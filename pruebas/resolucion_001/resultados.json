@@ -1,0 +1,701 @@
+{
+ "tiempos": {
+  "1280x720": {
+   "pixeles": 921600,
+   "momentos": {
+    "m1_plano_general": {
+     "A_s": 14.501,
+     "B_s": 14.691,
+     "media_s": 14.6,
+     "rss_pico_mb": 1253
+    },
+    "m2_fachada_exterior": {
+     "A_s": 18.237,
+     "B_s": 18.054,
+     "media_s": 18.15,
+     "rss_pico_mb": 1253
+    },
+    "m3_entrada_garaje": {
+     "A_s": 18.194,
+     "B_s": 18.107,
+     "media_s": 18.15,
+     "rss_pico_mb": 1253
+    },
+    "m4_piscina_reflejos": {
+     "A_s": 17.045,
+     "B_s": 16.69,
+     "media_s": 16.87,
+     "rss_pico_mb": 1253
+    },
+    "m5_jardin_vegetacion": {
+     "A_s": 17.258,
+     "B_s": 16.811,
+     "media_s": 17.03,
+     "rss_pico_mb": 1267
+    }
+   },
+   "total_5_A_s": 85.23,
+   "total_5_B_s": 84.35,
+   "total_5_media_s": 84.79,
+   "media_por_fotograma_s": 16.96,
+   "fps_reales_render": 0.059,
+   "horas_cpu_10min_video": 84.8,
+   "uso_cpu_proceso_pct": 98.4,
+   "uso_cpu_sistema_pct": 99.2,
+   "cpu_s_por_fotograma": 66.7,
+   "memoria_pico_mb": 1267,
+   "memoria_pico_A_mb": 1253,
+   "memoria_pico_B_mb": 1267,
+   "construccion_escena_s": 0.4,
+   "calentamiento_s": 16.6,
+   "tiempo_relativo_a_720p": 1.0,
+   "pixeles_relativos_a_720p": 1.0,
+   "s_por_megapixel": 18.4
+  },
+  "1024x576": {
+   "pixeles": 589824,
+   "momentos": {
+    "m1_plano_general": {
+     "A_s": 9.515,
+     "B_s": 10.439,
+     "media_s": 9.98,
+     "rss_pico_mb": 947
+    },
+    "m2_fachada_exterior": {
+     "A_s": 11.561,
+     "B_s": 12.133,
+     "media_s": 11.85,
+     "rss_pico_mb": 971
+    },
+    "m3_entrada_garaje": {
+     "A_s": 11.535,
+     "B_s": 12.393,
+     "media_s": 11.96,
+     "rss_pico_mb": 972
+    },
+    "m4_piscina_reflejos": {
+     "A_s": 10.917,
+     "B_s": 11.513,
+     "media_s": 11.21,
+     "rss_pico_mb": 972
+    },
+    "m5_jardin_vegetacion": {
+     "A_s": 11.397,
+     "B_s": 11.487,
+     "media_s": 11.44,
+     "rss_pico_mb": 972
+    }
+   },
+   "total_5_A_s": 54.92,
+   "total_5_B_s": 57.97,
+   "total_5_media_s": 56.45,
+   "media_por_fotograma_s": 11.29,
+   "fps_reales_render": 0.0886,
+   "horas_cpu_10min_video": 56.4,
+   "uso_cpu_proceso_pct": 98.4,
+   "uso_cpu_sistema_pct": 99.0,
+   "cpu_s_por_fotograma": 44.4,
+   "memoria_pico_mb": 972,
+   "memoria_pico_A_mb": 972,
+   "memoria_pico_B_mb": 972,
+   "construccion_escena_s": 0.4,
+   "calentamiento_s": 12.0,
+   "tiempo_relativo_a_720p": 0.666,
+   "pixeles_relativos_a_720p": 0.64,
+   "s_por_megapixel": 19.1
+  },
+  "960x540": {
+   "pixeles": 518400,
+   "momentos": {
+    "m1_plano_general": {
+     "A_s": 8.247,
+     "B_s": 8.372,
+     "media_s": 8.31,
+     "rss_pico_mb": 888
+    },
+    "m2_fachada_exterior": {
+     "A_s": 10.338,
+     "B_s": 10.799,
+     "media_s": 10.57,
+     "rss_pico_mb": 914
+    },
+    "m3_entrada_garaje": {
+     "A_s": 10.349,
+     "B_s": 11.219,
+     "media_s": 10.78,
+     "rss_pico_mb": 914
+    },
+    "m4_piscina_reflejos": {
+     "A_s": 9.912,
+     "B_s": 9.785,
+     "media_s": 9.85,
+     "rss_pico_mb": 914
+    },
+    "m5_jardin_vegetacion": {
+     "A_s": 9.658,
+     "B_s": 10.547,
+     "media_s": 10.1,
+     "rss_pico_mb": 914
+    }
+   },
+   "total_5_A_s": 48.5,
+   "total_5_B_s": 50.72,
+   "total_5_media_s": 49.61,
+   "media_por_fotograma_s": 9.92,
+   "fps_reales_render": 0.1008,
+   "horas_cpu_10min_video": 49.6,
+   "uso_cpu_proceso_pct": 98.3,
+   "uso_cpu_sistema_pct": 99.0,
+   "cpu_s_por_fotograma": 39.0,
+   "memoria_pico_mb": 914,
+   "memoria_pico_A_mb": 914,
+   "memoria_pico_B_mb": 913,
+   "construccion_escena_s": 0.3,
+   "calentamiento_s": 10.1,
+   "tiempo_relativo_a_720p": 0.585,
+   "pixeles_relativos_a_720p": 0.562,
+   "s_por_megapixel": 19.1
+  },
+  "854x480": {
+   "pixeles": 409920,
+   "momentos": {
+    "m1_plano_general": {
+     "A_s": 6.655,
+     "B_s": 6.737,
+     "media_s": 6.7,
+     "rss_pico_mb": 802
+    },
+    "m2_fachada_exterior": {
+     "A_s": 8.107,
+     "B_s": 7.95,
+     "media_s": 8.03,
+     "rss_pico_mb": 823
+    },
+    "m3_entrada_garaje": {
+     "A_s": 8.07,
+     "B_s": 8.094,
+     "media_s": 8.08,
+     "rss_pico_mb": 824
+    },
+    "m4_piscina_reflejos": {
+     "A_s": 7.466,
+     "B_s": 7.334,
+     "media_s": 7.4,
+     "rss_pico_mb": 824
+    },
+    "m5_jardin_vegetacion": {
+     "A_s": 7.672,
+     "B_s": 7.398,
+     "media_s": 7.54,
+     "rss_pico_mb": 824
+    }
+   },
+   "total_5_A_s": 37.97,
+   "total_5_B_s": 37.51,
+   "total_5_media_s": 37.74,
+   "media_por_fotograma_s": 7.55,
+   "fps_reales_render": 0.1325,
+   "horas_cpu_10min_video": 37.7,
+   "uso_cpu_proceso_pct": 98.3,
+   "uso_cpu_sistema_pct": 98.8,
+   "cpu_s_por_fotograma": 29.7,
+   "memoria_pico_mb": 824,
+   "memoria_pico_A_mb": 824,
+   "memoria_pico_B_mb": 824,
+   "construccion_escena_s": 0.3,
+   "calentamiento_s": 8.4,
+   "tiempo_relativo_a_720p": 0.445,
+   "pixeles_relativos_a_720p": 0.445,
+   "s_por_megapixel": 18.4
+  }
+ },
+ "fidelidad": {
+  "1280x720": {
+   "momentos": {
+    "m1_plano_general": {
+     "vista_720p": {
+      "ssim": 1.0,
+      "psnr_db": null
+     },
+     "propia_resolucion": {
+      "ssim": 1.0,
+      "psnr_db": null
+     }
+    },
+    "m2_fachada_exterior": {
+     "vista_720p": {
+      "ssim": 1.0,
+      "psnr_db": null
+     },
+     "propia_resolucion": {
+      "ssim": 1.0,
+      "psnr_db": null
+     }
+    },
+    "m3_entrada_garaje": {
+     "vista_720p": {
+      "ssim": 1.0,
+      "psnr_db": null
+     },
+     "propia_resolucion": {
+      "ssim": 1.0,
+      "psnr_db": null
+     }
+    },
+    "m4_piscina_reflejos": {
+     "vista_720p": {
+      "ssim": 1.0,
+      "psnr_db": null
+     },
+     "propia_resolucion": {
+      "ssim": 1.0,
+      "psnr_db": null
+     }
+    },
+    "m5_jardin_vegetacion": {
+     "vista_720p": {
+      "ssim": 1.0,
+      "psnr_db": null
+     },
+     "propia_resolucion": {
+      "ssim": 1.0,
+      "psnr_db": null
+     }
+    }
+   },
+   "ssim_vista_720p": 1.0,
+   "psnr_vista_720p_db": null,
+   "ssim_propia": 1.0,
+   "psnr_propia_db": null
+  },
+  "1024x576": {
+   "momentos": {
+    "m1_plano_general": {
+     "vista_720p": {
+      "ssim": 0.971108,
+      "psnr_db": 30.118895
+     },
+     "propia_resolucion": {
+      "ssim": 0.976902,
+      "psnr_db": 31.278084
+     }
+    },
+    "m2_fachada_exterior": {
+     "vista_720p": {
+      "ssim": 0.969015,
+      "psnr_db": 34.545695
+     },
+     "propia_resolucion": {
+      "ssim": 0.970952,
+      "psnr_db": 34.902513
+     }
+    },
+    "m3_entrada_garaje": {
+     "vista_720p": {
+      "ssim": 0.971185,
+      "psnr_db": 31.125694
+     },
+     "propia_resolucion": {
+      "ssim": 0.975996,
+      "psnr_db": 32.273406
+     }
+    },
+    "m4_piscina_reflejos": {
+     "vista_720p": {
+      "ssim": 0.972637,
+      "psnr_db": 38.047102
+     },
+     "propia_resolucion": {
+      "ssim": 0.975646,
+      "psnr_db": 38.559411
+     }
+    },
+    "m5_jardin_vegetacion": {
+     "vista_720p": {
+      "ssim": 0.982488,
+      "psnr_db": 39.282036
+     },
+     "propia_resolucion": {
+      "ssim": 0.984602,
+      "psnr_db": 39.785564
+     }
+    }
+   },
+   "ssim_vista_720p": 0.9733,
+   "psnr_vista_720p_db": 34.6239,
+   "ssim_propia": 0.9768,
+   "psnr_propia_db": 35.3598
+  },
+  "960x540": {
+   "momentos": {
+    "m1_plano_general": {
+     "vista_720p": {
+      "ssim": 0.967755,
+      "psnr_db": 29.358249
+     },
+     "propia_resolucion": {
+      "ssim": 0.974247,
+      "psnr_db": 30.710216
+     }
+    },
+    "m2_fachada_exterior": {
+     "vista_720p": {
+      "ssim": 0.96556,
+      "psnr_db": 33.651594
+     },
+     "propia_resolucion": {
+      "ssim": 0.968479,
+      "psnr_db": 34.041503
+     }
+    },
+    "m3_entrada_garaje": {
+     "vista_720p": {
+      "ssim": 0.969304,
+      "psnr_db": 30.440042
+     },
+     "propia_resolucion": {
+      "ssim": 0.97509,
+      "psnr_db": 31.791143
+     }
+    },
+    "m4_piscina_reflejos": {
+     "vista_720p": {
+      "ssim": 0.974089,
+      "psnr_db": 37.894898
+     },
+     "propia_resolucion": {
+      "ssim": 0.978271,
+      "psnr_db": 38.584672
+     }
+    },
+    "m5_jardin_vegetacion": {
+     "vista_720p": {
+      "ssim": 0.981272,
+      "psnr_db": 39.101563
+     },
+     "propia_resolucion": {
+      "ssim": 0.983859,
+      "psnr_db": 39.750385
+     }
+    }
+   },
+   "ssim_vista_720p": 0.9716,
+   "psnr_vista_720p_db": 34.0893,
+   "ssim_propia": 0.976,
+   "psnr_propia_db": 34.9756
+  },
+  "854x480": {
+   "momentos": {
+    "m1_plano_general": {
+     "vista_720p": {
+      "ssim": 0.959016,
+      "psnr_db": 27.784219
+     },
+     "propia_resolucion": {
+      "ssim": 0.970783,
+      "psnr_db": 29.315591
+     }
+    },
+    "m2_fachada_exterior": {
+     "vista_720p": {
+      "ssim": 0.960976,
+      "psnr_db": 32.695346
+     },
+     "propia_resolucion": {
+      "ssim": 0.966209,
+      "psnr_db": 33.23006
+     }
+    },
+    "m3_entrada_garaje": {
+     "vista_720p": {
+      "ssim": 0.961527,
+      "psnr_db": 28.708972
+     },
+     "propia_resolucion": {
+      "ssim": 0.97017,
+      "psnr_db": 30.096964
+     }
+    },
+    "m4_piscina_reflejos": {
+     "vista_720p": {
+      "ssim": 0.970507,
+      "psnr_db": 36.843294
+     },
+     "propia_resolucion": {
+      "ssim": 0.976953,
+      "psnr_db": 37.719192
+     }
+    },
+    "m5_jardin_vegetacion": {
+     "vista_720p": {
+      "ssim": 0.978218,
+      "psnr_db": 37.851358
+     },
+     "propia_resolucion": {
+      "ssim": 0.982062,
+      "psnr_db": 38.629847
+     }
+    }
+   },
+   "ssim_vista_720p": 0.966,
+   "psnr_vista_720p_db": 32.7766,
+   "ssim_propia": 0.9732,
+   "psnr_propia_db": 33.7983
+  }
+ },
+ "validacion_contra_video_publicado": {
+  "m1_plano_general": {
+   "ssim": 0.971933,
+   "psnr_db": 37.280519
+  },
+  "m2_fachada_exterior": {
+   "ssim": 0.9768,
+   "psnr_db": 40.90303
+  },
+  "m3_entrada_garaje": {
+   "ssim": 0.966222,
+   "psnr_db": 37.238103
+  },
+  "m4_piscina_reflejos": {
+   "ssim": 0.961778,
+   "psnr_db": 40.420656
+  },
+  "m5_jardin_vegetacion": {
+   "ssim": 0.955439,
+   "psnr_db": 40.636676
+  }
+ },
+ "tamano_video": {
+  "duracion_muestra_s": 28.0,
+  "audio_aac_192k_mb_10min": 14.4,
+  "por_resolucion": {
+   "1280x720": {
+    "crf19": {
+     "bytes_muestra": 11152801,
+     "kbps": 3187,
+     "mb_10min_solo_video": 239.0
+    },
+    "crf22": {
+     "bytes_muestra": 8206301,
+     "kbps": 2345,
+     "mb_10min_solo_video": 175.8
+    },
+    "crf26": {
+     "bytes_muestra": 3601429,
+     "kbps": 1029,
+     "mb_10min_solo_video": 77.2
+    }
+   },
+   "1024x576": {
+    "crf19": {
+     "bytes_muestra": 7057534,
+     "kbps": 2016,
+     "mb_10min_solo_video": 151.2
+    },
+    "crf22": {
+     "bytes_muestra": 4062680,
+     "kbps": 1161,
+     "mb_10min_solo_video": 87.1
+    },
+    "crf26": {
+     "bytes_muestra": 2120014,
+     "kbps": 606,
+     "mb_10min_solo_video": 45.4
+    }
+   },
+   "960x540": {
+    "crf19": {
+     "bytes_muestra": 6259218,
+     "kbps": 1788,
+     "mb_10min_solo_video": 134.1
+    },
+    "crf22": {
+     "bytes_muestra": 3623216,
+     "kbps": 1035,
+     "mb_10min_solo_video": 77.6
+    },
+    "crf26": {
+     "bytes_muestra": 1915931,
+     "kbps": 547,
+     "mb_10min_solo_video": 41.1
+    }
+   },
+   "854x480": {
+    "crf19": {
+     "bytes_muestra": 4872372,
+     "kbps": 1392,
+     "mb_10min_solo_video": 104.4
+    },
+    "crf22": {
+     "bytes_muestra": 2894808,
+     "kbps": 827,
+     "mb_10min_solo_video": 62.0
+    },
+    "crf26": {
+     "bytes_muestra": 1571194,
+     "kbps": 449,
+     "mb_10min_solo_video": 33.7
+    }
+   }
+  },
+  "calibrado_con_archivo_real": {
+   "archivo_real_bytes": 10792182,
+   "video_real_estimado_bytes": 10120182,
+   "factor_calibracion": 1.233,
+   "mb_10min_video_mas_audio": {
+    "1280x720": 231.0,
+    "1024x576": 122.0,
+    "960x540": 110.0,
+    "854x480": 91.0
+   }
+  }
+ },
+ "maquina": {
+  "cpu": "x86_64",
+  "nucleos_logicos": 4,
+  "ram_total_mb": 16088,
+  "gpu": "no disponible (sin GPU)",
+  "blender": "5.3.0",
+  "so": "Linux-6.18.44-fc-v470-x86_64-with-glibc2.39"
+ },
+ "configuracion_render": {
+  "motor": "CYCLES",
+  "muestras": 10,
+  "denoiser": "OPENIMAGEDENOISE",
+  "dispositivo": "CPU",
+  "adaptativo": true,
+  "umbral_adaptativo": 0.05000000074505806,
+  "rebotes": 6,
+  "persistent_data": true,
+  "exposicion": 1.100000023841858,
+  "transformacion_vista": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "fps_declarados": 30,
+  "hilos": "AUTO",
+  "hilos_n": 4,
+  "objetos": 417,
+  "luces": 47,
+  "materiales": 34
+ },
+ "huella_receta": "b37fec200c272686",
+ "piso_de_ruido": {
+  "1280x720": {
+   "momentos_identicos_por_pixel": 5,
+   "de": 5,
+   "detalle": {
+    "m1_plano_general": true,
+    "m2_fachada_exterior": true,
+    "m3_entrada_garaje": true,
+    "m4_piscina_reflejos": true,
+    "m5_jardin_vegetacion": true
+   }
+  },
+  "1024x576": {
+   "momentos_identicos_por_pixel": 5,
+   "de": 5,
+   "detalle": {
+    "m1_plano_general": true,
+    "m2_fachada_exterior": true,
+    "m3_entrada_garaje": true,
+    "m4_piscina_reflejos": true,
+    "m5_jardin_vegetacion": true
+   }
+  },
+  "960x540": {
+   "momentos_identicos_por_pixel": 5,
+   "de": 5,
+   "detalle": {
+    "m1_plano_general": true,
+    "m2_fachada_exterior": true,
+    "m3_entrada_garaje": true,
+    "m4_piscina_reflejos": true,
+    "m5_jardin_vegetacion": true
+   }
+  },
+  "854x480": {
+   "momentos_identicos_por_pixel": 5,
+   "de": 5,
+   "detalle": {
+    "m1_plano_general": true,
+    "m2_fachada_exterior": true,
+    "m3_entrada_garaje": true,
+    "m4_piscina_reflejos": true,
+    "m5_jardin_vegetacion": true
+   }
+  }
+ },
+ "detalle_fino_pct_vs_720p": {
+  "1280x720": {
+   "cuadro": {
+    "m1_plano_general": 100.0,
+    "m2_fachada_exterior": 100.0,
+    "m3_entrada_garaje": 100.0,
+    "m4_piscina_reflejos": 100.0,
+    "m5_jardin_vegetacion": 100.0
+   },
+   "zona": {
+    "m1_plano_general": 100.0,
+    "m2_fachada_exterior": 100.0,
+    "m3_entrada_garaje": 100.0,
+    "m4_piscina_reflejos": 100.0,
+    "m5_jardin_vegetacion": 100.0
+   },
+   "cuadro_media_pct": 100.0,
+   "zona_media_pct": 100.0
+  },
+  "1024x576": {
+   "cuadro": {
+    "m1_plano_general": 56.0,
+    "m2_fachada_exterior": 57.8,
+    "m3_entrada_garaje": 54.6,
+    "m4_piscina_reflejos": 48.4,
+    "m5_jardin_vegetacion": 52.6
+   },
+   "zona": {
+    "m1_plano_general": 54.6,
+    "m2_fachada_exterior": 62.8,
+    "m3_entrada_garaje": 54.9,
+    "m4_piscina_reflejos": 39.3,
+    "m5_jardin_vegetacion": 57.3
+   },
+   "cuadro_media_pct": 53.9,
+   "zona_media_pct": 53.8
+  },
+  "960x540": {
+   "cuadro": {
+    "m1_plano_general": 48.3,
+    "m2_fachada_exterior": 52.6,
+    "m3_entrada_garaje": 47.5,
+    "m4_piscina_reflejos": 39.1,
+    "m5_jardin_vegetacion": 46.6
+   },
+   "zona": {
+    "m1_plano_general": 49.8,
+    "m2_fachada_exterior": 57.5,
+    "m3_entrada_garaje": 45.2,
+    "m4_piscina_reflejos": 27.0,
+    "m5_jardin_vegetacion": 50.1
+   },
+   "cuadro_media_pct": 46.8,
+   "zona_media_pct": 45.9
+  },
+  "854x480": {
+   "cuadro": {
+    "m1_plano_general": 36.3,
+    "m2_fachada_exterior": 40.0,
+    "m3_entrada_garaje": 37.0,
+    "m4_piscina_reflejos": 29.7,
+    "m5_jardin_vegetacion": 35.4
+   },
+   "zona": {
+    "m1_plano_general": 36.0,
+    "m2_fachada_exterior": 43.1,
+    "m3_entrada_garaje": 34.9,
+    "m4_piscina_reflejos": 19.6,
+    "m5_jardin_vegetacion": 39.5
+   },
+   "cuadro_media_pct": 35.7,
+   "zona_media_pct": 34.6
+  }
+ }
+}

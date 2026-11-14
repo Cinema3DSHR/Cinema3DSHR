@@ -1,0 +1,47 @@
+{
+ "escena": "producciones/p000_prueba_mansion/escenas/e01/v1/escena.json",
+ "fps": 30,
+ "criterio": "Elegidos mirando vistas previas de baja calidad de 10 candidatos de las tomas ya producidas, ANTES de medir. Cada momento es un fotograma exacto (toma + número de fotograma) y no cambia entre resoluciones.",
+ "momentos": [
+  {
+   "id": "m1_plano_general",
+   "nombre": "Plano general de la mansión",
+   "toma": "t01_general",
+   "tiempo_s": 2.0,
+   "frame": 61,
+   "por_que": "Toma 1 de la producción: casa, piscina, jardín, muro y ciudad de fondo."
+  },
+  {
+   "id": "m2_fachada_exterior",
+   "nombre": "Fachada e iluminación exterior",
+   "toma": "t04_grua",
+   "tiempo_s": 14.0,
+   "frame": 421,
+   "por_que": "Grúa baja: fachada de madera y vidrio, apliques, balizas y asfalto mojado."
+  },
+  {
+   "id": "m3_entrada_garaje",
+   "nombre": "Entrada del garaje",
+   "toma": "t04_grua",
+   "tiempo_s": 17.4,
+   "frame": 523,
+   "por_que": "Misma grúa, más alta: portón del garaje abierto, el auto frente a la entrada."
+  },
+  {
+   "id": "m4_piscina_reflejos",
+   "nombre": "Piscina y reflejos",
+   "toma": "t07_aerea",
+   "tiempo_s": 24.3,
+   "frame": 730,
+   "por_que": "Toma aérea: piscina iluminada con su agua animada y reflejos sobre el deck."
+  },
+  {
+   "id": "m5_jardin_vegetacion",
+   "nombre": "Jardín, vegetación y luces",
+   "toma": "t07_aerea",
+   "tiempo_s": 27.6,
+   "frame": 829,
+   "por_que": "Aérea abierta: árboles, arbustos, camino de balizas y luces del jardín."
+  }
+ ]
+}

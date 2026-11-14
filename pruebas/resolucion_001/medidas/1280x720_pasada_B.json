@@ -1,0 +1,102 @@
+{
+ "resolucion": "1280x720",
+ "ancho": 1280,
+ "alto": 720,
+ "pixeles": 921600,
+ "huella_receta": "b37fec200c272686",
+ "construccion_escena_s": 0.4,
+ "calentamiento": {
+  "segundos": 16.72,
+  "cpu_s": 64.3,
+  "rss_pico_mb": 1186
+ },
+ "momentos": [
+  {
+   "id": "m1_plano_general",
+   "toma": "t01_general",
+   "frame": 61,
+   "segundos": 14.691,
+   "cpu_s": 57.96,
+   "uso_cpu_proceso_pct": 98.6,
+   "uso_cpu_sistema_pct": 98.8,
+   "rss_pico_mb": 1207,
+   "bytes_png": 990788
+  },
+  {
+   "id": "m2_fachada_exterior",
+   "toma": "t04_grua",
+   "frame": 421,
+   "segundos": 18.054,
+   "cpu_s": 71.13,
+   "uso_cpu_proceso_pct": 98.5,
+   "uso_cpu_sistema_pct": 99.3,
+   "rss_pico_mb": 1253,
+   "bytes_png": 917568
+  },
+  {
+   "id": "m3_entrada_garaje",
+   "toma": "t04_grua",
+   "frame": 523,
+   "segundos": 18.107,
+   "cpu_s": 71.28,
+   "uso_cpu_proceso_pct": 98.4,
+   "uso_cpu_sistema_pct": 98.5,
+   "rss_pico_mb": 1253,
+   "bytes_png": 997194
+  },
+  {
+   "id": "m4_piscina_reflejos",
+   "toma": "t07_aerea",
+   "frame": 730,
+   "segundos": 16.69,
+   "cpu_s": 65.78,
+   "uso_cpu_proceso_pct": 98.5,
+   "uso_cpu_sistema_pct": 99.6,
+   "rss_pico_mb": 1253,
+   "bytes_png": 923574
+  },
+  {
+   "id": "m5_jardin_vegetacion",
+   "toma": "t07_aerea",
+   "frame": 829,
+   "segundos": 16.811,
+   "cpu_s": 66.0,
+   "uso_cpu_proceso_pct": 98.2,
+   "uso_cpu_sistema_pct": 99.2,
+   "rss_pico_mb": 1267,
+   "bytes_png": 893102
+  }
+ ],
+ "total_5_s": 84.35,
+ "media_s": 16.87,
+ "fps_reales_render": 0.0593,
+ "rss_pico_mb": 1267,
+ "ru_maxrss_mb": 1267,
+ "configuracion": {
+  "motor": "CYCLES",
+  "muestras": 10,
+  "denoiser": "OPENIMAGEDENOISE",
+  "dispositivo": "CPU",
+  "adaptativo": true,
+  "umbral_adaptativo": 0.05000000074505806,
+  "rebotes": 6,
+  "persistent_data": true,
+  "exposicion": 1.100000023841858,
+  "transformacion_vista": "AgX",
+  "look": "AgX - Medium High Contrast",
+  "fps_declarados": 30,
+  "hilos": "AUTO",
+  "hilos_n": 4,
+  "objetos": 417,
+  "luces": 47,
+  "materiales": 34
+ },
+ "maquina": {
+  "cpu": "x86_64",
+  "nucleos_logicos": 4,
+  "ram_total_mb": 16088,
+  "gpu": "no disponible (sin GPU)",
+  "blender": "5.3.0",
+  "so": "Linux-6.18.44-fc-v470-x86_64-with-glibc2.39"
+ }
+}
