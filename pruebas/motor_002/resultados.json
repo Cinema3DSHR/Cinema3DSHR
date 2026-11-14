@@ -1,0 +1,420 @@
+{
+ "medidas": {
+  "cycles_prod": {
+   "variante": "cycles_prod",
+   "config": {
+    "motor": "CYCLES",
+    "muestras_cycles": 10,
+    "taa_eevee": 64,
+    "raytracing_eevee": false,
+    "light_tree": true,
+    "prefiltro_denoise": "ACCURATE"
+   },
+   "calentamiento_s": 16.7,
+   "construccion_s": 0.4,
+   "fotogramas": [
+    {
+     "id": "m1_plano_general",
+     "segundos": 15.09,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1207
+    },
+    {
+     "id": "m2_fachada_exterior",
+     "segundos": 18.41,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1252
+    },
+    {
+     "id": "m3_entrada_garaje",
+     "segundos": 17.82,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1252
+    },
+    {
+     "id": "m4_piscina_reflejos",
+     "segundos": 16.88,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1253
+    },
+    {
+     "id": "m5_jardin_vegetacion",
+     "segundos": 17.09,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1253
+    }
+   ],
+   "total_5_s": 85.3,
+   "media_s": 17.06,
+   "rss_pico_mb": 1253,
+   "huella": "b37fec200c272686",
+   "maquina": {
+    "nucleos": 4,
+    "ram_mb": 16088,
+    "gpu": "no hay",
+    "blender": "5.3.0"
+   }
+  },
+  "cycles_sinarbol": {
+   "variante": "cycles_sinarbol",
+   "config": {
+    "motor": "CYCLES",
+    "muestras_cycles": 10,
+    "taa_eevee": 64,
+    "raytracing_eevee": false,
+    "light_tree": false,
+    "prefiltro_denoise": "ACCURATE"
+   },
+   "calentamiento_s": 13.1,
+   "construccion_s": 0.3,
+   "fotogramas": [
+    {
+     "id": "m1_plano_general",
+     "segundos": 11.41,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1252
+    },
+    {
+     "id": "m2_fachada_exterior",
+     "segundos": 13.84,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1252
+    },
+    {
+     "id": "m3_entrada_garaje",
+     "segundos": 13.54,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1252
+    },
+    {
+     "id": "m4_piscina_reflejos",
+     "segundos": 12.69,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1252
+    },
+    {
+     "id": "m5_jardin_vegetacion",
+     "segundos": 12.79,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1252
+    }
+   ],
+   "total_5_s": 64.3,
+   "media_s": 12.85,
+   "rss_pico_mb": 1252,
+   "huella": "b37fec200c272686",
+   "maquina": {
+    "nucleos": 4,
+    "ram_mb": 16088,
+    "gpu": "no hay",
+    "blender": "5.3.0"
+   }
+  },
+  "cycles_rapido": {
+   "variante": "cycles_rapido",
+   "config": {
+    "motor": "CYCLES",
+    "muestras_cycles": 6,
+    "taa_eevee": 64,
+    "raytracing_eevee": false,
+    "light_tree": false,
+    "prefiltro_denoise": "FAST"
+   },
+   "calentamiento_s": 7.7,
+   "construccion_s": 0.4,
+   "fotogramas": [
+    {
+     "id": "m1_plano_general",
+     "segundos": 5.71,
+     "cpu_proceso_pct": 97,
+     "rss_pico_mb": 1032
+    },
+    {
+     "id": "m2_fachada_exterior",
+     "segundos": 6.91,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1092
+    },
+    {
+     "id": "m3_entrada_garaje",
+     "segundos": 6.6,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1092
+    },
+    {
+     "id": "m4_piscina_reflejos",
+     "segundos": 6.3,
+     "cpu_proceso_pct": 97,
+     "rss_pico_mb": 1079
+    },
+    {
+     "id": "m5_jardin_vegetacion",
+     "segundos": 6.56,
+     "cpu_proceso_pct": 98,
+     "rss_pico_mb": 1093
+    }
+   ],
+   "total_5_s": 32.1,
+   "media_s": 6.42,
+   "rss_pico_mb": 1093,
+   "huella": "b37fec200c272686",
+   "maquina": {
+    "nucleos": 4,
+    "ram_mb": 16088,
+    "gpu": "no hay",
+    "blender": "5.3.0"
+   }
+  },
+  "eevee_rt0_16": {
+   "variante": "eevee_rt0_16",
+   "config": {
+    "motor": "BLENDER_EEVEE",
+    "muestras_cycles": 10,
+    "taa_eevee": 16,
+    "raytracing_eevee": false,
+    "light_tree": true,
+    "prefiltro_denoise": "ACCURATE"
+   },
+   "calentamiento_s": 32.2,
+   "construccion_s": 0.4,
+   "fotogramas": [
+    {
+     "id": "m1_plano_general",
+     "segundos": 44.16,
+     "cpu_proceso_pct": 90,
+     "rss_pico_mb": 2070
+    },
+    {
+     "id": "m2_fachada_exterior",
+     "segundos": 66.9,
+     "cpu_proceso_pct": 93,
+     "rss_pico_mb": 2091
+    },
+    {
+     "id": "m3_entrada_garaje",
+     "segundos": 55.61,
+     "cpu_proceso_pct": 92,
+     "rss_pico_mb": 2093
+    },
+    {
+     "id": "m4_piscina_reflejos",
+     "segundos": 46.14,
+     "cpu_proceso_pct": 91,
+     "rss_pico_mb": 2086
+    },
+    {
+     "id": "m5_jardin_vegetacion",
+     "segundos": 42.85,
+     "cpu_proceso_pct": 90,
+     "rss_pico_mb": 2100
+    }
+   ],
+   "total_5_s": 255.7,
+   "media_s": 51.13,
+   "rss_pico_mb": 2100,
+   "huella": "b37fec200c272686",
+   "maquina": {
+    "nucleos": 4,
+    "ram_mb": 16088,
+    "gpu": "no hay",
+    "blender": "5.3.0"
+   }
+  },
+  "eevee_rt1_16": {
+   "variante": "eevee_rt1_16",
+   "config": {
+    "motor": "BLENDER_EEVEE",
+    "muestras_cycles": 10,
+    "taa_eevee": 16,
+    "raytracing_eevee": true,
+    "light_tree": true,
+    "prefiltro_denoise": "ACCURATE"
+   },
+   "calentamiento_s": 35.5,
+   "construccion_s": 0.4,
+   "fotogramas": [
+    {
+     "id": "m1_plano_general",
+     "segundos": 46.69,
+     "cpu_proceso_pct": 90,
+     "rss_pico_mb": 2164
+    },
+    {
+     "id": "m2_fachada_exterior",
+     "segundos": 69.6,
+     "cpu_proceso_pct": 93,
+     "rss_pico_mb": 2166
+    },
+    {
+     "id": "m3_entrada_garaje",
+     "segundos": 62.19,
+     "cpu_proceso_pct": 91,
+     "rss_pico_mb": 2157
+    },
+    {
+     "id": "m4_piscina_reflejos",
+     "segundos": 51.07,
+     "cpu_proceso_pct": 90,
+     "rss_pico_mb": 2171
+    },
+    {
+     "id": "m5_jardin_vegetacion",
+     "segundos": 50.22,
+     "cpu_proceso_pct": 89,
+     "rss_pico_mb": 2175
+    }
+   ],
+   "total_5_s": 279.8,
+   "media_s": 55.95,
+   "rss_pico_mb": 2175,
+   "huella": "b37fec200c272686",
+   "maquina": {
+    "nucleos": 4,
+    "ram_mb": 16088,
+    "gpu": "no hay",
+    "blender": "5.3.0"
+   }
+  },
+  "cycles_ref64": {
+   "variante": "cycles_ref64",
+   "config": {
+    "motor": "CYCLES",
+    "muestras_cycles": 64,
+    "taa_eevee": 64,
+    "raytracing_eevee": false,
+    "light_tree": true,
+    "prefiltro_denoise": "ACCURATE"
+   },
+   "calentamiento_s": 78.6,
+   "construccion_s": 0.3,
+   "fotogramas": [
+    {
+     "id": "m1_plano_general",
+     "segundos": 76.25,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1235
+    },
+    {
+     "id": "m2_fachada_exterior",
+     "segundos": 96.9,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1235
+    },
+    {
+     "id": "m3_entrada_garaje",
+     "segundos": 96.82,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1235
+    },
+    {
+     "id": "m4_piscina_reflejos",
+     "segundos": 86.88,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1235
+    },
+    {
+     "id": "m5_jardin_vegetacion",
+     "segundos": 88.01,
+     "cpu_proceso_pct": 99,
+     "rss_pico_mb": 1235
+    }
+   ],
+   "total_5_s": 444.9,
+   "media_s": 88.97,
+   "rss_pico_mb": 1235,
+   "huella": "b37fec200c272686",
+   "maquina": {
+    "nucleos": 4,
+    "ram_mb": 16088,
+    "gpu": "no hay",
+    "blender": "5.3.0"
+   }
+  }
+ },
+ "fidelidad": {
+  "cycles_prod": {
+   "ssim_vs_produccion": 1.0,
+   "ssim_vs_ref64": 0.9832,
+   "psnr_vs_ref64": 37.2886,
+   "detalle_pct_vs_prod": 100.0,
+   "brillo_vs_ref64": 0.07,
+   "ssim_por_momento_vs_ref64": [
+    0.983,
+    0.978,
+    0.983,
+    0.983,
+    0.989
+   ]
+  },
+  "cycles_sinarbol": {
+   "ssim_vs_produccion": 0.9759,
+   "ssim_vs_ref64": 0.9688,
+   "psnr_vs_ref64": 35.6538,
+   "detalle_pct_vs_prod": 94.7,
+   "brillo_vs_ref64": 0.42,
+   "ssim_por_momento_vs_ref64": [
+    0.965,
+    0.969,
+    0.971,
+    0.966,
+    0.973
+   ]
+  },
+  "cycles_rapido": {
+   "ssim_vs_produccion": 0.9505,
+   "ssim_vs_ref64": 0.9495,
+   "psnr_vs_ref64": 33.3498,
+   "detalle_pct_vs_prod": 80.4,
+   "brillo_vs_ref64": 0.79,
+   "ssim_por_momento_vs_ref64": [
+    0.945,
+    0.951,
+    0.95,
+    0.951,
+    0.95
+   ]
+  },
+  "eevee_rt0_16": {
+   "ssim_vs_produccion": 0.8647,
+   "ssim_vs_ref64": 0.87,
+   "psnr_vs_ref64": 22.7853,
+   "detalle_pct_vs_prod": 104.4,
+   "brillo_vs_ref64": -6.74,
+   "ssim_por_momento_vs_ref64": [
+    0.916,
+    0.77,
+    0.844,
+    0.906,
+    0.915
+   ]
+  },
+  "eevee_rt1_16": {
+   "ssim_vs_produccion": 0.8706,
+   "ssim_vs_ref64": 0.8763,
+   "psnr_vs_ref64": 23.1154,
+   "detalle_pct_vs_prod": 103.3,
+   "brillo_vs_ref64": -6.25,
+   "ssim_por_momento_vs_ref64": [
+    0.919,
+    0.796,
+    0.848,
+    0.904,
+    0.914
+   ]
+  },
+  "cycles_ref64": {
+   "ssim_vs_produccion": 0.9832,
+   "ssim_vs_ref64": 1.0,
+   "psnr_vs_ref64": null,
+   "detalle_pct_vs_prod": 105.1,
+   "brillo_vs_ref64": 0.0,
+   "ssim_por_momento_vs_ref64": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ]
+  }
+ }
+}
