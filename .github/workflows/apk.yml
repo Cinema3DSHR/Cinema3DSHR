@@ -1,0 +1,167 @@
+name: App Android (APK firmada + actualización)
+
+# Compila el cliente liviano de 3D Film Studio (Godot 4.7.2) y publica en la release "app":
+#   app.json  · app.pck (código de la interfaz: se descarga solo al abrir la app, sin reinstalar)
+#   3DFilmStudio.apk (firmada SIEMPRE con la misma clave → se instala encima, sin desinstalar)
+# La APK sólo cambia de "época" (app/apk_epoca.txt) cuando cambia el motor o el lanzador (app/boot).
+#
+# FIRMA: la clave se genera UNA vez en este flujo y se guarda CIFRADA (AES-256, PBKDF2 600 000 iteraciones)
+# en la release "firma" con la contraseña del secreto ANDROID_KEYSTORE_PASSWORD (la inventa el dueño;
+# nadie más la conoce). Sin ese secreto se compila una APK de PRUEBA con firma temporal y no se publica.
+on:
+  push:
+    paths: ["app/**", ".github/workflows/apk.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apk
+  cancel-in-progress: false
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            app
+            .github
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Caché de Godot y plantillas
+        id: cache-godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot
+          key: godot-${{ env.GODOT_VERSION }}
+      - name: Instalar Godot y plantillas de exportación
+        if: steps.cache-godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot && cd ~/godot
+          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && rm godot.zip
+          curl -sSL -o tpl.tpz "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q tpl.tpz && rm tpl.tpz
+          # sólo hacen falta las plantillas de Android (el resto ocupa caché sin uso)
+          find templates -type f ! -name 'android_*' ! -name 'version.txt' -delete
+      - name: Configurar Godot (SDK de Android)
+        run: |
+          mkdir -p ~/.local/share/godot/export_templates
+          ln -sfn ~/godot/templates ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+          sudo ln -sf ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 /usr/local/bin/godot
+          mkdir -p ~/.config/godot
+          cat > ~/.config/godot/editor_settings-${GODOT_VERSION%.*}.tres <<EOT
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "${ANDROID_SDK_ROOT}"
+          export/android/java_sdk_path = "${JAVA_HOME}"
+          EOT
+          godot --version
+
+      - name: Clave de firma (persistente y cifrada)
+        id: firma
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          set -e
+          R=${{ github.repository }}
+          mkdir -p ~/firma
+          if [ -z "$PASS" ]; then
+            echo "::warning::Falta el secreto ANDROID_KEYSTORE_PASSWORD: se arma una APK de PRUEBA con firma temporal (NO se publica; la próxima APK firmada pedirá desinstalar esta una vez)."
+            keytool -genkeypair -keystore ~/firma/temporal.keystore -storepass temporal123 -keypass temporal123 \
+              -alias cine3d -keyalg RSA -keysize 2048 -validity 3650 -dname "CN=3D Film Studio PRUEBA" >/dev/null 2>&1
+            echo "keystore=$HOME/firma/temporal.keystore" >> $GITHUB_OUTPUT
+            echo "estable=0" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "::add-mask::$PASS"
+          if gh release download firma --repo "$R" --pattern keystore.enc --dir ~/firma 2>/dev/null; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -iter 600000 -in ~/firma/keystore.enc -out ~/firma/cine3d.keystore -pass env:PASS \
+              || { echo "::error::No se pudo descifrar la clave: ANDROID_KEYSTORE_PASSWORD no coincide con la que la creó."; exit 1; }
+            echo "Clave existente descifrada."
+          else
+            if [ -f app/firma_huella.txt ]; then
+              echo "::error::La clave de firma ya existía (app/firma_huella.txt) pero falta la release 'firma'. NO se crea otra: los teléfonos tendrían que desinstalar. Restaurar keystore.enc."
+              exit 1
+            fi
+            keytool -genkeypair -keystore ~/firma/cine3d.keystore -storepass "$PASS" -keypass "$PASS" \
+              -alias cine3d -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=3D Film Studio, O=webmaletin-art" >/dev/null 2>&1
+            openssl enc -aes-256-cbc -pbkdf2 -iter 600000 -salt -in ~/firma/cine3d.keystore -out ~/firma/keystore.enc -pass env:PASS
+            gh release view firma --repo "$R" >/dev/null 2>&1 || \
+              gh release create firma --repo "$R" --title "Firma Android (cifrada)" --latest=false \
+                --notes "Clave de firma de la APK, CIFRADA con AES-256 (la contraseña sólo está en los secretos del repositorio). NO BORRAR: sin ella las actualizaciones obligan a desinstalar."
+            gh release upload firma ~/firma/keystore.enc --repo "$R" --clobber
+            echo "Clave nueva creada y guardada cifrada."
+          fi
+          HUELLA=$(keytool -list -v -keystore ~/firma/cine3d.keystore -storepass "$PASS" -alias cine3d | grep -m1 "SHA256:" | sed 's/.*SHA256: //')
+          echo "Huella del certificado (pública): $HUELLA"
+          echo "huella=$HUELLA" >> $GITHUB_OUTPUT
+          echo "keystore=$HOME/firma/cine3d.keystore" >> $GITHUB_OUTPUT
+          echo "estable=1" >> $GITHUB_OUTPUT
+
+      - name: Versión
+        id: ver
+        run: |
+          N=${{ github.run_number }}
+          EPOCA=$(cat app/apk_epoca.txt)
+          echo "n=$N" >> $GITHUB_OUTPUT
+          echo "epoca=$EPOCA" >> $GITHUB_OUTPUT
+          printf '{"app": %s, "apk": %s, "commit": "%s"}\n' "$N" "$EPOCA" "${GITHUB_SHA::7}" > app/boot/version.json
+          sed -i "s/^version\/code=.*/version\/code=$N/; s/^version\/name=.*/version\/name=\"1.$EPOCA.$N\"/" app/export_presets.cfg
+
+      - name: Importar y exportar
+        env:
+          GODOT_ANDROID_KEYSTORE_RELEASE_PATH: ${{ steps.firma.outputs.keystore }}
+          GODOT_ANDROID_KEYSTORE_RELEASE_USER: cine3d
+          GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || 'temporal123' }}
+        run: |
+          mkdir -p out
+          godot --headless --path app --import 2>&1 | tail -n 3 || true
+          godot --headless --path app --export-release "Android" ../out/3DFilmStudio.apk 2>&1 | grep -vE "RID|Leaked|resources still" | tail -n 25
+          test -f out/3DFilmStudio.apk
+          godot --headless --path app --export-pack "Android" ../out/app.pck 2>&1 | tail -n 5
+          test -f out/app.pck
+          ls -la out
+          # comprobar la firma
+          $ANDROID_SDK_ROOT/build-tools/$(ls $ANDROID_SDK_ROOT/build-tools | sort -V | tail -1)/apksigner verify --print-certs out/3DFilmStudio.apk | head -n 4
+
+      - name: Subir APK como artefacto
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: 3DFilmStudio-${{ steps.firma.outputs.estable == '1' && 'firmada' || 'PRUEBA-firma-temporal' }}-v${{ steps.ver.outputs.n }}
+          path: out/3DFilmStudio.apk
+          retention-days: 7
+
+      - name: Publicar en la release "app"
+        if: steps.firma.outputs.estable == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          R=${{ github.repository }}
+          N=${{ steps.ver.outputs.n }}
+          E=${{ steps.ver.outputs.epoca }}
+          B="https://github.com/$R/releases/download/app"
+          gh release view app --repo "$R" >/dev/null 2>&1 || \
+            gh release create app --repo "$R" --title "3D Film Studio — app Android" --latest \
+              --notes "Última APK firmada y paquete de actualización. La app se actualiza sola; la APK se instala encima sin desinstalar."
+          cat > out/app.json <<EOT
+          {"app": $N, "apk": $E, "pck_url": "$B/app.pck", "pck_sha256": "$(sha256sum out/app.pck | cut -d' ' -f1)",
+           "pck_bytes": $(stat -c%s out/app.pck), "apk_url": "$B/3DFilmStudio.apk", "apk_bytes": $(stat -c%s out/3DFilmStudio.apk),
+           "huella_firma": "${{ steps.firma.outputs.huella }}", "commit": "${GITHUB_SHA::7}"}
+          EOT
+          cat out/app.json
+          # orden: primero el pck y la APK, al final app.json (así nunca apunta a algo que falta)
+          gh release upload app out/app.pck out/3DFilmStudio.apk --repo "$R" --clobber
+          gh release upload app out/app.json --repo "$R" --clobber

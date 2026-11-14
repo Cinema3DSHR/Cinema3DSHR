@@ -1,0 +1,642 @@
+[
+ {
+  "id": "packs_rifle_8_way_locomotion_pack_jump_loop",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   31.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   -0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_caminar_correr_prone_right_turn_2",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   40.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.015,
+   0.008,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_idle_parado_crouching_idle",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   76.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   -0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_not_so_scary_zombie_pack_walking_2_inplace",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   122.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": true
+ },
+ {
+  "id": "animaciones_sentado_manejar_sitting_yell_3",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   60.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_saltos_parkour_big_jump",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   72.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.003,
+   -6.117,
+   0.034
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_combate_pelea_jumping_over_into_combat",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   126.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.528,
+   -4.041,
+   -0.182
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_deportes_otros_golf_putt_4",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   102.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.022,
+   -0.025,
+   -0.005
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_armas_shooter_rifle_idle_to_crouch",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   74.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.005,
+   -0.512,
+   -0.084
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_great_sword_pack_great_sword_turn_2",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   26.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.127,
+   -0.108,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_otras_entry_2",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   101.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.036,
+   -2.464,
+   -0.064
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_basic_shooter_pack_rifle_jump",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   19.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.002,
+   0.004,
+   -0.043
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_caidas_muertes_flying_back_death",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   92.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.041,
+   1.369,
+   -0.636
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_soccer_game_pack_stall_soccerball_3",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   70.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_combate_pelea_reaction",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   51.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_rifle_8_way_locomotion_pack_walk_crouching_left",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   31.0
+  ],
+  "desplazamiento_cadera_m": [
+   1.97,
+   -0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_pro_rifle_pack_sprint_forward_right",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   16.0
+  ],
+  "desplazamiento_cadera_m": [
+   -2.461,
+   -2.461,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_combate_pelea_medium_hit_to_head",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   33.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   -0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_idle_parado_prone_idle",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   149.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_gestos_crouch_idle_02_looking_around",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   176.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   -0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_armas_shooter_grab_rifle_from_behind_shoulder",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   107.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.072,
+   -0.249,
+   -0.022
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_caminar_correr_stepping_left",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   45.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.508,
+   0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_combate_pelea_inverted_double_kick_to_kip_up",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   97.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.002,
+   -3.594,
+   0.026
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_armas_shooter_rifle_rubbing_eyes",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   56.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.004,
+   -0.016,
+   -0.03
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_pro_longbow_pack_standing_run_right_inplace",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   24.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   -0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": true
+ },
+ {
+  "id": "packs_rifle_8_way_locomotion_pack_walk_backward",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   31.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   1.856,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_idle_parado_t_pose",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   2.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_pro_longbow_pack_standing_aim_walk_back",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   45.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   1.331,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_baile_hip_hop_dancing_15",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   184.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   -1.427,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_combate_pelea_stabbing_2",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   65.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_interaccion_pulled_from_seat",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   141.0
+  ],
+  "desplazamiento_cadera_m": [
+   -1.157,
+   1.655,
+   -0.522
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_breakdance_pack_breakdance_ending_3",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   193.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.461,
+   -0.79,
+   0.177
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_emociones_victory_2",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   184.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   -0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_great_sword_pack_great_sword_strafe",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   34.0
+  ],
+  "desplazamiento_cadera_m": [
+   1.241,
+   0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_pro_magic_pack_crouch_turn_right_90",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   50.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   -0.001,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_caminar_correr_right_cover_sneak",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   35.0
+  ],
+  "desplazamiento_cadera_m": [
+   -1.287,
+   0.0,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_farming_pack_plant_a_plant",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   228.0
+  ],
+  "desplazamiento_cadera_m": [
+   -0.0,
+   0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "animaciones_idle_parado_male_laying_pose_5",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   2.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_capoeira_pack_esquiva_2",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   68.0
+  ],
+  "desplazamiento_cadera_m": [
+   -1.371,
+   0.531,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ },
+ {
+  "id": "packs_sword_and_shield_pack_sword_and_shield_walk_2",
+  "huesos": 65,
+  "raiz": "mixamorig:Hips",
+  "todos_mixamorig": true,
+  "rango": [
+   1.0,
+   39.0
+  ],
+  "desplazamiento_cadera_m": [
+   0.0,
+   1.379,
+   -0.0
+  ],
+  "en_el_lugar_indice": false
+ }
+]

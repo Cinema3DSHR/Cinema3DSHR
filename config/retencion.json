@@ -1,0 +1,7 @@
+{
+  "descripcion": "Política de borrado automático de entregables TEMPORALES (videos de revisión). Nunca se borran proyectos (.blend), GLB del visor, portadas, manifiestos ni recursos originales.",
+  "tipos_temporales": ["mp4", "ogv"],
+  "dias_versiones_viejas": 30,
+  "dias_rechazadas": 14,
+  "conservar_siempre": ["version_actual", "aprobadas"]
+}

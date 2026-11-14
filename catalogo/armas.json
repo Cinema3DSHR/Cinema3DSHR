@@ -1,0 +1,236 @@
+{
+ "formato": 1,
+ "descripcion": "Catálogo de armas y equipamiento. Los originales no se modifican; el procesado genera GLB con origen en la empuñadura (+Z = boca del cañón).",
+ "armas": [
+  {
+   "id": "pistola_USP",
+   "categoria": "pistola",
+   "ref": "extraction:characters/armas/pistola_USP.glb",
+   "formato": "glb",
+   "bytes": 151352,
+   "triangulos": 2090,
+   "largo_m": 0.194,
+   "escala": 1.0,
+   "ejes": "+Z = boca del canon, +Y = arriba, +X = izquierda del tirador",
+   "anclaje": {
+    "origen": "centro de la empunadura (mano derecha)",
+    "mano_derecha": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "mano_izquierda": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "culata": null,
+    "boca_canon": [
+     0.0,
+     0.0425,
+     0.1625
+    ]
+   },
+   "hueso_mano": "mixamorig:RightHand",
+   "fuente_original": "USP.fbx (17-weapons-and-attachments)",
+   "estado": "listo (puntos de agarre medidos)",
+   "licencia": "según el paquete original «17-weapons-and-attachments»: verificar antes de publicar fuera del estudio"
+  },
+  {
+   "id": "rifle_M4A1",
+   "categoria": "arma_larga",
+   "ref": "extraction:characters/armas/rifle_M4A1.glb",
+   "formato": "glb",
+   "bytes": 499684,
+   "triangulos": 6928,
+   "largo_m": 0.84,
+   "escala": 1.0,
+   "ejes": "+Z = boca del canon, +Y = arriba, +X = izquierda del tirador",
+   "anclaje": {
+    "origen": "centro de la empunadura (mano derecha)",
+    "mano_derecha": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "mano_izquierda": [
+     0.0,
+     0.0645,
+     0.2385
+    ],
+    "culata": [
+     0.0,
+     0.0673,
+     -0.2749
+    ],
+    "boca_canon": [
+     0.0,
+     0.087,
+     0.5636
+    ]
+   },
+   "hueso_mano": "mixamorig:RightHand",
+   "fuente_original": "M4A1.fbx (17-weapons-and-attachments)",
+   "estado": "listo (puntos de agarre medidos)",
+   "licencia": "según el paquete original «17-weapons-and-attachments»: verificar antes de publicar fuera del estudio"
+  },
+  {
+   "id": "rifle_AK47",
+   "categoria": "arma_larga",
+   "ref": "extraction:characters/armas/rifle_AK47.glb",
+   "formato": "glb",
+   "bytes": 379232,
+   "triangulos": 5255,
+   "largo_m": 0.88,
+   "escala": 1.0,
+   "ejes": "+Z = boca del canon, +Y = arriba, +X = izquierda del tirador",
+   "anclaje": {
+    "origen": "centro de la empunadura (mano derecha)",
+    "mano_derecha": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "mano_izquierda": [
+     0.0,
+     0.063,
+     0.351
+    ],
+    "culata": [
+     0.0,
+     -0.009,
+     -0.252
+    ],
+    "boca_canon": [
+     0.0,
+     0.081,
+     0.6312
+    ]
+   },
+   "hueso_mano": "mixamorig:RightHand",
+   "fuente_original": "AK47.fbx (17-weapons-and-attachments)",
+   "estado": "listo (puntos de agarre medidos)",
+   "licencia": "según el paquete original «17-weapons-and-attachments»: verificar antes de publicar fuera del estudio"
+  },
+  {
+   "id": "escopeta_Mossberg",
+   "categoria": "arma_larga",
+   "ref": "extraction:characters/armas/escopeta_Mossberg.glb",
+   "formato": "glb",
+   "bytes": 113060,
+   "triangulos": 1558,
+   "largo_m": 1.0,
+   "escala": 1.0,
+   "ejes": "+Z = boca del canon, +Y = arriba, +X = izquierda del tirador",
+   "anclaje": {
+    "origen": "centro de la empunadura (mano derecha)",
+    "mano_derecha": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "mano_izquierda": [
+     0.0,
+     0.0304,
+     0.426
+    ],
+    "culata": [
+     0.0,
+     -0.0406,
+     -0.2739
+    ],
+    "boca_canon": [
+     0.0,
+     0.0659,
+     0.7222
+    ]
+   },
+   "hueso_mano": "mixamorig:RightHand",
+   "fuente_original": "Mossberg Shotgun.fbx (17-weapons-and-attachments)",
+   "estado": "listo (puntos de agarre medidos)",
+   "licencia": "según el paquete original «17-weapons-and-attachments»: verificar antes de publicar fuera del estudio"
+  },
+  {
+   "id": "francotirador_AWP",
+   "categoria": "arma_larga",
+   "ref": "extraction:characters/armas/francotirador_AWP.glb",
+   "formato": "glb",
+   "bytes": 287596,
+   "triangulos": 3982,
+   "largo_m": 1.18,
+   "escala": 1.0,
+   "ejes": "+Z = boca del canon, +Y = arriba, +X = izquierda del tirador",
+   "anclaje": {
+    "origen": "centro de la empunadura (mano derecha)",
+    "mano_derecha": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "mano_izquierda": [
+     0.0,
+     0.0399,
+     0.2394
+    ],
+    "culata": [
+     0.0,
+     0.016,
+     -0.3072
+    ],
+    "boca_canon": [
+     0.0,
+     0.0718,
+     0.8704
+    ]
+   },
+   "hueso_mano": "mixamorig:RightHand",
+   "fuente_original": "AWP.fbx (17-weapons-and-attachments)",
+   "estado": "listo (puntos de agarre medidos)",
+   "licencia": "según el paquete original «17-weapons-and-attachments»: verificar antes de publicar fuera del estudio"
+  }
+ ],
+ "paquetes_originales": [
+  {
+   "id": "pack1_94weapons",
+   "archivos": [
+    "nexus:armas/pack1_94weapons/all weapons.fbx",
+    "nexus:armas/pack1_94weapons/all weapons.mtl",
+    "nexus:armas/pack1_94weapons/all weapons.obj",
+    "nexus:armas/pack1_94weapons/all weapons1.blend",
+    "nexus:armas/pack1_94weapons/all weapons1.x3d"
+   ],
+   "estado": "original sin procesar: falta separar cada arma, medir escala y puntos de agarre"
+  },
+  {
+   "id": "pack2_armas2",
+   "archivos": [
+    "nexus:armas/pack2_armas2/Obj/untitled.mtl",
+    "nexus:armas/pack2_armas2/Obj/untitled.obj",
+    "nexus:armas/pack2_armas2/fbx/untitled.fbx"
+   ],
+   "estado": "original sin procesar: falta separar cada arma, medir escala y puntos de agarre"
+  },
+  {
+   "id": "pack3_weapons_fbx",
+   "archivos": [
+    "nexus:armas/pack3_weapons_fbx/Weapons.fbx"
+   ],
+   "estado": "original sin procesar: falta separar cada arma, medir escala y puntos de agarre"
+  },
+  {
+   "id": "pack4_weapons_obj",
+   "archivos": [
+    "nexus:armas/pack4_weapons_obj/WeaponsOBJ.obj"
+   ],
+   "estado": "original sin procesar: falta separar cada arma, medir escala y puntos de agarre"
+  }
+ ],
+ "pendiente": [
+  "mochilas",
+  "cascos",
+  "chalecos",
+  "cuchillos",
+  "accesorios"
+ ],
+ "equipo_extraction": "extraction:characters/equipo.json (revisar)"
+}

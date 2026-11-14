@@ -1,0 +1,171 @@
+"""Sonido procedural (sin servicios pagos): ambientes, motor de vehículos y mecanismos, sincronizados con la escena.
+
+Usa las PISTAS que exporta el director (posición de cada cámara y de cada móvil por fotograma), así el motor sube de
+tono con la velocidad real del auto y el volumen y el paneo dependen de la distancia a la cámara de cada toma.
+Sólo necesita numpy. Todo lo generado acá es propio (licencia del estudio) y se puede guardar en la biblioteca.
+
+Cuando se autorice ElevenLabs (ver docs/AUDIO.md) los diálogos, voces y efectos especiales vienen de ahí;
+este módulo sigue cubriendo ambientes y mecanismos baratos de sintetizar.
+"""
+from __future__ import annotations
+import json
+import math
+import wave
+from pathlib import Path
+import numpy as np
+
+SR = 48000
+
+
+def _ruido_color(n, rng, pendiente_db_oct=-3.0, f_baja=20.0, f_alta=20000.0):
+    """Ruido con pendiente espectral (−3 dB/oct rosa, −6 marrón) y banda limitada, filtrado por FFT."""
+    x = rng.standard_normal(n)
+    X = np.fft.rfft(x)
+    f = np.fft.rfftfreq(n, 1 / SR)
+    f[0] = 1.0
+    g = (f / 1000.0) ** (pendiente_db_oct / 6.0206)
+    g[(f < f_baja) | (f > f_alta)] = 0.0
+    y = np.fft.irfft(X * g, n)
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def _env(n, ataque_s, relajo_s):
+    e = np.ones(n)
+    a, r = int(ataque_s * SR), int(relajo_s * SR)
+    if a:
+        e[:a] = np.linspace(0, 1, a)
+    if r:
+        e[-r:] *= np.linspace(1, 0, r)
+    return e
+
+
+def _interp_por_frame(valores_por_frame, n, fps):
+    """Lleva una curva por fotograma a una curva por muestra."""
+    v = np.asarray(valores_por_frame, dtype=float)
+    t_f = np.arange(len(v)) / fps
+    t_s = np.arange(n) / SR
+    return np.interp(t_s, t_f, v)
+
+
+def _espacial(pistas, fuente_pos_por_frame, n):
+    """Ganancia y paneo (−1..1) respecto de la cámara activa en cada fotograma."""
+    fps = pistas["fps"]
+    cam = pistas["camara_activa"]  # lista por fotograma: [x, y, z, dx, dy] (posición y derecha de cámara)
+    g, pan = [], []
+    for i, c in enumerate(cam):
+        p = fuente_pos_por_frame[min(i, len(fuente_pos_por_frame) - 1)]
+        d = math.dist(p, c[:3])
+        g.append(1.0 / (1.0 + d / 6.0))
+        rx, ry = c[3], c[4]
+        lat = ((p[0] - c[0]) * rx + (p[1] - c[1]) * ry) / (d + 1e-6)
+        pan.append(max(-1.0, min(1.0, lat)))
+    return _interp_por_frame(g, n, fps), _interp_por_frame(pan, n, fps)
+
+
+def _a_estereo(mono, ganancia, pan):
+    izq = mono * ganancia * np.sqrt(0.5 * (1 - pan))
+    der = mono * ganancia * np.sqrt(0.5 * (1 + pan))
+    return np.stack([izq, der], axis=1)
+
+
+# ------------------------------------------------------------------------------------------- generadores
+
+def ambiente_noche_suburbio(n, rng):
+    viento = _ruido_color(n, rng, -6, 40, 1200) * 0.35
+    mod = 0.6 + 0.4 * np.sin(np.arange(n) / SR * 2 * np.pi * 0.07 + rng.uniform(0, 6))
+    viento *= mod
+    ciudad = _ruido_color(n, rng, -4.5, 30, 400) * 0.12  # rumor lejano de la ciudad
+    grillos = np.zeros(n)
+    t = 0.0
+    while t < n / SR:
+        f0 = rng.uniform(4200, 4900)
+        for k in range(rng.integers(2, 5)):  # ráfaga de chirridos
+            ini = int((t + k * 0.06) * SR)
+            dur = int(0.035 * SR)
+            if ini + dur >= n:
+                break
+            tt = np.arange(dur) / SR
+            grillos[ini:ini + dur] += np.sin(2 * np.pi * f0 * tt) * np.hanning(dur) * rng.uniform(0.02, 0.06)
+        t += rng.uniform(0.35, 1.4)
+    mono_bajo = viento + ciudad
+    st = np.stack([mono_bajo * 0.9 + grillos * 0.8, mono_bajo * 0.9 + np.roll(grillos, 900) * 0.8], axis=1)
+    return st
+
+
+def motor(pistas, movil, n, rng):
+    fps = pistas["fps"]
+    m = pistas["moviles"][movil]
+    vel = np.abs(np.array([x[3] for x in m]))
+    v = _interp_por_frame(vel, n, fps)
+    rpm_hz = 28 + v * 5.5  # ralentí ~28 Hz de encendido; sube con la velocidad
+    fase = np.cumsum(2 * np.pi * rpm_hz / SR)
+    tono = (np.sin(fase) * 0.6 + np.sin(2 * fase) * 0.35 + np.sin(3 * fase + 0.5) * 0.2 + np.sin(0.5 * fase) * 0.25)
+    aspereza = _ruido_color(n, rng, -3, 60, 2500) * (0.08 + 0.02 * v)
+    carga = 0.45 + np.clip(v / 14.0, 0, 1) * 0.55
+    rodado = _ruido_color(n, rng, -2, 300, 6000) * np.clip(v / 10.0, 0, 1) * 0.35  # gomas sobre asfalto mojado
+    mono = (tono * 0.5 + aspereza) * carga + rodado
+    g, pan = _espacial(pistas, [x[:3] for x in m], n)
+    return _a_estereo(mono, g * 1.4, pan)
+
+
+def mecanismo(pistas, n, rng, inicio_s, duracion_s, pos, tipo="porton_motor"):
+    a, b = int(inicio_s * SR), int((inicio_s + duracion_s) * SR)
+    b = min(b, n)
+    seg = b - a
+    out = np.zeros(n)
+    if seg <= 0:
+        return np.zeros((n, 2))
+    tt = np.arange(seg) / SR
+    if tipo == "porton_motor":
+        zumbido = np.sin(2 * np.pi * 110 * tt) * 0.25 + np.sin(2 * np.pi * 220 * tt) * 0.1
+        roce = _ruido_color(seg, rng, -3, 200, 3000) * 0.15
+        golpe = np.zeros(seg)
+        g_n = int(0.12 * SR)
+        golpe[-g_n:] = _ruido_color(g_n, rng, -6, 40, 800) * np.linspace(1, 0, g_n) * 0.8
+        out[a:b] = (zumbido + roce) * _env(seg, 0.15, 0.25) + golpe
+    else:  # porton_garaje: traqueteo de los paneles al subir
+        trq = np.zeros(seg)
+        for k in np.arange(0, duracion_s, 0.11):
+            i = int(k * SR)
+            d = min(int(0.03 * SR), seg - i)
+            if d > 0:
+                trq[i:i + d] += rng.standard_normal(d) * np.linspace(1, 0, d) * 0.4
+        motor_ = np.sin(2 * np.pi * 90 * tt) * 0.2
+        out[a:b] = (trq + motor_ + _ruido_color(seg, rng, -6, 50, 600) * 0.15) * _env(seg, 0.1, 0.3)
+    fpos = [pos] * len(pistas["camara_activa"])
+    g, pan = _espacial(pistas, fpos, n)
+    return _a_estereo(out, g * 2.5, pan)
+
+
+def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
+    """Genera la mezcla de efectos+ambiente de la escena (WAV 48 kHz estéreo)."""
+    son = manifiesto.get("sonido", {})
+    rng = np.random.default_rng(sum(map(ord, manifiesto["id"])) + manifiesto.get("version", 1))
+    n = int(manifiesto["duracion_s"] * SR)
+    mezcla = np.zeros((n, 2))
+    amb = son.get("ambiente")
+    if amb == "noche_suburbio":
+        mezcla += ambiente_noche_suburbio(n, rng) * 0.5
+    for ev in son.get("eventos", []):
+        if ev["tipo"] == "motor":
+            mezcla += motor(pistas, ev["movil"], n, rng) * ev.get("volumen", 1.0)
+        elif ev["tipo"] in ("porton_motor", "porton_garaje"):
+            pos = pistas["anclas"][ev["ancla"]]
+            mezcla += mecanismo(pistas, n, rng, ev["inicio_s"], ev["duracion_s"], pos, ev["tipo"]) * ev.get("volumen", 1.0)
+    pico = np.abs(mezcla).max() + 1e-9
+    mezcla = mezcla / pico * 0.89
+    salida.parent.mkdir(parents=True, exist_ok=True)
+    pcm = (mezcla * 32767).astype("<i2")
+    with wave.open(str(salida), "wb") as w:
+        w.setnchannels(2)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes(pcm.tobytes())
+    return salida
+
+
+if __name__ == "__main__":
+    import sys
+    m = json.loads(Path(sys.argv[1]).read_text())
+    p = json.loads(Path(sys.argv[2]).read_text())
+    print(generar(m, p, Path(sys.argv[3])))

@@ -1,0 +1,78 @@
+{
+ "formato": 1,
+ "descripcion": "Biblioteca de audio permanente. Cada sonido: id, nombre, categoría, duración, procedencia, licencia, etiquetas, variantes, volumen recomendado.",
+ "sonidos": [
+  {
+   "id": "amb_noche_suburbio",
+   "nombre": "Noche en un barrio residencial",
+   "categoria": "ambiente",
+   "procedencia": "procedural (estudio/audio/procedural.py)",
+   "licencia": "propia",
+   "etiquetas": [
+    "noche",
+    "viento",
+    "grillos",
+    "ciudad lejana"
+   ],
+   "volumen_db": -18,
+   "variantes": "infinitas (semilla)"
+  },
+  {
+   "id": "veh_motor_sedan",
+   "nombre": "Motor de sedán según velocidad",
+   "categoria": "motor",
+   "procedencia": "procedural",
+   "licencia": "propia",
+   "etiquetas": [
+    "auto",
+    "motor",
+    "gomas",
+    "asfalto mojado"
+   ],
+   "volumen_db": -12,
+   "sincronizado": "velocidad del vehículo por fotograma"
+  },
+  {
+   "id": "mec_porton_motor",
+   "nombre": "Portón batiente con motor",
+   "categoria": "puertas",
+   "procedencia": "procedural",
+   "licencia": "propia",
+   "etiquetas": [
+    "porton",
+    "motor",
+    "golpe final"
+   ],
+   "volumen_db": -14
+  },
+  {
+   "id": "mec_porton_garaje",
+   "nombre": "Portón seccional de garaje",
+   "categoria": "puertas",
+   "procedencia": "procedural",
+   "licencia": "propia",
+   "etiquetas": [
+    "garaje",
+    "traqueteo"
+   ],
+   "volumen_db": -14
+  }
+ ],
+ "fuentes_existentes_para_importar": [
+  {
+   "ref": "extraction:audio/weapons",
+   "contenido": "disparos de rifle, pistola y escopeta (OGG)",
+   "licencia": "verificar"
+  },
+  {
+   "ref": "nexus:audio/elevenlabs",
+   "contenido": "voces generadas con ElevenLabs para Operación Nexus",
+   "licencia": "según la cuenta de ElevenLabs del dueño"
+  },
+  {
+   "ref": "nexus:audio/muestras",
+   "contenido": "muestras de voces (operadoras, jugador)",
+   "licencia": "según la cuenta de ElevenLabs del dueño"
+  }
+ ]
+}

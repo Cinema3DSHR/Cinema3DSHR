@@ -1,0 +1,16 @@
+# Salidas de render y temporales: NUNCA al historial de Git (van a Releases)
+/salida/
+/tmp/
+*.blend1
+__pycache__/
+*.pyc
+# Godot
+app/.godot/
+app/export/
+*.apk
+*.aab
+*.keystore
+*.jks
+# Secretos locales
+.env
+*.secret

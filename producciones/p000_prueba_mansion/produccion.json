@@ -1,0 +1,10 @@
+{
+  "tipo": "produccion",
+  "id": "p000_prueba_mansion",
+  "titulo": "Prueba 000 — Llegada a la mansión",
+  "genero": "Prueba técnica · Suspenso",
+  "sinopsis": "Escena de prueba de la Etapa 3: de noche, un auto llega a una mansión moderna, entra por el portón y se guarda en el garaje, mientras la sala de seguridad lo vigila.",
+  "clase": "escena",
+  "creada": "2026-11-14",
+  "escenas": ["e01"]
+}

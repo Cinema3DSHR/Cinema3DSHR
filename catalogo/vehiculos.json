@@ -1,0 +1,48 @@
+{
+ "formato": 1,
+ "vehiculos": [
+  {
+   "id": "sedan_procedural",
+   "modelo": "procedural:sedan",
+   "categoria": "auto",
+   "estado": "listo",
+   "licencia": "propio (genérico, sin marca)",
+   "anclas": [
+    "asiento_conductor",
+    "puerta_conductor",
+    "rueda_del_izq",
+    "rueda_tras_izq",
+    "capot",
+    "baul",
+    "techo"
+   ],
+   "ruedas": 4,
+   "luces": [
+    "faros",
+    "traseras"
+   ]
+  },
+  {
+   "id": "auto_nexus",
+   "ref": "nexus:vehiculos/sputnik_jfkennedy_car.glb",
+   "categoria": "auto",
+   "estado": "sin procesar: falta identificar ruedas/puertas, escala y verificar licencia y derechos de diseño (modelo de un auto real)",
+   "licencia": "desconocida"
+  }
+ ],
+ "esquema_anclas": {
+  "ruedas": "nombres de nodo que giran sobre X local",
+  "puertas": "nodos con bisagra (eje y ángulo de apertura)",
+  "asientos": "posición y orientación de ocupantes",
+  "luces": "faros, traseras, sirenas"
+ },
+ "animaciones_previstas": [
+  "conduccion",
+  "entrada",
+  "salida",
+  "persecucion",
+  "frenado",
+  "derrape",
+  "colision"
+ ]
+}

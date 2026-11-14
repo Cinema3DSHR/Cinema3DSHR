@@ -1,0 +1,12 @@
+{
+  "tipo": "escenario",
+  "id": "mansion_moderna_noche",
+  "nombre": "Mansión moderna de lujo — noche",
+  "generador": "mansion_moderna",
+  "parametros": {"suelo_mojado": true, "niebla": 0.0, "arboles": 26, "arbustos": 70, "ciudad_fondo": true, "semilla": 7},
+  "descripcion": "Mansión de dos plantas (planta baja vidriada y planta alta en voladizo de madera), garaje con portón seccional, sala de seguridad con monitores, living, cocina, dormitorio, piscina iluminada, jardín, muro perimetral con portón batiente, camino de entrada de asfalto mojado, calle con farolas y ciudad lejana.",
+  "etiquetas": ["mansion", "casa", "lujo", "moderna", "noche", "exterior", "interior", "piscina", "garaje", "seguridad"],
+  "anclas": ["porton", "garaje", "explanada_garaje", "entrada", "piscina", "sala_seguridad", "monitores", "living", "camara_vigilancia", "calle_oeste", "calle_este", "centro_casa"],
+  "acciones": ["abrir_porton", "abrir_garaje"],
+  "version": 1
+}

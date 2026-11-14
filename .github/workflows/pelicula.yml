@@ -1,0 +1,78 @@
+name: Película completa (montaje final)
+
+# Une las escenas APROBADAS de una producción en un MP4 H.264 (y un OGV para verla en la app).
+# Si falta aprobar alguna escena, no monta y lo informa.
+on:
+  workflow_dispatch:
+    inputs:
+      produccion: {description: "Id de la producción", required: true}
+      resolucion: {description: "1080p | 720p | 4k", required: false, default: "1080p"}
+      fps: {description: "24 | 30 | 60", required: false, default: "30"}
+      issue: {description: "Issue para responder (opcional)", required: false, default: ""}
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            estudio
+            config
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Escenas aprobadas
+        id: esc
+        env:
+          P: ${{ inputs.produccion }}
+        run: |
+          sudo apt-get install -y -qq ffmpeg >/dev/null
+          R=${{ github.repository }}
+          curl -sfL "https://github.com/$R/releases/download/catalogo/catalogo.json" -o catalogo.json
+          python3 - <<'PY'
+          import json, os
+          cat = json.load(open("catalogo.json"))
+          p = next(x for x in cat["producciones"] if x["id"] == os.environ["P"])
+          urls, faltan = [], []
+          for e in p["escenas"]:
+              ap = [v for v in e["versiones"] if v["estado"] == "aprobada" and "mp4" in v["archivos"]]
+              if ap:
+                  urls.append(ap[-1]["archivos"]["mp4"]["url"])
+              else:
+                  faltan.append(f"{e['id']} ({e['titulo']})")
+          open("urls.txt", "w").write("\n".join(urls))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"faltan={'; '.join(faltan)}\n")
+          PY
+      - name: Montar y publicar
+        if: steps.esc.outputs.faltan == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          P: ${{ inputs.produccion }}
+        run: |
+          R=${{ github.repository }}
+          mkdir -p esc && i=0
+          while read -r u; do i=$((i+1)); curl -sfL "$u" -o "esc/$(printf %03d $i).mp4"; done < urls.txt
+          case "${{ inputs.resolucion }}" in 4k) W=3840;; 720p) W=1280;; *) W=1920;; esac
+          python3 -c "
+          from pathlib import Path; from estudio import montaje as M
+          M.unir_pelicula(sorted(Path('esc').glob('*.mp4')), Path('pelicula_final.mp4'), ancho=$W, fps=int('${{ inputs.fps }}'))"
+          ffmpeg -loglevel error -y -i pelicula_final.mp4 -vf "scale='min(1280,iw)':-2" -c:v libtheora -q:v 7 -c:a libvorbis -q:a 4 pelicula_final.ogv
+          gh release upload "$P" pelicula_final.mp4 pelicula_final.ogv --repo "$R" --clobber
+          [ -n "${{ inputs.issue }}" ] && gh issue comment "${{ inputs.issue }}" --repo "$R" --body "🎬 Película montada: https://github.com/$R/releases/download/$P/pelicula_final.mp4" || true
+      - name: Avisar que faltan aprobaciones
+        if: steps.esc.outputs.faltan != '' && inputs.issue != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue comment "${{ inputs.issue }}" --repo "${{ github.repository }}" --body "No se montó: faltan aprobar ${{ steps.esc.outputs.faltan }}."
+
+  catalogo:
+    needs: montar
+    uses: ./.github/workflows/catalogo.yml

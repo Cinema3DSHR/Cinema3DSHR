@@ -1,0 +1,87 @@
+name: Revisiones desde la app
+
+# La app Android crea un Issue "[REVISIÓN] …" con un bloque JSON (decisión sobre una escena y versión).
+# SÓLO se atienden los del dueño del repositorio (cualquiera puede abrir issues en un repo público).
+#   APROBAR / RECHAZAR → se registra y se cierra (el catálogo pasa la escena a aprobada/rechazada)
+#   CORREGIR           → queda ABIERTO con la etiqueta "correccion" para que Claude lo trabaje
+#   RENDERIZAR         → vuelve a renderizar esa versión (salvo que esté aprobada)
+#   EXPORTAR           → monta la película completa con las escenas aprobadas
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+jobs:
+  atender:
+    if: startsWith(github.event.issue.title, '[REVISIÓN]') && github.event.issue.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            producciones
+      - name: Leer la decisión
+        id: d
+        env:
+          CUERPO: ${{ github.event.issue.body }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          m = re.search(r"```json\s*(\{.*?\})\s*```", os.environ["CUERPO"], re.S)
+          d = json.loads(m.group(1)) if m else {}
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              for k in ("produccion", "escena", "version", "decision", "resolucion", "fps"):
+                  v = str(d.get(k, "")).replace("\n", " ")
+                  f.write(f"{k}={v}\n")
+          PY
+      - name: Atender
+        env:
+          GH_TOKEN: ${{ github.token }}
+          N: ${{ github.event.issue.number }}
+          P: ${{ steps.d.outputs.produccion }}
+          E: ${{ steps.d.outputs.escena }}
+          V: ${{ steps.d.outputs.version }}
+          D: ${{ steps.d.outputs.decision }}
+          RES: ${{ steps.d.outputs.resolucion }}
+          FPS: ${{ steps.d.outputs.fps }}
+        run: |
+          R=${{ github.repository }}
+          for L in revision correccion; do gh label create "$L" --repo "$R" --force --color "e8b04a" >/dev/null 2>&1 || true; done
+          gh issue edit "$N" --repo "$R" --add-label revision
+          PIE=$'\n\n---\n_Respuesta automática del estudio (flujo «Revisiones desde la app»)._'
+          RUTA="producciones/$P/escenas/$E/v$V/escena.json"
+          case "$D" in
+            APROBAR)
+              gh issue comment "$N" --repo "$R" --body "✔ **Aprobada**: $P · $E v$V. Queda bloqueada: no se vuelve a renderizar por accidente.$PIE"
+              gh issue close "$N" --repo "$R" --reason completed ;;
+            RECHAZAR)
+              gh issue comment "$N" --repo "$R" --body "✖ **Rechazada**: $P · $E v$V. Claude preparará una versión nueva cuando se le pida.$PIE"
+              gh issue close "$N" --repo "$R" --reason completed ;;
+            CORREGIR)
+              gh issue edit "$N" --repo "$R" --add-label correccion
+              gh issue comment "$N" --repo "$R" --body "✎ **Correcciones registradas** para $P · $E v$V. Quedan pendientes para Claude (que creará la v$((V+1)) sin tocar las demás escenas).$PIE" ;;
+            RENDERIZAR)
+              if [ ! -f "$RUTA" ]; then
+                gh issue comment "$N" --repo "$R" --body "No existe $RUTA.$PIE"
+              elif grep -q '"bloqueada": true' "$RUTA"; then
+                gh issue comment "$N" --repo "$R" --body "La versión está APROBADA y bloqueada: no se vuelve a renderizar.$PIE"
+              else
+                gh workflow run render.yml --repo "$R" --ref "${{ github.event.repository.default_branch }}" -f escena="$RUTA" -f forzar=true -f calidad=revision
+                gh issue comment "$N" --repo "$R" --body "⟳ **Render en cola** para $P · $E v$V. La app la mostrará cuando termine.$PIE"
+              fi
+              gh issue close "$N" --repo "$R" --reason completed ;;
+            EXPORTAR)
+              gh workflow run pelicula.yml --repo "$R" --ref "${{ github.event.repository.default_branch }}" -f produccion="$P" \
+                -f resolucion="$RES" -f fps="$FPS" -f issue="$N"
+              gh issue comment "$N" --repo "$R" --body "🎬 **Montaje final en cola** ($P, $RES, $FPS FPS).$PIE" ;;
+            *)
+              gh issue comment "$N" --repo "$R" --body "Decisión no reconocida.$PIE" ;;
+          esac
+
+  catalogo:
+    needs: atender
+    uses: ./.github/workflows/catalogo.yml

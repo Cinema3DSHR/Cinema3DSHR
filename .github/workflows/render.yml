@@ -1,0 +1,214 @@
+name: Render de escenas
+
+# Renderiza en paralelo (una máquina por TOMA), monta la escena y publica los entregables en la release
+# de la producción. Se dispara solo cuando se sube una versión nueva de una escena (escena.json) o un escenario,
+# a mano desde Actions, o desde la app (VOLVER A RENDERIZAR → flujo "Revisiones").
+# Nunca vuelve a renderizar una versión ya publicada salvo "forzar", ni una versión APROBADA.
+on:
+  push:
+    paths: ["producciones/**/escena.json", "escenarios/**/escenario.json"]
+  workflow_dispatch:
+    inputs:
+      escena:
+        description: "Ruta del escena.json (vacío = sólo lo que cambió en el último push)"
+        required: false
+        default: ""
+      calidad:
+        description: "previa | revision | final | final4k"
+        required: false
+        default: "revision"
+      forzar:
+        description: "Volver a renderizar aunque ya esté publicada"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: render-${{ github.ref }}-${{ inputs.escena || 'push' }}
+  cancel-in-progress: false
+
+jobs:
+  planificar:
+    runs-on: ubuntu-latest
+    outputs:
+      tomas: ${{ steps.plan.outputs.tomas }}
+      escenas: ${{ steps.plan.outputs.escenas }}
+      escenarios: ${{ steps.plan.outputs.escenarios }}
+      calidad: ${{ steps.plan.outputs.calidad }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Qué hay que renderizar
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENTRADA: ${{ inputs.escena }}
+          FORZAR: ${{ inputs.forzar }}
+          ANTES: ${{ github.event.before }}
+        run: |
+          R=${{ github.repository }}
+          if [ -n "$ENTRADA" ]; then
+            echo "$ENTRADA" > cambiados.txt
+          elif [ -n "$ANTES" ] && [ "$ANTES" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$ANTES" 2>/dev/null; then
+            git diff --name-only --diff-filter=AM "$ANTES" "${{ github.sha }}" > cambiados.txt
+          else
+            git ls-files > cambiados.txt
+          fi
+          gh api "repos/$R/releases?per_page=100" --paginate | jq -s 'add // []' > releases.json
+          curl -sfL "https://github.com/$R/releases/download/catalogo/catalogo.json" -o catalogo.json || echo '{}' > catalogo.json
+          python3 - <<'PY'
+          import json, os, re, sys
+          sys.path.insert(0, ".")
+          from estudio import manifiesto as MF
+          cambiados = [l.strip() for l in open("cambiados.txt") if l.strip()]
+          rel = {r["tag_name"]: {a["name"] for a in r.get("assets", [])} for r in json.load(open("releases.json"))}
+          cat = json.load(open("catalogo.json"))
+          aprobadas = {(p["id"], e["id"], v["version"]) for p in cat.get("producciones", []) for e in p["escenas"]
+                       for v in e["versiones"] if v["estado"] == "aprobada"}
+          forzar = os.environ.get("FORZAR") == "true"
+          tomas, escenas, escenarios = [], [], []
+          for ruta in cambiados:
+              if re.match(r"producciones/[^/]+/escenas/[^/]+/v\d+/escena\.json$", ruta) and os.path.exists(ruta):
+                  m = MF.leer(ruta)
+                  errs = MF.validar(m)
+                  if errs:
+                      print(f"::error::{ruta} inválido: {errs}"); sys.exit(1)
+                  eid = m["id"].split("-")[-1]
+                  clave = f"{m['produccion']}__{eid}__v{m['version']}"
+                  if m.get("bloqueada") or (m["produccion"], eid, m["version"]) in aprobadas:
+                      print(f"::notice::{clave} está APROBADA: no se vuelve a renderizar"); continue
+                  if f"{eid}_v{m['version']}_info.json" in rel.get(m["produccion"], set()) and not forzar:
+                      print(f"::notice::{clave} ya está publicada (usar 'forzar' para repetir)"); continue
+                  escenas.append({"escena": ruta, "clave": clave, "produccion": m["produccion"]})
+                  for t in m["tomas"]:
+                      tomas.append({"escena": ruta, "clave": clave, "toma": t["id"]})
+              elif re.match(r"escenarios/[^/]+/escenario\.json$", ruta) and os.path.exists(ruta):
+                  escenarios.append(ruta)
+          print("tomas:", len(tomas), "escenas:", len(escenas), "escenarios:", len(escenarios))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"tomas={json.dumps(tomas)}\nescenas={json.dumps(escenas)}\nescenarios={json.dumps(escenarios)}\n")
+          PY
+          echo "calidad=${{ inputs.calidad || 'revision' }}" >> $GITHUB_OUTPUT
+
+  render:
+    needs: planificar
+    if: needs.planificar.outputs.tomas != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        item: ${{ fromJSON(needs.planificar.outputs.tomas) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-produccion.txt
+      - name: Blender (bpy) y dependencias
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg fonts-dejavu-core >/dev/null
+          pip install -q -r requirements-produccion.txt
+          python -c "import bpy; print('Blender', bpy.app.version_string)"
+      - name: Renderizar toma ${{ matrix.item.toma }}
+        run: python -m estudio render "${{ matrix.item.escena }}" --toma "${{ matrix.item.toma }}" --calidad "${{ needs.planificar.outputs.calidad }}" --salida out/tomas ${{ inputs.forzar && '--forzar' || '' }} 2>&1 | grep -vE "EGL|CUEW|^$|Saved:|Fra:" | tail -n 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: toma__${{ matrix.item.clave }}__${{ matrix.item.toma }}
+          path: |
+            out/tomas/${{ matrix.item.toma }}.mp4
+            out/tomas/informe_${{ matrix.item.toma }}.json
+          retention-days: 2
+
+  cerrar:
+    needs: [planificar, render]
+    if: needs.planificar.outputs.escenas != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        item: ${{ fromJSON(needs.planificar.outputs.escenas) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-produccion.txt
+      - name: Blender (bpy) y dependencias
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg fonts-dejavu-core >/dev/null
+          pip install -q -r requirements-produccion.txt
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: toma__${{ matrix.item.clave }}__*
+          path: out/tomas
+          merge-multiple: true
+      - name: Montaje, audio, visor 3D y proyecto
+        run: python -m estudio cerrar "${{ matrix.item.escena }}" --tomas out/tomas --calidad "${{ needs.planificar.outputs.calidad }}" --salida out/entrega 2>&1 | grep -vE "EGL|CUEW|^$" | tail -n 60
+      - name: Publicar en la release de la producción
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          R=${{ github.repository }}
+          P="${{ matrix.item.produccion }}"
+          gh release view "$P" --repo "$R" >/dev/null 2>&1 || \
+            gh release create "$P" --repo "$R" --title "Producción $P" --latest=false \
+              --notes "Entregables de la producción $P (videos de revisión temporales, escena 3D para el visor, proyecto .blend). Los manifiestos y recetas están en producciones/$P."
+          cd out/entrega
+          ls -la
+          # el info.json se sube al final: marca la versión como publicada
+          gh release upload "$P" $(ls *_v*_* | grep -v '_info.json$') --repo "$R" --clobber
+          gh release upload "$P" *_info.json --repo "$R" --clobber
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: fallo__${{ matrix.item.clave }}
+          path: out/entrega
+          retention-days: 3
+
+  escenarios:
+    needs: planificar
+    if: needs.planificar.outputs.escenarios != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        ruta: ${{ fromJSON(needs.planificar.outputs.escenarios) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: requirements-produccion.txt
+      - name: Blender (bpy)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q -r requirements-produccion.txt
+      - name: Construir escenario y versión para el visor
+        run: python -m estudio escenario "${{ matrix.ruta }}" --salida out/escenarios 2>&1 | grep -vE "EGL|CUEW|^$|Saved:" | tail -n 20
+      - name: Publicar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          R=${{ github.repository }}
+          gh release view escenarios --repo "$R" >/dev/null 2>&1 || \
+            gh release create escenarios --repo "$R" --title "Escenarios" --latest=false --notes "Escenarios reutilizables: versión liviana para el visor 3D y portada."
+          gh release upload escenarios out/escenarios/* --repo "$R" --clobber
+
+  catalogo:
+    needs: [cerrar, escenarios]
+    if: always() && (needs.cerrar.result == 'success' || needs.escenarios.result == 'success')
+    uses: ./.github/workflows/catalogo.yml

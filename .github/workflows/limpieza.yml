@@ -1,0 +1,55 @@
+name: Limpieza de temporales
+
+# Borra SÓLO videos de revisión (MP4/OGV) de versiones reemplazadas o rechazadas, según config/retencion.json.
+# Nunca borra: la versión actual de cada escena, versiones aprobadas, proyectos .blend, GLB, portadas,
+# manifiestos ni recursos originales. Desde Actions se puede correr en modo simulación.
+on:
+  schedule:
+    - cron: "41 7 * * 1"
+  workflow_dispatch:
+    inputs:
+      ejecutar: {description: "Borrar de verdad (si no, sólo lista)", type: boolean, default: false}
+
+permissions:
+  contents: write
+
+jobs:
+  limpiar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            estudio
+            config
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Plan y borrado
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EJECUTAR: ${{ github.event_name == 'schedule' || inputs.ejecutar }}
+        run: |
+          R=${{ github.repository }}
+          curl -sfL "https://github.com/$R/releases/download/catalogo/catalogo.json" -o catalogo.json
+          gh api "repos/$R/releases?per_page=100" --paginate | jq -s 'add // []' > releases.json
+          python -m estudio limpieza --catalogo catalogo.json > plan.json
+          cat plan.json
+          python3 - <<'PY'
+          import json, os, subprocess
+          plan = json.load(open("plan.json"))
+          ids = {a["browser_download_url"]: a["id"] for r in json.load(open("releases.json")) for a in r["assets"]}
+          total = 0
+          for p in plan:
+              nombre = p["url"].rsplit("/", 1)[-1]
+              assert nombre.endswith(("_revision.mp4", "_revision.ogv")), nombre  # doble seguro: sólo temporales
+              total += p["bytes"]
+              if os.environ["EJECUTAR"] == "true" and p["url"] in ids:
+                  subprocess.run(["gh", "api", "-X", "DELETE", f"repos/{os.environ['GITHUB_REPOSITORY']}/releases/assets/{ids[p['url']]}"], check=True)
+                  print("borrado", nombre)
+          print(f"{len(plan)} temporales, {total/1e6:.1f} MB", "BORRADOS" if os.environ["EJECUTAR"] == "true" else "(simulación)")
+          PY
+
+  catalogo:
+    needs: limpiar
+    uses: ./.github/workflows/catalogo.yml
