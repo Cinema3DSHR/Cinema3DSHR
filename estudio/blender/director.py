@@ -255,7 +255,22 @@ def render_tomas(res: dict, carpeta: Path, solo: list[str] | None = None, cada: 
 
 
 def guardar_blend(ruta: Path):
+    """Guarda el proyecto editable. Se descartan los clips de las bibliotecas que la escena no usa (el modelo de
+    fútbol trae 3 223): se pueden volver a cargar en cualquier momento desde el recurso original."""
     ruta.parent.mkdir(parents=True, exist_ok=True)
+    usadas = set()
+    for o in bpy.data.objects:
+        ad = o.animation_data
+        if ad:
+            if ad.action:
+                usadas.add(ad.action)
+            for tr in ad.nla_tracks:
+                for st in tr.strips:
+                    if st.action:
+                        usadas.add(st.action)
+    for a in list(bpy.data.actions):
+        if a not in usadas:
+            bpy.data.actions.remove(a)
     bpy.ops.wm.save_as_mainfile(filepath=str(ruta), compress=True)
 
 

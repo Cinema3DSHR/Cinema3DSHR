@@ -30,6 +30,7 @@ MODELOS = {
     "futbol:jugador": {
         "ref": "mixamo:futbol_free_kick_swipe/exportados/jugador_con_animaciones.glb",
         "texturas": "mixamo:futbol_free_kick_swipe/02_jugador/assets/characters/player",
+        "raices": "mixamo:futbol_free_kick_swipe/raices_clips.json",
         "raiz": "Rig", "armadura": "Armature", "malla": "TripoBodyMesh", "ocultar": ["Icosphere"],
         "cadera": "mixamorig_Hips", "pie_der": "mixamorig_RightToeBase", "pie_izq": "mixamorig_LeftToeBase",
         "cabeza": "mixamorig_Head", "mano_der": "mixamorig_RightHand",
@@ -212,6 +213,7 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
     # mismo truco de giro: el Rig de Godot viene con Y arriba ya convertido; +X es el frente
     pista = arm.animation_data.nla_tracks.new()
     pista.name = "acciones"
+    raices = _raices(info)
     pos = Vector((0, 0, 0))
     rumbo = 0.0
     tramos = []
@@ -221,25 +223,16 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
         if accion is None:
             raise KeyError(f"El clip {ac['clip']} no está en {spec.get('modelo')} (ver catalogo/futbol.json)")
         f0 = int(round(ac["inicio_s"] * fps)) + 1
-        a0, a1 = accion.frame_range
         vel = ac.get("velocidad", 1.0)
         rep = ac.get("repetir", 1)
         if ac.get("encadenar") and tramos:
-            cadera_fin, rumbo = _fin_de_tramo(arm, raiz, tramos[-1], info["cadera"])
-            if "mirando_deg" in ac:
-                rumbo = math.radians(ac["mirando_deg"])
-            ini = Matrix.Rotation(rumbo, 3, "Z") @ _cadera_local(arm, raiz, accion, a0, info["cadera"])
-            pos = cadera_fin - ini
+            pos, rumbo = tramos[-1]["pos"], tramos[-1]["rumbo"]  # se recalcula abajo con el recorrido real
         else:
             if "pos" in ac:
                 p = ac["pos"]
                 pos = Vector((p[0], p[1], p[2] if len(p) > 2 else 0.0))
             if "mirando_deg" in ac:
                 rumbo = math.radians(ac["mirando_deg"])
-        raiz.location = pos
-        raiz.rotation_euler = (0, 0, rumbo)
-        raiz.keyframe_insert("location", frame=f0)
-        raiz.keyframe_insert("rotation_euler", frame=f0)
         if tramos and tramos[-1]["strip"].frame_end > f0 - 0.01:
             # el tramo anterior (o sus repeticiones) se corta donde empieza este
             tramos[-1]["strip"].frame_end = f0 - 0.01
@@ -249,21 +242,70 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
         st.repeat = rep
         st.blend_in = st.blend_out = 0
         st.extrapolation = "HOLD"
-        fin = st.frame_end
-        tramos.append({"accion": accion, "f0": f0, "fin": fin, "pos": pos.copy(), "rumbo": rumbo, "strip": st})
-        ultimo_fin = fin
-    # las claves de ubicación son escalones (cada tramo arranca en su lugar)
-    if raiz.animation_data and raiz.animation_data.action:
-        for fc in K._fcurves(raiz.animation_data.action):
-            for k in fc.keyframe_points:
-                k.interpolation = "CONSTANT"
-    # recortar cada tramo para que no se pise con el siguiente
-    for a, b in zip(tramos, tramos[1:]):
-        if a["strip"].frame_end > b["f0"]:
-            a["strip"].frame_end = b["f0"]
-            a["fin"] = b["f0"]
+        tramos.append({"accion": accion, "f0": f0, "fin": st.frame_end, "pos": pos.copy(), "rumbo": rumbo,
+                       "strip": st, "raiz": raices.get(ac["clip"], {}), "vel": vel, "rep": rep})
+    # recortes por superposición ya aplicados: ahora el desplazamiento (root_path) cuadro por cuadro
+    for k, tr in enumerate(tramos):
+        f_fin = int(tramos[k + 1]["f0"]) - 1 if k + 1 < len(tramos) else int(tr["fin"])
+        if k > 0 and spec["acciones"][k].get("encadenar"):
+            tr["pos"], tr["rumbo"] = tramos[k - 1]["pos_fin"], (math.radians(spec["acciones"][k]["mirando_deg"])
+                                                                 if "mirando_deg" in spec["acciones"][k]
+                                                                 else tramos[k - 1]["rumbo_fin"])
+        pf, rf = tr["pos"], tr["rumbo"]
+        for f in range(tr["f0"], f_fin + 1):
+            pf, rf = _raiz_en(tr, (f - tr["f0"]) / fps)
+            raiz.location = pf
+            raiz.rotation_euler = (0, 0, rf)
+            raiz.keyframe_insert("location", frame=f)
+            raiz.keyframe_insert("rotation_euler", frame=f)
+        tr["pos_fin"], tr["rumbo_fin"] = pf, rf
+        ultimo_fin = max(ultimo_fin, f_fin)
     return {"id": pid, "raiz": raiz, "armadura": arm, "malla": malla, "tramos": tramos, "info": info,
             "fin": ultimo_fin}
+
+
+_RAICES: dict[str, dict] = {}
+
+
+def _raices(info: dict) -> dict:
+    ref = info.get("raices")
+    if not ref:
+        return {}
+    if ref not in _RAICES:
+        import json
+        _RAICES[ref] = json.loads(config.resolver(ref).read_text())
+    return _RAICES[ref]
+
+
+def _raiz_en(tr: dict, t: float):
+    """Posición y rumbo de la raíz a t segundos del inicio del tramo, como SpActor.body_at del juego:
+    origen + adelante·x + derecha·y (root_path a 30 fps) y giro del cuerpo si el clip es de tipo "turn"."""
+    datos = tr["raiz"]
+    rp = datos.get("root_path") or []
+    t_clip = t * tr["vel"]
+    rumbo0 = tr["rumbo"]
+    if len(rp) < 2:
+        return tr["pos"].copy(), rumbo0
+    largo = (len(rp) - 1) / 30.0
+    vuelta = int(t_clip // largo) if t_clip >= largo else 0
+    vuelta = min(vuelta, tr["rep"] - 1) if tr["rep"] > 1 else 0
+    tl = min(t_clip - vuelta * largo, largo)
+    fi = tl * 30.0
+    i = min(int(fi), len(rp) - 2)
+    a = fi - i
+    rx = rp[i][0] + (rp[i + 1][0] - rp[i][0]) * a + vuelta * rp[-1][0]
+    ry = rp[i][1] + (rp[i + 1][1] - rp[i][1]) * a + vuelta * rp[-1][1]
+    adelante = Vector((math.cos(rumbo0), math.sin(rumbo0), 0))
+    derecha = Vector((math.sin(rumbo0), -math.cos(rumbo0), 0))
+    pos = tr["pos"] + adelante * rx + derecha * ry
+    rumbo = rumbo0
+    hp = datos.get("heading_path") or []
+    if datos.get("meta", {}).get("heading_mode") == "turn" and len(hp) > 1:
+        # igual que ActionMotion.heading_rel: grados, relativos al primer cuadro, + = izquierda
+        fh = min(tl * 30.0, len(hp) - 1.0)
+        j = min(int(fh), len(hp) - 2)
+        rumbo = rumbo0 + math.radians(hp[j] + (hp[j + 1] - hp[j]) * (fh - j) - hp[0])
+    return pos, rumbo
 
 
 def _cadera_local(arm, raiz, accion, frame: float, cadera: str) -> Vector:

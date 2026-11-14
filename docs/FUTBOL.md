@@ -35,7 +35,10 @@ física real. Recursos originales (sin modificar) en **mixamo-respaldo/futbol_fr
   ]}]
 ```
 - `mirando_deg`: 0 = hacia el arco de x = +52,5; 180 = hacia el otro arco.
-- `encadenar`: el clip empieza donde terminó la cadera del anterior (las carreras no "vuelven" al origen).
+- Los clips del GLB son **en el lugar**: el estudio mueve al jugador con la curva de raíz de cada clip
+  (`raices_clips.json`: `root_path` adelante/derecha a 30 fps y `heading_path` para los giros), igual que
+  `SpActor.body_at` del juego. Así la carrera del tiro libre recorre ~6,6 m de verdad y el arquero se tira de costado.
+- `encadenar`: el clip empieza donde terminó el anterior (posición y rumbo finales).
 - Si un clip con `repetir` se superpone con el siguiente, se corta solo.
 
 ## Pelota
