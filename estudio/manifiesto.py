@@ -122,4 +122,5 @@ def dependencias(m: dict) -> list[str]:
             deps.update(ast.literal_eval(nodo.value))
     for pj in m.get("personajes", []):
         deps.update(MODELOS_DEPS.get(pj.get("modelo", "futbol:jugador"), []))
+        deps.update(a["clip"] for a in pj.get("acciones", []) if str(a.get("clip", "")).startswith("mixamo:"))
     return sorted(deps)

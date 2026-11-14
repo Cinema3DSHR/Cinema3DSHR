@@ -26,8 +26,96 @@
    "id": "auto_nexus",
    "ref": "nexus:vehiculos/sputnik_jfkennedy_car.glb",
    "categoria": "auto",
-   "estado": "sin procesar: falta identificar ruedas/puertas, escala y verificar licencia y derechos de diseño (modelo de un auto real)",
+   "estado": "sin procesar; representa un auto real: verificar licencia y derechos de diseño",
    "licencia": "desconocida"
+  },
+  {
+   "id": "auto_clasico_falcon",
+   "nombre": "Auto clásico «Falcon» (azul)",
+   "ref": "mixamo:modelos_pelicula/auto_clasico_falcon.glb",
+   "categoria": "auto",
+   "escala_real_estimada_m": 5.0,
+   "eje_largo": "Y",
+   "poligonos": 445288,
+   "estado": "importable (GLB Tripo3D); carrocería sin ruedas, sin interior visible; falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D); Su nombre evoca un modelo real de fabricante: no mostrar logos ni sugerir marcas."
+  },
+  {
+   "id": "pickup_arena",
+   "nombre": "Pickup 4×4 blanca de arena",
+   "ref": "mixamo:modelos_pelicula/pickup_arena.glb",
+   "categoria": "camioneta",
+   "escala_real_estimada_m": 5.6,
+   "eje_largo": "Y",
+   "poligonos": 504938,
+   "estado": "importable (GLB Tripo3D); carrocería sin ruedas; falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D)"
+  },
+  {
+   "id": "vehiculo_blindado_policial",
+   "nombre": "Vehículo blindado policial «POLICIA»",
+   "ref": "mixamo:modelos_pelicula/vehiculo_blindado_policial.glb",
+   "categoria": "vehiculo_policial",
+   "escala_real_estimada_m": 5.6,
+   "eje_largo": "X",
+   "poligonos": 503741,
+   "estado": "importable (GLB Tripo3D); carrocería sin ruedas; cartel «POLICIA» pintado en la puerta; falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D); Lleva la palabra POLICIA pintada: usarlo sólo en ficción."
+  },
+  {
+   "id": "helicoptero_militar",
+   "nombre": "Helicóptero militar (fuselaje)",
+   "ref": "mixamo:modelos_pelicula/helicoptero_militar.glb",
+   "categoria": "helicoptero",
+   "escala_real_estimada_m": 15.0,
+   "eje_largo": "X",
+   "poligonos": 507568,
+   "estado": "importable (GLB Tripo3D); fuselaje sin rotores ni rotor de cola; falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D)"
+  },
+  {
+   "id": "locomotora_diesel",
+   "nombre": "Locomotora diésel roja y blanca",
+   "ref": "mixamo:modelos_pelicula/locomotora_diesel.glb",
+   "categoria": "tren",
+   "escala_real_estimada_m": 18.0,
+   "eje_largo": "Y",
+   "poligonos": 504130,
+   "estado": "importable (GLB Tripo3D); sin bogies/ruedas separables (una sola malla); falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D)"
+  },
+  {
+   "id": "vagon_cerrado",
+   "nombre": "Vagón de carga cerrado (rojo)",
+   "ref": "mixamo:modelos_pelicula/vagon_cerrado.glb",
+   "categoria": "tren",
+   "escala_real_estimada_m": 13.7,
+   "eje_largo": "X",
+   "poligonos": 483194,
+   "estado": "importable (GLB Tripo3D); una sola malla; falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D)"
+  },
+  {
+   "id": "vagon_plano",
+   "nombre": "Vagón plataforma de madera",
+   "ref": "mixamo:modelos_pelicula/vagon_plano.glb",
+   "categoria": "tren",
+   "escala_real_estimada_m": 14.0,
+   "eje_largo": "Y",
+   "poligonos": 482122,
+   "estado": "importable (GLB Tripo3D); una sola malla; falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D)"
+  },
+  {
+   "id": "trailer_plano_camion",
+   "nombre": "Tráiler plano de camión (semirremolque)",
+   "ref": "mixamo:modelos_pelicula/trailer_plano_camion.glb",
+   "categoria": "camion",
+   "escala_real_estimada_m": 12.0,
+   "eje_largo": "Y",
+   "poligonos": 500384,
+   "estado": "importable (GLB Tripo3D); chasis sin tractor ni ruedas separables; falta integrarlo al director",
+   "licencia": "modelos del dueño (Tripo3D)"
   }
  ],
  "esquema_anclas": {

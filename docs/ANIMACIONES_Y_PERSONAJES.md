@@ -20,6 +20,7 @@ fotograma), miniaturas/previsualizaciones, marcas de eventos (pisada, disparo, r
 
 ## Personajes ya integrados
 
+- **Jefa** (`mixamo:jefa`): rig de Mixamo con retargeting; ver `docs/MODELOS.md`.
 - **Futbolista** (`futbol:jugador`): animado con sus 3 223 clips, uniforme configurable. Ver `docs/FUTBOL.md`.
 
 ## Personajes y retargeting (Etapa 5)

@@ -14,3 +14,8 @@
 | «Falta el secreto ASSETS_TOKEN» en Actions | La escena usa recursos privados (fútbol, Mixamo) | GitHub → Settings → Developer settings → Fine-grained token: repo **mixamo-respaldo**, *Contents: Read*. Guardarlo en Cinema3DSHR → Settings → Secrets → Actions como `ASSETS_TOKEN`. |
 | El estadio importa lento o se cuelga | Mover miles de objetos de colección | Ya resuelto: se importa directo en la colección destino y los materiales se asignan por malla. |
 | Godot: `Cannot infer the type` | Tipado estricto de GDScript | Declarar el tipo (`var x: float = …`). |
+| Un clip de Mixamo deja al personaje en T-pose | Blender 5 liga cada acción a un «slot» de su objeto de origen | Usar `estudio/blender/retarget.py` (asigna el slot y retargetea). |
+| La cadera del personaje viaja a −77 m | El FBX está en centímetros y el personaje mide 1 m | Idem: el retargeting escala el desplazamiento por el cociente de alturas. |
+| El personaje queda al 59 % de su tamaño y flotando | Se fijó escala 1 en espacio mundo con el objeto ya escalado ×1,7 | Corregido en `retarget.py` (usa la escala del objeto). |
+| «Falta generar el audio de voz …» al cerrar la escena | La mezcla no gasta créditos | `python -m estudio voces <escena.json> --gastar` y subir `audio/biblioteca/`. |
+| ElevenLabs 401/403 | Clave vencida o proxy sin recoger la credencial | Esperar 1 minuto y reintentar; si sigue, volver a cargar la credencial del entorno. |

@@ -41,6 +41,18 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Los clips de fútbol son en el lugar: se exportaron las curvas de raíz de las bibliotecas `.res` con Godot
   (`raices_clips.json` en mixamo-respaldo) y el director las aplica; la carrera del tiro libre recorre 6,6 m.
 
+## 14/11/2026 — ElevenLabs y 13 modelos 3D
+
+- **ElevenLabs conectado y probado:** plan Starter (40 000 créditos), 27 voces; módulo `estudio/audio/elevenlabs.py` con
+  caché permanente, estimación previa, tope de gasto y registro (`audio/ledger.jsonl`). Voz en español de la Jefa y
+  un efecto generados (~83 créditos estimados, más ~40 por regenerar el efecto); mezcla verificada midiendo niveles.
+  Música no probada. No pude escuchar los audios.
+- **13 modelos 3D** guardados sin modificar en mixamo-respaldo/modelos_pelicula (con índice y vistas previas) y
+  catalogados (`catalogo/modelos.json`). Vehículos sin ruedas, helicóptero sin rotores, 3 packs de decorado fusionados.
+- **Jefa/novia:** esqueleto idéntico al Y Bot → nuevo `retarget.py` (probado: tres errores propios corregidos: slot de
+  acción, cm→m y escala mundo) + modelo `mixamo:jefa` en el director + escena de prueba `p002_la_jefa_llega`
+  (14 s, 3 tomas, voz y efecto). Verificada con fotogramas fijos y la mezcla de audio; **no se renderizó el video completo**.
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.
@@ -48,5 +60,6 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Dueño: decidir si el repo sigue público (videos visibles) — ver informe §5.
 - Etapa 5: secreto `ASSETS_TOKEN` (lectura de mixamo-respaldo y Nexus en Actions), personajes en escena,
   armas en la mano, análisis completo de animaciones, retargeting.
-- Etapa 6: ElevenLabs (pedir la clave).
+- Etapa 6: probar música de ElevenLabs y los modelos v3/v4; reparto final de voces.
+- Integrar al director los vehículos del dueño (ruedas, frente) y separar los packs de decorado.
 - Calidad visual: modelo de auto más detallado, árboles con más forma, pantallas de vigilancia con imagen real.

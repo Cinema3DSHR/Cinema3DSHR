@@ -1,0 +1,5 @@
+{
+  "descripcion": "Tope de gasto de ElevenLabs (créditos = caracteres del plan Starter: 40 000 al mes). Nada se genera si queda menos que la reserva, ni si una escena supera el tope por escena sin autorización del dueño.",
+  "reserva_creditos": 5000,
+  "max_por_escena": 4000
+}

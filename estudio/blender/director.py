@@ -95,7 +95,9 @@ def _muestrear_personaje(pj: dict, duracion_f: int) -> dict:
     for f in range(1, duracion_f + 1):
         sc.frame_set(f)
         pos = (arm.matrix_world @ hueso.head).copy()
-        rumbo = pj["raiz"].matrix_world.to_euler().z - math.pi / 2  # +X del modelo = "adelante" de la cámara
+        # rumbo de la convención de móviles (0 = mirando a +Y): dirección en que mira el modelo menos 90°
+        rumbo = (pj["raiz"].matrix_world.to_euler().z + math.radians(pj["info"].get("adelante_deg", 0))
+                 - math.pi / 2)
         v = 0.0 if prev is None else (pos - prev).length * sc.render.fps
         tray[f] = (pos, rumbo, v)
         prev = pos

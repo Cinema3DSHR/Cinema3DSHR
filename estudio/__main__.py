@@ -11,6 +11,9 @@ Comandos principales
   catalogo --releases R.json --issues I.json [--infos DIR] --salida catalogo.json
   limpieza --catalogo catalogo.json             lista los temporales que la política permite borrar
   animaciones [--limite N]                      inventario de animaciones → catalogo/animaciones.json
+  voces <escena.json> [--gastar]                voces y efectos de ElevenLabs que faltan (sin --gastar: sólo estima)
+  audio-estado                                  plan y créditos de ElevenLabs (consulta gratuita)
+  voces-lista                                   voces de la cuenta (consulta gratuita)
 """
 from __future__ import annotations
 import argparse
@@ -179,6 +182,25 @@ def cmd_limpieza(a):
     print(json.dumps(P.plan_limpieza(cat, pol), indent=1))
 
 
+def cmd_voces(a):
+    """Genera (o sólo estima, sin --gastar) las voces y efectos de ElevenLabs que faltan en la biblioteca."""
+    from estudio.audio import elevenlabs as EL
+    m = _cargar(a.escena)
+    inf = EL.asegurar_escena(m, gastar=a.gastar)
+    print(json.dumps(inf, ensure_ascii=False, indent=1))
+
+
+def cmd_audio_estado(a):
+    from estudio.audio import elevenlabs as EL
+    print(json.dumps(EL.suscripcion(), ensure_ascii=False, indent=1))
+
+
+def cmd_voces_lista(a):
+    from estudio.audio import elevenlabs as EL
+    for v in EL.voces():
+        print(f"{v['voice_id']}  {v['nombre'][:42]:42} {str(v['categoria']):12} {str(v['genero']):7} {str(v['acento']):14} {','.join(v['idiomas'])}")
+
+
 def cmd_animaciones(a):
     from estudio.catalogo import animaciones
     animaciones.construir(limite=a.limite, analizar=a.analizar)
@@ -205,6 +227,10 @@ def main(argv=None):
     p = sub.add_parser("catalogo"); p.add_argument("--releases"); p.add_argument("--issues")
     p.add_argument("--infos"); p.add_argument("--salida", default="catalogo.json"); p.set_defaults(f=cmd_catalogo)
     p = sub.add_parser("limpieza"); p.add_argument("--catalogo", required=True); p.set_defaults(f=cmd_limpieza)
+    p = sub.add_parser("voces"); p.add_argument("escena"); p.add_argument("--gastar", action="store_true")
+    p.set_defaults(f=cmd_voces)
+    p = sub.add_parser("audio-estado"); p.set_defaults(f=cmd_audio_estado)
+    p = sub.add_parser("voces-lista"); p.set_defaults(f=cmd_voces_lista)
     p = sub.add_parser("animaciones"); p.add_argument("--limite", type=int, default=0)
     p.add_argument("--analizar", action="store_true"); p.set_defaults(f=cmd_animaciones)
     a = ap.parse_args(argv)

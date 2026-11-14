@@ -13,15 +13,43 @@
 Biblioteca: `catalogo/audio.json` (id, nombre, categoría, procedencia, licencia, etiquetas, variantes, volumen).
 Ya existen para importar: disparos OGG de Extraction-tactical y voces ElevenLabs de Operación Nexus.
 
-## ElevenLabs (Etapa 6 — falta autorización)
+## ElevenLabs (conectado el 14/11/2026)
 
-Para conectarlo hace falta, del dueño:
-1. Una **API key** de ElevenLabs con permisos de *Text to Speech*, *Sound Effects* y (si se usa) *Music*.
-2. Guardarla como secreto del repositorio `ELEVENLABS_API_KEY` (Actions) y, para usarla desde la sesión de
-   Claude, como credencial del entorno (nunca en el chat ni en archivos).
-3. Indicar el plan/créditos disponibles para fijar un tope de gasto por producción.
+**Estado probado:** conexión OK (plan **Starter**, 40 000 créditos/mes), 27 voces en la cuenta, voz en español generada
+y mezclada en una escena (`p002_la_jefa_llega`), efecto de sonido generado. **Música: no probada** (el endpoint
+está escrito pero no se lo llamó: puede requerir otro plan).
 
-Plan de integración: `estudio/audio/elevenlabs.py` con caché por (texto, voz, ajustes) → hash, de modo que un
-diálogo o efecto que ya existe **no se vuelve a generar**; cada archivo generado se registra en
-`catalogo/audio.json` con procedencia «ElevenLabs», fecha y licencia de la cuenta. Los efectos se sincronizan con
-las animaciones por eventos (p. ej. recarga → sonido en el fotograma del clip marcado en el catálogo).
+**Credencial:** la guardó el dueño con el formulario seguro del entorno; el proxy la inyecta en las llamadas a
+`api.elevenlabs.io`. No está en el repo ni en la APK. En otra máquina: variable `ELEVENLABS_API_KEY` (y secreto del
+repo si algún flujo de Actions generara audio; hoy **no hace falta**: el audio se genera acá y se guarda en la
+biblioteca de Git).
+
+### Cómo se usa (`estudio/audio/elevenlabs.py`)
+En `sonido.eventos` de la escena:
+```jsonc
+{"tipo": "voz", "rol": "jefa", "texto": "Buenas noches. Llegué antes de lo previsto.", "inicio_s": 10.6, "movil": "jefa"},
+{"tipo": "efecto", "prompt": "crujido de una puerta de madera pesada abriéndose lentamente", "duracion_s": 2.0, "inicio_s": 12.2}
+```
+1. `python -m estudio voces <escena.json>` → **sólo estima** (créditos) y lista lo que falta.
+2. `python -m estudio voces <escena.json> --gastar` → genera lo que falta y lo guarda en `audio/biblioteca/`.
+3. `python -m estudio cerrar …` mezcla desde la biblioteca (nunca gasta). Con `movil`, el volumen y el paneo siguen
+   al personaje respecto de la cámara; sin `movil`, va centrado (voz en off, radio, música).
+Otros comandos: `audio-estado` (plan y créditos), `voces-lista` (voces de la cuenta).
+
+### Reglas de gasto
+- Lo que ya existe **no se regenera** (el nombre del archivo es el hash del pedido completo: texto, voz, modelo, ajustes).
+- Tope por escena 4 000 créditos y reserva mensual de 5 000 (`config/presupuesto_audio.json`); pasarse requiere OK del dueño.
+- Cada generación queda en `audio/ledger.jsonl` y en `catalogo/audio.json` (id, duración, procedencia, licencia, etiquetas).
+- **Costo real:** el panel de ElevenLabs (Usage). La cabecera `character-cost` que devuelve la API no coincidió con el
+  costo esperado (17 para 43 caracteres) y el contador de la suscripción tardó en moverse: por eso el registro guarda
+  la cifra estimada y la de la cabecera.
+
+### Voces (`config/voces.json`, propuesta: el dueño decide)
+`jefa` = «BV Operadora (contrato)» (mujer **argentina**, una de las 6 voces propias en español de Black Veil),
+`operador_peninsular`, `mujer_joven`, `hombre_joven`, `hombre_grave`, `narrador`, `narradora`, `radio`.
+Modelo por defecto `eleven_multilingual_v2`; la cuenta también ofrece `eleven_v3` y `eleven_v4` (no probados).
+
+### Lecciones de la prueba
+- Los efectos salen a niveles muy dispares (el de la puerta: pico −36 dB): la mezcla los normaliza a −6 dB de pico.
+- Un prompt de efecto no debe nombrar lo que no querés oír («silencioso»).
+- **No pude escuchar** los audios, sólo medirlos: conviene que los escuches vos antes de aprobar.

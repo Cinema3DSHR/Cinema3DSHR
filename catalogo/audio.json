@@ -56,6 +56,43 @@
     "traqueteo"
    ],
    "volumen_db": -14
+  },
+  {
+   "id": "voz_6f4b203c9e357b2a",
+   "nombre": "Buenas noches. Llegué antes de lo previsto.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_6f4b203c9e357b2a.mp3",
+   "duracion_s": 2.74,
+   "procedencia": "ElevenLabs (eleven_multilingual_v2)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "jefa",
+    "llegada",
+    "prueba"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_multilingual_v2",
+   "voice_id": "8Nz6hV5TPv151P6ZNEBV",
+   "texto": "Buenas noches. Llegué antes de lo previsto.",
+   "rol": "jefa"
+  },
+  {
+   "id": "sfx_0b230591229956fb",
+   "nombre": "crujido de una puerta de madera pesada abriéndose lentamente, bisagras antiguas",
+   "categoria": "efecto",
+   "archivo": "audio/biblioteca/sfx_0b230591229956fb.mp3",
+   "duracion_s": 2.04,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "puerta",
+    "madera",
+    "crujido"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "crujido de una puerta de madera pesada abriéndose lentamente, bisagras antiguas"
   }
  ],
  "fuentes_existentes_para_importar": [

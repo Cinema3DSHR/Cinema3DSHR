@@ -177,6 +177,36 @@ def golpe(n, rng, t0, tipo="patada"):
     return np.stack([out, out], axis=1)
 
 
+def _decodificar(ruta: Path) -> np.ndarray:
+    """MP3/OGG/WAV → mono float32 a 48 kHz (con ffmpeg)."""
+    import subprocess
+    r = subprocess.run(["ffmpeg", "-v", "error", "-i", str(ruta), "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"],
+                       capture_output=True, check=True)
+    return np.frombuffer(r.stdout, dtype="<f4").astype(np.float64)
+
+
+def audio_de_biblioteca(pistas, ev, n, rng=None):
+    """Coloca un audio ya generado (voz, efecto o música de la biblioteca) en su momento; si trae `movil`, la
+    ganancia y el paneo siguen a ese personaje o vehículo respecto de la cámara activa."""
+    from estudio.audio import elevenlabs as EL
+    x = _decodificar(EL.ruta_en_biblioteca(ev))
+    if ev["tipo"] in ("efecto", "musica") and np.abs(x).max() > 1e-6:
+        # los efectos generados salen a niveles muy dispares (medido: pico −36 dB): se llevan a −6 dB de pico
+        x = x / np.abs(x).max() * 0.5
+    x = x * float(ev.get("volumen", 1.0))
+    a = int(ev.get("inicio_s", 0.0) * SR)
+    b = min(n, a + len(x))
+    if b <= a:
+        return np.zeros((n, 2))
+    mono = np.zeros(n)
+    mono[a:b] = x[: b - a]
+    if ev.get("movil") and ev["movil"] in pistas["moviles"]:
+        pos = [f[:3] for f in pistas["moviles"][ev["movil"]]]
+        g, pan = _espacial(pistas, pos, n)
+        return _a_estereo(mono, np.clip(g * 3.0, 0.15, 1.0), pan)
+    return np.stack([mono, mono], axis=1) * 0.9   # sin posición: voz en off / música / radio
+
+
 def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
     """Genera la mezcla de efectos+ambiente de la escena (WAV 48 kHz estéreo)."""
     son = manifiesto.get("sonido", {})
@@ -195,7 +225,9 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
             mezcla += golpe(n, rng, ev["t"], "red") * 0.5
             mezcla += ovacion(n, rng, ev["t"] + 0.15, 6.0) * 0.8
     for ev in son.get("eventos", []):
-        if ev["tipo"] == "motor":
+        if ev["tipo"] in ("voz", "efecto", "musica"):
+            mezcla += audio_de_biblioteca(pistas, ev, n)
+        elif ev["tipo"] == "motor":
             mezcla += motor(pistas, ev["movil"], n, rng) * ev.get("volumen", 1.0)
         elif ev["tipo"] in ("porton_motor", "porton_garaje"):
             pos = pistas["anclas"][ev["ancla"]]

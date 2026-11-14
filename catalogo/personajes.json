@@ -14,12 +14,24 @@
    "estado": "listo"
   },
   {
+   "id": "mixamo:jefa",
+   "nombre": "Jefa / novia (mujer, traje negro)",
+   "ref": "mixamo:modelos_pelicula/jefa_o_novia.glb",
+   "esqueleto": "mixamorig de 65 huesos, nombres idénticos al Y Bot (verificado)",
+   "altura_m": 1.7,
+   "frente": "−Y",
+   "rig_facial": false,
+   "animaciones": "las 3 100 de Mixamo (catalogo/animaciones.json) por retargeting (estudio/blender/retarget.py); en el manifiesto: clip = \"mixamo:ruta.fbx\"",
+   "voz_sugerida": "rol «jefa» (config/voces.json)",
+   "estado": "listo (probado: camina, se detiene, cámara de seguimiento)"
+  },
+  {
    "id": "mixamo:ybot",
    "nombre": "Y Bot",
    "ref": "mixamo:personajes/ybot_tpose.fbx",
    "esqueleto": "mixamorig 65",
    "animaciones": "catalogo/animaciones.json (3 100 FBX)",
-   "estado": "compatible; falta integrar al director (Etapa 5)"
+   "estado": "compatible: mismo esqueleto; falta darlos de alta en MODELOS (estudio/blender/personajes.py) como mixamo65"
   },
   {
    "id": "nexus:operador",
@@ -27,8 +39,8 @@
    "ref": "nexus:personajes/operador_character.fbx",
    "esqueleto": "mixamorig 65 (verificado)",
    "animaciones": "catalogo/animaciones.json",
-   "estado": "compatible; falta integrar al director (Etapa 5)"
+   "estado": "compatible: mismo esqueleto; falta darlos de alta en MODELOS (estudio/blender/personajes.py) como mixamo65"
   }
  ],
- "pendiente": "retargeting entre esqueletos distintos (Etapa 5)"
+ "pendiente": "retargeting entre esqueletos de distintos nombres (la Jefa, el Y Bot y el operador de Nexus comparten los de Mixamo)"
 }

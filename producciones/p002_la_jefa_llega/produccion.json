@@ -1,0 +1,10 @@
+{
+  "tipo": "produccion",
+  "id": "p002_la_jefa_llega",
+  "titulo": "La jefa llega",
+  "genero": "Prueba técnica · Suspenso",
+  "sinopsis": "Prueba del personaje «Jefa» (rig Mixamo retargeteado): de noche, una mujer de traje negro cruza el jardín de la mansión y se detiene frente a la puerta.",
+  "clase": "escena",
+  "creada": "2026-11-14",
+  "escenas": ["e01"]
+}

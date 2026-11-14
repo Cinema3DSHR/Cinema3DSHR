@@ -37,6 +37,13 @@ MODELOS = {
         "luma": {"camiseta": 0.203, "short": 0.286, "medias": 0.785, "botines": 0.088, "piel": 0.492, "pelo": 0.18},
     },
 }
+MODELOS["mixamo:jefa"] = {
+    "tipo": "mixamo65", "ref": "mixamo:modelos_pelicula/jefa_o_novia.glb", "escala": 1.70,
+    "ocultar": ["Icosphere"], "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase",
+    "pie_izq": "mixamorig:LeftToeBase", "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand",
+    "frente": math.pi / 2,   # el modelo mira a −Y; con mirando_deg = 0 debe mirar a +X
+    "adelante_deg": -90,     # hacia dónde mira el modelo en su propio marco (0 = +X, −90 = −Y); lo usan las cámaras
+}
 UNIFORME_DEFECTO = {"camiseta": (0.72, 0.04, 0.05), "short": (0.05, 0.12, 0.62), "medias": (0.9, 0.9, 0.9),
                     "botines": (0.03, 0.03, 0.035), "piel": (0.62, 0.40, 0.29), "pelo": (0.12, 0.07, 0.04)}
 
@@ -175,6 +182,8 @@ def _material_uniforme(nombre: str, info: dict, colores: dict) -> bpy.types.Mate
 
 def crear(spec: dict, fps: int = 30, col=None) -> dict:
     """Crea un personaje (copia liviana del prototipo) y programa sus acciones. Devuelve sus datos."""
+    if MODELOS[spec.get("modelo", "futbol:jugador")].get("tipo") == "mixamo65":
+        return _crear_mixamo(spec, fps, col)
     lib = biblioteca(spec.get("modelo", "futbol:jugador"))
     info = lib["info"]
     col = col or K.coleccion("personajes")
@@ -306,6 +315,97 @@ def _raiz_en(tr: dict, t: float):
         j = min(int(fh), len(hp) - 2)
         rumbo = rumbo0 + math.radians(hp[j] + (hp[j + 1] - hp[j]) * (fh - j) - hp[0])
     return pos, rumbo
+
+
+_RETARGETS: dict[tuple, bpy.types.Action] = {}
+
+
+def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
+    """Personaje con esqueleto mixamorig de 65 huesos (p. ej. la Jefa). Sus clips son FBX de Mixamo
+    ("clip": "mixamo:packs/…/walking.fbx") que se RETARGETEAN al esqueleto del personaje (estudio/blender/retarget.py)."""
+    from estudio.blender import retarget as R
+    modelo = spec.get("modelo", "mixamo:jefa")
+    info = MODELOS[modelo]
+    col = col or K.coleccion("personajes")
+    pid = spec["id"]
+    objs = I.importar(info["ref"], col)
+    raiz = bpy.data.objects.new(f"PJ_{pid}", None)
+    raiz.empty_display_type = "ARROWS"
+    col.objects.link(raiz)
+    for o in objs:
+        if o.name.split(".")[0] in info["ocultar"]:
+            o.hide_render = o.hide_viewport = True
+        if o.parent is None:
+            o.parent = raiz
+    raiz.scale = (info["escala"],) * 3
+    arm = next(o for o in objs if o.type == "ARMATURE")
+    malla = next(o for o in objs if o.type == "MESH" and o.name.split(".")[0] not in info["ocultar"])
+    arm.animation_data_create()
+    pista = arm.animation_data.nla_tracks.new()
+    pista.name = "acciones"
+    pos = Vector((0, 0, 0))
+    rumbo = 0.0
+    tramos = []
+    llaves = []
+    for i, ac in enumerate(spec.get("acciones", [])):
+        ref = ac["clip"]
+        clave = (modelo, ref)
+        if clave not in _RETARGETS or _RETARGETS[clave].name not in bpy.data.actions:
+            antes = set(bpy.data.actions)
+            tmp = I.importar(ref)
+            acc = next(a for a in bpy.data.actions if a not in antes)
+            tarm = next(o for o in tmp if o.type == "ARMATURE")
+            raiz.rotation_euler = (0, 0, 0)
+            raiz.location = (0, 0, 0)
+            nombre = f"rt_{modelo.split(':')[-1]}_{Path(ref).stem}"
+            _RETARGETS[clave] = R.retarget(tarm, acc, arm, nombre, info["cadera"])
+            for o in tmp:
+                bpy.data.objects.remove(o)
+        accion = _RETARGETS[clave]
+        f0 = int(round(ac["inicio_s"] * fps)) + 1
+        if ac.get("encadenar") and tramos:
+            pos, rumbo = tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"]
+        if "pos" in ac:
+            p = ac["pos"]
+            pos = Vector((p[0], p[1], p[2] if len(p) > 2 else 0.0))
+        if "mirando_deg" in ac:
+            rumbo = math.radians(ac["mirando_deg"])
+        if tramos and tramos[-1]["strip"].frame_end > f0 - 0.01:
+            tramos[-1]["strip"].frame_end = f0 - 0.01
+            tramos[-1]["fin"] = f0 - 0.01
+        st = pista.strips.new(f"{i:02d}_{accion.name}", f0, accion)
+        try:
+            st.action_slot = accion.slots[0]
+        except Exception:
+            pass
+        st.scale = 1.0 / ac.get("velocidad", 1.0)
+        st.repeat = ac.get("repetir", 1)
+        st.blend_in = st.blend_out = 0
+        st.extrapolation = "HOLD"
+        d = Vector(accion.get("desplazamiento_cadera_m", (0, 0, 0)))
+        d.z = 0
+        vueltas = max(1, int(st.repeat))
+        giro = Matrix.Rotation(rumbo + info["frente"], 3, "Z")
+        pos_fin = pos + giro @ (d * vueltas)
+        tramos.append({"accion": accion, "f0": f0, "fin": st.frame_end, "pos": pos.copy(), "rumbo": rumbo,
+                       "strip": st, "pos_fin": pos_fin, "rumbo_fin": rumbo})
+        # en cada repetición la cadera vuelve al punto de partida del clip: el personaje avanza lo que avanzó el ciclo
+        por_ciclo = (st.frame_end - st.frame_start) / vueltas
+        for k in range(vueltas):
+            llaves.append((f0 + k * por_ciclo, pos + giro @ (d * k), rumbo + info["frente"]))
+    raiz.animation_data_create()
+    for f0, pz, rz in llaves:
+        raiz.location = pz
+        raiz.rotation_euler = (0, 0, rz)
+        raiz.keyframe_insert("location", frame=f0)
+        raiz.keyframe_insert("rotation_euler", frame=f0)
+    # (los tramos con repeticiones recortadas por el siguiente dejan claves de más: son inofensivas)
+    if raiz.animation_data and raiz.animation_data.action:
+        for fc in K._fcurves(raiz.animation_data.action):
+            for k in fc.keyframe_points:
+                k.interpolation = "CONSTANT"
+    fin = max((t["fin"] for t in tramos), default=1)
+    return {"id": pid, "raiz": raiz, "armadura": arm, "malla": malla, "tramos": tramos, "info": info, "fin": fin}
 
 
 def _cadera_local(arm, raiz, accion, frame: float, cadera: str) -> Vector:

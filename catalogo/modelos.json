@@ -1,0 +1,369 @@
+{
+ "formato": 1,
+ "fuente": "mixamo:modelos_pelicula (respaldo privado) — entregado por el dueño el 14/11/2026",
+ "aviso": "Todos vienen normalizados a 1 m en su lado más largo. 'escala_real_estimada_m' es el tamaño al que llevarlos en escena (estimado: ajustar viendo la toma). Los modelos son privados: acá sólo hay metadatos.",
+ "pendientes_generales": [
+  "ruedas para los vehículos (el estudio ya tiene ruedas procedurales)",
+  "rotores del helicóptero",
+  "definir el 'frente' de cada vehículo e integrarlos al director",
+  "separar por objeto los packs fusionados de cocina, muebles y moto/taller"
+ ],
+ "modelos": [
+  {
+   "id": "auto_clasico_falcon",
+   "nombre": "Auto clásico «Falcon» (azul)",
+   "tipo": "vehiculo",
+   "categoria": "auto",
+   "ref": "mixamo:modelos_pelicula/auto_clasico_falcon.glb",
+   "bytes": 15033548,
+   "poligonos": 445288,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    0.43,
+    1.0,
+    0.28
+   ],
+   "eje_largo": "Y",
+   "escala_real_estimada_m": 5.0,
+   "estado": "carrocería sin ruedas, sin interior visible",
+   "etiquetas": [
+    "auto",
+    "clasico",
+    "sedan",
+    "muscle",
+    "años 70",
+    "azul"
+   ],
+   "nota": "Su nombre evoca un modelo real de fabricante: no mostrar logos ni sugerir marcas.",
+   "integrado_al_director": false
+  },
+  {
+   "id": "cocina_sin_segmentos",
+   "nombre": "Pack de cocina y baño (sin segmentar)",
+   "tipo": "decorado",
+   "categoria": "interior",
+   "ref": "mixamo:modelos_pelicula/cocina_sin_segmentos.glb",
+   "bytes": 17746856,
+   "poligonos": 535988,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    1.0,
+    0.93,
+    0.84
+   ],
+   "eje_largo": "-",
+   "escala_real_estimada_m": 6.0,
+   "estado": "una sola malla fusionada (~2.100 islas)",
+   "etiquetas": [
+    "cocina",
+    "baño",
+    "electrodomesticos",
+    "heladera",
+    "bañera",
+    "interior"
+   ],
+   "nota": "Sirve completo como decorado; separar por objeto queda pendiente.",
+   "integrado_al_director": false
+  },
+  {
+   "id": "decoracion_taller_segmentada",
+   "nombre": "Pack de decoración de taller mecánico (69 piezas)",
+   "tipo": "decorado",
+   "categoria": "taller",
+   "ref": "mixamo:modelos_pelicula/decoracion_taller_segmentada.glb",
+   "bytes": 27418332,
+   "poligonos": 544985,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    1.0,
+    1.0,
+    0.67
+   ],
+   "eje_largo": "-",
+   "escala_real_estimada_m": 6.0,
+   "estado": "69 objetos sueltos con su material (usables por separado)",
+   "etiquetas": [
+    "taller",
+    "mecanica",
+    "banco",
+    "motor",
+    "herramientas",
+    "estanteria",
+    "interior"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "helicoptero_militar",
+   "nombre": "Helicóptero militar (fuselaje)",
+   "tipo": "vehiculo",
+   "categoria": "helicoptero",
+   "ref": "mixamo:modelos_pelicula/helicoptero_militar.glb",
+   "bytes": 16643836,
+   "poligonos": 507568,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    1.0,
+    0.31,
+    0.33
+   ],
+   "eje_largo": "X",
+   "escala_real_estimada_m": 15.0,
+   "estado": "fuselaje sin rotores ni rotor de cola",
+   "etiquetas": [
+    "helicoptero",
+    "militar",
+    "negro",
+    "transporte"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "jefa_o_novia",
+   "nombre": "Jefa / novia (mujer, traje negro)",
+   "tipo": "personaje",
+   "categoria": "humano",
+   "ref": "mixamo:modelos_pelicula/jefa_o_novia.glb",
+   "bytes": 2919012,
+   "poligonos": 18050,
+   "huesos": 65,
+   "dimensiones_normalizadas_m": [
+    1.9,
+    2.0,
+    2.0
+   ],
+   "eje_largo": "Z",
+   "escala_real_estimada_m": 1.7,
+   "estado": "rigged: 65 huesos mixamorig idénticos al Y Bot; T-pose; sin rig facial ni shape keys",
+   "etiquetas": [
+    "mujer",
+    "traje",
+    "jefa",
+    "novia",
+    "ejecutiva",
+    "personaje"
+   ],
+   "nota": "Trae una esfera «Icosphere» fantasma de 2 m (hay que ocultarla).",
+   "integrado_al_director": true
+  },
+  {
+   "id": "locomotora_diesel",
+   "nombre": "Locomotora diésel roja y blanca",
+   "tipo": "vehiculo",
+   "categoria": "tren",
+   "ref": "mixamo:modelos_pelicula/locomotora_diesel.glb",
+   "bytes": 16920496,
+   "poligonos": 504130,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    0.27,
+    1.0,
+    0.28
+   ],
+   "eje_largo": "Y",
+   "escala_real_estimada_m": 18.0,
+   "estado": "sin bogies/ruedas separables (una sola malla)",
+   "etiquetas": [
+    "tren",
+    "locomotora",
+    "diesel",
+    "ferrocarril",
+    "roja"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "moto_enduro_decoracion_taller",
+   "nombre": "Moto enduro blanca en taller (con caballete y repuestos)",
+   "tipo": "decorado",
+   "categoria": "taller",
+   "ref": "mixamo:modelos_pelicula/moto_enduro_decoracion_taller.glb",
+   "bytes": 17382296,
+   "poligonos": 536584,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    1.0,
+    0.63,
+    0.66
+   ],
+   "eje_largo": "-",
+   "escala_real_estimada_m": 4.5,
+   "estado": "una sola malla fusionada con la moto, caballete, amortiguador, llanta y herramientas",
+   "etiquetas": [
+    "moto",
+    "enduro",
+    "taller",
+    "mecanica",
+    "repuestos"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "muebles_casa_sin_segmentar",
+   "nombre": "Pack de muebles de casa (sin segmentar)",
+   "tipo": "decorado",
+   "categoria": "interior",
+   "ref": "mixamo:modelos_pelicula/muebles_casa_sin_segmentar.glb",
+   "bytes": 17460840,
+   "poligonos": 526782,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    1.0,
+    0.73,
+    0.78
+   ],
+   "eje_largo": "-",
+   "escala_real_estimada_m": 6.0,
+   "estado": "una sola malla fusionada (~2.200 islas)",
+   "etiquetas": [
+    "muebles",
+    "living",
+    "dormitorio",
+    "sofa",
+    "cama",
+    "tv",
+    "interior"
+   ],
+   "nota": "Sirve completo como decorado; separar por objeto queda pendiente.",
+   "integrado_al_director": false
+  },
+  {
+   "id": "pickup_arena",
+   "nombre": "Pickup 4×4 blanca de arena",
+   "tipo": "vehiculo",
+   "categoria": "camioneta",
+   "ref": "mixamo:modelos_pelicula/pickup_arena.glb",
+   "bytes": 16945912,
+   "poligonos": 504938,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    0.46,
+    1.0,
+    0.32
+   ],
+   "eje_largo": "Y",
+   "escala_real_estimada_m": 5.6,
+   "estado": "carrocería sin ruedas",
+   "etiquetas": [
+    "pickup",
+    "camioneta",
+    "4x4",
+    "desierto",
+    "blanca",
+    "off-road"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "trailer_plano_camion",
+   "nombre": "Tráiler plano de camión (semirremolque)",
+   "tipo": "vehiculo",
+   "categoria": "camion",
+   "ref": "mixamo:modelos_pelicula/trailer_plano_camion.glb",
+   "bytes": 17031808,
+   "poligonos": 500384,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    0.26,
+    1.0,
+    0.14
+   ],
+   "eje_largo": "Y",
+   "escala_real_estimada_m": 12.0,
+   "estado": "chasis sin tractor ni ruedas separables",
+   "etiquetas": [
+    "camion",
+    "trailer",
+    "semirremolque",
+    "plataforma"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "vagon_cerrado",
+   "nombre": "Vagón de carga cerrado (rojo)",
+   "tipo": "vehiculo",
+   "categoria": "tren",
+   "ref": "mixamo:modelos_pelicula/vagon_cerrado.glb",
+   "bytes": 16251912,
+   "poligonos": 483194,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    1.0,
+    0.29,
+    0.29
+   ],
+   "eje_largo": "X",
+   "escala_real_estimada_m": 13.7,
+   "estado": "una sola malla",
+   "etiquetas": [
+    "tren",
+    "vagon",
+    "carga",
+    "cerrado",
+    "rojo"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "vagon_plano",
+   "nombre": "Vagón plataforma de madera",
+   "tipo": "vehiculo",
+   "categoria": "tren",
+   "ref": "mixamo:modelos_pelicula/vagon_plano.glb",
+   "bytes": 17027188,
+   "poligonos": 482122,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    0.25,
+    1.0,
+    0.1
+   ],
+   "eje_largo": "Y",
+   "escala_real_estimada_m": 14.0,
+   "estado": "una sola malla",
+   "etiquetas": [
+    "tren",
+    "vagon",
+    "plataforma",
+    "carga"
+   ],
+   "nota": "",
+   "integrado_al_director": false
+  },
+  {
+   "id": "vehiculo_blindado_policial",
+   "nombre": "Vehículo blindado policial «POLICIA»",
+   "tipo": "vehiculo",
+   "categoria": "vehiculo_policial",
+   "ref": "mixamo:modelos_pelicula/vehiculo_blindado_policial.glb",
+   "bytes": 16685468,
+   "poligonos": 503741,
+   "huesos": 0,
+   "dimensiones_normalizadas_m": [
+    1.0,
+    0.5,
+    0.37
+   ],
+   "eje_largo": "X",
+   "escala_real_estimada_m": 5.6,
+   "estado": "carrocería sin ruedas; cartel «POLICIA» pintado en la puerta",
+   "etiquetas": [
+    "policia",
+    "blindado",
+    "suv",
+    "swat",
+    "tactico"
+   ],
+   "nota": "Lleva la palabra POLICIA pintada: usarlo sólo en ficción.",
+   "integrado_al_director": false
+  }
+ ]
+}

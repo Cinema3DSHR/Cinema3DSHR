@@ -1,0 +1,4 @@
+{"fecha": "2026-11-14T22:29:34Z", "tipo": "voz", "id": "voz_6f4b203c9e357b2a", "resumen": "Buenas noches. Llegué antes de lo previsto.", "creditos_cabecera": 17.0, "creditos_estimados": 43.0}
+{"fecha": "2026-11-14T22:29:36Z", "tipo": "efecto", "id": "sfx_25fa15a374bd130b", "resumen": "puerta de madera pesada que se abre lentamente con un crujid", "creditos_cabecera": 20.0, "creditos_estimados": 40.0}
+{"fecha": "2026-11-14T22:31:00Z", "tipo": "efecto", "id": "sfx_25fa15a374bd130b", "nota": "descartado: salió casi mudo (pico −42 dB) por el prompt «interior silencioso»", "creditos_estimados": 40.0, "creditos_cabecera": null}
+{"fecha": "2026-11-14T22:30:26Z", "tipo": "efecto", "id": "sfx_0b230591229956fb", "creditos_estimados": 40.0, "creditos_cabecera": 20.0, "resumen": "crujido de una puerta de madera pesada abriéndose lentamente"}
