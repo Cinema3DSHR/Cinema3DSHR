@@ -1,0 +1,34 @@
+{
+ "formato": 1,
+ "personajes": [
+  {
+   "id": "futbol:jugador",
+   "nombre": "Futbolista (Tripo3D)",
+   "ref": "mixamo:futbol_free_kick_swipe/exportados/jugador_con_animaciones.glb",
+   "esqueleto": "mixamorig de 23 huesos (nombres con guion bajo) + Root",
+   "altura_m": 1.75,
+   "frente": "+X",
+   "rig_facial": false,
+   "animaciones": "catalogo/futbol.json (3 223 clips)",
+   "uniforme": "camiseta, short, medias, botines, piel y pelo por color (máscaras del juego)",
+   "estado": "listo"
+  },
+  {
+   "id": "mixamo:ybot",
+   "nombre": "Y Bot",
+   "ref": "mixamo:personajes/ybot_tpose.fbx",
+   "esqueleto": "mixamorig 65",
+   "animaciones": "catalogo/animaciones.json (3 100 FBX)",
+   "estado": "compatible; falta integrar al director (Etapa 5)"
+  },
+  {
+   "id": "nexus:operador",
+   "nombre": "Operador táctico",
+   "ref": "nexus:personajes/operador_character.fbx",
+   "esqueleto": "mixamorig 65 (verificado)",
+   "animaciones": "catalogo/animaciones.json",
+   "estado": "compatible; falta integrar al director (Etapa 5)"
+  }
+ ],
+ "pendiente": "retargeting entre esqueletos distintos (Etapa 5)"
+}

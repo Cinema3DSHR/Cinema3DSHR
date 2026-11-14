@@ -66,7 +66,9 @@ def validar(m: dict) -> list[str]:
     gen = m["escenario"].get("generador")
     if not gen or not (config.RAIZ / "estudio" / "escenarios" / f"{gen}.py").exists():
         err.append(f"generador de escenario '{gen}' inexistente")
-    movs = {v["id"] for v in m.get("vehiculos", [])}
+    movs = {v["id"] for v in m.get("vehiculos", [])} | {p["id"] for p in m.get("personajes", [])}
+    if m.get("pelota"):
+        movs.add("pelota")
     for t in m["tomas"]:
         if t.get("movil") and t["movil"] not in movs:
             err.append(f"{t['id']}: móvil '{t['movil']}' no definido")
@@ -106,3 +108,18 @@ def puede_renderizar(m: dict, forzar: bool = False) -> tuple[bool, str]:
     if m.get("bloqueada") and not forzar:
         return False, f"{m['id']} v{m['version']} está APROBADA y bloqueada: crear una versión nueva para cambiarla"
     return True, ""
+
+
+def dependencias(m: dict) -> list[str]:
+    """Recursos externos ("fuente:ruta") que necesita la escena: sirven para bajar SÓLO eso en Actions.
+    Lee la lista DEPENDENCIAS del generador sin importarlo (el planificador no tiene Blender)."""
+    import ast
+    from estudio.blender_deps import MODELOS_DEPS
+    deps = set()
+    src = (config.RAIZ / "estudio" / "escenarios" / f"{m['escenario']['generador']}.py").read_text(encoding="utf-8")
+    for nodo in ast.parse(src).body:
+        if isinstance(nodo, ast.Assign) and any(getattr(t, "id", "") == "DEPENDENCIAS" for t in nodo.targets):
+            deps.update(ast.literal_eval(nodo.value))
+    for pj in m.get("personajes", []):
+        deps.update(MODELOS_DEPS.get(pj.get("modelo", "futbol:jugador"), []))
+    return sorted(deps)

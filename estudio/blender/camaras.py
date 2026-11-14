@@ -33,6 +33,7 @@ class Contexto:
         self.anclas = anclas
         self.moviles: dict[str, dict] = {}       # id -> {"tray": {frame: (pos, rumbo, v)}, "anclas": {...}}
         self.fps = fps
+        self.eventos: list[dict] = []           # patadas, goles… (para el sonido y la app)
 
     def punto(self, spec, frame: int) -> Vector:
         if spec is None:

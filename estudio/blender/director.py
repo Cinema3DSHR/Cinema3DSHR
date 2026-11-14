@@ -15,6 +15,8 @@ from estudio import config
 from estudio.blender import kit as K
 from estudio.blender import camaras as C
 from estudio.blender import vehiculos as V
+from estudio.blender import personajes as P
+from estudio.blender import pelota as B
 
 
 def _modulo_escenario(gen: str):
@@ -24,7 +26,9 @@ def _modulo_escenario(gen: str):
 def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     fps = manifiesto.get("render", {}).get("fps", 30)
     K.reiniciar_materiales()
+    P.reiniciar()
     s = K.escena_vacia(manifiesto["id"])
+    s.render.fps = fps  # antes de importar: los clips glTF se convierten a cuadros con este valor
     esc = manifiesto["escenario"]
     mod = _modulo_escenario(esc["generador"])
     info = mod.construir(esc.get("parametros", {}))
@@ -51,9 +55,21 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
                                       duracion_s=manifiesto.get("duracion_s"))
         ctx.moviles[vh["id"]] = {"tray": tray, "anclas": veh["anclas"]}
 
-    # personajes (Etapa 5): por ahora se validan y se ignoran con aviso
-    for pj in manifiesto.get("personajes", []):
-        print(f"[director] aviso: personaje {pj.get('id')} pendiente (Etapa 5)")
+    # personajes animados (bancos de clips)
+    pjs = {}
+    seguidos = {t.get("movil") for t in manifiesto["tomas"]} | {
+        (t.get(k) or {}).get("movil") for t in manifiesto["tomas"] for k in ("objetivo", "desde", "hasta", "centro", "foco")
+        if isinstance(t.get(k), dict)}
+    for spec in manifiesto.get("personajes", []):
+        pjs[spec["id"]] = P.crear(spec, fps)
+    duracion_f = int(round(manifiesto["duracion_s"] * fps))
+    for pid, pj in pjs.items():
+        if pid in seguidos:
+            ctx.moviles[pid] = {"tray": _muestrear_personaje(pj, duracion_f), "anclas": ANCLAS_PERSONAJE}
+
+    # pelota con física (sale de una patada)
+    if manifiesto.get("pelota"):
+        _pelota(manifiesto["pelota"], pjs, ctx, fps, duracion_f)
 
     # tomas
     tomas = [C.crear_toma(t, ctx) for t in manifiesto["tomas"]]
@@ -63,6 +79,89 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     s.camera = tomas[0]["camara"]
     ajustes_render(s, calidad, manifiesto.get("render", {}))
     return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info}
+
+
+ANCLAS_PERSONAJE = {"cadera": (0, 0, 0), "cabeza": (0, 0, 0.62), "pecho": (0, 0, 0.35), "pies": (0, 0, -0.9),
+                    "": (0, 0, 0)}
+
+
+def _muestrear_personaje(pj: dict, duracion_f: int) -> dict:
+    """Trayectoria de la cadera por cuadro (para que las cámaras sigan a un personaje)."""
+    sc = bpy.context.scene
+    arm = pj["armadura"]
+    hueso = arm.pose.bones[pj["info"]["cadera"]]
+    tray = {}
+    prev = None
+    for f in range(1, duracion_f + 1):
+        sc.frame_set(f)
+        pos = (arm.matrix_world @ hueso.head).copy()
+        rumbo = pj["raiz"].matrix_world.to_euler().z - math.pi / 2  # +X del modelo = "adelante" de la cámara
+        v = 0.0 if prev is None else (pos - prev).length * sc.render.fps
+        tray[f] = (pos, rumbo, v)
+        prev = pos
+    return tray
+
+
+def _pelota(spec: dict, pjs: dict, ctx, fps: int, duracion_f: int):
+    """Arma la pelota: reposo hasta la patada; después, física pura (FISICA_E_IA.md)."""
+    from mathutils import Vector
+    ob = B.crear("pelota", K.coleccion("objetos"))
+    pat = spec.get("patada")
+    reposo = Vector(ctx.punto(spec["inicio"], 1)) if spec.get("inicio") else None
+    if not pat:
+        ob.location = reposo or (0, 0, B.RADIO)
+        return
+    t_contacto = pat.get("tiempo_s")
+    pj = pjs.get(pat.get("personaje", ""))
+    if t_contacto is None and pj:
+        clip = pat.get("clip") or pj["tramos"][-1]["accion"].name
+        tr = next(t for t in pj["tramos"] if t["accion"].name == clip)
+        golpeo = _golpeo(clip)
+        tc = (golpeo or {}).get("tc", 0.35)
+        t_contacto = (tr["f0"] - 1) / fps + tc / (1.0 / tr["strip"].scale)
+    f_contacto = int(round(t_contacto * fps)) + 1
+    if reposo is None and pj:
+        # la pelota espera donde va a pegar el pie: la punta más adelantada en el cuadro de contacto
+        bpy.context.scene.frame_set(f_contacto)
+        arm = pj["armadura"]
+        pies = [(arm.matrix_world @ arm.pose.bones[h].head) for h in (pj["info"]["pie_der"], pj["info"]["pie_izq"])]
+        reposo = min(pies, key=lambda v: v.z).copy()
+        reposo.z = B.RADIO
+    reposo = reposo or Vector((0, 0, B.RADIO))
+    arco_x = {"este": 52.5, "oeste": -52.5}.get(pat.get("arco", "este"))
+    destino = ctx.punto(pat["destino"], f_contacto)
+    v0 = B.resolver_tiro(reposo, destino, pat.get("velocidad", 25.0), tuple(pat.get("efecto", (0, 0, 0))), arco_x)
+    tray = B.simular(reposo, v0, tuple(pat.get("efecto", (0, 0, 0))),
+                     duracion=max(0.5, (duracion_f - f_contacto) / fps), arco_x=arco_x)
+    B.animar(ob, tray, f_contacto, fps, reposo=reposo)
+    t_tray = {}
+    for i in range(0, len(tray), int(round(240 / fps))):
+        t, p, v, w = tray[i]
+        t_tray[f_contacto + int(round(t * fps))] = (p.copy(), math.atan2(-v.x, v.y) if v.length > 0.1 else 0.0, v.length)
+    t_tray[1] = (reposo.copy(), 0.0, 0.0)
+    for f in range(1, f_contacto):
+        t_tray[f] = (reposo.copy(), 0.0, 0.0)
+    ctx.moviles["pelota"] = {"tray": t_tray, "anclas": {"": (0, 0, 0)}}
+    ctx.eventos.append({"tipo": "patada", "t": t_contacto, "pos": list(reposo)})
+    if arco_x is not None:
+        for t, p_, v_, w_ in tray:
+            if abs(p_.x) > abs(arco_x) and abs(p_.y) < B.ARCO["ancho"] / 2 and p_.z < B.ARCO["alto"]:
+                ctx.eventos.append({"tipo": "gol", "t": t_contacto + t, "pos": list(p_)})
+                break
+    print(f"[pelota] patada en t={t_contacto:.2f} s, salida {v0.length:.1f} m/s hacia {tuple(round(c, 2) for c in destino)}")
+
+
+def _golpeo(clip: str) -> dict | None:
+    ruta = config.CATALOGO / "futbol.json"
+    if not ruta.exists():
+        return None
+    base = clip[2:] if clip[:2] in ("f_", "k_", "s_") else clip
+    for c in json.loads(ruta.read_text())["clips"]:
+        if c["clip"] == clip and c.get("golpeo"):
+            return c["golpeo"]
+        if c["clip"].endswith(base.replace("_mirror", "")) and c.get("golpeo"):
+            return c["golpeo"]
+    return None
 
 
 def ajustes_render(s, calidad: str, extra: dict):
@@ -185,7 +284,11 @@ def exportar_visor(ruta: Path, max_tex: int = 512):
         if meta.get("emision"):
             bsdf.inputs["Emission Color"].default_value = (*meta["emision"], 1)
         bsdf.inputs["Roughness"].default_value = meta["rugosidad"]
-    bpy.ops.export_scene.gltf(filepath=str(ruta), export_format="GLB", export_apply=True,
+    for o in bpy.data.objects:
+        if o.get("visor_omitir"):
+            o.hide_set(True)
+            o.select_set(False)
+    bpy.ops.export_scene.gltf(filepath=str(ruta), use_visible=True, export_format="GLB", export_apply=True,
                               export_lights=True, export_cameras=True, export_animations=True,
                               export_yup=True, export_image_format="WEBP" if max_tex else "AUTO",
                               export_extras=True, export_animation_mode="SCENE", export_bake_animation=False)
@@ -218,7 +321,7 @@ def exportar_pistas(res: dict, ruta: Path) -> dict:
             filas.append([round(pos.x, 3), round(pos.y, 3), round(pos.z, 3), round(v if f0 <= f <= f1 else 0.0, 3)])
         moviles[mid] = filas
     datos = {"fps": s.render.fps, "frames": s.frame_end, "camara_activa": cam_activa, "moviles": moviles,
-             "anclas": {k: list(v) for k, v in ctx.anclas.items()},
+             "anclas": {k: list(v) for k, v in ctx.anclas.items()}, "eventos": ctx.eventos,
              "tomas": [{"id": t["spec"]["id"], "frame_inicio": t["frame_inicio"], "frame_fin": t["frame_fin"]}
                        for t in res["tomas"]]}
     ruta.parent.mkdir(parents=True, exist_ok=True)

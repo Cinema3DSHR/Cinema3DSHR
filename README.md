@@ -11,6 +11,7 @@ recorrer en 3D, aprobar, pedir correcciones y exportar.
 | Producir (para Claude) | [`CLAUDE.md`](CLAUDE.md) · [`docs/FLUJO_DE_PRODUCCION.md`](docs/FLUJO_DE_PRODUCCION.md) |
 | Instalar la app, firma y token | [`docs/APP_ANDROID.md`](docs/APP_ANDROID.md) |
 | Animaciones, personajes, armas, vehículos | [`docs/ANIMACIONES_Y_PERSONAJES.md`](docs/ANIMACIONES_Y_PERSONAJES.md) |
+| Películas de fútbol (jugadores, estadio, pelota) | [`docs/FUTBOL.md`](docs/FUTBOL.md) |
 | Audio y ElevenLabs | [`docs/AUDIO.md`](docs/AUDIO.md) |
 | Algo falla | [`docs/ERRORES.md`](docs/ERRORES.md) |
 | Qué se hizo y qué falta | [`docs/REGISTRO.md`](docs/REGISTRO.md) |

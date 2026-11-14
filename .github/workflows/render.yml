@@ -87,11 +87,15 @@ jobs:
                       print(f"::notice::{clave} está APROBADA: no se vuelve a renderizar"); continue
                   if f"{eid}_v{m['version']}_info.json" in rel.get(m["produccion"], set()) and not forzar:
                       print(f"::notice::{clave} ya está publicada (usar 'forzar' para repetir)"); continue
-                  escenas.append({"escena": ruta, "clave": clave, "produccion": m["produccion"]})
+                  deps = MF.dependencias(m)
+                  mixamo = "\n".join(d.split(":", 1)[1] for d in deps if d.startswith("mixamo:"))
+                  escenas.append({"escena": ruta, "clave": clave, "produccion": m["produccion"], "mixamo": mixamo})
                   for t in m["tomas"]:
-                      tomas.append({"escena": ruta, "clave": clave, "toma": t["id"]})
+                      tomas.append({"escena": ruta, "clave": clave, "toma": t["id"], "mixamo": mixamo})
               elif re.match(r"escenarios/[^/]+/escenario\.json$", ruta) and os.path.exists(ruta):
-                  escenarios.append(ruta)
+                  e = MF.leer(ruta)
+                  deps = MF.dependencias({"escenario": {"generador": e["generador"]}})
+                  escenarios.append({"ruta": ruta, "mixamo": "\n".join(d.split(":", 1)[1] for d in deps if d.startswith("mixamo:"))})
           print("tomas:", len(tomas), "escenas:", len(escenas), "escenarios:", len(escenarios))
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"tomas={json.dumps(tomas)}\nescenas={json.dumps(escenas)}\nescenarios={json.dumps(escenarios)}\n")
@@ -108,6 +112,8 @@ jobs:
       max-parallel: 20
       matrix:
         item: ${{ fromJSON(needs.planificar.outputs.tomas) }}
+    env:
+      CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -120,6 +126,25 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg fonts-dejavu-core >/dev/null
           pip install -q -r requirements-produccion.txt
           python -c "import bpy; print('Blender', bpy.app.version_string)"
+      - name: Recursos privados (sólo los archivos que usa la escena)
+        if: matrix.item.mixamo != ''
+        env:
+          TOKEN: ${{ secrets.ASSETS_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Esta escena usa recursos de mixamo-respaldo (privado). Falta el secreto ASSETS_TOKEN (token de sólo lectura de ese repo): ver docs/ERRORES.md"
+            exit 1
+          fi
+      - name: Bajar recursos de mixamo-respaldo
+        if: matrix.item.mixamo != ''
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/mixamo-respaldo
+          ref: ${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/mixamo-respaldo
+          sparse-checkout: ${{ matrix.item.mixamo }}
+          sparse-checkout-cone-mode: false
       - name: Renderizar toma ${{ matrix.item.toma }}
         run: python -m estudio render "${{ matrix.item.escena }}" --toma "${{ matrix.item.toma }}" --calidad "${{ needs.planificar.outputs.calidad }}" --salida out/tomas ${{ inputs.forzar && '--forzar' || '' }} 2>&1 | grep -vE "EGL|CUEW|^$|Saved:|Fra:" | tail -n 30
       - uses: actions/upload-artifact@v4
@@ -139,6 +164,8 @@ jobs:
       fail-fast: false
       matrix:
         item: ${{ fromJSON(needs.planificar.outputs.escenas) }}
+    env:
+      CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -155,6 +182,25 @@ jobs:
           pattern: toma__${{ matrix.item.clave }}__*
           path: out/tomas
           merge-multiple: true
+      - name: Recursos privados (sólo los archivos que usa la escena)
+        if: matrix.item.mixamo != ''
+        env:
+          TOKEN: ${{ secrets.ASSETS_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Esta escena usa recursos de mixamo-respaldo (privado). Falta el secreto ASSETS_TOKEN (token de sólo lectura de ese repo): ver docs/ERRORES.md"
+            exit 1
+          fi
+      - name: Bajar recursos de mixamo-respaldo
+        if: matrix.item.mixamo != ''
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/mixamo-respaldo
+          ref: ${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/mixamo-respaldo
+          sparse-checkout: ${{ matrix.item.mixamo }}
+          sparse-checkout-cone-mode: false
       - name: Montaje, audio, visor 3D y proyecto
         run: python -m estudio cerrar "${{ matrix.item.escena }}" --tomas out/tomas --calidad "${{ needs.planificar.outputs.calidad }}" --salida out/entrega 2>&1 | grep -vE "EGL|CUEW|^$" | tail -n 60
       - name: Publicar en la release de la producción
@@ -187,6 +233,8 @@ jobs:
       fail-fast: false
       matrix:
         ruta: ${{ fromJSON(needs.planificar.outputs.escenarios) }}
+    env:
+      CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -198,8 +246,27 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
           pip install -q -r requirements-produccion.txt
+      - name: Recursos privados (sólo los archivos que usa la escena)
+        if: matrix.ruta.mixamo != ''
+        env:
+          TOKEN: ${{ secrets.ASSETS_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Esta escena usa recursos de mixamo-respaldo (privado). Falta el secreto ASSETS_TOKEN (token de sólo lectura de ese repo): ver docs/ERRORES.md"
+            exit 1
+          fi
+      - name: Bajar recursos de mixamo-respaldo
+        if: matrix.ruta.mixamo != ''
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/mixamo-respaldo
+          ref: ${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/mixamo-respaldo
+          sparse-checkout: ${{ matrix.ruta.mixamo }}
+          sparse-checkout-cone-mode: false
       - name: Construir escenario y versión para el visor
-        run: python -m estudio escenario "${{ matrix.ruta }}" --salida out/escenarios 2>&1 | grep -vE "EGL|CUEW|^$|Saved:" | tail -n 20
+        run: python -m estudio escenario "${{ matrix.ruta.ruta }}" --salida out/escenarios 2>&1 | grep -vE "EGL|CUEW|^$|Saved:" | tail -n 20
       - name: Publicar
         env:
           GH_TOKEN: ${{ github.token }}

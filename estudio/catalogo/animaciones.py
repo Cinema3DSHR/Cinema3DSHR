@@ -139,6 +139,24 @@ def construir(limite: int = 0, analizar: bool = False) -> Path:
                     "esqueleto": esq if "perro" not in pack["archivo"] else "perro_48", "bytes": None,
                     "grupo": _grupo(c["clip"]), **d,
                 })
+    fut = config.CATALOGO / "futbol.json"
+    if fut.exists():
+        mapa_rol = {"kick": ["golpear", "futbol"], "gk": ["futbol", "arquero"], "celebrate": ["reaccion", "festejo"],
+                    "dejected": ["reaccion", "lamento"], "run": ["correr"], "sprint": ["sprint", "correr"],
+                    "jog": ["correr"], "idle": ["idle"], "wall": ["futbol", "barrera"], "jump": ["saltar"],
+                    "sidestep": ["caminar"], "start": ["correr"], "step": ["caminar"], "setpiece": ["golpear", "futbol"]}
+        for c in json.loads(fut.read_text())["clips"]:
+            funcs = sorted({f for k, fs in mapa_rol.items() if (c["rol"] or c["accion"]).startswith(k) for f in fs}) or ["futbol"]
+            clips.append({
+                "id": "fut_" + c["clip"], "ref": "mixamo:futbol_free_kick_swipe/exportados/jugador_con_animaciones.glb",
+                "formato": "glb", "clip": c["clip"], "nombre": c["clip"], "descripcion": c.get("etiqueta", ""),
+                "descripcion_en": c["accion"].replace("_", " ") + " " + (c.get("toma") or "").lower().replace("_", " "),
+                "categoria_origen": ",".join(c["categorias"]), "pack": "Fútbol (Free Kick Swipe)",
+                "duracion_s": c["duracion_s"], "fotogramas": None, "fps": 60, "en_el_lugar": False,
+                "esqueleto": "futbol_tripo_23", "bytes": None, "grupo": "fut_" + c["accion"],
+                "funciones": funcs, "arma": "ninguna", "postura": "de_pie", "bucle_probable": c["rol"] in ("idle", "run", "jog", "sprint"),
+                "rol_futbol": c["rol"], "golpeo": c.get("golpeo"),
+            })
     if limite:
         clips = clips[:limite]
     grupos: dict[str, int] = {}

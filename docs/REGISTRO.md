@@ -21,7 +21,23 @@ La versión de revisión (720p) la renderiza el flujo `render.yml` en Actions al
 exportación), VISOR 3D, ESCENARIOS y AJUSTES; lanzador con actualización por `app.pck`; firma estable cifrada.
 Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 
+## 14/11/2026 — Módulo de fútbol (pedido del dueño)
+
+- Paquete Free Kick Swipe guardado completo en **mixamo-respaldo/futbol_free_kick_swipe/** (rama de la sesión),
+  con `README.md` e `indice_futbol.json` (3 223 clips con rol, categoría, toma y golpeo). Originales intactos.
+- `catalogo/futbol.json`, `catalogo/personajes.json`; los clips de fútbol también entran al buscador general
+  (6 515 clips en total).
+- Estudio: importador GLB que tolera extensiones de Godot (copia saneada en caché), personajes animados por NLA con
+  encadenado por desplazamiento de cadera, uniformes por máscaras (recrea el shader del juego), pelota con la física
+  del juego y solucionador de tiro al destino, estadio rematerializado con 13 074 hinchas sentados, línea de tiempo
+  del ánimo del público, sonido de estadio (murmullo, patada, red, ovación).
+- Escena de prueba `p001_futbol_tiro_libre` (14 s, 6 tomas) verificada con fotogramas fijos; render completo local en
+  calidad previa enviado al dueño. En Actions necesita el secreto `ASSETS_TOKEN`.
+- Render de la mansión (p000) en Actions: ~10 s por fotograma a 720p, una máquina por toma.
+
 ### Pendiente / próximo
+- Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
+  la rama de mixamo-respaldo a `main`.
 - Dueño: crear `ANDROID_KEYSTORE_PASSWORD` (firma) — sin eso la APK es de prueba.
 - Dueño: decidir si el repo sigue público (videos visibles) — ver informe §5.
 - Etapa 5: secreto `ASSETS_TOKEN` (lectura de mixamo-respaldo y Nexus en Actions), personajes en escena,

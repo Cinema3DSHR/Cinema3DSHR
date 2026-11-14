@@ -11,5 +11,6 @@
 | La app no aprueba («código 401/403/404») | Token vencido o sin permiso Issues | AJUSTES → crear token fine-grained (Issues RW, sólo Cinema3DSHR). |
 | APK de «PRUEBA» | Falta `ANDROID_KEYSTORE_PASSWORD` | Crear el secreto (docs/APP_ANDROID.md) y volver a correr «App Android». |
 | «No se pudo descifrar la clave» | El secreto cambió | Volver a poner la contraseña original (no se puede recuperar la clave sin ella). |
-| Render de una escena con personajes falla en Actions buscando `mixamo:` | Falta acceso al repo privado | Secreto `ASSETS_TOKEN` (Etapa 5). |
+| «Falta el secreto ASSETS_TOKEN» en Actions | La escena usa recursos privados (fútbol, Mixamo) | GitHub → Settings → Developer settings → Fine-grained token: repo **mixamo-respaldo**, *Contents: Read*. Guardarlo en Cinema3DSHR → Settings → Secrets → Actions como `ASSETS_TOKEN`. |
+| El estadio importa lento o se cuelga | Mover miles de objetos de colección | Ya resuelto: se importa directo en la colección destino y los materiales se asignan por malla. |
 | Godot: `Cannot infer the type` | Tipado estricto de GDScript | Declarar el tipo (`var x: float = …`). |

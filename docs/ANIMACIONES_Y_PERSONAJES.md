@@ -18,6 +18,10 @@
 Pendiente (Etapa 5): análisis completo de los 3292 (desplazamiento, velocidad, bucle real comparando primer y último
 fotograma), miniaturas/previsualizaciones, marcas de eventos (pisada, disparo, recarga) para sincronizar sonido.
 
+## Personajes ya integrados
+
+- **Futbolista** (`futbol:jugador`): animado con sus 3 223 clips, uniforme configurable. Ver `docs/FUTBOL.md`.
+
 ## Personajes y retargeting (Etapa 5)
 
 - Compatibles directos (mismo esqueleto): Y Bot (`mixamo:personajes/ybot_tpose.fbx`), operador de Nexus

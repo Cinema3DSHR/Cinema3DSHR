@@ -137,6 +137,46 @@ def mecanismo(pistas, n, rng, inicio_s, duracion_s, pos, tipo="porton_motor"):
     return _a_estereo(out, g * 2.5, pan)
 
 
+def ambiente_estadio(n, rng):
+    """Murmullo de multitud: ruido en banda de voz con oleadas lentas y algún grito lejano."""
+    base = _ruido_color(n, rng, -2.5, 180, 2600) * 0.45
+    ola = 0.7 + 0.3 * np.sin(np.arange(n) / SR * 2 * np.pi * 0.11 + rng.uniform(0, 6))
+    grave = _ruido_color(n, rng, -6, 40, 250) * 0.25
+    st = np.stack([base * ola + grave, np.roll(base, 2400) * ola + grave], axis=1)
+    return st
+
+
+def ovacion(n, rng, t0, dur=5.0):
+    out = np.zeros((n, 2))
+    a = int(t0 * SR)
+    b = min(n, a + int(dur * SR))
+    if b <= a:
+        return out
+    seg = b - a
+    x = _ruido_color(seg, rng, -1.5, 200, 5000)
+    env = np.minimum(1, np.arange(seg) / (0.25 * SR)) * np.exp(-np.arange(seg) / (dur * 0.55 * SR))
+    out[a:b, 0] = x * env * 1.6
+    out[a:b, 1] = np.roll(x, 1200) * env * 1.6
+    return out
+
+
+def golpe(n, rng, t0, tipo="patada"):
+    out = np.zeros(n)
+    a = int(t0 * SR)
+    if tipo == "patada":
+        d = int(0.18 * SR)
+        tt = np.arange(d) / SR
+        s = np.sin(2 * np.pi * 95 * tt) * np.exp(-tt * 28) + rng.standard_normal(d) * np.exp(-tt * 120) * 0.6
+    else:  # red: roce de la pelota contra la red
+        d = int(0.6 * SR)
+        tt = np.arange(d) / SR
+        s = _ruido_color(d, rng, -1, 800, 7000) * np.exp(-tt * 6) * 0.7
+    b = min(n, a + len(s))
+    if b > a:
+        out[a:b] = s[: b - a]
+    return np.stack([out, out], axis=1)
+
+
 def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
     """Genera la mezcla de efectos+ambiente de la escena (WAV 48 kHz estéreo)."""
     son = manifiesto.get("sonido", {})
@@ -146,6 +186,14 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
     amb = son.get("ambiente")
     if amb == "noche_suburbio":
         mezcla += ambiente_noche_suburbio(n, rng) * 0.5
+    elif amb == "estadio":
+        mezcla += ambiente_estadio(n, rng) * 0.35
+    for ev in pistas.get("eventos", []):
+        if ev["tipo"] == "patada":
+            mezcla += golpe(n, rng, ev["t"], "patada") * 0.9
+        elif ev["tipo"] == "gol":
+            mezcla += golpe(n, rng, ev["t"], "red") * 0.5
+            mezcla += ovacion(n, rng, ev["t"] + 0.15, 6.0) * 0.8
     for ev in son.get("eventos", []):
         if ev["tipo"] == "motor":
             mezcla += motor(pistas, ev["movil"], n, rng) * ev.get("volumen", 1.0)

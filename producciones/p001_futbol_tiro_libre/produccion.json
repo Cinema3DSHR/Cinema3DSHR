@@ -1,0 +1,10 @@
+{
+  "tipo": "produccion",
+  "id": "p001_futbol_tiro_libre",
+  "titulo": "Tiro libre al ángulo",
+  "genero": "Deportes · Fútbol",
+  "sinopsis": "Prueba del módulo de fútbol: noche de estadio lleno. El 10 acomoda la pelota frente a la barrera, toma carrera y la clava en el ángulo; el arquero vuela y no llega. Festejo con la tribuna de pie.",
+  "clase": "escena",
+  "creada": "2026-11-14",
+  "escenas": ["e01"]
+}
