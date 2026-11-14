@@ -1,0 +1,190 @@
+<title>Prueba de resolución 001</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Concepto: mesa de revisión de montaje. Un visor grande que cambia de resolución sobre el mismo cuadro, y debajo los números.
+   Paleta: grafito azulado + ámbar de la app 3D Film Studio. Tipos: Space Grotesk (títulos), Inter (texto), JetBrains Mono (cifras). */
+:root {
+  --bg: #eceef2; --panel: #ffffff; --linea: #d3d8e0; --fg: #14171d; --muted: #566073;
+  --acento: #94560a; --acento-fondo: #fdeccb; --escena: #07080b; --activo: #14171d; --activo-fg: #ffffff;
+  --f-titulo: "Space Grotesk", system-ui, sans-serif; --f-texto: "Inter", system-ui, sans-serif; --f-num: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b0c10; --panel: #14161c; --linea: #262a33; --fg: #e8eaef; --muted: #9aa2b1;
+    --acento: #e8b04a; --acento-fondo: #2a2112; --escena: #050608; --activo: #e8b04a; --activo-fg: #14110a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b0c10; --panel: #14161c; --linea: #262a33; --fg: #e8eaef; --muted: #9aa2b1;
+  --acento: #e8b04a; --acento-fondo: #2a2112; --escena: #050608; --activo: #e8b04a; --activo-fg: #14110a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--f-texto); font-size: 15px; line-height: 1.55;
+  padding-block: 24px 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.pagina { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2 { font-family: var(--f-titulo); text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h1 { font-size: clamp(26px, 4vw, 38px); line-height: 1.1; }
+h2 { font-size: 20px; }
+p { margin: 0; }
+.sub { color: var(--muted); max-width: 70ch; }
+.cabecera { display: flex; flex-direction: column; gap: 10px; }
+.estado { align-self: flex-start; font-size: 13px; font-weight: 600; color: var(--acento); background: var(--acento-fondo); padding: 4px 12px; border-radius: 999px; }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+
+/* visor */
+.visor { display: flex; flex-direction: column; gap: 12px; }
+.barra { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 10px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--linea); }
+.fila { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.etiqueta { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); min-width: 92px; }
+button { font: inherit; cursor: pointer; border: 1px solid var(--linea); background: var(--panel); color: var(--fg); border-radius: 8px; padding: 7px 12px; line-height: 1.2; }
+button:hover { border-color: var(--acento); }
+button[aria-pressed="true"] { background: var(--activo); color: var(--activo-fg); border-color: var(--activo); font-weight: 600; }
+button:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+.btn-res small { display: block; font-size: 11px; opacity: 0.75; font-family: var(--f-num); }
+.marco { background: var(--escena); border-radius: 10px; overflow: hidden; aspect-ratio: 16 / 9; max-width: 100%; position: relative; }
+.marco img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.marco.zoom { overflow: auto; aspect-ratio: auto; max-height: min(78vh, 760px); }
+.marco.zoom img { width: 200%; height: auto; max-width: none; }
+.pie { display: flex; flex-wrap: wrap; gap: 6px 22px; color: var(--muted); font-size: 13px; }
+.pie b { color: var(--fg); font-weight: 600; }
+.mirar { background: var(--panel); border: 1px solid var(--linea); border-radius: 10px; padding: 12px 14px; max-width: 80ch; }
+.mirar strong { font-family: var(--f-titulo); }
+
+/* recortes */
+.recorte { display: grid; gap: 10px; }
+.recorte img { width: 100%; height: auto; border-radius: 10px; background: var(--escena); display: block; }
+
+/* tablas */
+.tabla { overflow-x: auto; border: 1px solid var(--linea); border-radius: 10px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: 14px; }
+th, td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--linea); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+th { font-weight: 600; color: var(--muted); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; white-space: normal; vertical-align: bottom; }
+tr:last-child td { border-bottom: 0; }
+td.ref { color: var(--muted); }
+.lista { display: flex; flex-direction: column; gap: 10px; max-width: 80ch; padding-left: 20px; margin: 0; }
+.dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+.panel { background: var(--panel); border: 1px solid var(--linea); border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+code { font-family: var(--f-num); font-size: 13px; }
+@media (max-width: 560px) { .etiqueta { min-width: 100%; } }
+@media (prefers-reduced-motion: no-preference) { button { transition: border-color .15s, background .15s; } }
+</style>
+
+<div class="pagina">
+  <header class="cabecera">
+    <span class="estado">Sin resolución definitiva · falta tu revisión</span>
+    <h1>Prueba de resolución 001</h1>
+    <p class="sub">Mansión de referencia (<code>p000</code>) renderizada en 4 resoluciones, cinco momentos exactos cada una. Misma escena, mismas cámaras, luces, materiales y calidad de render: lo único que cambia es la resolución de salida. 14/11/2026.</p>
+  </header>
+
+  <section class="visor" aria-labelledby="t-visor">
+    <h2 id="t-visor">Comparador</h2>
+    <div class="barra">
+      <div class="fila"><span class="etiqueta">Momento</span><span class="fila" id="momentos"></span></div>
+      <div class="fila"><span class="etiqueta">Resolución</span><span class="fila" id="resoluciones"></span>
+        <button id="zoom" aria-pressed="false" title="Amplía el cuadro al doble para ver el detalle fino">Zoom 2×</button></div>
+    </div>
+    <div class="marco" id="marco"><img id="img" alt="" decoding="async"></div>
+    <div class="pie" id="pie"></div>
+    <div class="mirar" id="mirar"></div>
+    <p class="sub">Atajos: teclas <b>1</b> a <b>4</b> cambian la resolución, <b>←</b> y <b>→</b> el momento, <b>Z</b> el zoom. Todas las imágenes se muestran al mismo tamaño en pantalla, así que lo que se ve más blando tiene menos detalle real.</p>
+  </section>
+
+  <section class="recorte" aria-labelledby="t-rec">
+    <h2 id="t-rec">El mismo recorte, las cuatro juntas</h2>
+    <p class="sub">Zona de interés de este momento ampliada sin suavizar (cada píxel se ve como es). Arriba a la izquierda 1280×720; arriba a la derecha 1024×576; abajo 960×540 y 854×480.</p>
+    <img id="detalle" alt="Recorte comparativo de las cuatro resoluciones">
+  </section>
+
+  <section aria-labelledby="t-res">
+    <h2 id="t-res">Resultados medidos</h2>
+    <p class="sub" style="margin-block: 6px 12px">Tiempos: media de dos pasadas (equipo de 4 núcleos, sin GPU, 10 muestras). El peso de 10 minutos es una estimación calibrada con el MP4 real de producción (H.264, CRF 22, con audio).</p>
+    <div class="tabla"><table id="tabla">
+      <thead><tr><th>Resolución</th><th>Render por fotograma</th><th>Tiempo vs 720p</th><th>CPU para 10 min</th><th>Peso de 10 min</th><th>RAM pico</th><th>SSIM vs 720p</th><th>Detalle fino</th><th>Detalle en el agua</th></tr></thead>
+      <tbody></tbody></table></div>
+  </section>
+
+  <section class="dos" aria-labelledby="t-lec">
+    <div class="panel">
+      <h2 id="t-lec">Mi lectura (provisoria)</h2>
+      <ul class="lista">
+        <li><b>El costo de render es proporcional a los píxeles.</b> No hay un punto dulce escondido: bajar de 720p a 540p ahorra ~42 % del tiempo y ~52 % del peso.</li>
+        <li><b>Lo que no cambia:</b> color, exposición, sombras, reflejos grandes y luces. <b>Lo que se pierde primero:</b> el detalle fino (ondas del agua, vidrio, ventanas lejanas).</li>
+        <li><b>960×540 es mi candidata a mejor relación</b> (es justo la mitad de 1080p, así que se amplía ×2 sin remuestreo raro). 1024×576 es el piso si querés conservar algo más del agua. 854×480 la veo mejor para borradores.</li>
+        <li>No fijé nada: mirá el agua (momento 4) y las ventanas de la ciudad (momento 1) y decidí si esa pérdida te molesta.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>Qué no demuestra esta prueba</h2>
+      <ul class="lista">
+        <li>Es <b>una sola escena</b>, nocturna y oscura (el detalle fino pesa menos que de día).</li>
+        <li>Son <b>fotogramas fijos</b>: no se evaluó parpadeo del agua en movimiento ni la compresión de video.</li>
+        <li><b>No se probó en un teléfono</b> ni tras la recompresión de TikTok, Reels o YouTube. Eso viene con la prueba 9:16.</li>
+        <li>La escena <b>no tiene partículas, lluvia ni niebla</b> activas; esos efectos no se pudieron evaluar.</li>
+        <li>El peso de video es una <b>estimación</b> (±25 %), no un video de 10 minutos renderizado.</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="sub">Informe completo, mediciones crudas y las 20 imágenes: <code>pruebas/resolucion_001/</code> en el repositorio Cinema3DSHR.</p>
+</div>
+
+<script>
+/*DATOS*/
+const RES = Object.keys(DATOS.res);
+const E = { m: 0, r: 0, zoom: false };
+const $ = (id) => document.getElementById(id);
+const fmt = (n, d = 1) => n.toLocaleString("es-AR", { minimumFractionDigits: d, maximumFractionDigits: d });
+
+function botones(id, items, alClick) {
+  const cont = $(id); cont.textContent = "";
+  items.forEach((it, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    if (it.html) { b.className = "btn-res"; b.innerHTML = it.html; } else b.textContent = it.texto;
+    b.addEventListener("click", () => alClick(i));
+    cont.appendChild(b);
+  });
+}
+function marcar(id, activo) {
+  [...$(id).children].forEach((b, i) => b.setAttribute("aria-pressed", String(i === activo)));
+}
+function pintar() {
+  const m = DATOS.momentos[E.m], rk = RES[E.r], r = DATOS.res[rk];
+  marcar("momentos", E.m); marcar("resoluciones", E.r);
+  $("img").src = m.img[rk];
+  $("img").alt = m.nombre + " en " + r.ancho + "×" + r.alto;
+  $("marco").classList.toggle("zoom", E.zoom);
+  $("zoom").setAttribute("aria-pressed", String(E.zoom));
+  $("pie").innerHTML =
+    "<span><b>" + r.ancho + "×" + r.alto + "</b> · " + m.toma + " · " + fmt(m.t, 1) + " s (fotograma " + m.frame + ")</span>" +
+    "<span>Render de este cuadro: <b class='num'>" + fmt(m.t_s[rk], 1) + " s</b></span>" +
+    "<span>Detalle fino en la zona: <b class='num'>" + m.amp_zona[rk] + " %</b> del 720p</span>";
+  $("mirar").innerHTML = "<strong>Qué mirar:</strong> " + m.mirar;
+  $("detalle").src = m.detalle;
+}
+function tabla() {
+  const cuerpo = document.querySelector("#tabla tbody"); cuerpo.textContent = "";
+  RES.forEach((k, i) => {
+    const r = DATOS.res[k], tr = document.createElement("tr");
+    const celdas = [
+      "<b>" + r.ancho + "×" + r.alto + "</b>" + (i === 0 ? " <span class='ref'>(referencia)</span>" : ""),
+      fmt(r.s, 2) + " s", i === 0 ? "1,00×" : fmt(r.rel, 2) + "×", r.cpu_h + " h", "≈ " + r.mb + " MB", fmt(r.ram, 0) + " MB",
+      i === 0 ? "—" : fmt(r.ssim, 3), r.amp + " %", r.amp_pool + " %"];
+    tr.innerHTML = celdas.map((c, j) => "<td class='" + (j ? "num" : "") + "'>" + c + "</td>").join("");
+    cuerpo.appendChild(tr);
+  });
+}
+$("zoom").addEventListener("click", () => { E.zoom = !E.zoom; pintar(); });
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT" || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key >= "1" && e.key <= "4") { E.r = Number(e.key) - 1; pintar(); }
+  else if (e.key === "ArrowRight") { E.m = (E.m + 1) % DATOS.momentos.length; pintar(); }
+  else if (e.key === "ArrowLeft") { E.m = (E.m + DATOS.momentos.length - 1) % DATOS.momentos.length; pintar(); }
+  else if (e.key.toLowerCase() === "z") { E.zoom = !E.zoom; pintar(); }
+});
+botones("momentos", DATOS.momentos.map((x, i) => ({ texto: (i + 1) + " · " + x.nombre })), (i) => { E.m = i; pintar(); });
+botones("resoluciones", RES.map((k) => ({ html: DATOS.res[k].ancho + "×" + DATOS.res[k].alto + "<small>" + fmt(DATOS.res[k].s, 1) + " s/fotograma</small>" })), (i) => { E.r = i; pintar(); });
+tabla(); pintar();
+</script>
