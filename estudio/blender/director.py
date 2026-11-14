@@ -258,6 +258,10 @@ def guardar_blend(ruta: Path):
     """Guarda el proyecto editable. Se descartan los clips de las bibliotecas que la escena no usa (el modelo de
     fútbol trae 3 223): se pueden volver a cargar en cualquier momento desde el recurso original."""
     ruta.parent.mkdir(parents=True, exist_ok=True)
+    # el prototipo oculto de cada biblioteca guarda TODOS los clips como pistas NLA "estacionadas": se limpian
+    for o in bpy.data.objects:
+        if any(c.name.startswith("BIBLIOTECA_") for c in o.users_collection) and o.animation_data:
+            o.animation_data_clear()
     usadas = set()
     for o in bpy.data.objects:
         ad = o.animation_data
