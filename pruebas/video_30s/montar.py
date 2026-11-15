@@ -24,7 +24,10 @@ def ssim(n):
     m = re.search(r"All:([0-9.]+)", r.stderr); return float(m.group(1)) if m else None
 s_lim = {n: ssim(n) for n in limites}
 dentro = [ssim(n) for n in range(2, a.total, 17) if n not in limites and n + 1 <= a.total]
-med, mn = statistics.median(dentro), min(dentro)
+if not [x for x in dentro if x is not None]:     # ensayos chicos: no hay puntos internos → se comparan todos los pares que no son límite
+    dentro = [ssim(n) for n in range(1, a.total) if n not in limites]
+dentro = [x for x in dentro if x is not None]
+med, mn = (statistics.median(dentro), min(dentro)) if dentro else (None, None)   # None = no había ningún par que comparar
 # 4) MP4: 30 fps constantes, 1280x720, audio original normalizado como en producción
 mp4 = S / f"{a.nombre}.mp4"
 cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-framerate", "30", "-start_number", "1", "-i", str(F / "f_%04d.png")]
@@ -41,7 +44,7 @@ reloj = (ahora - dt.datetime.fromisoformat(a.run_iniciado.replace("Z", "+00:00")
 por_toma = collections.defaultdict(list)
 for f in tt: por_toma[f["toma"]].append(f["segundos"])
 inf = {"integridad": {"fotogramas": len(nums), "esperados": a.total, "faltantes": faltan, "sobrantes": sobran, "grupos_de_fotogramas_con_contenido_identico": iguales[:20], "n_grupos_identicos": len(iguales)},
-       "continuidad": {"ssim_en_limites_entre_trabajos": {f"{n}->{n + 1}": round(x, 4) for n, x in s_lim.items()}, "ssim_mediana_dentro": round(med, 4), "ssim_minimo_dentro": round(mn, 4)},
+       "continuidad": {"ssim_en_limites_entre_trabajos": {f"{n}->{n + 1}": (round(x, 4) if x is not None else None) for n, x in s_lim.items()}, "pares_comparados_dentro": len(dentro), "ssim_mediana_dentro": round(med, 4) if med is not None else None, "ssim_minimo_dentro": round(mn, 4) if mn is not None else None},
        "video": {"archivo": mp4.name, "bytes": int(fmt["size"]), "mb": round(int(fmt["size"]) / 1e6, 2), "duracion_s": float(fmt["duration"]), "ancho": v["width"], "alto": v["height"],
                  "fps_declarados": v["r_frame_rate"], "fps_promedio": v["avg_frame_rate"], "fotogramas_leidos": v["nb_read_frames"], "codec": v["codec_name"], "pix_fmt": v["pix_fmt"], "audio": aud},
        "rendimiento": {"trabajos_de_render": len(informes), "fotogramas": len(tt), "render_acumulado_s": round(sum(segs), 1), "cpu_proceso_acumulada_s": round(sum(i["cpu_proceso_s"] for i in informes), 1),

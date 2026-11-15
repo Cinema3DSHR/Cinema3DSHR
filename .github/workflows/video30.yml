@@ -33,8 +33,12 @@ jobs:
       total: ${{ steps.plan.outputs.total }}
       mixamo: ${{ steps.plan.outputs.mixamo }}
       nexus: ${{ steps.plan.outputs.nexus }}
+      inicio: ${{ steps.t0.outputs.inicio }}
       extraction: ${{ steps.plan.outputs.extraction }}
     steps:
+      - name: Hora de inicio (para medir el reloj real hasta el MP4)
+        id: t0
+        run: echo "inicio=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.13"}
@@ -206,7 +210,7 @@ jobs:
           mkdir -p frames && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d frames; done
           ls frames | grep -c '^f_.*png$'
       - name: Verificar, codificar el MP4 y armar el informe
-        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --nombre "${{ inputs.nombre }}" --run-iniciado "${{ github.run_started_at }}"
+        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --nombre "${{ inputs.nombre }}" --run-iniciado "${{ needs.planificar.outputs.inicio }}"
       - name: Publicar en la release (sólo si no es ensayo)
         if: ${{ inputs.limite == '0' }}
         env:
