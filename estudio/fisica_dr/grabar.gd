@@ -114,6 +114,19 @@ class Ruta:
 	func tangente(si: float) -> Vector2:
 		return (en(si + 1.0) - en(si - 1.0)).normalized()
 
+	## s más cercano a q en todo el camino (al entrar a un marco nuevo)
+	func proyectar_global(q: Vector2) -> float:
+		var mejor := 0.0
+		var dmin := INF
+		var a := -5.0
+		while a <= largo + 5.0:
+			var d := en(a).distance_squared_to(q)
+			if d < dmin:
+				dmin = d
+				mejor = a
+			a += 0.5
+		return proyectar(q, mejor)
+
 	## s más cercano a q, buscando cerca de s0
 	func proyectar(q: Vector2, s0: float) -> float:
 		var mejor := s0
@@ -363,6 +376,9 @@ class Marco:
 		return Vector3((b.x - a.x) / (2 * d), (b.y - a.y) / (2 * d), wrapf(b.z - a.z, -PI, PI) / (2 * d))
 
 ## de coordenadas de la física (juego) del marco a Blender local del marco y al mundo
+static func _rumbo_marco(m: Marco, t: float) -> float:
+	return m.pose(t).z
+
 static func _local_a_mundo(m: Marco, t: float, xl: float, yl: float) -> Vector2:
 	var p := m.pose(t)
 	var r := p.z
@@ -534,15 +550,26 @@ func _sim_marcos(vp: Dictionary, plan: Dictionary, V, fps: int, hz: int, cuadros
 	ph.reset(float(ini[0]), -float(ini[1]), float(ini[2]) + PI)
 	var cambios: Array = vp.get("cambios", [])
 	var controles: Array = vp.get("controles", [])
-	# volante: con "ruta_local" lo maneja el conductor que sigue el camino (sólo en el marco inicial)
-	var cond: Conductor = null
+	# conductor por marco: "rutas_local": {marco: {"ruta": [[x, y]…], "horario": [[t, s]…] (opcional: si está, también
+	# maneja gas y freno para cumplir el horario)}}. "ruta_local" (sólo volante, marco inicial) se sigue aceptando.
+	var conds := {}
+	var con_vel := {}
+	var rl: Dictionary = vp.get("rutas_local", {})
 	if vp.has("ruta_local"):
-		cond = Conductor.new()
-		cond.ruta = Ruta.new(vp["ruta_local"])
-		cond.horario = [[-100.0, 0.0], [100.0, 1.0]]
-		cond.eventos = []
-		cond.s_act = cond.ruta.proyectar(Vector2(ph.px, ph.pz), 0.0)
-	var marco_inicial := actual
+		rl = rl.duplicate()
+		rl[actual] = {"ruta": vp["ruta_local"]}
+	for k in rl:
+		var cd := Conductor.new()
+		cd.ruta = Ruta.new(rl[k]["ruta"])
+		cd.horario = rl[k].get("horario", [[-100.0, 0.0], [100.0, 1.0]])
+		cd.eventos = []
+		conds[k] = cd
+		con_vel[k] = rl[k].has("horario")
+	if conds.has(actual):
+		conds[actual].s_act = conds[actual].ruta.proyectar_global(Vector2(ph.px, ph.pz))
+	# caminos nuevos a mitad de la toma: [{t0, marco, ruta, horario}] (p. ej. el doble vuelve a contramano y se planta)
+	var extras: Array = vp.get("rutas_extra", [])
+	var extra_hecho := 0
 	var previo := float(vp.get("previo_s", 1.0))
 	var h := 1.0 / hz
 	var sub := int(hz / fps)
@@ -590,13 +617,44 @@ func _sim_marcos(vp: Dictionary, plan: Dictionary, V, fps: int, hz: int, cuadros
 			m = B
 			actual = nuevo
 			hechos += 1
+			if conds.has(actual):
+				conds[actual].s_act = conds[actual].ruta.proyectar_global(Vector2(ph.px, ph.pz))
 		var thr := 0.0
 		var brk := 0.0
 		var st := 0.0
 		var hb := false
-		if cond != null and actual == marco_inicial:
-			st = float(cond.manejar(ph, tt, h)[2])
+		while extra_hecho < extras.size() and tt >= float(extras[extra_hecho]["t0"]):
+			var ex: Dictionary = extras[extra_hecho]
+			var cd2 := Conductor.new()
+			cd2.ruta = Ruta.new(ex["ruta"])
+			cd2.horario = ex.get("horario", [[-100.0, 0.0], [100.0, 1.0]])
+			cd2.eventos = []
+			cd2.s_act = cd2.ruta.proyectar_global(Vector2(ph.px, ph.pz))
+			if ex.has("horario_rel"):
+				# horario relativo: [[dt, ds]] desde donde está el auto al cambiar de camino
+				var hr := []
+				for q in ex["horario_rel"]:
+					hr.append([float(ex["t0"]) + float(q[0]), cd2.s_act + float(q[1])])
+				cd2.horario = hr
+			conds[str(ex["marco"])] = cd2
+			con_vel[str(ex["marco"])] = ex.has("horario") or ex.has("horario_rel")
+			extra_hecho += 1
+		if conds.has(actual):
+			var mj: Array = conds[actual].manejar(ph, tt, h)
+			st = float(mj[2])
+			if con_vel[actual]:
+				thr = minf(float(mj[0]), float(vp.get("gas_max", 1.0)))   # un doble dosifica el acelerador
+				brk = float(mj[1])
 		for c in controles:
+			if tt >= float(c["t0"]) and tt < float(c["t1"]) and c.has("rumbo_deg"):
+				# trompo dirigido: volante a fondo (y freno de mano) hasta acercarse al rumbo pedido, después contravolanteo
+				var rumbo_actual := ph.yaw - PI + _rumbo_marco(m, tt)
+				var err := wrapf(deg_to_rad(float(c["rumbo_deg"])) - rumbo_actual - ph.yawRate * float(c.get("anticipa_s", 0.0)), -PI, PI)
+				st = clampf(-err * 2.5, -1.0, 1.0)
+				hb = absf(err) > deg_to_rad(float(c.get("mano_hasta_deg", 35.0)))
+				thr = float(c.get("gas", 0.3)) if absf(err) > deg_to_rad(20.0) else 0.0
+				brk = 0.0 if absf(err) > deg_to_rad(20.0) else 0.7
+				continue
 			if tt >= float(c["t0"]) and tt < float(c["t1"]):
 				thr = float(c.get("gas", thr))
 				brk = float(c.get("freno", brk))

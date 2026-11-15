@@ -70,7 +70,8 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
             lc.exclude = True
             excluidas.append(lc)
     try:
-        for spec in manifiesto.get("personajes", []):
+        # personajes de la receta + los que calcula el escenario (p. ej. Mateo bajándose donde frenó el auto)
+        for spec in manifiesto.get("personajes", []) + info.get("personajes", []):
             pjs[spec["id"]] = P.crear(spec, fps)
     finally:
         for lc in excluidas:

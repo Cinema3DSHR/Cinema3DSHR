@@ -16,7 +16,7 @@ import random
 import bpy
 from mathutils import Vector, noise
 from mathutils.kdtree import KDTree
-from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD, via_ferrea as VF, paisaje as PA, salto_tren as ST
+from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD, via_ferrea as VF, paisaje as PA, salto_tren as ST, auto_rampa_s03 as ARS
 from estudio import fisica_dr as FD
 
 PARAMETROS = {"secuencia": 1, "semilla": 3, "velocidad_tren": 21.0, "s_cabeza_inicial": 620.0, "duracion_s": 75.0,
@@ -76,9 +76,9 @@ DEPENDENCIAS = [
 COMPOSICION = ["loco", "plano", "plano", "cerrado", "plano", "plano", "plano", "cerrado", "plano", "plano", "plano",
                "cerrado", "plano", "cerrado", "cerrado", "plano", "plano", "plano", "plano", "plano", "plano"]
 CARGA = {1: ["gt3", "kodiak"], 2: ["hyper", "suv"], 4: ["veltor_s", "muscle"], 5: ["truck", "strix"],
-         6: ["kl5", "trilux_gt"], 8: ["rally80", "pro_gt"], 9: ["veltor_gtr"], 10: ["gt", "genesis"],
+         6: ["kl5", "trilux_gt"], 8: ["rally80", "pro_gt"], 9: ["veltor_gtr", "moust"], 10: ["gt", "genesis"],
          12: ["torito", "clasico60"], 15: ["police", "camo"], 16: ["veltor", "hatch2"], 17: ["pickup", "hatch"],
-         18: ["buggy", "trilux"], 19: ["f1", "trilux_s"], 20: ["moust"]}
+         18: ["buggy", "trilux"], 19: ["f1", "trilux_s"], 20: []}            # el 20 (el último) va LIBRE: ahí cae el Bisonte en la secuencia 3
 VIA = [(-1600, -260), (-1000, -210), (-500, -90), (0, 0), (420, 110), (820, 170), (1220, 300), (1620, 500),
        (2000, 790), (2350, 1150)]
 
@@ -86,6 +86,9 @@ VIA = [(-1600, -260), (-1000, -210), (-500, -90), (0, 0), (420, 110), (820, 170)
 # blindado de la película con la física de Dream Rally del Cóndor T6 («camo»), con sus medidas y su peso
 PARAMS_BLINDADO = {"wheelBase": 3.27, "weightFront": 0.474, "trackF": 1.72, "trackR": 1.72, "wheelRadius": 0.46,
                    "mass": 4300.0, "comHeight": 0.95, "rideOffset": 0.0, "Ixx": 2200.0, "Iyy": 7800.0, "Izz": 8600.0}
+
+
+PROTOS: dict = {}           # prototipos Sweet Home de la escena en armado
 
 
 def _sh3d(nombre: str, col_proto: dict):
@@ -148,12 +151,15 @@ def construir(parametros: dict | None = None) -> dict:
     fps = s.render.fps
     col = K.coleccion("ESCENARIO_tren_fantasma")
     c_terr, c_via, c_deco, c_veh = (K.coleccion(n, col) for n in ("terreno", "via_y_ruta", "decorado", "vehiculos"))
-    protos = {}
+    protos = PROTOS
+    protos.clear()
     via = TR.Via([(x, y, 0) for x, y in VIA])
+    plan_s3 = None
     if p["secuencia"] == 3:
-        # el camión va por el carril de la izquierda a la distancia que pide el salto (ruta pegada a las vías)
-        pv = ST.prevuelo(fps, p.get("t_acelera", 15.0))
-        p["lado_ruta"] = (-pv["x"] + 0.45) + 1.875
+        # la física del auto rampa y del Bisonte decide dónde tiene que estar el tren (el vagón 20 bajo el Bisonte)
+        p["lado_ruta"] = ARS.LADO_RUTA
+        plan_s3 = ARS.planificar(via, p, fps)
+        p["s_cabeza_inicial"] = ARS.s_cabeza_para(via, plan_s3, COMPOSICION, p["velocidad_tren"])
     M = K.material
 
     # ------------------------------------------------------------------ cielo físico + sol de tarde
@@ -467,11 +473,12 @@ def construir(parametros: dict | None = None) -> dict:
     moviles["camara_desfile"] = {"tray": tray_des, "anclas": {"": (0, 0, 3.1)}}
 
     if p["secuencia"] == 3:
-        info_salto = ST.construir(via, tren, trays, frames, fps, c_veh, p, moviles)
+        info_salto = ARS.construir(via, tren, trays, frames, fps, c_veh, p, moviles, plan_s3)
     else:
         info_salto = None
     anclas = {"via_centro": tuple(via.en(1200)[0]), "casa_1": tuple(casas[1].location), "casa_3": tuple(casas[3].location)}
     for k, (sp_, pp_, nn_) in enumerate(vf["pasos_a_nivel"]):
         anclas[f"paso_nivel_{k + 1}"] = tuple(pp_)
         anclas[f"paso_nivel_{k + 1}_camino"] = tuple(pp_ + nn_ * -14.0 + Vector((0, 0, 1.6)))
-    return {"anclas": anclas, "animables": {"tren": tren, "via": via, "salto": info_salto}, "parametros": p, "moviles": moviles}
+    return {"anclas": anclas, "animables": {"tren": tren, "via": via, "salto": info_salto}, "parametros": p, "moviles": moviles,
+            "personajes": (info_salto or {}).get("personajes", [])}

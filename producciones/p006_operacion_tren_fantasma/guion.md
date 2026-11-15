@@ -52,16 +52,21 @@ construyeron para dar vuelta autos y para que otros salten sobre él).
 
 EXT. RUTA PEGADA A LAS VÍAS — CONTINUO
 
-El tren corre a la izquierda; la escolta de Halcón Negro (blindados y motos) va por la ruta, cerca del camión.
+El tren corre a la izquierda. A la par, por la ruta, el CAMIÓN GRIS (el Titán) tira del acoplado con el auto rampa;
+adelante, la escolta de Halcón Negro (un blindado y una moto). Al volante del auto rampa va el DOBLE DE RIESGO (casco
+y buzo de piloto). Detrás, a fondo, LUCÍA maneja el BISONTE XR; MATEO va de acompañante.
 
-1. **El único salto del auto rampa.** El auto rampa se baja del acoplado MARCHA ATRÁS, en movimiento: deja la cama por
-   atrás, vuela y cae en la ruta (cámara lenta: suspensión, ruedas, el piloto sacudido en la cabina).
-2. Gira sobre sí mismo, acelera, pasa al camión por el costado.
-3. **La cuña en acción:** alcanza a la escolta y la hace volar: un blindado sube por la cuña y sale dando vueltas, las
-   motos saltan por encima y caen.
-4. **El auto rampa vuelve y se planta DE FRENTE** en la ruta, con la cuña mirando al auto de los tres protagonistas,
-   que viene a fondo: el auto sube por la cuña del auto rampa y vuela hasta el tren (cámara lenta), cae en la
-   plataforma libre, derrapa y frena contra los obstáculos. Los protagonistas se bajan sobre el tren.
+1. **El único salto del auto rampa.** El doble mete reversa: el auto rampa se baja del acoplado MARCHA ATRÁS, en
+   movimiento, vuela por la cola y cae en la ruta (cámara lenta: suspensión, ruedas, el piloto sacudido en la cabina).
+2. Acelera y pasa al camión por el carril de la izquierda.
+3. **La cuña en acción:** alcanza a la escolta y la hace volar: la moto y el blindado suben por la cuña y salen dando
+   vueltas por el aire (cámara lenta).
+4. Trompo de 180° con freno de mano; vuelve a contramano por el carril pegado a las vías y **se planta DE FRENTE**,
+   con la cuña mirando al Bisonte, que viene a fondo.
+5. El Bisonte sube por la cuña y por el techo del auto rampa y vuela por encima de la ruta y del terraplén
+   (cámara lenta, de perfil y desde adentro: Lucía y Mateo contra los arneses). Cae en el **último vagón, el 20,
+   que viaja vacío**, derrapa sobre la madera y frena delante de los autos amarrados del vagón 19.
+6. El Bisonte se queda ahí con Lucía. MATEO se baja sobre el tren y sale caminando entre los autos: va a robarse uno.
 
 ## SECUENCIA 4 — ASALTO E INFILTRACIÓN (03:40–05:35)
 

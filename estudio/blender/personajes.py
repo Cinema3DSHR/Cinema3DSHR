@@ -204,10 +204,28 @@ def _material_uniforme(nombre: str, info: dict, colores: dict) -> bpy.types.Mate
     return mat
 
 
+def _aparecer(pj: dict, spec: dict, fps: int):
+    """"aparece_s": el personaje está oculto hasta ese momento (p. ej. se baja de un auto donde iba otro modelo)."""
+    if spec.get("aparece_s") is None:
+        return
+    f = int(round(spec["aparece_s"] * fps)) + 1
+    pila = [pj["raiz"]]
+    while pila:
+        o = pila.pop()
+        pila.extend(o.children)
+        if o.type == "MESH":
+            for fr, v in ((1, True), (f, False)):
+                o.hide_render = o.hide_viewport = v
+                o.keyframe_insert("hide_render", frame=fr)
+                o.keyframe_insert("hide_viewport", frame=fr)
+
+
 def crear(spec: dict, fps: int = 30, col=None) -> dict:
     """Crea un personaje (copia liviana del prototipo) y programa sus acciones. Devuelve sus datos."""
     if MODELOS[spec.get("modelo", "futbol:jugador")].get("tipo") == "mixamo65":
-        return _crear_mixamo(spec, fps, col)
+        pj = _crear_mixamo(spec, fps, col)
+        _aparecer(pj, spec, fps)
+        return pj
     lib = biblioteca(spec.get("modelo", "futbol:jugador"))
     info = lib["info"]
     col = col or K.coleccion("personajes")
