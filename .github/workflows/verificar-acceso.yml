@@ -1,0 +1,54 @@
+name: Verificar acceso a recursos privados (sin render, sin descargas)
+
+# Diagnóstico de autenticación de ASSETS_TOKEN. No renderiza, no publica y no baja recursos: sólo consulta metadatos
+# por API (HTTP) y hace `git ls-remote` (lista referencias, no baja contenido). NUNCA imprime el token: sólo su
+# longitud, su tipo por prefijo, si tiene espacios o saltos de línea y los códigos HTTP.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TOKEN: ${{ secrets.ASSETS_TOKEN }}
+      MIXAMO_REF: ${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}
+    steps:
+      - name: El secreto llega al trabajo (sin mostrarlo)
+        run: |
+          if [ -z "$TOKEN" ]; then echo "::error::ASSETS_TOKEN llega VACÍO (no existe como secreto de este repositorio, o es de otro ámbito)"; exit 1; fi
+          echo "longitud: ${#TOKEN}"
+          case "$TOKEN" in
+            github_pat_*) echo "tipo: fine-grained (github_pat_)";;
+            ghp_*)        echo "tipo: clásico (ghp_)";;
+            ghs_*)        echo "tipo: de instalación de app (ghs_)";;
+            *)            echo "tipo: DESCONOCIDO (prefijo inesperado: ¿se pegó otra cosa?)";;
+          esac
+          if printf '%s' "$TOKEN" | grep -q '[[:space:]]'; then echo "::error::el token contiene espacios o saltos de línea (se pegó mal)"; else echo "espacios/saltos: no"; fi
+      - name: ¿El token es válido? (API, sin mostrar nada del token)
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" https://api.github.com/rate_limit)
+          echo "GET /rate_limit -> HTTP $code   (200 = token aceptado; 401 = inválido, vencido o mal copiado)"
+          [ "$code" = "200" ]
+      - name: ¿Ve cada repositorio? (HTTP 200 = sí, 404 = sin acceso)
+        run: |
+          fallo=0
+          for R in mixamo-respaldo Operaci-n-Nexus-1 Extraction-tactical; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/webmaletin-art/$R")
+            echo "webmaletin-art/$R -> HTTP $code"
+            [ "$code" = "200" ] || fallo=1
+          done
+          exit $fallo
+      - name: ¿Existe la rama de mixamo-respaldo? (API)
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $TOKEN" -H "Accept: application/vnd.github+json" "https://api.github.com/repos/webmaletin-art/mixamo-respaldo/branches/${MIXAMO_REF}")
+          echo "rama ${MIXAMO_REF} -> HTTP $code"
+          [ "$code" = "200" ]
+      - name: Lo mismo por git (como lo hace el flujo de video) — sólo lista referencias
+        run: |
+          B64=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
+          echo "::add-mask::$B64"
+          git -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote https://github.com/webmaletin-art/mixamo-respaldo.git "refs/heads/${MIXAMO_REF}" | sed 's/^[0-9a-f]\{40\}/<sha>/'
