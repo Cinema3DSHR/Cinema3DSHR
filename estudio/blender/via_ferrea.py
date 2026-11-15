@@ -298,7 +298,8 @@ def construir(via, col, *, s0: float = 0.0, s1: float | None = None, s_detalle0:
     cables("cables_telegrafo", hilos, 0.006, m["cable"], col)
 
     # alambrado de 5 hilos a ambos lados de la franja ferroviaria (postes cada 4 m, esquineros cada 100 m)
-    for lado, d in ((-1, 22.0), (1, min(22.0, lado_ruta - 8.5))):
+    d_der = min(22.0, lado_ruta - 8.5) if lado_ruta - 8.5 > 5.0 else lado_ruta + 7.5   # ruta pegada: alambrado del otro lado
+    for lado, d in ((-1, 22.0), (1, d_der)):
         pl = Lote()
         hilos_a = [[] for _ in range(5)]
         s, k = s0, 0
@@ -406,6 +407,8 @@ def construir(via, col, *, s0: float = 0.0, s1: float | None = None, s_detalle0:
     while s <= s1:
         p, t, n, ang = marco(via, s)
         for x in (-5.6, 5.6):
+            if lado_ruta + x < 5.0:
+                continue                     # no sobre el terraplén de la vía
             dl.caja(p + n * (lado_ruta + x) + Vector((0, 0, 0.55)), ang, (0.1, 0.1, 1.1))
         s += 40.0
     dl.objeto("delineadores", m["blanco"], col)

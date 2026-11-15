@@ -33,6 +33,7 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     mod = _modulo_escenario(esc["generador"])
     info = mod.construir(esc.get("parametros", {}))
     ctx = C.Contexto(info["anclas"], fps)
+    ctx.mapa = manifiesto.get("mapa_tiempo")          # cámara lenta: la película recorre la escena más despacio
     ctx.moviles.update(info.get("moviles", {}))      # vehículos y vagones animados por el propio escenario
 
     # eventos del escenario (abrir portón, encender luces…)
@@ -86,11 +87,18 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     # tomas
     tomas = [C.crear_toma(t, ctx) for t in manifiesto["tomas"]]
     duracion_f = max(t["frame_fin"] for t in tomas)
-    s.frame_start, s.frame_end = 1, duracion_f
+    s.frame_start, s.frame_end = 1, int(math.ceil(ctx.cuadro(duracion_f)))     # la escena dura menos si hay cámara lenta
     s.render.fps = fps
     s.camera = tomas[0]["camara"]
     ajustes_render(s, calidad, manifiesto.get("render", {}))
-    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs}
+    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs, "frames_pelicula": duracion_f}
+
+
+def ir_a(res: dict, f_pelicula: int):
+    """Pone la escena en el instante que se ve en el cuadro f de la PELÍCULA (con cámara lenta, un sub-cuadro)."""
+    fe = res["contexto"].cuadro(f_pelicula)
+    entero = int(math.floor(fe))
+    res["escena"].frame_set(entero, subframe=fe - entero)
 
 
 ANCLAS_PERSONAJE = {"cadera": (0, 0, 0), "cabeza": (0, 0, 0.62), "pecho": (0, 0, 0.35), "pies": (0, 0, -0.9),
@@ -258,7 +266,7 @@ def render_tomas(res: dict, carpeta: Path, solo: list[str] | None = None, cada: 
             out = d / f"f_{i + 1:04d}.jpg"
             if out.exists() and out.stat().st_size > 0:
                 continue
-            s.frame_set(f)
+            ir_a(res, f)
             s.render.filepath = str(out)
             bpy.ops.render.render(write_still=True)
             hechos += 1
@@ -338,9 +346,10 @@ def exportar_pistas(res: dict, ruta: Path) -> dict:
     ctx = res["contexto"]
     cortes = sorted((t["frame_inicio"], t["frame_fin"], t["camara"]) for t in res["tomas"])
     cam_activa = []
-    for f in range(s.frame_start, s.frame_end + 1):
+    fin = res.get("frames_pelicula", s.frame_end)
+    for f in range(1, fin + 1):
         cam = next((c for a, b, c in cortes if a <= f <= b), cortes[-1][2])
-        s.frame_set(f)
+        ir_a(res, f)
         mw = cam.matrix_world
         der = mw.to_3x3() @ __import__("mathutils").Vector((1, 0, 0))
         cam_activa.append([round(v, 3) for v in (*mw.translation, der.x, der.y)])
@@ -349,11 +358,17 @@ def exportar_pistas(res: dict, ruta: Path) -> dict:
         tray = m["tray"]
         f0, f1 = min(tray), max(tray)
         filas = []
-        for f in range(s.frame_start, s.frame_end + 1):
-            pos, rumbo, v = tray[min(max(f, f0), f1)]
-            filas.append([round(pos.x, 3), round(pos.y, 3), round(pos.z, 3), round(v if f0 <= f <= f1 else 0.0, 3)])
+        for f in range(1, fin + 1):
+            fe = ctx.cuadro(f)
+            pos, rumbo, v = ctx.estado(m, fe)
+            filas.append([round(pos.x, 3), round(pos.y, 3), round(pos.z, 3), round(v if f0 <= fe <= f1 else 0.0, 3)])
         moviles[mid] = filas
-    datos = {"fps": s.render.fps, "frames": s.frame_end, "camara_activa": cam_activa, "moviles": moviles,
+    rpm = {}
+    for mid, m in ctx.moviles.items():          # régimen real de los vehículos con física de Dream Rally (sonido del motor)
+        if m.get("rpm"):
+            r = list(m["rpm"])
+            rpm[mid] = [r[min(max(int(ctx.cuadro(f)) - 1, 0), len(r) - 1)] for f in range(1, fin + 1)]
+    datos = {"fps": s.render.fps, "frames": fin, "mapa_tiempo": ctx.mapa, "camara_activa": cam_activa, "moviles": moviles, "rpm": rpm,
              "anclas": {k: list(v) for k, v in ctx.anclas.items()}, "eventos": ctx.eventos,
              "tomas": [{"id": t["spec"]["id"], "frame_inicio": t["frame_inicio"], "frame_fin": t["frame_fin"]}
                        for t in res["tomas"]]}

@@ -184,3 +184,80 @@ def aplicar(objetos, meta: dict, claro: bool = True):
                 hechos[m.name] = mc
             slot.material = hechos[m.name]
     return list(hechos.values())
+
+
+def mascara_ventanas(nt, marco, ventanas: list):
+    """Vidrios de un modelo de película (no del juego): polígonos medidos en el marco del rig (x derecha, y adelante,
+    z arriba, metros). ventanas: [{"tipo": "lado", "poly": [(y, z)…4], "x_min": m} | {"tipo": "plano", "a": (y, z),
+    "b": (y, z), "semiancho": m}]. Sin normales: el plano se reconoce por la distancia (±6 cm)."""
+    import math
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    tc.object = marco
+    x, y, z = _sep(nt, tc.outputs["Object"])
+    total = None
+    for v in ventanas:
+        if v["tipo"] == "lado":
+            poly = v["poly"]
+            c = (sum(p[0] for p in poly) / len(poly), sum(p[1] for p in poly) / len(poly))
+            dentro = None
+            for i in range(len(poly)):
+                a, b = poly[i], poly[(i + 1) % len(poly)]
+                ey, ez = b[0] - a[0], b[1] - a[1]
+                ln = max(math.hypot(ey, ez), 1e-6)
+                ny, nz = -ez / ln, ey / ln
+                if ny * (a[0] - c[0]) + nz * (a[1] - c[1]) < 0:
+                    ny, nz = -ny, -nz
+                lado = 1.0 - ((y - a[0]) * ny + (z - a[1]) * nz).smooth(-0.01, 0.01)
+                dentro = lado if dentro is None else dentro * lado
+            m = dentro * x.abs().smooth(v["x_min"] - 0.03, v["x_min"] + 0.03)
+        else:
+            (ay, az), (by_, bz) = v["a"], v["b"]
+            L = max(math.hypot(by_ - ay, bz - az), 1e-6)
+            uy, uz = (by_ - ay) / L, (bz - az) / L
+            t = (y - ay) * uy + (z - az) * uz
+            dist = (y - ay) * (-uz) + (z - az) * uy
+            m = (1.0 - (t / L - 0.5).abs().smooth(0.47, 0.5)) * (1.0 - dist.abs().smooth(0.06, 0.1)) * \
+                (1.0 - x.abs().smooth(v["semiancho"] - 0.04, v["semiancho"]))
+        total = m if total is None else total.max(m)
+    return total.s
+
+
+def aplicar_ventanas(objetos, marco, ventanas: list, claro: bool = True):
+    """Como `aplicar`, con los vidrios medidos a mano (modelos de película)."""
+    import types
+    meta_falsa = {"id": "pelicula"}
+    hechos = {}
+    for o in objetos:
+        if o.type != "MESH":
+            continue
+        for slot in o.material_slots:
+            m = slot.material
+            if m is None or not m.use_nodes:
+                continue
+            if m.name not in hechos:
+                mc = m.copy()
+                mc.name = f"{m.name}_ventanas"
+                nt = mc.node_tree
+                out = next((n for n in nt.nodes if n.type == "OUTPUT_MATERIAL"), None)
+                if out is None or not out.inputs["Surface"].is_linked:
+                    hechos[m.name] = m
+                    continue
+                sup = out.inputs["Surface"].links[0].from_socket
+                gm = mascara_ventanas(nt, marco, ventanas)
+                fres = nt.nodes.new("ShaderNodeLayerWeight")
+                fres.inputs["Blend"].default_value = 0.25
+                brillo = nt.nodes.new("ShaderNodeBsdfGlossy")
+                brillo.inputs["Roughness"].default_value = 0.03
+                trans = nt.nodes.new("ShaderNodeBsdfTransparent")
+                trans.inputs["Color"].default_value = (0.5, 0.56, 0.6, 1) if claro else (0.05, 0.06, 0.07, 1)
+                vid = nt.nodes.new("ShaderNodeMixShader")
+                nt.links.new(fres.outputs["Facing"], vid.inputs[0])
+                nt.links.new(trans.outputs[0], vid.inputs[1])
+                nt.links.new(brillo.outputs[0], vid.inputs[2])
+                mez = nt.nodes.new("ShaderNodeMixShader")
+                nt.links.new(gm, mez.inputs[0])
+                nt.links.new(sup, mez.inputs[1])
+                nt.links.new(vid.outputs[0], mez.inputs[2])
+                nt.links.new(mez.outputs[0], out.inputs["Surface"])
+                hechos[m.name] = mc
+            slot.material = hechos[m.name]

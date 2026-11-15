@@ -1,0 +1,374 @@
+{
+ "tipo": "escena",
+ "id": "p006_operacion_tren_fantasma-s03",
+ "produccion": "p006_operacion_tren_fantasma",
+ "numero": 3,
+ "version": 1,
+ "titulo": "El salto",
+ "guion": "EXT. RUTA PEGADA A LAS VÍAS — CONTINUO. El camión corre junto al tren. Lucía acelera sobre el acoplado en marcha y el auto rampa se baja de un salto —el único de toda la película— hasta la plataforma 9. Cámara lenta en el despegue, el vuelo y el aterrizaje.",
+ "duracion_s": 37.6,
+ "mapa_tiempo": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   17.0,
+   17.0
+  ],
+  [
+   25.799999999999997,
+   19.2
+  ],
+  [
+   37.6,
+   31.0
+  ]
+ ],
+ "escenario": {
+  "id": "llanura_tren",
+  "generador": "tren_fantasma",
+  "parametros": {
+   "secuencia": 3,
+   "semilla": 3,
+   "duracion_s": 31.0,
+   "s_cabeza_inicial": 1040.0,
+   "t_acelera": 15.0
+  }
+ },
+ "eventos": [],
+ "vehiculos": [],
+ "personajes": [],
+ "tomas": [
+  {
+   "id": "t01_grua",
+   "tipo": "grua",
+   "plano": "aérea: el tren alcanza al camión que corre pegado a las vías; sobre el acoplado, el auto rampa",
+   "inicio_s": 0,
+   "duracion_s": 7,
+   "luz_relleno": 0,
+   "desde": {
+    "movil": "acoplado",
+    "punto": "",
+    "desp_local": [
+     32,
+     -45,
+     26
+    ]
+   },
+   "hasta": {
+    "movil": "acoplado",
+    "punto": "",
+    "desp_local": [
+     20,
+     12,
+     13
+    ]
+   },
+   "objetivo": {
+    "movil": "acoplado",
+    "punto": ""
+   },
+   "lente_mm": 30
+  },
+  {
+   "id": "t02_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "lateral del camión: el auto rampa amarrado, la plataforma 9 se pone a la par",
+   "inicio_s": 7,
+   "duracion_s": 4,
+   "luz_relleno": 0,
+   "movil": "acoplado",
+   "punto_base": "",
+   "desp_local": [
+    8.5,
+    3.0,
+    0.2
+   ],
+   "objetivo": {
+    "movil": "auto_rampa",
+    "punto": ""
+   },
+   "lente_mm": 35,
+   "retardo": 0.6
+  },
+  {
+   "id": "t03_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "INTERIOR: Lucía al volante, Mateo agarrado de la jaula («Agarrate.»)",
+   "inicio_s": 11,
+   "duracion_s": 3.5,
+   "luz_relleno": 60,
+   "movil": "auto_rampa",
+   "punto_base": "interior",
+   "desp_local": [
+    0,
+    0,
+    0
+   ],
+   "objetivo": {
+    "movil": "auto_rampa",
+    "punto": "cabina"
+   },
+   "rigido": true,
+   "lente_mm": 14,
+   "retardo": 1.0
+  },
+  {
+   "id": "t04_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "cámara sobre el capó: acelera a fondo por la cama del acoplado hacia la rampa",
+   "inicio_s": 14.5,
+   "duracion_s": 1.7,
+   "luz_relleno": 0,
+   "movil": "auto_rampa",
+   "punto_base": "capo",
+   "desp_local": [
+    0,
+    0.2,
+    0.18
+   ],
+   "objetivo": {
+    "movil": "auto_rampa",
+    "punto": "",
+    "desp_local": [
+     0,
+     30,
+     0.6
+    ]
+   },
+   "rigido": true,
+   "lente_mm": 26,
+   "retardo": 1.0
+  },
+  {
+   "id": "t05_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "baja junto a la rueda trasera: patina y empuja",
+   "inicio_s": 16.2,
+   "duracion_s": 0.8,
+   "luz_relleno": 0,
+   "movil": "auto_rampa",
+   "punto_base": "",
+   "desp_local": [
+    -1.7,
+    -2.4,
+    -0.62
+   ],
+   "objetivo": {
+    "movil": "auto_rampa",
+    "punto": "rueda_tra_izq"
+   },
+   "rigido": true,
+   "lente_mm": 28,
+   "retardo": 1.0
+  },
+  {
+   "id": "t06_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "CÁMARA LENTA, de perfil a la altura del vuelo: el auto deja la rampa — la suspensión se estira, las ruedas siguen girando en el aire — y cruza hacia el tren",
+   "inicio_s": 17.0,
+   "duracion_s": 4.4,
+   "luz_relleno": 0,
+   "movil": "acoplado",
+   "punto_base": "",
+   "desp_local": [
+    7.0,
+    11.0,
+    1.3
+   ],
+   "objetivo": {
+    "movil": "auto_rampa",
+    "punto": ""
+   },
+   "lente_mm": 30,
+   "retardo": 1.0
+  },
+  {
+   "id": "t07_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "CÁMARA LENTA, INTERIOR: los cuerpos se despegan de las butacas contra los arneses y se hunden con el aterrizaje",
+   "inicio_s": 21.4,
+   "duracion_s": 4.4,
+   "luz_relleno": 60,
+   "movil": "auto_rampa",
+   "punto_base": "interior",
+   "desp_local": [
+    0,
+    0,
+    0
+   ],
+   "objetivo": {
+    "movil": "auto_rampa",
+    "punto": "cabina"
+   },
+   "rigido": true,
+   "lente_mm": 14,
+   "retardo": 1.0
+  },
+  {
+   "id": "t08_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "velocidad normal: desde la plataforma 10, el auto derrapa sobre la madera y frena a medio metro del deportivo",
+   "inicio_s": 25.799999999999997,
+   "duracion_s": 4.8,
+   "luz_relleno": 0,
+   "movil": "carro_10",
+   "punto_base": "",
+   "desp_local": [
+    1.0,
+    -5.5,
+    1.6
+   ],
+   "objetivo": {
+    "movil": "auto_rampa",
+    "punto": ""
+   },
+   "lente_mm": 30,
+   "retardo": 1.0
+  },
+  {
+   "id": "t09_grua",
+   "tipo": "grua",
+   "plano": "aérea: la cámara se aleja; el camión queda atrás, el tren sigue con el auto rampa en la plataforma 9",
+   "inicio_s": 30.6,
+   "duracion_s": 7.0,
+   "luz_relleno": 0,
+   "desde": {
+    "movil": "carro_09",
+    "punto": "",
+    "desp_local": [
+     -18,
+     -22,
+     7
+    ]
+   },
+   "hasta": {
+    "movil": "carro_09",
+    "punto": "",
+    "desp_local": [
+     -55,
+     -95,
+     48
+    ]
+   },
+   "objetivo": {
+    "movil": "carro_09",
+    "punto": ""
+   },
+   "lente_mm": 28
+  }
+ ],
+ "moviles_escenario": [
+  "carro_00",
+  "carro_01",
+  "carro_02",
+  "carro_03",
+  "carro_04",
+  "carro_05",
+  "carro_06",
+  "carro_07",
+  "carro_08",
+  "carro_09",
+  "carro_10",
+  "carro_11",
+  "carro_12",
+  "carro_13",
+  "carro_14",
+  "carro_15",
+  "carro_16",
+  "carro_17",
+  "carro_18",
+  "carro_19",
+  "carro_20",
+  "acoplado",
+  "camion",
+  "auto_rampa",
+  "auto_camara"
+ ],
+ "sonido": {
+  "generador": "procedural",
+  "ambiente": "tren_llanura",
+  "eventos": [
+   {
+    "tipo": "musica",
+    "prompt": "Cinematic action score, 38 seconds, no vocals. 0-17s: tense driving hybrid percussion and pulsing low strings, building anticipation as a car prepares to jump onto a moving train. 17-26s: time slows down: the rhythm drops out, a high sustained string chord and a soft choir float over slow deep heartbeat thuds and a reversed swell. 26s: a massive orchestral impact hit. 26-37s: triumphant heroic brass and taiko restate the theme, then settle.",
+    "duracion_s": 37.6,
+    "inicio_s": 0.0,
+    "volumen": 0.75
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "powerful sports car engine roaring to full throttle, tires spinning on steel, rising revs",
+    "duracion_s": 3,
+    "inicio_s": 14.6,
+    "volumen": 0.8,
+    "movil": "auto_rampa"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "heavy car landing hard on a wooden train flatcar: deep suspension slam, metal crunch, wood thud",
+    "duracion_s": 2,
+    "inicio_s": 25.55,
+    "volumen": 0.9,
+    "movil": "auto_rampa"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "car tires skidding and screeching on wooden planks, braking hard",
+    "duracion_s": 3,
+    "inicio_s": 26.0,
+    "volumen": 0.7,
+    "movil": "auto_rampa"
+   },
+   {
+    "tipo": "tren",
+    "tipos": [
+     "loco",
+     "plano",
+     "plano",
+     "cerrado",
+     "plano",
+     "plano",
+     "plano",
+     "cerrado",
+     "plano",
+     "plano",
+     "plano",
+     "cerrado",
+     "plano",
+     "cerrado",
+     "cerrado",
+     "plano",
+     "plano",
+     "plano",
+     "plano",
+     "plano",
+     "plano"
+    ],
+    "s_inicial": 1040.0,
+    "volumen": 0.9
+   },
+   {
+    "tipo": "motor",
+    "movil": "auto_rampa",
+    "clase": "diesel",
+    "volumen": 0.7
+   },
+   {
+    "tipo": "motor",
+    "movil": "camion",
+    "clase": "diesel",
+    "volumen": 0.8
+   }
+  ]
+ },
+ "render": {
+  "calidad": "revision",
+  "fps": 30,
+  "exposicion": 0.0
+ },
+ "estado": "borrador",
+ "bloqueada": false,
+ "huella_v": 2
+}

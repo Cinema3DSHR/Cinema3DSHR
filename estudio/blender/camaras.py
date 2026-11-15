@@ -37,6 +37,39 @@ class Contexto:
         self.moviles: dict[str, dict] = {}       # id -> {"tray": {frame: (pos, rumbo, v)}, "anclas": {...}}
         self.fps = fps
         self.eventos: list[dict] = []           # patadas, goles… (para el sonido y la app)
+        self.mapa: list | None = None           # cámara lenta: [[t_película_s, t_escena_s], …] (lineal por tramos)
+
+    def cuadro(self, f_pelicula: float) -> float:
+        """Cuadro de la ESCENA (puede ser fraccionario) que se ve en el cuadro f de la PELÍCULA. Sin mapa son iguales."""
+        if not self.mapa:
+            return f_pelicula
+        t = (f_pelicula - 1) / self.fps
+        m = self.mapa
+        if t <= m[0][0]:
+            te = m[0][1] + (t - m[0][0])
+        elif t >= m[-1][0]:
+            te = m[-1][1] + (t - m[-1][0])
+        else:
+            te = m[-1][1]
+            for (a0, b0), (a1, b1) in zip(m, m[1:]):
+                if a0 <= t <= a1:
+                    te = b0 + (b1 - b0) * (t - a0) / max(1e-9, a1 - a0)
+                    break
+        return 1 + te * self.fps
+
+    def estado(self, m: dict, fe: float):
+        """(pos, rumbo, v) de un móvil en un cuadro de escena fraccionario (interpolado)."""
+        a, b, _ = self._rango(m)
+        fe = min(max(fe, a), b)
+        f0 = int(math.floor(fe))
+        f1 = min(f0 + 1, b)
+        k = fe - f0
+        p0, r0, v0 = m["tray"][f0]
+        if k < 1e-6 or f1 == f0:
+            return p0, r0, v0
+        p1, r1, v1 = m["tray"][f1]
+        dr = (r1 - r0 + math.pi) % (2 * math.pi) - math.pi
+        return p0.lerp(p1, k), r0 + dr * k, v0 + (v1 - v0) * k
 
     @staticmethod
     def _rango(m: dict) -> tuple:
@@ -59,20 +92,15 @@ class Contexto:
             return Vector(self.anclas[spec["ancla"]]) + desp
         if "movil" in spec:
             m = self.moviles[spec["movil"]]
-            tray = m["tray"]
-            f = min(max(frame, self._rango(m)[0]), self._rango(m)[1])
             local = m["anclas"].get(spec.get("punto", ""), (0, 0, 0.8))
             if spec.get("desp_local"):
                 l = spec["desp_local"]
                 local = (local[0] + l[0], local[1] + l[1], local[2] + l[2])
-            return punto_en_vehiculo(tray[f], local) + desp
+            return punto_en_vehiculo(self.estado(m, self.cuadro(frame)), local) + desp
         raise ValueError(f"Punto no reconocido: {spec}")
 
     def rumbo(self, movil: str, frame: int) -> float:
-        m = self.moviles[movil]
-        tray = m["tray"]
-        f = min(max(frame, self._rango(m)[0]), self._rango(m)[1])
-        return tray[f][1]
+        return self.estado(self.moviles[movil], self.cuadro(frame))[1]
 
 
 def _ease(t, suave=True):
@@ -101,6 +129,22 @@ def crear_toma(spec: dict, ctx: Contexto, col=None) -> dict:
                    col, radio=0.3, sombra=False)
         lr.parent = cam
         lr.location = (0.4, 0.3, 0.0)
+    if spec.get("rigido"):
+        # cámara atornillada a la carrocería (interior, capó, rueda): sigue también el cabeceo y el rolido del móvil
+        m = ctx.moviles[spec["movil"]]
+        obj = m.get("objeto")
+        if obj is None:
+            raise ValueError(f"{spec['id']}: el móvil {spec['movil']!r} no tiene objeto para una toma rígida")
+        loc = Vector(m["anclas"].get(spec.get("punto_base", ""), (0, 0, 0.8))) + Vector(spec.get("desp_local", (0, 0, 0)))
+        ob = spec["objetivo"]
+        mira = Vector(m["anclas"].get(ob.get("punto", ""), (0, 0, 0.8))) + Vector(ob.get("desp_local", (0, 0, 0)))
+        cam.parent = obj
+        cam.location = loc
+        cam.rotation_euler = (mira - loc).to_track_quat("-Z", "Y").to_euler()
+        sc = K.bpy.context.scene
+        mk = sc.timeline_markers.new(spec["id"], frame=int(round(ctx.cuadro(f0))))
+        mk.camera = cam
+        return {"camara": cam, "frame_inicio": f0, "frame_fin": f1, "spec": spec}
     rnd = random.Random(sum(map(ord, spec["id"])))
     temblor = spec.get("temblor", 0.0)
     fases = [rnd.uniform(0, 6.28) for _ in range(6)]
@@ -127,14 +171,14 @@ def crear_toma(spec: dict, ctx: Contexto, col=None) -> dict:
             cam.matrix_world = __import__("mathutils").Matrix.Translation(a.translation.lerp(b.translation, t)) @ \
                 qa.slerp(qb, t).to_matrix().to_4x4()
             cd.lens = la + (lb - la) * t
-            cam.keyframe_insert("location", frame=f)
-            cam.keyframe_insert("rotation_euler", frame=f)
-            cd.keyframe_insert("lens", frame=f)
+            cam.keyframe_insert("location", frame=ctx.cuadro(f))
+            cam.keyframe_insert("rotation_euler", frame=ctx.cuadro(f))
+            cd.keyframe_insert("lens", frame=ctx.cuadro(f))
             if cd.dof.use_dof and spec.get("foco"):
                 cd.dof.focus_distance = max(0.1, (ctx.punto(spec["foco"], f) - cam.location).length)
-                cd.keyframe_insert("dof.focus_distance", frame=f)
+                cd.keyframe_insert("dof.focus_distance", frame=ctx.cuadro(f))
         sc = K.bpy.context.scene
-        m = sc.timeline_markers.new(spec["id"], frame=f0)
+        m = sc.timeline_markers.new(spec["id"], frame=int(round(ctx.cuadro(f0))))
         m.camera = cam
         return {"camara": cam, "frame_inicio": f0, "frame_fin": f1, "spec": spec}
     suav_pos = None
@@ -191,17 +235,17 @@ def crear_toma(spec: dict, ctx: Contexto, col=None) -> dict:
         K.mirar_a(cam, mira)
         if spec.get("inclinacion_deg"):
             cam.rotation_euler.rotate_axis("Z", math.radians(spec["inclinacion_deg"]))
-        cam.keyframe_insert("location", frame=f)
-        cam.keyframe_insert("rotation_euler", frame=f)
+        cam.keyframe_insert("location", frame=ctx.cuadro(f))
+        cam.keyframe_insert("rotation_euler", frame=ctx.cuadro(f))
         if lente1 != lente0:
             cd.lens = lente0 + (lente1 - lente0) * _ease(t, suave)
-            cd.keyframe_insert("lens", frame=f)
+            cd.keyframe_insert("lens", frame=ctx.cuadro(f))
         if cd.dof.use_dof:
             cd.dof.focus_distance = max(0.1, (mira - pos).length if not spec.get("foco") else
                                         (ctx.punto(spec["foco"], f) - pos).length)
-            cd.keyframe_insert("dof.focus_distance", frame=f)
+            cd.keyframe_insert("dof.focus_distance", frame=ctx.cuadro(f))
     # marcador de corte en la línea de tiempo
     sc = K.bpy.context.scene
-    m = sc.timeline_markers.new(spec["id"], frame=f0)
+    m = sc.timeline_markers.new(spec["id"], frame=int(round(ctx.cuadro(f0))))
     m.camera = cam
     return {"camara": cam, "frame_inicio": f0, "frame_fin": f1, "spec": spec}

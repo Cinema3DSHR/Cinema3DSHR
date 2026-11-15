@@ -22,7 +22,7 @@ from estudio import config
 
 AQUI = Path(__file__).resolve().parent
 CACHE = config.RAIZ / "datos" / "fisica_dr"
-VERSION = 1
+VERSION = 2
 ARCHIVOS_JUEGO = ["godot/game/physics/vehicle_physics.gd", "godot/game/physics/vehicle_params.gd",
                   "godot/game/physics/track_base.gd", "godot/game/data/car_build.gd", "godot/game/data/vehicles.json"]
 
@@ -32,6 +32,8 @@ def _huella(plan: dict) -> str:
     limpio = json.loads(json.dumps(plan))
     for v in limpio.get("vehiculos", []):
         v.get("cabina", {}).pop("glb", None)
+        for pil in v.get("cabina", {}).get("pilotos", []):
+            pil.pop("glb", None)
     h.update(json.dumps(limpio, sort_keys=True, separators=(",", ":")).encode())
     h.update((AQUI / "grabar.gd").read_bytes())
     h.update(str(VERSION).encode())
@@ -51,6 +53,14 @@ def _procedencia(rally: Path) -> dict:
     except Exception:
         pass
     return out
+
+
+def _convertir_personaje(ref: str, destino: Path):
+    import sys
+    r = subprocess.run([os.environ.get("CINE_BPY_PYTHON", sys.executable), "-I", str(AQUI / "convertir_personaje.py"), ref,
+                        str(destino)], capture_output=True, text=True, timeout=900)
+    if not destino.exists():
+        raise RuntimeError("fisica_dr: no se pudo convertir el personaje " + ref + "\n" + (r.stdout + r.stderr)[-2000:])
 
 
 def _correr_godot(plan: dict) -> dict:
@@ -78,6 +88,14 @@ def _correr_godot(plan: dict) -> dict:
                 # el habitáculo se mide sobre el modelo del auto (CabinCfg exige que exista su GLB)
                 if f.suffix in (".json", ".png") or (f.suffix == ".glb" and f.stem.replace("_lo", "") in tipos):
                     (t / "game" / "models" / "cars" / f.name).symlink_to(f)
+            # protagonistas sentados en la cabina: el personaje del estudio pasado a GLB (pose de reposo)
+            (t / "game" / "models" / "protas").mkdir()
+            for v in plan["vehiculos"]:
+                for k, pil in enumerate(v.get("cabina", {}).get("pilotos", [])):
+                    destino = t / "game" / "models" / "protas" / f"{v['id']}_{k}.glb"
+                    _convertir_personaje(pil["ref"], destino)
+                    pil["glb"] = f"res://game/models/protas/{destino.name}"
+            (t / "plan.json").write_text(json.dumps(plan))
             subprocess.run([godot, "--headless", "--path", str(t), "--import"], capture_output=True, text=True, timeout=1800)
         r = subprocess.run([godot, "--headless", "--path", str(t), "--script", "res://grabar.gd", "--",
                             str(t / "plan.json"), str(t / "salida.json")], capture_output=True, text=True, timeout=1800)

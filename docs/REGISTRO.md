@@ -154,6 +154,31 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - La huella de las escenas nuevas (`"huella_v": 2`) incluye los módulos que importa el generador (física, vía,
   paisaje…): un cambio de código invalida la aprobación. Las escenas viejas conservan su huella.
 
+## 15/11/2026 — Tren Fantasma: el salto (s03), los 28 autos y la música (pedido del dueño)
+
+- **Regla del auto rampa** (dueño): salta UNA sola vez, al bajarse del acoplado del camión hasta el tren; después
+  son los otros los que saltan sobre su cuña o salen volando. Guion y desglose corregidos (s02, s03, s05, s06).
+- **s03 v1 «El salto»** (37,6 s de película, 31 s de acción): `estudio/blender/salto_tren.py`. Física real de
+  Dream Rally en dos marcos móviles (el acoplado que viaja → la plataforma 9 del tren, cambio en pleno vuelo):
+  despega a los 17,77 s, sube a 3,4 m, vuela 0,67 s, cae en la plataforma y frena detrás del deportivo amarrado.
+  La cabina del juego con **Lucía y Mateo** (sus modelos sentados con la cinemática inversa y las fuerzas G del
+  juego). **Cámara lenta ×4** (despegue, vuelo y aterrizaje en 8,8 s) con el nuevo `mapa_tiempo` de la escena
+  (cámaras, render, sonido, previsualización y el EDITOR 3D de la app lo respetan). Tomas rígidas a la carrocería
+  (interior, capó, rueda) que siguen cabeceo y rolido.
+- Para que el salto sea limpio: el grabador ahora simula en marcos móviles, maneja con un camino dentro del marco,
+  tiene rampas giradas y un faldón bajo los bordes (la física del juego calcula la pendiente con las 4 ruedas, también
+  las del aire: un borde a pique la disparaba).
+- **s01 v2**: los **28 autos de Dream Rally** en el tren (todos menos el Mamut, que es el camión) y una toma de
+  **desfile**; **música épica** (ElevenLabs, 75 s + golpe del título) y **ambiente profesional procedural**
+  (`estudio/audio/tren.py`: diésel de la locomotora, el «ta-tac» de cada eje en las juntas cada 18 m, rodadura,
+  viento, teros, motores con las rpm reales de la física).
+- ElevenLabs: s01 (música 75 s, golpe 10 s, bocina) y s03 (música 37,6 s, motor, aterrizaje, derrape): saldo
+  32.973 → 31.850 créditos (1.123 en total; la música no informa costo en la respuesta y se cobra con atraso).
+- Arreglos: cámaras de seguimiento con `retardo` 0 quedaban quietas; los protagonistas (FBX en centímetros) se
+  sentaban a escala casi cero en la cabina; el arranque detenido con freno a fondo ponía reversa (el juego lo hace:
+  se sostiene con el de mano).
+- s03 dura 37,6 s (el desglose decía 80 s): se reparte al armar las secuencias 2 y 4. **Nada probado en un teléfono.**
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.

@@ -16,7 +16,7 @@ import random
 import bpy
 from mathutils import Vector, noise
 from mathutils.kdtree import KDTree
-from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD, via_ferrea as VF, paisaje as PA
+from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD, via_ferrea as VF, paisaje as PA, salto_tren as ST
 from estudio import fisica_dr as FD
 
 PARAMETROS = {"secuencia": 1, "semilla": 3, "velocidad_tren": 21.0, "s_cabeza_inicial": 620.0, "duracion_s": 75.0,
@@ -54,6 +54,14 @@ DEPENDENCIAS = [
     "rally:godot/game/models/cars/veltor.json", "rally:godot/game/models/cars/veltor.glb", "rally:godot/game/models/cars/veltor_lo.glb",
     "rally:godot/game/models/cars/veltor_gtr.json", "rally:godot/game/models/cars/veltor_gtr.glb", "rally:godot/game/models/cars/veltor_gtr_lo.glb",
     "rally:godot/game/models/cars/veltor_s.json", "rally:godot/game/models/cars/veltor_s.glb", "rally:godot/game/models/cars/veltor_s_lo.glb",
+    # física, cabina y pilotos de Dream Rally (estudio/fisica_dr) y lo del salto (secuencia 3)
+    "rally:godot/game/physics/", "rally:godot/game/data/", "rally:godot/game/car/", "rally:godot/game/models/pilot.glb",
+    "rally:godot/game/models/pilot_lo.glb", "rally:godot/game/models/pilot_Ch20_1001_Diffuse.jpg",
+    "rally:godot/game/models/pilot_Ch20_1001_Normal.jpg", "rally:godot/game/models/pilot_ao_met_rough_Ch20_1001_Glossiness.jpg",
+    "rally:godot/game/models/cabin/", "rally:godot/game/models/paint/", "rally:godot/game/models/cars/*.json",
+    "rally:godot/game/models/cars/*.png", "rally:godot/game/models/cars/truck.glb", "rally:godot/game/models/cars/truck_lo.glb",
+    "mixamo:vehiculos_pelicula/auto_rampa/", "mixamo:modelos_pelicula/trailer_plano_camion.glb",
+    "mixamo:personajes_pelicula/protagonista_femenina/", "mixamo:personajes_pelicula/protagonista_masculino/",
     "sh3d:models/tree_lombardy_poplar.glb", "sh3d:models/tree_tree.glb", "sh3d:models/tree_birch.glb",
     "sh3d:models/tree_weeping_willow.glb", "sh3d:models/tree_black_tupelo.glb", "sh3d:models/tree_quaking_aspen.glb",
     "sh3d:models/tree_sassafras.glb", "sh3d:models/sc_pine.glb", "sh3d:models/sc_cypress.glb", "sh3d:models/sc_acacia.glb",
@@ -141,6 +149,10 @@ def construir(parametros: dict | None = None) -> dict:
     c_terr, c_via, c_deco, c_veh = (K.coleccion(n, col) for n in ("terreno", "via_y_ruta", "decorado", "vehiculos"))
     protos = {}
     via = TR.Via([(x, y, 0) for x, y in VIA])
+    if p["secuencia"] == 3:
+        # el camión va por el carril de la izquierda a la distancia que pide el salto (ruta pegada a las vías)
+        pv = ST.prevuelo(fps, p.get("t_acelera", 15.0))
+        p["lado_ruta"] = (-pv["x"] + 0.45) + 1.875
     M = K.material
 
     # ------------------------------------------------------------------ cielo físico + sol de tarde
@@ -391,57 +403,74 @@ def construir(parametros: dict | None = None) -> dict:
     negro = M("negro_halcon", (0.015, 0.015, 0.017), 0.35, 0.3)
     # los blindados se manejan con la física REAL de Dream Rally (estudio/fisica_dr): suspensión, transferencia de peso,
     # gomas y caja de cambios del juego; el conductor sigue su carril a la par del tren.
-    s0c, dur, previo = p["s_cabeza_inicial"], p["duracion_s"], 3.0
-    plan = {"fps": fps, "hz": 120, "cuadros": nf, "suelo": {"tipo": "plano", "altura": 0.06, "superficie": 0}, "vehiculos": []}
-    escoltas = []
-    for k, (desfase, lat) in enumerate(((10.0, -1.8), (150.0, -1.8))):
-        lat_fn = (lambda s_, d_=desfase, l_=lat, k_=k: lado + l_ + 0.4 * math.sin((s_ - s0c + d_) / v * 0.35 + k_))
-        pts, sv = VD.ruta_paralela(via, max(1.0, s0c - desfase - v * (previo + 3) - 30),
-                                   min(via.largo - 1.0, s0c - desfase + v * (dur + 3) + 30), lat_fn)
-        hor = VD.horario_siguiendo(pts, sv, (lambda t, d_=desfase: s0c + v * t - d_), -previo - 1.0, dur + 1.0)
-        plan["vehiculos"].append({"id": f"escolta_{k + 1}", "dr": "camo", "ruta": pts, "horario": hor, "previo_s": previo,
-                                  "params": PARAMS_BLINDADO})
-        escoltas.append(VD.vehiculo(f"escolta_{k + 1}", c_veh, ref="mixamo:modelos_pelicula/vehiculo_blindado_policial.glb",
-                                    largo=5.6, ruedas=ruedas_blindado, alto_caja=0.18,
-                                    giro_modelo=math.pi / 2))     # el GLB del blindado tiene el largo en X
-    fis = FD.simular(plan)
-    for k, rig in enumerate(escoltas):
-        tray = VD.aplicar_fisica(rig, fis["vehiculos"][f"escolta_{k + 1}"], frames)
-        moviles[f"escolta_{k + 1}"] = {"tray": tray, "anclas": VD.ANCLAS_VEHICULO}
-    motos = []
-    for k in range(4):
-        raiz = K.vacio(f"VEH_moto_{k + 1}", (0, 0, 0), c_veh)
-        caja = K.vacio(f"VEH_moto_{k + 1}_caja", (0, 0, 0), c_veh)
-        caja.parent = raiz
-        proto_moto = _sh3d("sc_yamaha_yzr_r6", protos)
-        if k == 0:                                   # motos de Halcón Negro: carenado negro brillante, mecánica grafito
-            pintura = {"white": M("moto_negro", (0.012, 0.012, 0.014), 0.22, 0.4), "yellow": M("moto_negro", (0, 0, 0)),
-                       "red": M("moto_negro", (0, 0, 0)), "tires": M("goma_moto", (0.02, 0.02, 0.022), 0.85),
-                       "metal": M("moto_grafito", (0.06, 0.06, 0.065), 0.45, 0.8), "grey": M("moto_grafito", (0, 0, 0)),
-                       "tap": M("moto_grafito", (0, 0, 0)), "black": M("moto_grafito", (0, 0, 0))}
-            for o in proto_moto.objects:              # en el modelo de Sweet Home cada pieza se llama como su material
-                if o.type != "MESH":
-                    continue
-                clave = next((c for c in pintura if o.name.lower().startswith(c) or c in o.name.lower().split("-")), None)
-                if clave:
-                    o.data.materials.clear()
-                    o.data.materials.append(pintura[clave])
-        m = K.instancia(f"moto_{k + 1}_modelo", proto_moto, (0, 0, 0), 0.0, 1.0, c_veh)
-        m.parent = caja
-        asiento = K.vacio(f"moto_{k + 1}_asiento", (0, -0.15, 0.55), c_veh)
-        asiento.parent = caja
-        asiento.rotation_euler = (math.radians(-18), 0, 0)
-        rig = {"nombre": f"moto_{k + 1}", "raiz": raiz, "caja": caja, "ruedas": [], "entre_ejes": 1.4}
-        desfase = 175.0 + (k // 2) * 9.0
-        tray = VD.animar(rig, frames, por_ruta(desfase, -1.6 if k % 2 == 0 else 1.6, v, 0.3, k * 1.3), rolido_por_g=0.35)
-        moviles[f"moto_{k + 1}"] = {"tray": tray, "anclas": {"": (0, 0, 1.0), "piloto": (0, 0, 1.4)}}
-        motos.append(rig)
+    if p["secuencia"] != 3:          # en el salto la escolta se arma aparte (la ruta va pegada a las vías)
+        s0c, dur, previo = p["s_cabeza_inicial"], p["duracion_s"], 3.0
+        plan = {"fps": fps, "hz": 120, "cuadros": nf, "suelo": {"tipo": "plano", "altura": 0.06, "superficie": 0}, "vehiculos": []}
+        escoltas = []
+        for k, (desfase, lat) in enumerate(((10.0, -1.8), (150.0, -1.8))):
+            lat_fn = (lambda s_, d_=desfase, l_=lat, k_=k: lado + l_ + 0.4 * math.sin((s_ - s0c + d_) / v * 0.35 + k_))
+            pts, sv = VD.ruta_paralela(via, max(1.0, s0c - desfase - v * (previo + 3) - 30),
+                                       min(via.largo - 1.0, s0c - desfase + v * (dur + 3) + 30), lat_fn)
+            hor = VD.horario_siguiendo(pts, sv, (lambda t, d_=desfase: s0c + v * t - d_), -previo - 1.0, dur + 1.0)
+            plan["vehiculos"].append({"id": f"escolta_{k + 1}", "dr": "camo", "ruta": pts, "horario": hor, "previo_s": previo,
+                                      "params": PARAMS_BLINDADO})
+            escoltas.append(VD.vehiculo(f"escolta_{k + 1}", c_veh, ref="mixamo:modelos_pelicula/vehiculo_blindado_policial.glb",
+                                        largo=5.6, ruedas=ruedas_blindado, alto_caja=0.18,
+                                        giro_modelo=math.pi / 2))     # el GLB del blindado tiene el largo en X
+        fis = FD.simular(plan)
+        for k, rig in enumerate(escoltas):
+            tray = VD.aplicar_fisica(rig, fis["vehiculos"][f"escolta_{k + 1}"], frames)
+            moviles[f"escolta_{k + 1}"] = {"tray": tray, "anclas": VD.ANCLAS_VEHICULO,
+                                           "rpm": fis["vehiculos"][f"escolta_{k + 1}"]["rpm"][:nf]}
+        motos = []
+        for k in range(4):
+            raiz = K.vacio(f"VEH_moto_{k + 1}", (0, 0, 0), c_veh)
+            caja = K.vacio(f"VEH_moto_{k + 1}_caja", (0, 0, 0), c_veh)
+            caja.parent = raiz
+            proto_moto = _sh3d("sc_yamaha_yzr_r6", protos)
+            if k == 0:                                   # motos de Halcón Negro: carenado negro brillante, mecánica grafito
+                pintura = {"white": M("moto_negro", (0.012, 0.012, 0.014), 0.22, 0.4), "yellow": M("moto_negro", (0, 0, 0)),
+                           "red": M("moto_negro", (0, 0, 0)), "tires": M("goma_moto", (0.02, 0.02, 0.022), 0.85),
+                           "metal": M("moto_grafito", (0.06, 0.06, 0.065), 0.45, 0.8), "grey": M("moto_grafito", (0, 0, 0)),
+                           "tap": M("moto_grafito", (0, 0, 0)), "black": M("moto_grafito", (0, 0, 0))}
+                for o in proto_moto.objects:              # en el modelo de Sweet Home cada pieza se llama como su material
+                    if o.type != "MESH":
+                        continue
+                    clave = next((c for c in pintura if o.name.lower().startswith(c) or c in o.name.lower().split("-")), None)
+                    if clave:
+                        o.data.materials.clear()
+                        o.data.materials.append(pintura[clave])
+            m = K.instancia(f"moto_{k + 1}_modelo", proto_moto, (0, 0, 0), 0.0, 1.0, c_veh)
+            m.parent = caja
+            asiento = K.vacio(f"moto_{k + 1}_asiento", (0, -0.15, 0.55), c_veh)
+            asiento.parent = caja
+            asiento.rotation_euler = (math.radians(-18), 0, 0)
+            rig = {"nombre": f"moto_{k + 1}", "raiz": raiz, "caja": caja, "ruedas": [], "entre_ejes": 1.4}
+            desfase = 175.0 + (k // 2) * 9.0
+            tray = VD.animar(rig, frames, por_ruta(desfase, -1.6 if k % 2 == 0 else 1.6, v, 0.3, k * 1.3), rolido_por_g=0.35)
+            moviles[f"moto_{k + 1}"] = {"tray": tray, "anclas": {"": (0, 0, 1.0), "piloto": (0, 0, 1.4)}}
+            motos.append(rig)
+
     # cámara-auto invisible por la ruta (más lenta que el tren: los vagones la pasan)
     moviles["auto_camara"] = {"tray": {f: (Vector(q), math.atan2(-(tt := via.en(p['s_cabeza_inicial'] + 15.5 * (f - 1) / fps - 120)[1]).x, tt.y), 15.5)
                                        for f, q in zip(frames, por_ruta(120.0, 4.0, 15.5))}, "anclas": {"": (0, 0, 1.4)}}
 
+    s_des = p["s_cabeza_inicial"] + p["velocidad_tren"] * 10.5 - 2.0
+    tray_des = {}
+    for f in frames:
+        t_ = (f - 1) / fps
+        si = s_des + 4.0 * (t_ - 10.0)
+        pp_, tt_ = via.en(si)
+        nn_ = Vector((tt_.y, -tt_.x, 0)).normalized()
+        tray_des[f] = (pp_ + nn_ * 8.0, math.atan2(-tt_.x, tt_.y), 4.0)
+    moviles["camara_desfile"] = {"tray": tray_des, "anclas": {"": (0, 0, 3.1)}}
+
+    if p["secuencia"] == 3:
+        info_salto = ST.construir(via, tren, trays, frames, fps, c_veh, p, moviles)
+    else:
+        info_salto = None
     anclas = {"via_centro": tuple(via.en(1200)[0]), "casa_1": tuple(casas[1].location), "casa_3": tuple(casas[3].location)}
     for k, (sp_, pp_, nn_) in enumerate(vf["pasos_a_nivel"]):
         anclas[f"paso_nivel_{k + 1}"] = tuple(pp_)
         anclas[f"paso_nivel_{k + 1}_camino"] = tuple(pp_ + nn_ * -14.0 + Vector((0, 0, 1.6)))
-    return {"anclas": anclas, "animables": {"tren": tren, "via": via}, "parametros": p, "moviles": moviles}
+    return {"anclas": anclas, "animables": {"tren": tren, "via": via, "salto": info_salto}, "parametros": p, "moviles": moviles}

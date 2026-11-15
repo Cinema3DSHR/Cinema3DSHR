@@ -171,6 +171,8 @@ def aplicar_fisica(rig: dict, reg: dict, frames: list[int]) -> dict:
     la dirección. Las ruedas se asignan por eje y lado (0 del. izq · 1 del. der · 2 tras. izq · 3 tras. der del juego);
     con más de dos ejes, los intermedios copian el trasero. Devuelve la trayectoria {frame: (pos en el piso, rumbo, v)}."""
     from mathutils import Matrix
+    if reg.get("cuadros"):                  # grabación con varias muestras por cuadro (cámara lenta): claves fraccionarias
+        frames = reg["cuadros"]
     n = len(frames)
     pos = reg["pos"][:n]
     eul, prev = [], None
@@ -190,9 +192,11 @@ def aplicar_fisica(rig: dict, reg: dict, frames: list[int]) -> dict:
     rig["telemetria"] = {k: reg[k][:n] for k in ("v", "rpm", "marcha", "desliz", "contacto", "entradas")}
     out = {}
     for i, f in enumerate(frames):
+        if abs(f - round(f)) > 1e-3:
+            continue                         # la trayectoria de cámaras y sonido va por cuadros enteros
         r = reg["rot"][i]
         rumbo = math.atan2(-r[1], r[4])       # columna Y (adelante) de la orientación
-        out[f] = (Vector(pos[i]), rumbo, abs(reg["v"][i]))
+        out[int(round(f))] = (Vector(pos[i]), rumbo, abs(reg["v"][i]))
     return out
 
 
@@ -204,7 +208,7 @@ VISIBLE_DESDE_AFUERA = ("cab_seat", "cab_dash", "cab_carbon", "cab_floor", "cab_
 MOVILES_CABINA = ("cab_rim", "cab_gear_lever", "cab_hb_lever", "cab_pedal_thr", "cab_pedal_brk")
 
 
-def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool = True) -> list:
+def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool = True, desplazamiento=None) -> list:
     """Cuelga del auto la cabina de Dream Rally exportada por `estudio.fisica_dr` (habitáculo, butacas, tablero, volante,
     palancas, pedales y los dos pilotos con su animación cuadro a cuadro). Va en el mismo marco que el modelo del auto
     (la carrocería importada), así que coincide como en el juego. exterior=True esconde lo que en el juego sólo se ve con
@@ -218,9 +222,16 @@ def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool
         while o is not None:
             yield o
             o = o.parent
+    padre = rig["carroceria"]
+    if desplazamiento is not None or not rig.get("meta"):
+        # modelo de película (no es un auto del juego): la cabina del juego se acomoda con un corrimiento medido
+        padre = K.vacio(f"{rig['nombre']}_cabina", (0, 0, 0), col)
+        padre.parent = rig["caja"]
+        padre.rotation_euler = (0, 0, math.pi)        # el GLB mira a −Y (como los autos del juego importados)
+        padre.location = tuple(desplazamiento or (0, 0, 0))
     for o in objs:
         if o.parent is None:
-            o.parent = rig["carroceria"]
+            o.parent = padre
     for o in objs:
         if o.type != "MESH":
             continue
@@ -240,6 +251,8 @@ def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool
             o["visor_omitir"] = True
     if rig.get("meta"):
         VI.aplicar(rig["objetos"], rig["meta"], claro=vidrios_claros)
+    elif rig.get("ventanas"):
+        VI.aplicar_ventanas(rig["objetos"], rig["caja"], rig["ventanas"], claro=vidrios_claros)
     rig["cabina"] = objs
     return objs
 

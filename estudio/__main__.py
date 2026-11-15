@@ -61,7 +61,7 @@ def cmd_fijas(a):
     s = res["escena"]
     for t in res["tomas"]:
         s.camera = t["camara"]
-        s.frame_set((t["frame_inicio"] + t["frame_fin"]) // 2)
+        D.ir_a(res, (t["frame_inicio"] + t["frame_fin"]) // 2)
         s.render.filepath = str(out / f"{t['spec']['id']}.jpg")
         bpy.ops.render.render(write_still=True)
         print("fija", t["spec"]["id"])

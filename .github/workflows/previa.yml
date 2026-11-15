@@ -61,6 +61,12 @@ jobs:
           B64=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0); echo "::add-mask::$B64"
           cd "$RUNNER_TEMP"
           git -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote https://github.com/webmaletin-art/mixamo-respaldo.git HEAD | grep -q HEAD || { echo "::error::ASSETS_TOKEN no puede leer mixamo-respaldo"; exit 1; }
+      - name: Godot (física, cabina y pilotos de Dream Rally)
+        run: |
+          V=4.7.2
+          curl -sSL -o /tmp/godot.zip "https://github.com/godotengine/godot/releases/download/${V}-stable/Godot_v${V}-stable_linux.x86_64.zip"
+          unzip -q -o /tmp/godot.zip -d /tmp/godot && sudo ln -sf /tmp/godot/Godot_v${V}-stable_linux.x86_64 /usr/local/bin/godot
+          godot --version
       - name: Blender (bpy)
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg >/dev/null

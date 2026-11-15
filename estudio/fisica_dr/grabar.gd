@@ -25,8 +25,43 @@ class Suelo extends "res://game/physics/track_base.gd":
 	var ny := 1
 	var h := PackedFloat64Array()
 	var superficie := 0
+	var cajas: Array = []   # [{x0, x1, y0, y1, h0, h1, sup}] en coordenadas de Blender del marco; la altura va de h0 (y0) a h1 (y1)
+	## faldón: el piso cae con esta pendiente (m por m) fuera de cada caja. La física del juego calcula la pendiente con la
+	## altura bajo las cuatro ruedas (también las que están en el aire): un borde a pique (rampa, plataforma) la dispara
+	var faldon := 0.0
 
 	func ground_info(x: float, z: float) -> Vector2:
+		if tipo == "cajas":
+			var bx := x
+			var by := -z
+			var mejor := Vector2(altura, superficie)
+			for c in cajas:
+				var hh := -INF
+				if c.has("ang"):
+					# caja girada (rampa): centro cx, cy, eje a «ang» de +Y hacia la izquierda; la altura sube a lo largo
+					var a := float(c["ang"])
+					var dx := bx - float(c["cx"])
+					var dy := by - float(c["cy"])
+					var u := dx * -sin(a) + dy * cos(a)
+					var w := dx * cos(a) + dy * sin(a)
+					var L := float(c["largo"])
+					var A := float(c["ancho"]) / 2.0
+					var uc := clampf(u, -L / 2.0, L / 2.0)
+					var d := Vector2(u - uc, w - clampf(w, -A, A)).length()
+					hh = lerpf(float(c["h0"]), float(c["h1"]), (uc + L / 2.0) / L) - faldon * d
+				else:
+					var xc := clampf(bx, float(c["x0"]), float(c["x1"]))
+					var yc := clampf(by, float(c["y0"]), float(c["y1"]))
+					var d2 := Vector2(bx - xc, by - yc).length()
+					var k := (yc - float(c["y0"])) / maxf(1e-6, float(c["y1"]) - float(c["y0"]))
+					hh = lerpf(float(c["h0"]), float(c["h1"]), k) - faldon * d2
+					if faldon <= 0.0 and d2 > 0.0:
+						hh = -INF
+				if c.has("ang") and faldon <= 0.0 and hh < lerpf(float(c["h0"]), float(c["h1"]), 0.0) - 1e-6 and false:
+					hh = -INF
+				if hh > mejor.x:
+					mejor = Vector2(hh, float(c.get("sup", superficie)))
+			return mejor
 		if tipo == "plano":
 			return Vector2(altura, superficie)
 		var bx := x
@@ -173,7 +208,24 @@ class Grabadora:
 		var Snap = load("res://game/car/car_snapshot.gd")
 		var pin: Array = op.get("pintura", [0.1, 0.31, 0.88])
 		var acc: Array = op.get("acento", [1.0, 0.42, 0.03])
+		var pilotos: Array = op.get("pilotos", [])
+		var RP = load("res://game/car/rig_pilot.gd")
+		if pilotos.size() == 2:
+			# los protagonistas en lugar de los pilotos con casco: misma cinemática inversa y fuerzas G del juego
+			var s0: PackedScene = load(str(pilotos[0]["glb"]))
+			RP._full_scene = s0
+			RP._lo_scene = s0
+			RP._full_mat = null
 		nodo = Cockpit.new(str(op["tipo"]), Color(pin[0], pin[1], pin[2]), Color(acc[0], acc[1], acc[2]))
+		if pilotos.size() == 2:
+			for i in 2:
+				nodo.rig[i].root.free()
+				RP._lo_scene = load(str(pilotos[i]["glb"]))
+				nodo.rig[i] = RP.new(nodo.crew, float(pilotos[i].get("altura", 1.76)), true)
+			nodo.rig_ok = nodo.rig[0].ok and nodo.rig[1].ok
+			if not nodo.rig_ok:
+				push_error("cabina: el esqueleto de los protagonistas no tiene los huesos que pide rig_pilot")
+			nodo.notes.visible = false        # la hoja de ruta del copiloto de rally no va en esta película
 		nodo.name = "cabina_" + str(op["tipo"])
 		nodo.set_engine(V.maxRpm, V.shiftUpRpm)
 		snap = Snap.new()
@@ -192,7 +244,7 @@ class Grabadora:
 				huesos.append({"skel": sk, "i": i, "r": pr, "p": pp})
 		for nm in ["rim", "gear_lever", "hb_lever", "pedal_thr", "pedal_brk", "notes"]:
 			var nd: Node3D = nodo.get(nm)
-			if nd == null:
+			if nd == null or not nd.visible:
 				continue
 			nd.name = "cab_" + nm
 			var ruta := str(nodo.get_path_to(nd))
@@ -201,6 +253,31 @@ class Grabadora:
 			var pr2 := anim.add_track(Animation.TYPE_ROTATION_3D)
 			anim.track_set_path(pr2, NodePath(ruta))
 			piezas.append({"nodo": nd, "p": pp2, "r": pr2})
+
+	## muestra a la hora t (s): la clave queda en el cuadro 1 + t·fps_película (fps acá = fps × muestras por cuadro)
+	var fps_pelicula := 30.0
+	func cuadro_t(t: float, freno_mano: bool) -> void:
+		if n == 0:
+			nodo.set_inside(true, true)
+			_preparar()
+		n += 1
+		snap.sample(t)
+		var dt := 1.0 / fps
+		nodo.update_crew(dt, snap, freno_mano, t, float(opciones.get("rugosidad", 0.0)))
+		nodo.update_cabin(dt, snap, freno_mano, t)
+		var tk := (1.0 + t * fps_pelicula) / fps_pelicula
+		for hb in huesos:
+			var sk: Skeleton3D = hb["skel"]
+			anim.rotation_track_insert_key(hb["r"], tk, sk.get_bone_pose_rotation(hb["i"]))
+			if hb["p"] >= 0:
+				anim.position_track_insert_key(hb["p"], tk, sk.get_bone_pose_position(hb["i"]))
+		for pz in piezas:
+			var nd: Node3D = pz["nodo"]
+			anim.position_track_insert_key(pz["p"], tk, nd.position)
+			anim.rotation_track_insert_key(pz["r"], tk, nd.quaternion)
+		ultimo_tk = tk
+
+	var ultimo_tk := 0.0
 
 	func cuadro(f: int, t: float, freno_mano: bool) -> void:
 		if n == 0:
@@ -223,7 +300,7 @@ class Grabadora:
 			anim.rotation_track_insert_key(pz["r"], tk, nd.quaternion)
 
 	func exportar() -> String:
-		anim.length = float(n + 1) / fps
+		anim.length = maxf(float(n + 1) / fps, ultimo_tk + 1.0 / fps_pelicula)
 		var ap := AnimationPlayer.new()
 		ap.name = "animacion"
 		var lib := AnimationLibrary.new()
@@ -259,6 +336,55 @@ class Grabadora:
 			err = doc.write_to_filesystem(st, str(opciones["glb"]))
 		return str(opciones["glb"]) if err == OK else "error %d" % err
 
+## Marco móvil (acoplado de un camión, plataforma de un vagón): pose por cuadro [x, y, rumbo] en Blender (rumbo 0 = mira
+## a +Y). Se interpola a la hora de la física; antes del primer cuadro se extrapola con la velocidad inicial.
+class Marco:
+	var poses: Array = []
+	var fps := 30.0
+
+	func pose(t: float) -> Vector3:
+		var f := t * fps
+		var n := poses.size()
+		if f <= 0.0:
+			var a: Array = poses[0]
+			var b: Array = poses[1]
+			return Vector3(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2])
+		var i := mini(int(f), n - 2)
+		var k := f - i
+		var a2: Array = poses[i]
+		var b2: Array = poses[i + 1]
+		var dr := wrapf(float(b2[2]) - float(a2[2]), -PI, PI)
+		return Vector3(lerpf(a2[0], b2[0], k), lerpf(a2[1], b2[1], k), float(a2[2]) + dr * k)
+
+	func vel(t: float) -> Vector3:
+		var d := 0.5 / fps
+		var a := pose(t - d)
+		var b := pose(t + d)
+		return Vector3((b.x - a.x) / (2 * d), (b.y - a.y) / (2 * d), wrapf(b.z - a.z, -PI, PI) / (2 * d))
+
+## de coordenadas de la física (juego) del marco a Blender local del marco y al mundo
+static func _local_a_mundo(m: Marco, t: float, xl: float, yl: float) -> Vector2:
+	var p := m.pose(t)
+	var r := p.z
+	var der := Vector2(cos(r), sin(r))
+	var fwd := Vector2(-sin(r), cos(r))
+	return Vector2(p.x, p.y) + der * xl + fwd * yl
+
+static func _mundo_a_local(m: Marco, t: float, w: Vector2) -> Vector2:
+	var p := m.pose(t)
+	var r := p.z
+	var d := w - Vector2(p.x, p.y)
+	return Vector2(d.dot(Vector2(cos(r), sin(r))), d.dot(Vector2(-sin(r), cos(r))))
+
+static func _suelo_de(sp: Dictionary) -> Suelo:
+	var su := Suelo.new()
+	su.tipo = "cajas"
+	su.altura = float(sp.get("base", 0.0))
+	su.superficie = int(sp.get("superficie", 0))
+	su.cajas = sp.get("cajas", [])
+	su.faldon = float(sp.get("faldon", 0.0))
+	return su
+
 func _process(_d: float) -> bool:
 	var args := OS.get_cmdline_user_args()
 	var plan: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(args[0]))
@@ -286,6 +412,9 @@ func _process(_d: float) -> bool:
 		for k in (vp.get("params", {}) as Dictionary):
 			d[k] = vp["params"][k]
 		var V: VehicleParams = VehicleParams.from_dict(d)
+		if vp.has("marco"):
+			salida["vehiculos"][str(vp["id"])] = _sim_marcos(vp, plan, V, fps, hz, cuadros, W, M)
+			continue
 		var ph := VehiclePhysics.new(suelo, V)
 		var ruta := Ruta.new(vp["ruta"])
 		var cond := Conductor.new()
@@ -327,6 +456,7 @@ func _process(_d: float) -> bool:
 		var cab: Grabadora = null
 		if vp.has("cabina"):
 			cab = Grabadora.new(vp["cabina"], V, fps)
+			cab.fps_pelicula = fps
 			root.add_child(cab.nodo)
 		for i in total:
 			var tt := -previo + i * h
@@ -337,9 +467,10 @@ func _process(_d: float) -> bool:
 			if cab != null:
 				cab.snap.push(tt + h, ph)
 			var j := i + 1 - n_prev
-			if cab != null and j > 0 and j % sub == 0:
-				cab.cuadro(j / sub, tt + h, ent[3])
-			if j > 0 and j % sub == 0:
+			# muestra a la hora del cuadro: cuadro f ↔ t = (f − 1)/fps, como el resto del estudio
+			if cab != null and j >= 0 and j % sub == 0:
+				cab.cuadro_t(tt + h, ent[3])
+			if j >= 0 and j % sub == 0 and reg["pos"].size() < cuadros:
 				var B := Basis.from_euler(Vector3(ph.pitch, ph.yaw, ph.roll), EULER_ORDER_YXZ)
 				var origen := Vector3(ph.px, ph.py, ph.pz) + B * Vector3(0, -V.comHeight + V.rideOffset, 0)
 				var ob := W * origen
@@ -381,3 +512,141 @@ func _process(_d: float) -> bool:
 	print("fisica_dr: ", (plan["vehiculos"] as Array).size(), " vehículos, ", cuadros, " cuadros")
 	quit(0)
 	return true
+
+
+## Simulación en marcos móviles: el vehículo empieza en el marco `marco` (p. ej. el acoplado de un camión que viaja) con
+## el piso de ese marco quieto, maneja con `controles` por tiempo y en cada `cambio` (en el aire) pasa al otro marco
+## (p. ej. la plataforma de un vagón) conservando su velocidad y posición en el mundo. La salida va en el mundo.
+func _sim_marcos(vp: Dictionary, plan: Dictionary, V, fps: int, hz: int, cuadros: int, W: Basis, M: Basis) -> Dictionary:
+	var marcos := {}
+	for k in (plan.get("marcos", {}) as Dictionary):
+		var mm := Marco.new()
+		mm.poses = plan["marcos"][k]["poses"]
+		mm.fps = fps
+		marcos[k] = mm
+	var suelos := {}
+	for k in (vp.get("suelo_local", {}) as Dictionary):
+		suelos[k] = _suelo_de(vp["suelo_local"][k])
+	var actual := str(vp["marco"])
+	var m: Marco = marcos[actual]
+	var ph := VehiclePhysics.new(suelos[actual], V)
+	var ini: Array = vp.get("inicio_local", [0.0, 0.0, 0.0])
+	ph.reset(float(ini[0]), -float(ini[1]), float(ini[2]) + PI)
+	var cambios: Array = vp.get("cambios", [])
+	var controles: Array = vp.get("controles", [])
+	# volante: con "ruta_local" lo maneja el conductor que sigue el camino (sólo en el marco inicial)
+	var cond: Conductor = null
+	if vp.has("ruta_local"):
+		cond = Conductor.new()
+		cond.ruta = Ruta.new(vp["ruta_local"])
+		cond.horario = [[-100.0, 0.0], [100.0, 1.0]]
+		cond.eventos = []
+		cond.s_act = cond.ruta.proyectar(Vector2(ph.px, ph.pz), 0.0)
+	var marco_inicial := actual
+	var previo := float(vp.get("previo_s", 1.0))
+	var h := 1.0 / hz
+	var sub := int(hz / fps)
+	var muestras := clampi(int(vp.get("muestras_por_cuadro", 1)), 1, sub)
+	var paso_salida := int(sub / muestras)
+	var base: float = V.comHeight + V.hardpointY - V.rideOffset
+	var ang := [0.0, 0.0, 0.0, 0.0]
+	var reg := {"pos": [], "rot": [], "ruedas_z": [], "ruedas_giro": [], "direccion": [], "v": [], "rpm": [], "marcha": [],
+				"desliz": [], "contacto": [], "entradas": [], "cuadros": [], "marco": []}
+	var cab: Grabadora = null
+	if vp.has("cabina"):
+		cab = Grabadora.new(vp["cabina"], V, fps * muestras)
+		cab.fps_pelicula = fps
+		root.add_child(cab.nodo)
+	var n_prev := int(round(previo * hz))
+	var total := n_prev + cuadros * sub
+	var hechos := 0
+	for i in total:
+		var tt := -previo + i * h
+		# cambio de marco (en el aire): misma posición y velocidad en el mundo
+		while hechos < cambios.size() and tt >= float(cambios[hechos]["t"]):
+			var nuevo := str(cambios[hechos]["a"])
+			var B: Marco = marcos[nuevo]
+			var pa := m.pose(tt)
+			var va := m.vel(tt)
+			var pb := B.pose(tt)
+			var vb := B.vel(tt)
+			var pw := _local_a_mundo(m, tt, ph.px, -ph.pz)
+			var ra := pa.z
+			var vl := Vector2(ph.vx, -ph.vz)
+			var rel_a := pw - Vector2(pa.x, pa.y)
+			var vw := Vector2(cos(ra) * vl.x - sin(ra) * vl.y, sin(ra) * vl.x + cos(ra) * vl.y) + Vector2(va.x, va.y) + va.z * Vector2(-rel_a.y, rel_a.x)
+			var rel_b := pw - Vector2(pb.x, pb.y)
+			var vr := vw - Vector2(vb.x, vb.y) - vb.z * Vector2(-rel_b.y, rel_b.x)
+			var rb := pb.z
+			var vlb := Vector2(cos(rb) * vr.x + sin(rb) * vr.y, -sin(rb) * vr.x + cos(rb) * vr.y)
+			var plb := _mundo_a_local(B, tt, pw)
+			ph.px = plb.x
+			ph.pz = -plb.y
+			ph.vx = vlb.x
+			ph.vz = -vlb.y
+			ph.yaw += wrapf(ra - rb, -PI, PI)
+			ph.yawRate += va.z - vb.z
+			ph.track = suelos[nuevo]
+			m = B
+			actual = nuevo
+			hechos += 1
+		var thr := 0.0
+		var brk := 0.0
+		var st := 0.0
+		var hb := false
+		if cond != null and actual == marco_inicial:
+			st = float(cond.manejar(ph, tt, h)[2])
+		for c in controles:
+			if tt >= float(c["t0"]) and tt < float(c["t1"]):
+				thr = float(c.get("gas", thr))
+				brk = float(c.get("freno", brk))
+				st = float(c.get("volante", st))
+				hb = bool(c.get("freno_mano", hb))
+		ph.step(h, thr, brk, st, hb)
+		for k in 4:
+			ang[k] += ph.wheels[k].omega * h
+		if cab != null:
+			cab.snap.push(tt + h, ph)
+		var j := i + 1 - n_prev
+		if j >= 0 and j % paso_salida == 0 and reg["pos"].size() < cuadros * muestras:
+			var ts := tt + h
+			if cab != null:
+				cab.cuadro_t(ts, hb)
+			var Bq := Basis.from_euler(Vector3(ph.pitch, ph.yaw, ph.roll), EULER_ORDER_YXZ)
+			var org := W * (Vector3(ph.px, ph.py, ph.pz) + Bq * Vector3(0, -V.comHeight + V.rideOffset, 0))
+			var pm := m.pose(ts)
+			var w2 := _local_a_mundo(m, ts, org.x, org.y)
+			var rz := Basis(Vector3(cos(pm.z), sin(pm.z), 0), Vector3(-sin(pm.z), cos(pm.z), 0), Vector3(0, 0, 1))
+			var R := rz * (W * Bq * M)
+			reg["pos"].append([snappedf(w2.x, 0.0001), snappedf(w2.y, 0.0001), snappedf(org.z, 0.0001)])
+			reg["rot"].append([snappedf(R.x.x, 1e-5), snappedf(R.y.x, 1e-5), snappedf(R.z.x, 1e-5),
+							   snappedf(R.x.y, 1e-5), snappedf(R.y.y, 1e-5), snappedf(R.z.y, 1e-5),
+							   snappedf(R.x.z, 1e-5), snappedf(R.y.z, 1e-5), snappedf(R.z.z, 1e-5)])
+			var zs := []
+			var gs := []
+			var ds := []
+			var cs := []
+			for k in 4:
+				var w = ph.wheels[k]
+				zs.append(snappedf(base - w.s, 0.0001))
+				gs.append(snappedf(ang[k], 0.0001))
+				ds.append(snappedf(w.slip, 0.001))
+				cs.append(1 if w.contact else 0)
+			reg["ruedas_z"].append(zs)
+			reg["ruedas_giro"].append(gs)
+			reg["desliz"].append(ds)
+			reg["contacto"].append(cs)
+			reg["direccion"].append(snappedf(ph.steerAngle, 0.0001))
+			reg["v"].append(snappedf(ph.vLong, 0.001))
+			reg["rpm"].append(int(ph.rpm))
+			reg["marcha"].append(ph.gear)
+			reg["entradas"].append([snappedf(thr, 0.01), snappedf(brk, 0.01), snappedf(st, 0.01), 1 if hb else 0])
+			reg["cuadros"].append(snappedf(1.0 + ts * fps, 0.0001))
+			reg["marco"].append(actual)
+	reg["ruedas"] = [{"x": -V.trackF / 2.0, "y": ph.a, "delantera": true}, {"x": V.trackF / 2.0, "y": ph.a, "delantera": true},
+					 {"x": -V.trackR / 2.0, "y": -ph.b, "delantera": false}, {"x": V.trackR / 2.0, "y": -ph.b, "delantera": false}]
+	reg["radio"] = V.wheelRadius
+	reg["reposo_z"] = base - ph.wheels[0].sStatic
+	if cab != null:
+		reg["cabina"] = cab.exportar()
+	return reg

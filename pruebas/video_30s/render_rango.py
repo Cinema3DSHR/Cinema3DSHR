@@ -25,7 +25,7 @@ s.cycles.samples = a.muestras                       # ÚNICO ajuste de la prueba
 s.render.image_settings.file_format = "PNG"; s.render.image_settings.color_mode = "RGB"; s.render.image_settings.color_depth = "8"
 assert (s.render.resolution_x, s.render.resolution_y, s.render.resolution_percentage, s.render.fps) == (1280, 720, 100, 30), "resolución/FPS distintos de 1280x720@30"
 assert s.render.engine == "CYCLES"
-assert a.hasta <= s.frame_end, f"la escena tiene {s.frame_end} fotogramas"
+assert a.hasta <= res.get("frames_pelicula", s.frame_end), f"la escena tiene {res.get('frames_pelicula', s.frame_end)} fotogramas"
 def toma_de(f):
     for t in res["tomas"]:
         if t["frame_inicio"] <= f <= t["frame_fin"]: return t
@@ -42,7 +42,7 @@ cpu0 = sum(os.times()[:2]); filas = []
 for f in range(a.desde, a.hasta + 1):
     destino = out / f"f_{f:04d}.png"
     if destino.exists() and destino.stat().st_size > 0: continue
-    t = toma_de(f); s.camera = t["camara"]; s.frame_set(f); s.render.filepath = str(destino)
+    t = toma_de(f); s.camera = t["camara"]; D.ir_a(res, f); s.render.filepath = str(destino)
     w = time.perf_counter(); bpy.ops.render.render(write_still=True); dtf = time.perf_counter() - w
     filas.append({"fotograma": f, "toma": t["spec"]["id"], "segundos": round(dtf, 3)})
     print(f"f_{f:04d} {t['spec']['id']:20} {dtf:6.2f} s", flush=True)

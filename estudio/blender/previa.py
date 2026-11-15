@@ -172,8 +172,10 @@ def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path, max_p
                       **_lente(t["camara"])})
     # muestras de control (coordenadas de Blender) para comprobar que el visor reproduce lo mismo que el render
     control = {"frames": [], "caderas": {a["id"]: [] for a in actores}, "camaras": {}}
-    for f in sorted({1, *range(60, s.frame_end + 1, 120), s.frame_end}):
-        s.frame_set(f)
+    from estudio.blender import director as D
+    fin_p = res.get("frames_pelicula", s.frame_end)          # cuadros de la PELÍCULA (con cámara lenta, más que la escena)
+    for f in sorted({1, *range(60, fin_p + 1, 120), fin_p}):
+        D.ir_a(res, f)
         control["frames"].append(f)
         for a in actores:
             pj = res["personajes"][a["id"]]
@@ -182,13 +184,16 @@ def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path, max_p
             control["caderas"][a["id"]].append([round(v, 4) for v in h])
     for t in res["tomas"]:
         f = (t["frame_inicio"] + t["frame_fin"]) // 2
-        s.frame_set(f)
+        D.ir_a(res, f)
         mw = t["camara"].matrix_world
         control["camaras"][t["camara"].name] = {"frame": f, "matriz": [[round(v, 6) for v in fila] for fila in mw]}
     datos = {
         "formato": "estudio.previa/1", "produccion": manifiesto["produccion"], "escena_id": manifiesto["id"],
         "version": manifiesto.get("version", 1), "huella": MF.huella(manifiesto), "titulo": manifiesto.get("titulo", ""),
-        "fps": fps, "frames": s.frame_end, "duracion_s": s.frame_end / fps,
+        "fps": fps, "frames": fin_p, "duracion_s": fin_p / fps,
+        # cámara lenta: la animación del GLB está en tiempo de la ESCENA; la película la recorre con este mapa
+        # ([[t_película, t_escena], …], lineal por tramos; null = iguales)
+        "mapa_tiempo": manifiesto.get("mapa_tiempo"),
         "resolucion": [s.render.resolution_x, s.render.resolution_y],
         "coordenadas": {"glb": "glTF Y arriba", "blender_desde_glb": "(x, y, z)_blender = (x, -z, y)_glb",
                         "camara": "mira hacia −Z local con +Y local arriba (igual en Blender, glTF y Godot)"},

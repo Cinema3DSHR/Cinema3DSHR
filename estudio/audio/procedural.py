@@ -373,6 +373,9 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
         mezcla += ambiente_dia_suburbio(n, rng) * 0.6
     elif amb == "estadio":
         mezcla += ambiente_estadio(n, rng) * 0.35
+    elif amb == "tren_llanura":
+        from estudio.audio import tren as TRA
+        mezcla += TRA.ambiente_llanura(n, rng) * 0.5
     for ev in pistas.get("eventos", []):
         if ev["tipo"] == "patada":
             mezcla += golpe(n, rng, ev["t"], "patada") * 0.9
@@ -383,7 +386,14 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
         if ev["tipo"] in ("voz", "efecto", "musica"):
             mezcla += audio_de_biblioteca(pistas, ev, n)
         elif ev["tipo"] == "motor":
-            mezcla += motor(pistas, ev["movil"], n, rng) * ev.get("volumen", 1.0)
+            if ev.get("clase") or (pistas.get("rpm") or {}).get(ev["movil"]):
+                from estudio.audio import tren as TRA
+                mezcla += TRA.motor_rpm(pistas, ev["movil"], n, rng, ev.get("clase", "diesel")) * ev.get("volumen", 1.0)
+            else:
+                mezcla += motor(pistas, ev["movil"], n, rng) * ev.get("volumen", 1.0)
+        elif ev["tipo"] == "tren":
+            from estudio.audio import tren as TRA
+            mezcla += TRA.tren(pistas, n, rng, ev["tipos"], ev.get("s_inicial", 0.0)) * ev.get("volumen", 1.0)
         elif ev["tipo"] == "puerta_patada":
             _poner(seco, puerta_patada(rng), ev["inicio_s"], 1.0, -0.05)
         elif ev["tipo"] == "pasos":

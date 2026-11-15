@@ -8,7 +8,7 @@ película entera antes del render final (que sólo arranca con «APROBADO. INICI
 |---|---|---|---|---|---|
 | s01 | El transporte | 00:00–01:15 | 75 s | llanura + vías + ruta paralela | 2.250 |
 | s02 | La preparación | 01:15–02:20 | 65 s | ruta abierta, cabina, túnel | 1.950 |
-| s03 | El salto | 02:20–03:40 | 80 s | ruta paralela + tren | 2.400 |
+| s03 | El salto (v1: 37,6 s con cámara lenta ×4) | 02:20–03:40 | 80 s | ruta pegada a las vías + tren | 2.400 |
 | s04 | Asalto e infiltración | 03:40–05:35 | 115 s | techos y plataformas del tren | 3.450 |
 | s05 | El robo | 05:35–06:35 | 60 s | vagón 14, salida del tren | 1.800 |
 | s06 | Persecución en la montaña | 06:35–08:15 | 100 s | ruta de montaña + pueblo | 3.000 |

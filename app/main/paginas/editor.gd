@@ -456,11 +456,28 @@ func _cargar(ruta_glb: String, ruta_json: String) -> void:
 
 # ================================================================================================= tiempo
 
+## cámara lenta: la animación del GLB está en tiempo de la escena; la línea de tiempo es la de la película
+func _t_escena(t: float) -> float:
+	var m = _d.get("mapa_tiempo")
+	if not (m is Array) or (m as Array).size() < 2:
+		return t
+	var a: Array = m
+	if t <= float(a[0][0]):
+		return float(a[0][1]) + (t - float(a[0][0]))
+	for i in range(1, a.size()):
+		if t <= float(a[i][0]):
+			var t0 := float(a[i - 1][0])
+			var t1 := float(a[i][0])
+			var k := (t - t0) / maxf(1e-9, t1 - t0)
+			return lerpf(float(a[i - 1][1]), float(a[i][1]), k)
+	var n := a.size()
+	return float(a[n - 1][1]) + (t - float(a[n - 1][0]))
+
 func _ir_a(t: float) -> void:
 	_t = clampf(t, 0.0, _dur)
 	if _ap:
 		# el GLB de Blender pone el cuadro f en el tiempo f/fps (cuadro 1 = 1/fps); la película empieza en el cuadro 1
-		_ap.seek(minf(_t + 1.0 / _fps, _ap.current_animation_length), true)
+		_ap.seek(minf(_t_escena(_t) + 1.0 / _fps, _ap.current_animation_length), true)
 	var f := _frame()
 	for n in _vis:
 		var on := false
