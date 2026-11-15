@@ -8,6 +8,7 @@ const PAGINAS := {
 	"pelicula": preload("res://main/paginas/pelicula.gd"),
 	"escena": preload("res://main/paginas/escena.gd"),
 	"visor": preload("res://main/paginas/visor.gd"),
+	"editor": preload("res://main/paginas/editor.gd"),
 	"escenarios": preload("res://main/paginas/escenarios.gd"),
 	"ajustes": preload("res://main/paginas/ajustes.gd"),
 }
@@ -101,7 +102,7 @@ func ir(nombre: String, datos := {}, raiz := false) -> void:
 	n.call("abrir", datos)
 	for k in _nav:
 		_nav[k].button_pressed = (k == _pila[0]["nombre"])
-	_barra.visible = nombre != "visor"
+	_barra.visible = not (nombre in ["visor", "editor"])
 
 func atras() -> bool:
 	if _pila.size() <= 1:
@@ -112,7 +113,7 @@ func atras() -> bool:
 	arriba.visible = true
 	if arriba.has_method("al_volver"):
 		arriba.call("al_volver")
-	_barra.visible = _pila.back()["nombre"] != "visor"
+	_barra.visible = not (_pila.back()["nombre"] in ["visor", "editor"])
 	return true
 
 func _notification(what: int) -> void:

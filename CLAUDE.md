@@ -18,6 +18,16 @@ Hablar con el dueño en español rioplatense. Leer primero `docs/REGISTRO.md` (e
 7. Antes de subir una escena: `validar` y `fijas` (mirar las imágenes). No decir que algo funciona sin haberlo probado.
 8. Registrar cada avance en `docs/REGISTRO.md`.
 
+## Previsualización y aprobación ANTES del render (docs/EDITOR_3D.md)
+- Toda escena nueva o corregida: publicar su previsualización con el flujo «Previsualización 3D» (`previa.yml`) y avisar
+  al dueño para que la revise en EDITOR 3D. **Nada de render final durante la revisión.**
+- Pedidos `[DIRECCIÓN]` (etiqueta `direccion`): leer `python -m estudio direccion <produccion>` y los archivos de
+  `producciones/<produccion>/director/` (cámaras en coordenadas de Blender: usar los números, nunca adivinar desde una
+  captura). Aplicar en una versión NUEVA (`aplicar-direccion` para cámaras), publicar la previsualización nueva,
+  comentar y cerrar el pedido. No tocar lo que la corrección no menciona.
+- Render final sólo con la frase del dueño «LA ESCENA ESTÁ BIEN. EMPEZÁ CON EL VIDEO» y sobre la versión aprobada:
+  `video30.yml` se niega si la versión no está aprobada con la misma huella.
+
 ## Pedidos del dueño desde la app
 Issues abiertos con etiqueta `correccion` (bloque JSON con producción, escena, versión y nota). Atenderlos con una
 versión nueva sólo de esa escena; comentar el resultado en el issue y cerrarlo.

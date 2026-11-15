@@ -71,6 +71,9 @@ if a.produccion:
     if Path(a.audio).exists():
         subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", a.audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-f", "adts", str(S / "audio.aac")], check=True)
     shutil.copy(mp4, S / f"{eid}_v{ver}_revision.mp4")                        # el nombre que la app busca en el catálogo
+    # la app reproduce OGV (Theora + Vorbis), como los videos de revisión del estudio
+    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(mp4), "-vf", "scale='min(1280,iw)':-2", "-c:v", "libtheora",
+                    "-q:v", "7", "-c:a", "libvorbis", "-q:a", "4", str(S / f"{eid}_v{ver}_revision.ogv")], check=True)
     n_portada = max(1, min(a.total, int(round(a.total * 0.38))))                 # un cuadro del enfrentamiento
     subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(F / f"f_{n_portada:04d}.png"), "-q:v", "2", str(S / f"{eid}_v{ver}_portada.jpg")], check=True)
     subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(F / f"f_{n_portada:04d}.png"), "-vf", "scale=320:-2", "-q:v", "4", str(S / f"{eid}_v{ver}_miniatura.jpg")], check=True)

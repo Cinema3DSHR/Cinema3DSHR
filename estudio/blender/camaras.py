@@ -11,6 +11,9 @@ Tipos de toma (campo "tipo" en el manifiesto de la escena):
   detalle       primer plano / plano detalle que sigue un punto del móvil (rueda, mano, puerta)
   vigilancia    cámara de seguridad: fija, alta, lente angular, barrido lento; el montaje agrega el texto REC
   subjetiva     punto de vista de un móvil (p. ej. conductor): posición y mirada en el marco del vehículo
+  director      cámara colocada por el director en el EDITOR 3D: "camara" = datos exactos del archivo
+                director/camaras/camera_NNN.json (coordenadas de Blender). Con "hasta" (otra cámara del director) la
+                toma viaja suavemente de una a otra (posición, orientación y lente): transición entre cámaras.
 
 Puntos ("desde", "hasta", "objetivo", "centro"):
   [x, y, z]                                         posición fija
@@ -100,6 +103,30 @@ def crear_toma(spec: dict, ctx: Contexto, col=None) -> dict:
             return ctx.punto(spec["objetivo"], f).lerp(ctx.punto(spec["objetivo_final"], f), _ease(t, suave))
         return ctx.punto(spec.get("objetivo") or spec.get("centro"), f)
 
+    if tipo == "director":
+        from estudio.blender import camara_director as CD
+        a = CD.matriz(spec["camara"])
+        b = CD.matriz(spec["hasta"]) if spec.get("hasta") else a
+        la, lb = float(spec["camara"]["lens_mm"]), float((spec.get("hasta") or spec["camara"])["lens_mm"])
+        cd.sensor_width = float(spec["camara"].get("sensor_mm", 36.0))
+        cd.sensor_fit = "AUTO"
+        qa, qb = a.to_quaternion(), b.to_quaternion()
+        cam.rotation_mode = "XYZ"
+        for f in range(f0, f1 + 1):
+            t = _ease((f - f0) / max(1, f1 - f0), suave)
+            cam.matrix_world = __import__("mathutils").Matrix.Translation(a.translation.lerp(b.translation, t)) @ \
+                qa.slerp(qb, t).to_matrix().to_4x4()
+            cd.lens = la + (lb - la) * t
+            cam.keyframe_insert("location", frame=f)
+            cam.keyframe_insert("rotation_euler", frame=f)
+            cd.keyframe_insert("lens", frame=f)
+            if cd.dof.use_dof and spec.get("foco"):
+                cd.dof.focus_distance = max(0.1, (ctx.punto(spec["foco"], f) - cam.location).length)
+                cd.keyframe_insert("dof.focus_distance", frame=f)
+        sc = K.bpy.context.scene
+        m = sc.timeline_markers.new(spec["id"], frame=f0)
+        m.camera = cam
+        return {"camara": cam, "frame_inicio": f0, "frame_fin": f1, "spec": spec}
     suav_pos = None
     for f in range(f0, f1 + 1):
         t = (f - f0) / max(1, f1 - f0)

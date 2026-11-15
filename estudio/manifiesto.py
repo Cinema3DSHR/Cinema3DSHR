@@ -18,7 +18,7 @@ from pathlib import Path
 from estudio import config
 
 TIPOS_TOMA = {"estatica", "general", "dolly", "paneo", "grua", "orbita", "seguimiento", "detalle", "vigilancia",
-              "subjetiva"}
+              "subjetiva", "director"}
 ESTADOS = ["borrador", "renderizando", "en_revision", "aprobada", "rechazada", "correcciones", "reemplazada"]
 
 
@@ -59,6 +59,8 @@ def validar(m: dict) -> list[str]:
         if abs(t["inicio_s"] - fin) > 1e-6:
             err.append(f"{t['id']}: empieza en {t['inicio_s']} s pero la toma anterior termina en {fin} s")
         fin = t["inicio_s"] + t["duracion_s"]
+        if t.get("tipo") == "director" and not all(k in (t.get("camara") or {}) for k in ("position", "lens_mm")):
+            err.append(f"{t['id']}: las tomas del director necesitan 'camara' con position y lens_mm (archivo camera_NNN.json)")
         if t.get("tipo") in ("seguimiento", "detalle", "subjetiva") and not t.get("movil"):
             err.append(f"{t['id']}: las tomas de {t['tipo']} necesitan 'movil'")
     if abs(fin - m["duracion_s"]) > 1e-6:

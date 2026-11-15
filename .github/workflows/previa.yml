@@ -1,0 +1,96 @@
+name: Previsualización 3D (EDITOR 3D de la app)
+
+# Exporta la previsualización interactiva de UNA versión de escena desde la MISMA receta que se renderiza
+# (director.construir sobre el mismo escena.json): <escena>_v<k>_previa.glb + _previa.json en la release de la
+# producción. No renderiza fotogramas ni usa Cycles. Después rearma el catálogo para que la app la vea.
+# Si la versión ya tiene MP4 publicado y le falta el OGV que reproduce la app, lo agrega.
+on:
+  workflow_dispatch:
+    inputs:
+      escena: {description: "Ruta del escena.json (p. ej. producciones/<produccion>/escenas/e01/v2/escena.json)", required: true}
+      rama_catalogo: {description: "Rama desde la que se rearma el catálogo (vacío = la rama de este flujo)", required: false, default: ""}
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: previa-${{ inputs.escena }}
+  cancel-in-progress: false
+
+env:
+  CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
+  CINE_NEXUS_DIR: ${{ github.workspace }}/recursos/nexus/fuente
+  CINE_EXTRACTION_DIR: ${{ github.workspace }}/recursos/extraction/public
+
+jobs:
+  previa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13", cache: pip, cache-dependency-path: requirements-produccion.txt}
+      - name: Qué recursos usa la escena
+        id: plan
+        env:
+          ESCENA: ${{ inputs.escena }}
+        run: |
+          python3 - <<'PY'
+          import os, sys
+          sys.path.insert(0, ".")
+          from estudio import manifiesto as MF
+          m = MF.leer(os.environ["ESCENA"]); err = MF.validar(m)
+          if err: print("::error::escena inválida:", err); sys.exit(1)
+          deps = MF.dependencias(m)
+          def lista(f, pre=""): return "\n".join(pre + d.split(":", 1)[1] for d in deps if d.startswith(f + ":"))
+          eid = m["id"].split("-")[-1]
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"produccion={m['produccion']}\neid={eid}\nversion={m['version']}\n")
+              for k, f2, pre in (("mixamo", "mixamo", ""), ("nexus", "nexus", "fuente/"), ("extraction", "extraction", "public/")):
+                  f.write(f"{k}<<EOF\n{lista(f2, pre)}\nEOF\n")
+          PY
+      - name: Acceso a los recursos privados
+        env:
+          TOKEN: ${{ secrets.ASSETS_TOKEN }}
+        run: |
+          [ -n "$TOKEN" ] || { echo "::error::Falta el secreto ASSETS_TOKEN"; exit 1; }
+          B64=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0); echo "::add-mask::$B64"
+          cd "$RUNNER_TEMP"
+          git -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote https://github.com/webmaletin-art/mixamo-respaldo.git HEAD | grep -q HEAD || { echo "::error::ASSETS_TOKEN no puede leer mixamo-respaldo"; exit 1; }
+      - name: Blender (bpy)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg >/dev/null
+          pip install -q -r requirements-produccion.txt
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.mixamo != '' }}
+        with: {repository: webmaletin-art/mixamo-respaldo, ref: "${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/mixamo-respaldo, sparse-checkout: "${{ steps.plan.outputs.mixamo }}", sparse-checkout-cone-mode: false}
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.nexus != '' }}
+        with: {repository: webmaletin-art/Operaci-n-Nexus-1, ref: "${{ vars.NEXUS_REF }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/nexus, sparse-checkout: "${{ steps.plan.outputs.nexus }}", sparse-checkout-cone-mode: false}
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.extraction != '' }}
+        with: {repository: webmaletin-art/Extraction-tactical, ref: "${{ vars.EXTRACTION_REF }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/extraction, sparse-checkout: "${{ steps.plan.outputs.extraction }}", sparse-checkout-cone-mode: false}
+      - name: Exportar la previsualización (misma escena que el render)
+        run: python -m estudio previa "${{ inputs.escena }}" --salida previa_out 2>&1 | grep -vE "INFO:|CUEW|FBX version|User property" | tail -20; ls -la previa_out
+      - name: Publicar en la release de la producción
+        env:
+          GH_TOKEN: ${{ github.token }}
+          P: ${{ steps.plan.outputs.produccion }}
+          E: ${{ steps.plan.outputs.eid }}
+          V: ${{ steps.plan.outputs.version }}
+        run: |
+          R=${{ github.repository }}
+          gh release view "$P" --repo "$R" >/dev/null 2>&1 || gh release create "$P" --repo "$R" --latest=false --title "$P" --notes "Entregables de la producción $P."
+          gh release upload "$P" "previa_out/${E}_v${V}_previa.glb" "previa_out/${E}_v${V}_previa.json" --repo "$R" --clobber
+          # la app reproduce OGV: si la versión tiene MP4 publicado y no OGV, se completa
+          if gh release view "$P" --repo "$R" --json assets -q '.assets[].name' | grep -qx "${E}_v${V}_revision.mp4" && \
+             ! gh release view "$P" --repo "$R" --json assets -q '.assets[].name' | grep -qx "${E}_v${V}_revision.ogv"; then
+            gh release download "$P" --repo "$R" --pattern "${E}_v${V}_revision.mp4" --dir ogv_tmp
+            ffmpeg -hide_banner -loglevel error -y -i "ogv_tmp/${E}_v${V}_revision.mp4" -vf "scale='min(1280,iw)':-2" -c:v libtheora -q:v 7 -c:a libvorbis -q:a 4 "ogv_tmp/${E}_v${V}_revision.ogv"
+            gh release upload "$P" "ogv_tmp/${E}_v${V}_revision.ogv" --repo "$R" --clobber
+          fi
+      - name: Rearmar el catálogo de la app
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run catalogo.yml --repo ${{ github.repository }} --ref "${{ github.ref_name }}" -f rama="${{ inputs.rama_catalogo || github.ref_name }}"

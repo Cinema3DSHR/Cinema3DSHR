@@ -124,6 +124,10 @@ func al_actualizar_catalogo() -> void:
 		("%d min de CPU" % int(float(v.get("segundos_render", 0)) / 60.0)) if v.get("segundos_render") else "—"], 16, Tema.TEXTO2, true))
 	var arch: Dictionary = v.get("archivos", {})
 	_cargar_video(arch.get("ogv", {}))
+	# editor 3D / previsualización (misma escena que el render: dirigir cámaras, marcar momentos, aprobar)
+	if arch.has("previa") and arch.has("previa_datos"):
+		_info.add_child(Tema.boton("🎬  EDITOR 3D / PREVISUALIZACIÓN", func():
+			app.ir("editor", {"produccion": _pid, "escena": _eid, "version": int(v["version"]), "archivos": arch}), "acento"))
 	# visor 3D
 	if arch.has("visor"):
 		_info.add_child(Tema.boton("🧊  VER EN 3D (escenario, cámaras, animación)", func():

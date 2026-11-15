@@ -78,7 +78,7 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     s.render.fps = fps
     s.camera = tomas[0]["camara"]
     ajustes_render(s, calidad, manifiesto.get("render", {}))
-    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info}
+    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs}
 
 
 ANCLAS_PERSONAJE = {"cadera": (0, 0, 0), "cabeza": (0, 0, 0.62), "pecho": (0, 0, 0.35), "pies": (0, 0, -0.9),

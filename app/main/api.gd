@@ -244,6 +244,85 @@ func _post_issue(d: Dictionary, listo: Callable) -> void:
 			listo.call(false, "El estudio rechazó el pedido (código %d). Revisá el token en AJUSTES." % cod))
 	h.request(API % REPO + "/issues", _cabeceras(), HTTPClient.METHOD_POST, JSON.stringify({"title": titulo, "body": cuerpo}))
 
+# ------------------------------------------------------------------------------------------- dirección (EDITOR 3D)
+
+## Envía al estudio datos de dirección: tipo = camara | guardar | nota | marcador.
+## Se crea un Issue "[DIRECCIÓN] …" con el JSON; el flujo «Dirección desde el editor 3D» lo guarda en
+## producciones/<produccion>/director/ y Claude lo aplica a la escena de producción.
+func enviar_direccion(datos: Dictionary, listo: Callable) -> void:
+	datos["clase"] = "direccion"
+	datos["app"] = str(ProjectSettings.get_setting("estudio/version", {}).get("app", 0))
+	datos["enviado"] = Time.get_datetime_string_from_system(true) + "Z"
+	if not tiene_token():
+		listo.call(false, "Para enviar al estudio hay que vincular la cuenta en AJUSTES (queda guardado en el teléfono).")
+		return
+	_post_direccion(datos, func(ok, texto):
+		if not ok and texto.begins_with("Sin conexión"):
+			var p := _leer(ARCH_PEND)
+			var lista: Array = p.get("lista", [])
+			lista.append(datos)
+			_escribir(ARCH_PEND, {"lista": lista})
+			listo.call(true, "Sin conexión: quedó guardado y se envía solo al volver la conexión.")
+		else:
+			listo.call(ok, texto))
+
+func _post_direccion(d: Dictionary, listo: Callable) -> void:
+	var tipo := str(d.get("tipo", "nota")).to_upper()
+	var nombre := str(d.get("camara", {}).get("name", d.get("titulo", "")))
+	var titulo := "[DIRECCIÓN] %s · %s v%d · %s%s" % [d.get("produccion", ""), d.get("escena", ""), int(d.get("version", 0)), tipo,
+		(" · " + nombre) if nombre != "" else ""]
+	var cuerpo := "%s\n\n```json\n%s\n```\n\n_Enviado desde el EDITOR 3D de 3D Film Studio._" % [str(d.get("texto", "")), JSON.stringify(d, "  ")]
+	var h := HTTPRequest.new()
+	add_child(h)
+	h.request_completed.connect(func(res, cod, _hd, resp):
+		h.queue_free()
+		if res != HTTPRequest.RESULT_SUCCESS:
+			listo.call(false, "Sin conexión.")
+		elif cod == 201:
+			var r = JSON.parse_string(resp.get_string_from_utf8())
+			listo.call(true, "Enviado al estudio (#%s)." % str(r.get("number", "?")) if r is Dictionary else "Enviado.")
+		else:
+			listo.call(false, "El estudio rechazó el envío (código %d). Revisá el token en AJUSTES." % cod))
+	h.request(API % REPO + "/issues", _cabeceras(), HTTPClient.METHOD_POST, JSON.stringify({"title": titulo, "body": cuerpo}))
+
+## Historial de dirección de una producción: issues "[DIRECCIÓN] <pid> …" (abiertos = pendientes para Claude).
+## listo.call(lista: Array) con {numero, titulo, estado, comentarios, fecha, cuerpo}
+func historial_direccion(pid: String, listo: Callable) -> void:
+	var h := HTTPRequest.new()
+	add_child(h)
+	h.request_completed.connect(func(res, cod, _hd, resp):
+		h.queue_free()
+		var out: Array = []
+		if res == HTTPRequest.RESULT_SUCCESS and cod == 200:
+			var r = JSON.parse_string(resp.get_string_from_utf8())
+			if r is Array:
+				for i in r:
+					var t := str(i.get("title", ""))
+					if t.begins_with("[DIRECCIÓN] " + pid) or t.begins_with("[REVISIÓN] " + pid):
+						out.append({"numero": int(i.get("number", 0)), "titulo": t, "estado": str(i.get("state", "")),
+							"comentarios": int(i.get("comments", 0)), "fecha": str(i.get("created_at", "")),
+							"cuerpo": str(i.get("body", "")).get_slice("```", 0).strip_edges()})
+		listo.call(out))
+	var cab := _cabeceras() if tiene_token() else PackedStringArray(["Accept: application/vnd.github+json", "User-Agent: 3DFilmStudio-Android"])
+	h.request(API % REPO + "/issues?state=all&per_page=60&sort=created&direction=desc", cab)
+
+## Comentarios (respuestas del estudio) de un pedido. listo.call(lista: Array[{autor, fecha, texto}])
+func comentarios(numero: int, listo: Callable) -> void:
+	var h := HTTPRequest.new()
+	add_child(h)
+	h.request_completed.connect(func(res, cod, _hd, resp):
+		h.queue_free()
+		var out: Array = []
+		if res == HTTPRequest.RESULT_SUCCESS and cod == 200:
+			var r = JSON.parse_string(resp.get_string_from_utf8())
+			if r is Array:
+				for c in r:
+					out.append({"autor": str(c.get("user", {}).get("login", "")), "fecha": str(c.get("created_at", "")),
+						"texto": str(c.get("body", ""))})
+		listo.call(out))
+	var cab := _cabeceras() if tiene_token() else PackedStringArray(["Accept: application/vnd.github+json", "User-Agent: 3DFilmStudio-Android"])
+	h.request(API % REPO + "/issues/%d/comments?per_page=50" % numero, cab)
+
 func pendientes() -> int:
 	return _leer(ARCH_PEND).get("lista", []).size()
 
@@ -253,7 +332,8 @@ func _reintentar_pendientes() -> void:
 		return
 	_escribir(ARCH_PEND, {"lista": []})
 	for d in lista:
-		_post_issue(d, func(ok, _t):
+		var enviar: Callable = _post_direccion if str(d.get("clase", "")) == "direccion" else _post_issue
+		enviar.call(d, func(ok, _t):
 			if not ok:
 				var p := _leer(ARCH_PEND)
 				var l: Array = p.get("lista", [])

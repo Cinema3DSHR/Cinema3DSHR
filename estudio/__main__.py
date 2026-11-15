@@ -8,6 +8,9 @@ Comandos principales
   cerrar <escena.json> --tomas DIR              audio, montaje, MP4/OGV, portada, GLB del visor, .blend, info.json
   escenario <escenario.json>                    publica un escenario suelto: GLB del visor + portada
   nueva-version <produccion> <escena> [--motivo TEXTO]
+  previa <escena.json> [--salida DIR]           GLB + línea de tiempo para el EDITOR 3D (misma escena que el render)
+  direccion <produccion>                        resumen de cámaras, marcadores y notas que mandó el director
+  aplicar-direccion <produccion> <escena> --camaras camera_001,…   versión nueva con esas cámaras del director
   catalogo --releases R.json --issues I.json [--infos DIR] --salida catalogo.json
   limpieza --catalogo catalogo.json             lista los temporales que la política permite borrar
   animaciones [--limite N]                      inventario de animaciones → catalogo/animaciones.json
@@ -162,6 +165,32 @@ def cmd_nueva_version(a):
     print(MF.nueva_version(a.produccion, a.escena, a.motivo))
 
 
+def cmd_previa(a):
+    """Previsualización 3D interactiva (EDITOR 3D de la app) desde la MISMA escena que se renderiza."""
+    from estudio.blender import director as D, previa as PV
+    m = MF.leer(a.escena)
+    err = MF.validar(m)
+    if err:
+        print("\n".join(err))
+        return 1
+    res = D.construir(m, "revision")
+    eid = m["id"].split("-")[-1]
+    out = Path(a.salida)
+    tam = PV.exportar(res, m, out / f"{eid}_v{m['version']}_previa.glb", out / f"{eid}_v{m['version']}_previa.json")
+    print("PREVIA", json.dumps(tam))
+
+
+def cmd_direccion(a):
+    from estudio import direccion as DR
+    print(DR.resumen(a.produccion))
+
+
+def cmd_aplicar_direccion(a):
+    from estudio import direccion as DR
+    ruta = DR.nueva_version_con_camaras(a.produccion, a.escena, [c.strip() for c in a.camaras.split(",") if c.strip()], a.motivo)
+    print("versión nueva:", ruta)
+
+
 def cmd_catalogo(a):
     from estudio import publicacion as P
     rel = json.loads(Path(a.releases).read_text()) if a.releases else []
@@ -224,6 +253,12 @@ def main(argv=None):
     p.add_argument("--salida", default=str(config.SALIDA / "escenarios")); p.set_defaults(f=cmd_escenario)
     p = sub.add_parser("nueva-version"); p.add_argument("produccion"); p.add_argument("escena")
     p.add_argument("--motivo", default=""); p.set_defaults(f=cmd_nueva_version)
+    p = sub.add_parser("previa"); p.add_argument("escena"); p.add_argument("--salida", default="salida/previa")
+    p.set_defaults(f=cmd_previa)
+    p = sub.add_parser("direccion"); p.add_argument("produccion"); p.set_defaults(f=cmd_direccion)
+    p = sub.add_parser("aplicar-direccion"); p.add_argument("produccion"); p.add_argument("escena")
+    p.add_argument("--camaras", required=True, help="ids separados por comas: camera_001,camera_002")
+    p.add_argument("--motivo", default=""); p.set_defaults(f=cmd_aplicar_direccion)
     p = sub.add_parser("catalogo"); p.add_argument("--releases"); p.add_argument("--issues")
     p.add_argument("--infos"); p.add_argument("--salida", default="catalogo.json"); p.set_defaults(f=cmd_catalogo)
     p = sub.add_parser("limpieza"); p.add_argument("--catalogo", required=True); p.set_defaults(f=cmd_limpieza)

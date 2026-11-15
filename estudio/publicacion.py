@@ -4,7 +4,7 @@ Dónde vive cada cosa (ver docs/ALMACENAMIENTO.md):
 - Recetas, manifiestos, código y documentación → Git (este repo).
 - Entregables (videos, GLB del visor, .blend, portadas) → GitHub Releases de este repo:
     release "<produccion>"  assets  <escena>_v<k>_{revision.mp4, revision.ogv, portada.jpg, miniatura.jpg,
-                                    visor.glb, proyecto.blend, info.json}
+                                    visor.glb, proyecto.blend, info.json, previa.glb, previa.json}
     release "escenarios"    assets  <escenario>_{visor.glb, portada.jpg, info.json}
     release "catalogo"      asset   catalogo.json  ← lo único que la app consulta para saber si hay novedades
 - Decisiones de revisión (aprobar, rechazar, correcciones, volver a renderizar) → Issues creados por la app
@@ -24,7 +24,7 @@ from estudio import manifiesto as MF
 TIPOS_ARCHIVO = {
     "revision.mp4": "mp4", "revision.ogv": "ogv", "portada.jpg": "portada", "miniatura.jpg": "miniatura",
     "visor.glb": "visor", "proyecto.blend": "proyecto", "info.json": "info", "final.mp4": "mp4_final",
-    "audio.wav": "audio",
+    "audio.wav": "audio", "previa.glb": "previa", "previa.json": "previa_datos",
 }
 DECISIONES = {"APROBAR": "aprobada", "RECHAZAR": "rechazada", "CORREGIR": "correcciones",
               "RENDERIZAR": "renderizando"}

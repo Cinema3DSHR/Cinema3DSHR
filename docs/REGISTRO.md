@@ -97,6 +97,25 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Entregables en la release `p005_mansion_cqb_30s_720p_30fps` (video.mp4 6,4 MB, audio.aac, informe.json, portada, miniatura, info). Los fotogramas quedaron sólo como artefactos temporales de Actions. Informe y huellas en `producciones/pruebas/mansion_cqb_30s_720p_30fps/`.
 - Límites conocidos: el enemigo usa el modelo Ch49 (uniforme de otra época, lo diferencia pero desentona); en la reacción al impacto la mano izquierda suelta el arma unos 0,4 s; árboles y jardín de baja poligonación; el catálogo de la app lo muestra recién cuando esta rama se fusione a la rama por defecto y corra `catalogo.yml`.
 
+## 15/11/2026 — EDITOR 3D / PREVISUALIZACIÓN (dirigir y aprobar antes del render)
+
+- Pedido del dueño: etapa obligatoria de previsualización 3D interactiva con cámara libre, COLOCAR CÁMARA con
+  coordenadas exactas, línea de tiempo, marcadores, chat de correcciones, versiones y aprobación antes del render.
+- Estudio: `estudio/blender/previa.py` (GLB + línea de tiempo desde la MISMA escena del render, esqueletos y clips
+  reales horneados), `estudio/blender/camara_director.py` (conversión Godot↔Blender), toma tipo `director` en
+  `camaras.py`, `estudio/direccion.py` + comandos `previa`, `direccion`, `aplicar-direccion`; catálogo con `previa`.
+- App: página `editor.gd` (vista 16:9, cámara libre táctil y de escritorio, montaje/tomas, línea de tiempo con
+  0,25×–1,50× y cuadro a cuadro, personajes con su clip actual, objetos, propiedades, cámaras del director con
+  renombrar/duplicar/borrar/comparar A/B, marcadores, mensajes al estudio, historial, versiones, GUARDAR CORRECCIONES
+  y APROBAR ESCENA); `camara_director.gd`; envío por Issues `[DIRECCIÓN]` (con cola sin conexión).
+- Flujos: `previa.yml` (exporta y publica; completa el OGV si falta), `direccion.yml` (guarda en `director/`),
+  `video30.yml` bloquea el render final si la versión no está aprobada con la misma huella, `catalogo.yml` acepta rama.
+- **Verificado:** ida y vuelta Godot→JSON→Blender 0,004 px máx. (23 cámaras), cámaras de rodaje exactas, caderas de los
+  5 personajes a 0,07 mm de Blender; prueba visual del editor con la escena CQB (capturas); lógica del flujo de
+  dirección (incluye rechazo de rutas maliciosas) y del bloqueo de render (5 casos). Error propio encontrado y
+  corregido en la prueba: el GLB pone el cuadro f en f/fps (las cámaras móviles se desfasaban un cuadro).
+- **No probado en un teléfono.** Detalle y límites en `docs/EDITOR_3D.md`.
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.

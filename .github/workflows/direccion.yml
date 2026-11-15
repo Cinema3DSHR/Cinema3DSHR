@@ -1,0 +1,100 @@
+name: Dirección desde el editor 3D
+
+# La app (EDITOR 3D) crea un Issue "[DIRECCIÓN] <produccion> · <escena> vN · TIPO …" con un bloque JSON.
+# SÓLO se atienden los del dueño del repositorio. Se guardan, legibles para la app y para Claude, en
+#   producciones/<produccion>/director/cameras/camera_NNN.json   (COLOCAR CÁMARA, coordenadas de Blender)
+#   producciones/<produccion>/director/markers.json              (marcadores de tiempo)
+#   producciones/<produccion>/director/director_notes.json       (mensajes del director con su contexto)
+# El pedido queda ABIERTO con la etiqueta "direccion": Claude lo aplica en una versión nueva y lo cierra.
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: direccion
+  cancel-in-progress: false
+
+jobs:
+  guardar:
+    if: startsWith(github.event.issue.title, '[DIRECCIÓN]') && github.event.issue.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ vars.DIRECCION_RAMA || github.event.repository.default_branch }}
+      - name: Guardar los datos del director
+        id: g
+        env:
+          CUERPO: ${{ github.event.issue.body }}
+          N: ${{ github.event.issue.number }}
+        run: |
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          m = re.search(r"```json\s*(\{.*\})\s*```", os.environ["CUERPO"], re.S)
+          d = json.loads(m.group(1)) if m else {}
+          n = int(os.environ["N"])
+          pid = str(d.get("produccion", ""))
+          if not re.fullmatch(r"[A-Za-z0-9_\-]+", pid) or not Path("producciones", pid, "produccion.json").exists():
+              raise SystemExit(f"producción desconocida: {pid!r}")
+          base = Path("producciones", pid, "director"); (base / "cameras").mkdir(parents=True, exist_ok=True)
+          guardados = []
+          def lista(nombre):
+              p = base / nombre
+              return json.loads(p.read_text()) if p.exists() else []
+          def escribir(p, datos):
+              p.write_text(json.dumps(datos, ensure_ascii=False, indent=2) + "\n"); guardados.append(str(p))
+          def camara(c):
+              cid = str(c.get("camera_id", ""))
+              if not re.fullmatch(r"camera_\d{3,}", cid):
+                  raise SystemExit(f"id de cámara inválido: {cid!r}")
+              c["issue"] = n; c.setdefault("escena", d.get("escena")); c.setdefault("version_escena", d.get("version"))
+              escribir(base / "cameras" / f"{cid}.json", c)
+          tipo = d.get("tipo")
+          if tipo == "camara":
+              camara(d["camara"])
+          elif tipo == "guardar":
+              for c in d.get("camaras", []):
+                  camara(c)
+              mk = [x for x in lista("markers.json") if not (x.get("escena") == d.get("escena") and x.get("version") == d.get("version"))]
+              mk += [{**x, "escena": d.get("escena"), "version": d.get("version"), "issue": n} for x in d.get("marcadores", [])]
+              escribir(base / "markers.json", mk)
+              notas = lista("director_notes.json")
+              vistas = {(x.get("fecha"), x.get("texto")) for x in notas}
+              notas += [{**x, "escena": d.get("escena"), "version": d.get("version"), "issue": n} for x in d.get("notas", [])
+                        if (x.get("fecha"), x.get("texto")) not in vistas]
+              escribir(base / "director_notes.json", notas)
+          elif tipo == "nota":
+              notas = lista("director_notes.json")
+              notas.append({**d.get("nota", {"texto": d.get("texto", "")}), "escena": d.get("escena"), "version": d.get("version"), "issue": n})
+              escribir(base / "director_notes.json", notas)
+          elif tipo == "marcador":
+              mk = lista("markers.json"); mk.append({**d.get("marcador", {}), "escena": d.get("escena"), "version": d.get("version"), "issue": n})
+              escribir(base / "markers.json", mk)
+          else:
+              raise SystemExit(f"tipo desconocido: {tipo!r}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write("archivos<<EOF\n" + "\n".join(guardados) + "\nEOF\n")
+          PY
+      - name: Commit
+        run: |
+          git config user.name "estudio-direccion[bot]"
+          git config user.email "estudio-direccion@users.noreply.github.com"
+          git add producciones/*/director
+          git diff --cached --quiet && exit 0
+          git commit -m "Dirección desde el editor 3D (#${{ github.event.issue.number }})"
+          for i in 1 2 3 4; do git push && break; sleep $((i * 5)); git pull --rebase; done
+      - name: Responder
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARCH: ${{ steps.g.outputs.archivos }}
+        run: |
+          R=${{ github.repository }}; N=${{ github.event.issue.number }}
+          gh label create direccion --repo "$R" --force --color "5b9bf0" >/dev/null 2>&1 || true
+          gh issue edit "$N" --repo "$R" --add-label direccion
+          printf '📁 Guardado para el estudio:\n%s\n\nClaude lo aplica en una versión nueva de la escena (sin tocar las anteriores) y genera una previsualización nueva para que la revises.\n\n---\n_Respuesta automática del estudio (flujo «Dirección desde el editor 3D»)._' "$(echo "$ARCH" | sed 's/^/- `/; s/$/`/')" > resp.md
+          gh issue comment "$N" --repo "$R" --body-file resp.md
