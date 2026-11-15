@@ -115,6 +115,133 @@ def ambiente_dia_suburbio(n, rng):
     return np.stack([base + aves * 0.9, base + np.roll(aves, 2400) * 0.9], axis=1)
 
 
+# ------------------------------------------------------------------------------------- CQB (interior táctico)
+
+def _barrido(n, f0, f1, dur_s, decay_s):
+    """Seno que baja de f0 a f1 Hz y se apaga (golpes graves, estampidos)."""
+    t = np.arange(n) / SR
+    f = f1 + (f0 - f1) * np.exp(-t / max(dur_s, 1e-3))
+    return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / decay_s)
+
+
+def _ruido_banda(n, rng, f_lo, f_hi):
+    x = rng.standard_normal(n)
+    X = np.fft.rfft(x)
+    f = np.fft.rfftfreq(n, 1 / SR)
+    X[(f < f_lo) | (f > f_hi)] = 0
+    y = np.fft.irfft(X, n)
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def _poner(mezcla, mono, t0, ganancia=1.0, pan=0.0):
+    """Suma un sonido mono en estéreo desde el instante t0 (s) con paneo equipotencia (−1 izq … 1 der)."""
+    i = int(t0 * SR)
+    if i >= len(mezcla):
+        return
+    seg = mono[: len(mezcla) - i]
+    mezcla[i:i + len(seg), 0] += seg * ganancia * np.sqrt(0.5 * (1 - pan))
+    mezcla[i:i + len(seg), 1] += seg * ganancia * np.sqrt(0.5 * (1 + pan))
+
+
+def disparo(rng, arma="M4A1", enemigo=False):
+    """Un disparo: chasquido de alta frecuencia + estampido grave con caída + cola corta (la reverberación va aparte)."""
+    n = int(0.5 * SR)
+    t = np.arange(n) / SR
+    crack = _ruido_banda(n, rng, 1500, 9000) * np.exp(-t / 0.012)
+    boom = _barrido(n, 190 if arma == "AK47" else 240, 55 if arma == "AK47" else 70, 0.035, 0.07 if arma == "AK47" else 0.055)
+    medio = _ruido_banda(n, rng, 250, 1800) * np.exp(-t / 0.035)
+    y = 0.9 * crack + 1.0 * boom + 0.6 * medio
+    if enemigo:
+        y = np.tanh(y * 1.3) * 0.85
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def impacto(rng):
+    n = int(0.35 * SR)
+    t = np.arange(n) / SR
+    y = _ruido_banda(n, rng, 800, 5000) * np.exp(-t / 0.02)
+    f = rng.uniform(1800, 3800)
+    y += 0.5 * np.sin(2 * np.pi * f * t * (1 - 0.15 * t)) * np.exp(-t / 0.06)     # rebote metálico/«tink»
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def paso(rng):
+    n = int(0.18 * SR)
+    t = np.arange(n) / SR
+    y = _barrido(n, 130, 60, 0.02, 0.035) + 0.45 * _ruido_banda(n, rng, 300, 2500) * np.exp(-t / 0.02)
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def puerta_patada(rng):
+    n = int(1.6 * SR)
+    t = np.arange(n) / SR
+    golpe = _barrido(n, 160, 45, 0.04, 0.12) + 0.8 * _ruido_banda(n, rng, 600, 4000) * np.exp(-t / 0.05)
+    y = golpe.copy()
+    k = int(0.28 * SR)                                   # rebote de la hoja contra el tope
+    y[k:] += 0.5 * (_barrido(n - k, 140, 50, 0.03, 0.09) + 0.5 * _ruido_banda(n - k, rng, 500, 3000) * np.exp(-t[: n - k] / 0.04))
+    k2 = int(0.5 * SR)
+    y[k2:] += 0.25 * _barrido(n - k2, 120, 55, 0.03, 0.07)
+    bisagra = _ruido_banda(n, rng, 1200, 3200) * np.exp(-t / 0.45) * (0.5 + 0.5 * np.sin(2 * np.pi * 9 * t)) * 0.08
+    return (y + bisagra) / (np.abs(y).max() + 1e-9)
+
+
+def equipo(rng):
+    n = int(0.4 * SR)
+    t = np.arange(n) / SR
+    y = _ruido_banda(n, rng, 2500, 9000) * np.exp(-t / 0.05) * (rng.random(n) > 0.4)
+    y += 0.5 * np.sin(2 * np.pi * rng.uniform(3200, 5200) * t) * np.exp(-t / 0.012)     # clic metálico
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def caida(rng, fuerte=True):
+    n = int(1.2 * SR)
+    t = np.arange(n) / SR
+    y = _barrido(n, 95, 38, 0.06, 0.2 if fuerte else 0.1) + 0.6 * _ruido_banda(n, rng, 120, 900) * np.exp(-t / 0.12)
+    y += 0.15 * _ruido_banda(n, rng, 2000, 7000) * np.exp(-t / 0.3)                       # tela y equipo
+    return y / (np.abs(y).max() + 1e-9)
+
+
+def _reverb(seco, rng, rt60=0.55):
+    """Reverberación de sala por convolución con una respuesta sintética (reflexiones tempranas + cola exponencial)."""
+    n_ir = int(rt60 * 1.3 * SR)
+    t = np.arange(n_ir) / SR
+    out = np.zeros_like(seco)
+    for c in (0, 1):
+        ir = rng.standard_normal(n_ir) * np.exp(-6.91 * t / rt60)
+        for k in range(7):                                 # primeras reflexiones (paredes, techo)
+            ir[int(rng.uniform(0.004, 0.04) * SR)] += rng.uniform(1.5, 3.5) * rng.choice([-1, 1])
+        ir *= 1 - np.exp(-t / 0.004)
+        ir[:int(0.003 * SR)] = 0
+        m = len(seco) + n_ir
+        nfft = 1 << (m - 1).bit_length()
+        out[:, c] = np.fft.irfft(np.fft.rfft(seco[:, c], nfft) * np.fft.rfft(ir, nfft), nfft)[: len(seco)] / (np.abs(ir).sum() ** 0.5 * 8)
+    return out
+
+
+def ambiente_cqb_interior(n, rng, dur):
+    """Habitación de lujo con ventanales: murmullo de aire, rumor lejano de afuera, pájaros apagados y un zumbido grave de tensión."""
+    t = np.arange(n) / SR
+    base = _ruido_color(n, rng, -6, 30, 600) * 0.12 + _ruido_color(n, rng, -4, 100, 3500) * 0.015
+    tension = (np.sin(2 * np.pi * 55 * t) + 0.6 * np.sin(2 * np.pi * 82.4 * t + 1)) * 0.03
+    crece = np.interp(t, [0, 10, 12, 19, 24, dur], [0.5, 1.0, 1.4, 1.2, 0.5, 0.25])      # sube hasta el enfrentamiento y se relaja al asegurar
+    st = np.stack([base + tension * crece, base * 0.95 + tension * crece * 0.9], axis=1)
+    pajaros = np.zeros(n)
+    tt = 0.5
+    while tt < dur - 0.5:
+        f0 = rng.uniform(2200, 3400)
+        for k in range(int(rng.integers(2, 5))):
+            ini = int((tt + k * 0.12) * SR)
+            d = int(0.08 * SR)
+            if ini + d >= n:
+                break
+            x = np.arange(d) / SR
+            pajaros[ini:ini + d] += np.sin(2 * np.pi * np.cumsum(f0 * (1 - 0.2 * x / 0.08)) / SR) * np.hanning(d) * rng.uniform(0.01, 0.025)
+        tt += rng.uniform(2.5, 7.0)
+    st[:, 0] += pajaros
+    st[:, 1] += np.roll(pajaros, 1800)
+    return st
+
+
 def motor(pistas, movil, n, rng):
     fps = pistas["fps"]
     m = pistas["moviles"][movil]
@@ -237,6 +364,9 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
     n = int(manifiesto["duracion_s"] * SR)
     mezcla = np.zeros((n, 2))
     amb = son.get("ambiente")
+    seco = np.zeros((n, 2))          # efectos «secos» de la escena CQB: se les agrega reverberación de sala al final
+    if amb == "cqb_interior":
+        mezcla += ambiente_cqb_interior(n, rng, manifiesto["duracion_s"]) * 0.8
     if amb == "noche_suburbio":
         mezcla += ambiente_noche_suburbio(n, rng) * 0.5
     elif amb == "dia_suburbio":
@@ -254,9 +384,35 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
             mezcla += audio_de_biblioteca(pistas, ev, n)
         elif ev["tipo"] == "motor":
             mezcla += motor(pistas, ev["movil"], n, rng) * ev.get("volumen", 1.0)
+        elif ev["tipo"] == "puerta_patada":
+            _poner(seco, puerta_patada(rng), ev["inicio_s"], 1.0, -0.05)
+        elif ev["tipo"] == "pasos":
+            for tp in ev["t"]:
+                _poner(seco, paso(rng), tp, rng.uniform(0.18, 0.3), rng.uniform(-0.5, 0.5))
+        elif ev["tipo"] == "equipo":
+            for tp in ev["t"]:
+                _poner(seco, equipo(rng), tp, rng.uniform(0.1, 0.18), rng.uniform(-0.6, 0.6))
+            for a0, a1 in ((1.3, 6.2), (18.8, 25.0)):       # roce continuo del equipo mientras se desplazan
+                i0, i1 = int(a0 * SR), int(a1 * SR)
+                r = _ruido_banda(i1 - i0, rng, 1800, 7000) * (0.5 + 0.5 * np.abs(np.sin(np.linspace(0, 40, i1 - i0)))) * 0.035
+                _poner(seco, np.concatenate([np.zeros(0), r]), a0, 1.0, 0.0)
+        elif ev["tipo"] == "disparos":
+            for k, tp in enumerate(ev["t"]):
+                xs = ev.get("xs")
+                pan = float(np.clip((xs[k] if xs else rng.uniform(-3, 3)) / 5.0, -0.9, 0.9))
+                _poner(seco, disparo(rng, ev.get("arma", "M4A1"), ev.get("lado") == "enemigo"), tp,
+                       rng.uniform(0.7, 0.95) if ev.get("lado") != "enemigo" else rng.uniform(0.85, 1.0), pan)
+        elif ev["tipo"] == "impactos":
+            for tp in ev["t"]:
+                _poner(seco, impacto(rng), tp, rng.uniform(0.1, 0.22), rng.uniform(-0.8, 0.8))
+        elif ev["tipo"] == "caida":
+            for k, tp in enumerate(ev["t"]):
+                _poner(seco, caida(rng, k == 0), tp, 1.1 if k == 0 else 0.4, 0.1)
         elif ev["tipo"] in ("porton_motor", "porton_garaje"):
             pos = pistas["anclas"][ev["ancla"]]
             mezcla += mecanismo(pistas, n, rng, ev["inicio_s"], ev["duracion_s"], pos, ev["tipo"]) * ev.get("volumen", 1.0)
+    if np.abs(seco).max() > 0:
+        mezcla += np.tanh(seco * 1.1) * 0.8 + _reverb(seco, rng) * 0.5     # directo + sala
     pico = np.abs(mezcla).max() + 1e-9
     mezcla = mezcla / pico * 0.89
     salida.parent.mkdir(parents=True, exist_ok=True)

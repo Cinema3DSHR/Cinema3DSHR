@@ -4,6 +4,7 @@ import argparse, collections, datetime as dt, hashlib, json, re, statistics, sub
 from pathlib import Path
 ap = argparse.ArgumentParser(); ap.add_argument("frames"); ap.add_argument("audio"); ap.add_argument("salida")
 ap.add_argument("--total", type=int, required=True); ap.add_argument("--run-iniciado", default=""); ap.add_argument("--crf", type=int, default=22); ap.add_argument("--nombre", default="futbol_30s_cycles6")
+ap.add_argument("--produccion", default=""); ap.add_argument("--escena-id", default="e01"); ap.add_argument("--version", type=int, default=1); ap.add_argument("--huella", default="")
 a = ap.parse_args(); F = Path(a.frames); S = Path(a.salida); S.mkdir(parents=True, exist_ok=True)
 def sh(*c): return subprocess.run([str(x) for x in c], capture_output=True, text=True)
 # 1) integridad: ni faltantes ni sobrantes ni números repetidos
@@ -59,3 +60,29 @@ inf = {"integridad": {"fotogramas": len(nums), "esperados": a.total, "faltantes"
        "fotogramas_tiempos": tt}
 (S / "informe_rendimiento.json").write_text(json.dumps(inf, indent=1, ensure_ascii=False))
 print(json.dumps({k: inf[k] for k in ("integridad", "continuidad", "video")}, indent=1, ensure_ascii=False)); print(json.dumps(inf["rendimiento"], indent=1, ensure_ascii=False))
+
+# 6) entregables para la app y para comparar con futuras pruebas (sólo si se indicó la producción)
+if a.produccion:
+    import shutil, datetime
+    pid, eid, ver = a.produccion, a.escena_id, a.version
+    cfg = inf["config_cycles"]
+    res = f'{v["width"]}x{v["height"]}'
+    (S / "audio.aac").unlink(missing_ok=True)
+    if Path(a.audio).exists():
+        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", a.audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-f", "adts", str(S / "audio.aac")], check=True)
+    shutil.copy(mp4, S / f"{eid}_v{ver}_revision.mp4")                        # el nombre que la app busca en el catálogo
+    n_portada = max(1, min(a.total, int(round(a.total * 0.38))))                 # un cuadro del enfrentamiento
+    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(F / f"f_{n_portada:04d}.png"), "-q:v", "2", str(S / f"{eid}_v{ver}_portada.jpg")], check=True)
+    subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(F / f"f_{n_portada:04d}.png"), "-vf", "scale=320:-2", "-q:v", "4", str(S / f"{eid}_v{ver}_miniatura.jpg")], check=True)
+    fecha = ahora.strftime("%Y-%m-%dT%H:%M:%SZ")
+    info = {"produccion": pid, "escena": eid, "version": ver, "huella": a.huella or ",".join(inf["huellas_de_receta"]), "calidad": "revision", "resolucion": res,
+            "fps": 30, "duracion_s": round(float(fmt["duration"]), 3), "fecha": fecha, "segundos_render": inf["rendimiento"]["render_acumulado_s"]}
+    (S / f"{eid}_v{ver}_info.json").write_text(json.dumps(info, indent=1, ensure_ascii=False))
+    informe = {"produccion": a.nombre and pid, "nombre": "mansion_cqb_30s_720p_30fps", "fecha": fecha,
+               "configuracion_acordada": {"motor": cfg["motor"], "dispositivo": cfg["dispositivo"], "resolucion": res, "fps": 30, "duracion_s": 30, "fotogramas": a.total,
+                                          "muestras": cfg["muestras"], "muestreo_adaptativo": cfg["muestreo_adaptativo"], "umbral_adaptativo": cfg["umbral_adaptativo"],
+                                          "denoiser": cfg["denoiser"], "rebotes_max": cfg["rebotes_max"], "arbol_de_luces": cfg["arbol_de_luces"], "semilla": cfg["semilla"],
+                                          "semilla_animada": cfg["semilla_animada"]},
+               "entregables": {"video": "video.mp4", "audio": "audio.aac", "informe": "informe.json", "catalogo": f"{eid}_v{ver}_revision.mp4"}, **inf}
+    (S / "informe.json").write_text(json.dumps(informe, indent=1, ensure_ascii=False))
+    print("ENTREGA", sorted(p.name for p in S.iterdir()))

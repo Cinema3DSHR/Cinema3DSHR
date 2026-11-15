@@ -392,6 +392,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         if "pos" in ac:
             p = ac["pos"]
             pos = Vector((p[0], p[1], p[2] if len(p) > 2 else 0.0))
+        rumbo_ant = rumbo
         if "mirando_deg" in ac:
             rumbo = math.radians(ac["mirando_deg"])
         if tramos and tramos[-1]["strip"].frame_end > f0 - 0.01:
@@ -415,8 +416,18 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
                        "strip": st, "pos_fin": pos_fin, "rumbo_fin": rumbo})
         # en cada repetición la cadera vuelve al punto de partida del clip: el personaje avanza lo que avanzó el ciclo
         por_ciclo = (st.frame_end - st.frame_start) / vueltas
+        # "giro_s": el rumbo pasa del anterior al nuevo de forma suave durante los primeros `giro_s` segundos del tramo
+        nf = int(round(ac.get("giro_s", 0.0) * fps)) if (tramos[:-1] and "pos" not in ac) else 0
+        nf = min(nf, int(por_ciclo) - 1)
+        dr = (rumbo - rumbo_ant + math.pi) % math.tau - math.pi
         for k in range(vueltas):
-            llaves.append((f0 + k * por_ciclo, pos + giro @ (d * k), rumbo + info["frente"]))
+            r = rumbo + info["frente"]
+            if k == 0 and nf > 1:
+                for j in range(nf):
+                    u = j / nf
+                    u = u * u * (3 - 2 * u)
+                    llaves.append((f0 + j, pos, rumbo_ant + info["frente"] + dr * u))
+            llaves.append((f0 + k * por_ciclo + (nf if k == 0 and nf > 1 else 0), pos + giro @ (d * k), r))
     raiz.animation_data_create()
     for f0, pz, rz in llaves:
         raiz.location = pz
@@ -429,6 +440,9 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
             for k in fc.keyframe_points:
                 k.interpolation = "CONSTANT"
     fin = max((t["fin"] for t in tramos), default=1)
+    if arma_obj is not None and spec.get("disparos"):
+        from estudio.blender import efectos as EF
+        EF.fogonazos(arma_obj, [int(round(t * fps)) + 1 for t in spec["disparos"]], col)
     return {"id": pid, "raiz": raiz, "armadura": arm, "malla": malla, "tramos": tramos, "info": info, "fin": fin, "arma": arma_obj}
 
 

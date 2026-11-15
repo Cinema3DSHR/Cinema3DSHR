@@ -12,6 +12,8 @@ on:
       limite: {description: "ENSAYO: renderizar sólo los primeros N fotogramas (0 = todos)", required: false, default: "0"}
       etiqueta: {description: "Tag de la release", required: false, default: "p003_futbol_30s-cycles6"}
       nombre: {description: "Nombre del MP4 de salida (sin extensión)", required: false, default: "futbol_30s_cycles6"}
+      produccion: {description: "Id de la producción (genera los entregables de catálogo: audio.aac, informe.json, portada, info)", required: false, default: ""}
+      fotogramas_en_release: {description: "Subir también los fotogramas y el WAV a la release (false = quedan sólo como artefactos temporales)", required: false, default: "true"}
 
 permissions:
   contents: write
@@ -210,7 +212,7 @@ jobs:
           mkdir -p frames && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d frames; done
           ls frames | grep -c '^f_.*png$'
       - name: Verificar, codificar el MP4 y armar el informe
-        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --nombre "${{ inputs.nombre }}" --run-iniciado "${{ needs.planificar.outputs.inicio }}"
+        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --nombre "${{ inputs.nombre }}" --run-iniciado "${{ needs.planificar.outputs.inicio }}" --produccion "${{ inputs.produccion }}"
       - name: Publicar en la release (sólo si no es ensayo)
         if: ${{ inputs.limite == '0' }}
         env:
@@ -219,6 +221,13 @@ jobs:
           R=${{ github.repository }}; T="${{ inputs.etiqueta }}"
           gh release view "$T" --repo "$R" >/dev/null 2>&1 || gh release create "$T" --repo "$R" --latest=false \
             --title "Prueba 30 s — Cycles ${{ inputs.muestras }} muestras, 720p" --notes "Video de 30 s renderizado en paralelo en GitHub Actions. Informe en informe_rendimiento.json. Secuencia de fotogramas en frames_NN.zip."
-          gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/informe_rendimiento.json descargas/audio/audio.wav descargas/frames-*/frames_*.zip --repo "$R" --clobber
+          if [ -n "${{ inputs.produccion }}" ]; then
+            gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/audio.aac salida/informe.json salida/e01_v1_* --repo "$R" --clobber
+          else
+            gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/informe_rendimiento.json --repo "$R" --clobber
+          fi
+          if [ "${{ inputs.fotogramas_en_release }}" = "true" ]; then
+            gh release upload "$T" descargas/audio/audio.wav descargas/frames-*/frames_*.zip --repo "$R" --clobber
+          fi
       - uses: actions/upload-artifact@v4
         with: {name: entrega, path: salida/, retention-days: 14}

@@ -31,6 +31,7 @@ def toma_de(f):
         if t["frame_inicio"] <= f <= t["frame_fin"]: return t
     raise SystemExit(f"fotograma {f} sin toma")
 c = s.cycles
+c.seed = 0; c.use_animated_seed = False          # semilla fija: el ruido es idéntico entre ejecuciones
 cfg = {"motor": s.render.engine, "dispositivo": c.device, "muestras": c.samples, "muestreo_adaptativo": c.use_adaptive_sampling, "umbral_adaptativo": round(c.adaptive_threshold, 4),
        "denoiser": c.denoiser, "denoise_entradas": c.denoising_input_passes, "denoise_prefiltro": c.denoising_prefilter, "rebotes_max": c.max_bounces, "difusos": c.diffuse_bounces,
        "brillantes": c.glossy_bounces, "transmision": c.transmission_bounces, "transparentes": c.transparent_max_bounces, "caustica_reflectiva": c.caustics_reflective,
