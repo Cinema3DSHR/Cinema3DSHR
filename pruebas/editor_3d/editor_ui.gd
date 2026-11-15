@@ -45,6 +45,7 @@ func _process(_d: float) -> bool:
 		print("PROPS: ", _ed._props.text.replace("\n", " | "))
 	elif _paso == 70:
 		_captura("editor_libre_colocada.png")
+		_ed._vp.get_texture().get_image().save_png(_out + "/vista_colocada.png")   # el cuadro 16:9 exacto de la vista
 		quit()
 	return false
 func _captura(n: String) -> void:
