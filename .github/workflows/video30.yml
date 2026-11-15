@@ -1,0 +1,163 @@
+name: Video 30 s (Cycles 6 muestras, 720p) en paralelo
+
+# Produce un video COMPLETO repartiendo los fotogramas entre trabajos simultáneos y lo publica en una release.
+# No modifica el estudio: usa pruebas/video_30s/* (render por rangos, audio, montaje) sobre una copia de producción.
+# Con limite > 0 hace un ENSAYO (sólo ese número de fotogramas, sin publicar).
+on:
+  workflow_dispatch:
+    inputs:
+      escena: {description: "Ruta del escena.json", required: false, default: "producciones/p003_futbol_30s/escenas/e01/v1/escena.json"}
+      muestras: {description: "Muestras de Cycles", required: false, default: "6"}
+      trabajos: {description: "Trabajos de render en paralelo (máx. 19: el plan gratis admite 20 simultáneos y uno es el audio)", required: false, default: "19"}
+      limite: {description: "ENSAYO: renderizar sólo los primeros N fotogramas (0 = todos)", required: false, default: "0"}
+      etiqueta: {description: "Tag de la release", required: false, default: "p003_futbol_30s-cycles6"}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: video30
+  cancel-in-progress: false
+
+env:
+  CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
+
+jobs:
+  planificar:
+    runs-on: ubuntu-latest
+    outputs:
+      trozos: ${{ steps.plan.outputs.trozos }}
+      total: ${{ steps.plan.outputs.total }}
+      mixamo: ${{ steps.plan.outputs.mixamo }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13"}
+      - name: Acceso a los recursos privados (mixamo-respaldo)
+        env:
+          TOKEN: ${{ secrets.ASSETS_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::Falta el secreto ASSETS_TOKEN (token fine-grained, Contents: Read sobre mixamo-respaldo). Sin él los jugadores y el estadio no se pueden bajar."; exit 1
+          fi
+          git ls-remote "https://x-access-token:${TOKEN}@github.com/webmaletin-art/mixamo-respaldo.git" "refs/heads/${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}" | grep -q refs || { echo "::error::ASSETS_TOKEN no puede leer la rama de mixamo-respaldo"; exit 1; }
+          echo "Acceso OK"
+      - name: Repartir los fotogramas
+        id: plan
+        env:
+          ESCENA: ${{ inputs.escena }}
+          TRABAJOS: ${{ inputs.trabajos }}
+          LIMITE: ${{ inputs.limite }}
+        run: |
+          python3 - <<'PY'
+          import json, math, os, sys
+          sys.path.insert(0, ".")
+          from estudio import manifiesto as MF
+          m = MF.leer(os.environ["ESCENA"]); err = MF.validar(m)
+          if err: print("::error::escena inválida:", err); sys.exit(1)
+          total = round(m["duracion_s"] * m["render"].get("fps", 30)); lim = int(os.environ["LIMITE"])
+          if lim > 0: total = min(total, lim)
+          n = max(1, min(19, int(os.environ["TRABAJOS"])))
+          tam = math.ceil(total / n)                      # trozos contiguos y casi iguales
+          trozos = [{"n": f"{i:02d}", "desde": d, "hasta": min(total, d + tam - 1)} for i, d in enumerate(range(1, total + 1, tam))]
+          assert sum(t["hasta"] - t["desde"] + 1 for t in trozos) == total          # ni faltantes ni repetidos
+          assert all(a["hasta"] + 1 == b["desde"] for a, b in zip(trozos, trozos[1:]))
+          mix = "\n".join(d.split(":", 1)[1] for d in MF.dependencias(m) if d.startswith("mixamo:"))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"trozos={json.dumps(trozos)}\ntotal={total}\nmixamo<<EOF\n{mix}\nEOF\n")
+          print(f"{total} fotogramas en {len(trozos)} trozos de hasta {tam}"); print(mix)
+          PY
+
+  render:
+    needs: planificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 19
+      matrix:
+        trozo: ${{ fromJSON(needs.planificar.outputs.trozos) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13", cache: pip, cache-dependency-path: requirements-produccion.txt}
+      - name: Blender (bpy) y FFmpeg
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg fonts-dejavu-core >/dev/null
+          pip install -q -r requirements-produccion.txt
+      - name: Recursos de mixamo-respaldo (sólo lo que usa la escena)
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/mixamo-respaldo
+          ref: ${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/mixamo-respaldo
+          sparse-checkout: ${{ needs.planificar.outputs.mixamo }}
+          sparse-checkout-cone-mode: false
+      - name: Renderizar fotogramas ${{ matrix.trozo.desde }}–${{ matrix.trozo.hasta }}
+        run: |
+          python -I pruebas/video_30s/render_rango.py "${{ inputs.escena }}" --desde ${{ matrix.trozo.desde }} --hasta ${{ matrix.trozo.hasta }} \
+            --muestras ${{ inputs.muestras }} --salida out 2>&1 | grep -vE "INFO:|CUEW|^$"
+      - name: Empaquetar (sin recomprimir los PNG)
+        run: |
+          cd out && zip -0 -q "../frames_${{ matrix.trozo.n }}.zip" f_*.png informe_*.json && cd .. && ls -la frames_*.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.trozo.n }}
+          path: frames_${{ matrix.trozo.n }}.zip
+          compression-level: 0
+          retention-days: 14
+
+  audio:
+    needs: planificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13", cache: pip, cache-dependency-path: requirements-produccion.txt}
+      - name: Blender (bpy)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg >/dev/null
+          pip install -q -r requirements-produccion.txt
+      - name: Recursos de mixamo-respaldo
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/mixamo-respaldo
+          ref: ${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/mixamo-respaldo
+          sparse-checkout: ${{ needs.planificar.outputs.mixamo }}
+          sparse-checkout-cone-mode: false
+      - name: Audio original de la escena
+        run: python -I pruebas/video_30s/audio_escena.py "${{ inputs.escena }}" audio_out 2>&1 | grep -E "^AUDIO|Traceback|Error" || true; test -f audio_out/audio.wav
+      - uses: actions/upload-artifact@v4
+        with: {name: audio, path: audio_out/audio.wav, retention-days: 14}
+
+  montar:
+    needs: [planificar, render, audio]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - uses: actions/download-artifact@v4
+        with: {path: descargas}
+      - name: Reunir la secuencia
+        run: |
+          mkdir -p frames && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d frames; done
+          ls frames | grep -c '^f_.*png$'
+      - name: Verificar, codificar el MP4 y armar el informe
+        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --run-iniciado "${{ github.run_started_at }}"
+      - name: Publicar en la release (sólo si no es ensayo)
+        if: ${{ inputs.limite == '0' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          R=${{ github.repository }}; T="${{ inputs.etiqueta }}"
+          gh release view "$T" --repo "$R" >/dev/null 2>&1 || gh release create "$T" --repo "$R" --latest=false \
+            --title "Prueba 30 s — Cycles ${{ inputs.muestras }} muestras, 720p" --notes "Video de 30 s renderizado en paralelo en GitHub Actions. Informe en informe_rendimiento.json. Secuencia de fotogramas en frames_NN.zip."
+          gh release upload "$T" salida/futbol_30s_cycles6.mp4 salida/informe_rendimiento.json descargas/audio/audio.wav descargas/frames-*/frames_*.zip --repo "$R" --clobber
+      - uses: actions/upload-artifact@v4
+        with: {name: entrega, path: salida/, retention-days: 14}
