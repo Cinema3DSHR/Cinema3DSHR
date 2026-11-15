@@ -172,26 +172,41 @@ def planificar(via, p, fps):
     t_quieto = next(((ar["cuadros"][i] - 1) / fps for i in range(n4) if (ar["cuadros"][i] - 1) / fps > t_vuelta + 4.6 + 3.0
                      and abs(ar["v"][i]) < 0.2), t_vuelta + 12.5)
 
-    # 2) el Bisonte: viene por el carril izquierdo, cruza en diagonal sobre el lomo del auto rampa (hacia las vías)
+    # 2) el Bisonte: viene por la ruta (carril izquierdo durante la batalla, el derecho desde 100 m antes) y los últimos
+    #    ~40 m en diagonal sobre el lomo del auto rampa (hacia las vías)
     t_salto = t_quieto + 3.0
-    _, r_ruta = _carril(via, _proyectar(via, Vector(pose_ar[:2]), S0 + 300, radio=600), 0.0)
+    s_ar_via = _proyectar(via, Vector(pose_ar[:2]), S0 + 300, radio=600)
+    _, r_ruta = _carril(via, s_ar_via, 0.0)
     adelante = Vector((-math.sin(r_ruta), math.cos(r_ruta)))                                   # sentido de la ruta
     hacia_via = Vector((adelante.y, -adelante.x)) * -1.0                                    # izquierda del salto
     ang = math.radians(p.get("angulo_salto_deg", 4.0))
     dir_b = (adelante * math.cos(ang) + hacia_via * math.sin(ang)).normalized()
     centro = Vector(pose_ar[:2])
     v_b = p.get("v_bisonte", 23.0)
-    atras = int(v_b * (t_salto + 1.5) + 30)
-    ruta_b = [list(centro + dir_b * d) for d in range(-atras, 160, 2)]
-    s_rampa = atras - 2.6                                   # la punta de la cuña
+    pp_ar, tt_ar = via.en(s_ar_via)
+    lat_ar = (centro - pp_ar.to_2d()).dot(Vector((tt_ar.y, -tt_ar.x)).normalized())
+    d_j = (L_der - lat_ar) / math.sin(ang)                   # la diagonal sale del carril derecho d_j m antes del auto rampa
+    s_j = _proyectar(via, centro - dir_b * d_j, s_ar_via, radio=80)
+    def lat_b(s):
+        k = min(1.0, max(0.0, (s - (s_j - 100.0)) / 50.0))
+        return L_izq + (L_der - L_izq) * k * k * (3 - 2 * k)
+    s_desde = s_j - v_b * (t_salto + 3.0) - 60.0
+    ruta_b = _ruta(via, s_desde, s_j - 2.0, lat_b)
+    diag = [list(centro + dir_b * d) for d in [x * 2.0 - d_j for x in range(int((d_j + 160) / 2))]]
+    acc_j = _largos(ruta_b)[-1] + math.hypot(diag[0][0] - ruta_b[-1][0], diag[0][1] - ruta_b[-1][1])
+    ruta_b += diag
+    s_rampa = acc_j + d_j - 2.6                               # la punta de la cuña
     hor_b = [[round(t, 3), round(s_rampa + v_b * (t - t_salto), 3)] for t in [x * 0.25 - 2 for x in range(int((dur + 4) * 4))]]
     s_ini = s_rampa - v_b * (t_salto + 1.0)                 # dónde tiene que estar en t = −1 (arranca con el horario)
-    q_ini = centro + dir_b * (s_ini - atras)
-    inicio_b = [q_ini.x, q_ini.y, math.atan2(-dir_b.x, dir_b.y)]
+    acc_b = _largos(ruta_b)
+    k_ini = next(i for i in range(len(acc_b)) if acc_b[i] >= s_ini)
+    a_, b_ = Vector(ruta_b[k_ini - 1]), Vector(ruta_b[k_ini])
+    q_ini = a_ + (b_ - a_) * ((s_ini - acc_b[k_ini - 1]) / max(1e-6, acc_b[k_ini] - acc_b[k_ini - 1]))
+    inicio_b = [q_ini.x, q_ini.y, math.atan2(-(b_ - a_).x, (b_ - a_).y)]
     suelo_b = {"base": 0.06, "faldon": 1.0, "cajas": _cajas_lomo(pose_ar)}
     plan_b0 = {"fps": fps, "hz": 120, "cuadros": nf, "marcos": {"mundo": {"poses": mundo}},
                "vehiculos": [{"id": "bisonte", "dr": "genesis", "marco": "mundo",
-                              "inicio_local": inicio_b, "previo_s": 1.0,
+                              "inicio_local": inicio_b, "previo_s": 1.0, "v_inicial": v_b,
                               "suelo_local": {"mundo": suelo_b},
                               "rutas_local": {"mundo": {"ruta": ruta_b, "horario": hor_b}},
                               "controles": [{"t0": t_salto + 0.3, "t1": 999, "gas": 0.0, "freno": 0.0}]}]}
@@ -204,7 +219,7 @@ def planificar(via, p, fps):
     return {"S0": S0, "poses_ac": poses_ac, "fis_ar": fis_ar, "plan_ar": plan_ar, "t_aire": t_aire, "t_ruta": t_ruta,
             "t_vuelta": t_vuelta, "t_quieto": t_quieto, "pose_ar": pose_ar, "t_salto": t_salto, "t_land": t_land,
             "land": land, "ruta_b": ruta_b, "hor_b": hor_b, "suelo_b": suelo_b, "b0": b0, "sale": sale / fps,
-            "inicio_b": inicio_b,
+            "inicio_b": inicio_b, "s_j": s_j, "lat_b": lat_b, "v_b": v_b,
             "altura_max": max(q[2] for q in b0["pos"][sale:i_land + 1]), "ruta_ar": ruta_ar}
 
 
@@ -357,7 +372,7 @@ def construir(via, tren, trays, frames, fps, c_veh, p, moviles, pl) -> dict:
         else:
             raiz = K.vacio(f"VEH_{nombre}", (0, 0, 0), c_veh)
             from estudio.escenarios import tren_fantasma as TF
-            m = K.instancia(f"{nombre}_modelo", TF._sh3d("sc_yamaha_yzr_r6", TF.PROTOS), (0, 0, 0), 0.0, 1.0, c_veh)
+            m = K.instancia(f"{nombre}_modelo", TF.moto_halcon(TF.PROTOS), (0, 0, 0), 0.0, 1.0, c_veh)
             m.parent = raiz
             off = -(dims[2] / 2 + 0.06)
         # el centro del cuerpo rígido es el centro de la caja; el origen del modelo está en el piso
@@ -381,7 +396,7 @@ def construir(via, tren, trays, frames, fps, c_veh, p, moviles, pl) -> dict:
     plan_b = {"fps": fps, "hz": 120, "cuadros": nf,
               "marcos": {"mundo": {"poses": [[0.0, 0.0, 0.0]] * (nf + 2)}, "carro": {"poses": poses_20}},
               "vehiculos": [{"id": "bisonte", "dr": "genesis", "marco": "mundo", "muestras_por_cuadro": 4,
-                             "inicio_local": pl["inicio_b"], "previo_s": 1.0,
+                             "inicio_local": pl["inicio_b"], "previo_s": 1.0, "v_inicial": pl["v_b"],
                              "suelo_local": {"mundo": pl["suelo_b"], "carro": {"base": 0.25, "faldon": 1.0, "cajas": cajas20}},
                              "rutas_local": {"mundo": {"ruta": pl["ruta_b"], "horario": pl["hor_b"]}},
                              "cambios": [{"t": t_land - 0.15, "a": "carro"}],
@@ -396,7 +411,7 @@ def construir(via, tren, trays, frames, fps, c_veh, p, moviles, pl) -> dict:
     VD.cabina(rig_b, rb["cabina"], c_veh, exterior=True)
     moviles["bisonte"] = {"tray": tray_b, "objeto": rig_b["raiz"],
                           "rpm": [rb["rpm"][min(i * 4, len(rb["rpm"]) - 1)] for i in range(nf)],
-                          "anclas": {**VD.ANCLAS_VEHICULO, "interior": (0.0, 0.55, 1.42), "cabina": (0.0, -0.45, 1.3),
+                          "anclas": {**VD.ANCLAS_VEHICULO, "interior": (0.0, 0.45, 1.15), "cabina": (0.0, -0.5, 1.15),
                                      "capo": (0, 1.9, 1.3), "rueda_del_izq": (-1.05, 1.53, 0.45)}}
     # dónde quedó el Bisonte sobre el vagón 20 (marco del vagón) para que Mateo se baje
     i_fin = len(rb["pos"]) - 1

@@ -548,6 +548,24 @@ func _sim_marcos(vp: Dictionary, plan: Dictionary, V, fps: int, hz: int, cuadros
 	var ph := VehiclePhysics.new(suelos[actual], V)
 	var ini: Array = vp.get("inicio_local", [0.0, 0.0, 0.0])
 	ph.reset(float(ini[0]), -float(ini[1]), float(ini[2]) + PI)
+	# "v_inicial" (m/s): arranca ya andando (como el modo de camino), no desde parado
+	var v_ini := float(vp.get("v_inicial", 0.0))
+	if v_ini > 0.0:
+		var yaw_i := float(ini[2]) + PI
+		ph.vx = sin(yaw_i) * v_ini
+		ph.vz = cos(yaw_i) * v_ini
+		ph.vLong = v_ini
+		for w in ph.wheels:
+			w.omega = v_ini / V.wheelRadius
+		if V.gears.size() > 0 and v_ini > 1.0:
+			var g := 1
+			for gi in V.gears.size():
+				var r: float = v_ini / V.wheelRadius * V.gears[gi] * V.finalDrive * 60.0 / TAU
+				if r > V.shiftDownRpm * 1.15:
+					g = gi + 1
+			ph.gear = g
+			ph.clutchLocked = true
+			ph.rpm = v_ini / V.wheelRadius * V.gears[g - 1] * V.finalDrive * 60.0 / TAU
 	var cambios: Array = vp.get("cambios", [])
 	var controles: Array = vp.get("controles", [])
 	# conductor por marco: "rutas_local": {marco: {"ruta": [[x, y]…], "horario": [[t, s]…] (opcional: si está, también

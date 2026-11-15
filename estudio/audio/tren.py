@@ -117,6 +117,11 @@ def motor_rpm(pistas, movil, n, rng, clase="diesel"):
         fase = np.cumsum(2 * np.pi * f / SR)
         tono = np.sin(fase) * 0.5 + np.sin(2 * fase) * 0.35 + np.sin(3 * fase) * 0.2 + np.sin(4 * fase) * 0.12
         mono = np.tanh(tono * 1.8) * 0.35 + _ruido_banda(n, rng, 1500, 7000) * 0.05
+    elif clase == "deportivo":
+        f = rpm / 60 * 5                                   # V10 atmosférico: 5 encendidos por vuelta, agudo y áspero
+        fase = np.cumsum(2 * np.pi * f / SR)
+        tono = np.sin(fase) * 0.45 + np.sin(2 * fase) * 0.4 + np.sin(3 * fase) * 0.25 + np.sin(5 * fase) * 0.12
+        mono = np.tanh(tono * 2.2) * 0.3 + _ruido_banda(n, rng, 2000, 9000) * 0.04
     else:
         f = rpm / 60 * 4                                   # V8 diésel
         fase = np.cumsum(2 * np.pi * f / SR)

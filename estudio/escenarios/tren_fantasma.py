@@ -16,7 +16,7 @@ import random
 import bpy
 from mathutils import Vector, noise
 from mathutils.kdtree import KDTree
-from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD, via_ferrea as VF, paisaje as PA, salto_tren as ST, auto_rampa_s03 as ARS
+from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD, via_ferrea as VF, paisaje as PA, salto_tren as ST, auto_rampa_s03 as ARS, batalla_s03 as BT
 from estudio import fisica_dr as FD
 
 PARAMETROS = {"secuencia": 1, "semilla": 3, "velocidad_tren": 21.0, "s_cabeza_inicial": 620.0, "duracion_s": 75.0,
@@ -143,6 +143,27 @@ def _cajas_por_via(nombre, via, s0, s1, paso, tam, mat, col, desp=0.0, z=0.0, al
         k += 1
     return lote.objeto(nombre, mat, col)
 
+
+
+def moto_halcon(protos):
+    """Moto de Halcón Negro (Sweet Home): carenado negro brillante, mecánica grafito (se pinta una sola vez)."""
+    M = K.material
+    proto_moto = _sh3d("sc_yamaha_yzr_r6", protos)
+    if proto_moto.get("pintada"):
+        return proto_moto
+    pintura = {"white": M("moto_negro", (0.012, 0.012, 0.014), 0.22, 0.4), "yellow": M("moto_negro", (0, 0, 0)),
+               "red": M("moto_negro", (0, 0, 0)), "tires": M("goma_moto", (0.02, 0.02, 0.022), 0.85),
+               "metal": M("moto_grafito", (0.06, 0.06, 0.065), 0.45, 0.8), "grey": M("moto_grafito", (0, 0, 0)),
+               "tap": M("moto_grafito", (0, 0, 0)), "black": M("moto_grafito", (0, 0, 0))}
+    for o in proto_moto.objects:              # en el modelo de Sweet Home cada pieza se llama como su material
+        if o.type != "MESH":
+            continue
+        clave = next((c for c in pintura if o.name.lower().startswith(c) or c in o.name.lower().split("-")), None)
+        if clave:
+            o.data.materials.clear()
+            o.data.materials.append(pintura[clave])
+    proto_moto["pintada"] = True
+    return proto_moto
 
 def construir(parametros: dict | None = None) -> dict:
     p = {**PARAMETROS, **(parametros or {})}
@@ -434,19 +455,7 @@ def construir(parametros: dict | None = None) -> dict:
             raiz = K.vacio(f"VEH_moto_{k + 1}", (0, 0, 0), c_veh)
             caja = K.vacio(f"VEH_moto_{k + 1}_caja", (0, 0, 0), c_veh)
             caja.parent = raiz
-            proto_moto = _sh3d("sc_yamaha_yzr_r6", protos)
-            if k == 0:                                   # motos de Halcón Negro: carenado negro brillante, mecánica grafito
-                pintura = {"white": M("moto_negro", (0.012, 0.012, 0.014), 0.22, 0.4), "yellow": M("moto_negro", (0, 0, 0)),
-                           "red": M("moto_negro", (0, 0, 0)), "tires": M("goma_moto", (0.02, 0.02, 0.022), 0.85),
-                           "metal": M("moto_grafito", (0.06, 0.06, 0.065), 0.45, 0.8), "grey": M("moto_grafito", (0, 0, 0)),
-                           "tap": M("moto_grafito", (0, 0, 0)), "black": M("moto_grafito", (0, 0, 0))}
-                for o in proto_moto.objects:              # en el modelo de Sweet Home cada pieza se llama como su material
-                    if o.type != "MESH":
-                        continue
-                    clave = next((c for c in pintura if o.name.lower().startswith(c) or c in o.name.lower().split("-")), None)
-                    if clave:
-                        o.data.materials.clear()
-                        o.data.materials.append(pintura[clave])
+            proto_moto = moto_halcon(protos)
             m = K.instancia(f"moto_{k + 1}_modelo", proto_moto, (0, 0, 0), 0.0, 1.0, c_veh)
             m.parent = caja
             asiento = K.vacio(f"moto_{k + 1}_asiento", (0, -0.15, 0.55), c_veh)
@@ -474,6 +483,10 @@ def construir(parametros: dict | None = None) -> dict:
 
     if p["secuencia"] == 3:
         info_salto = ARS.construir(via, tren, trays, frames, fps, c_veh, p, moviles, plan_s3)
+        if p.get("batalla", True):       # las escoltas: los nuestros contra Halcón Negro, detrás del tren
+            bt = BT.planificar(via, plan_s3, p, fps)
+            info_salto["batalla"] = BT.construir(via, frames, fps, c_veh, p, moviles, plan_s3, bt)
+            print("batalla_s03:", info_salto["batalla"])
     else:
         info_salto = None
     anclas = {"via_centro": tuple(via.en(1200)[0]), "casa_1": tuple(casas[1].location), "casa_3": tuple(casas[3].location)}

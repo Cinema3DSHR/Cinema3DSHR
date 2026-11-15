@@ -61,10 +61,17 @@ y buzo de piloto). Detrás, a fondo, LUCÍA maneja el BISONTE XR; MATEO va de ac
 2. Acelera y pasa al camión por el carril de la izquierda.
 3. **La cuña en acción:** alcanza a la escolta y la hace volar: la moto y el blindado suben por la cuña y salen dando
    vueltas por el aire (cámara lenta).
+   **Mientras tanto, 400 m atrás, pegado a la cola del tren**, la escolta del Bisonte —el Vortex Aerion de EL ZORRO
+   (piloto amigo, casco naranja), el Veltor Max Pro GTR y el Cóndor Kodiak Raid— pelea contra la retaguardia de
+   Halcón Negro: el Cóndor T6 Multicam se le tira encima al Bisonte y El Zorro le hace un PIT (sale dando vueltas al
+   campo, cámara lenta); el Veltor pasa al Bisonte por la banquina, a centímetros del terraplén, y vuelca al Pampero
+   de un golpe de costado (cámara lenta); el Kairós KL5 viene a fondo por la banquina y el Kodiak lo encierra: trompo
+   al campo.
 4. Trompo de 180° con freno de mano; vuelve a contramano por el carril pegado a las vías y **se planta DE FRENTE**,
    con la cuña mirando al Bisonte, que viene a fondo.
 5. El Bisonte sube por la cuña y por el techo del auto rampa y vuela por encima de la ruta y del terraplén
-   (cámara lenta, de perfil y desde adentro: Lucía y Mateo contra los arneses). Cae en el **último vagón, el 20,
+   (cámara lenta, de perfil y desde adentro: Lucía y Mateo contra los arneses); abajo, el Vortex pasa a fondo por la
+   banquina. Cae en el **último vagón, el 20,
    que viaja vacío**, derrapa sobre la madera y frena delante de los autos amarrados del vagón 19.
 6. El Bisonte se queda ahí con Lucía. MATEO se baja sobre el tren y sale caminando entre los autos: va a robarse uno.
 

@@ -8,7 +8,7 @@ película entera antes del render final (que sólo arranca con «APROBADO. INICI
 |---|---|---|---|---|---|
 | s01 | El transporte | 00:00–01:15 | 75 s | llanura + vías + ruta paralela | 2.250 |
 | s02 | La preparación | 01:15–02:20 | 65 s | ruta abierta, cabina, túnel | 1.950 |
-| s03 | El auto rampa (v2: 60,1 s, tres cámaras lentas) | 02:20–03:40 | 80 s | ruta pegada a las vías + tren | 2.400 |
+| s03 | El auto rampa (v2: 63,9 s, cinco cámaras lentas, batalla de escoltas) | 02:20–03:40 | 80 s | ruta pegada a las vías + tren | 2.400 |
 | s04 | Asalto e infiltración | 03:40–05:35 | 115 s | techos y plataformas del tren | 3.450 |
 | s05 | El robo | 05:35–06:35 | 60 s | vagón 14, salida del tren | 1.800 |
 | s06 | Persecución en la montaña | 06:35–08:15 | 100 s | ruta de montaña + pueblo | 3.000 |
@@ -35,6 +35,8 @@ película entera antes del render final (que sólo arranca con «APROBADO. INICI
 | Vagón cerrado | `modelos_pelicula/vagon_cerrado.glb` | entregado | escala 13,7 m; ruedas de acero; puerta corrediza (s04–s05) |
 | Autos transportados | los 28 autos de Dream Rally (todos menos el camión Mamut) (`godot/game/models/cars/*.glb` + `.json`) | Rally-Sim-movile | ruedas generadas con las medidas de cada `.json` (arcos, radio, trocha) |
 | Auto rampa (doble de riesgo) | `vehiculos_pelicula/auto_rampa` (FBX entregado; cuña delantera, jaula, alerón) | entregado (mixamo-respaldo) | escala 5 m; ruedas y física de Dream Rally; cabina del juego con el doble de riesgo (piloto con casco de Dream Rally). **Salta una sola vez**: en s03, al bajarse marcha atrás del acoplado del camión a la ruta (cámara lenta); en s03 también voltea a la escolta y le hace de rampa al Bisonte XR. Después son los otros los que saltan sobre su cuña (la camioneta en s05, una moto en s06) o los que salen volando (el blindado en s06) |
+| Escolta de los nuestros (s03) | Dream Rally `hyper` (Vortex Aerion, El Zorro con casco, cabina del juego), `veltor_gtr`, `kodiak` | Rally-Sim-movile | física del juego; PIT, golpe de costado y encierre |
+| Retaguardia de Halcón Negro (s03) | Dream Rally `camo` (Cóndor T6), `pickup` (Pampero), `kl5` (Kairós KL5) | Rally-Sim-movile | física del juego hasta el golpe; después cuerpo rígido (vuelcos y trompo) |
 | Bisonte XR (Lucía y Mateo) | Dream Rally `bisonte` (modelo, física, cabina y pilotos del juego) | Rally-Sim-movile | Lucía maneja y Mateo de acompañante; en s03 vuela por la cuña del auto rampa al vagón 20 (libre) |
 | Camioneta robada | `modelos_pelicula/pickup_arena.glb` | entregado | ruedas Dream Rally (radio de la pickup del juego); torreta remota construida |
 | Blindados de escolta | `modelos_pelicula/vehiculo_blindado_policial.glb` | entregado | ruedas Dream Rally; rotulado de ficción (Halcón Negro); torreta |
