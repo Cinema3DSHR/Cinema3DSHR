@@ -102,7 +102,7 @@ def rueda_auto(nombre: str, radio: float, ancho: float, col, lado: int = 1, colo
 # ------------------------------------------------------------------------------------------------ ferroviario
 
 def _mat_acero():
-    return bpy.data.materials.get("acero_rueda_tren") or K.material("acero_rueda_tren", (0.36, 0.33, 0.3), 0.45, 0.9, ruido=0.2, escala_ruido=30)
+    return bpy.data.materials.get("acero_rueda_tren") or K.material("acero_rueda_tren", (0.13, 0.1, 0.08), 0.55, 0.8, ruido=0.35, escala_ruido=30, relieve=0.2)
 
 
 def _mat_bastidor():

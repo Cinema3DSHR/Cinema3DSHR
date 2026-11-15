@@ -81,12 +81,42 @@ def huella(m: dict) -> str:
     """sha256 de lo que define la imagen: receta sin metadatos de estado + código de los generadores usados."""
     receta = {k: v for k, v in m.items() if k not in ("estado", "bloqueada", "salidas", "historial", "notas")}
     h = hashlib.sha256(json.dumps(receta, sort_keys=True, ensure_ascii=False).encode())
-    for rel in ("estudio/blender/kit.py", "estudio/blender/camaras.py", "estudio/blender/vehiculos.py",
-                "estudio/blender/director.py", f"estudio/escenarios/{m['escenario']['generador']}.py"):
+    base = ("estudio/blender/kit.py", "estudio/blender/camaras.py", "estudio/blender/vehiculos.py",
+            "estudio/blender/director.py", f"estudio/escenarios/{m['escenario']['generador']}.py")
+    for rel in base:
         p = config.RAIZ / rel
         if p.exists():
             h.update(p.read_bytes())
+    if int(m.get("huella_v", 1)) >= 2:     # escenas nuevas: también los módulos que importa el generador (las viejas no cambian)
+        for rel in _dependencias_codigo(f"estudio/escenarios/{m['escenario']['generador']}.py", set(base)):
+            h.update((config.RAIZ / rel).read_bytes())
     return h.hexdigest()[:16]
+
+
+def _dependencias_codigo(rel: str, vistos: set) -> list[str]:
+    """Módulos del estudio que importa (recursivamente) un generador: física de Dream Rally, vía, paisaje, vehículos…"""
+    import re
+    out = []
+    p = config.RAIZ / rel
+    if not p.exists():
+        return out
+    txt = p.read_text()
+    mods = []
+    for linea in re.findall(r"^\s*from estudio\.blender import ([^\n]+)", txt, re.M):
+        mods += [f"estudio/blender/{x.strip().split(' as ')[0]}.py" for x in linea.split(",")]
+    for x in re.findall(r"^\s*from estudio import ([^\n]+)", txt, re.M):
+        for nombre in x.split(","):
+            n = nombre.strip().split(" as ")[0]
+            if (config.RAIZ / f"estudio/{n}/__init__.py").exists():
+                mods += [f"estudio/{n}/__init__.py"] + sorted(str(q.relative_to(config.RAIZ)) for q in (config.RAIZ / f"estudio/{n}").glob("*.gd"))
+    for d in mods:
+        if d in vistos or not (config.RAIZ / d).exists():
+            continue
+        vistos.add(d)
+        out.append(d)
+        if d.endswith(".py"):
+            out += _dependencias_codigo(d, vistos)
+    return out
 
 
 def nueva_version(prod: str, escena: str, motivo: str = "") -> Path:

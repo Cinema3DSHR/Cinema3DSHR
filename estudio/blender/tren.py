@@ -116,8 +116,8 @@ def construir(nombre: str, col, composicion: list[str], carga: dict | None = Non
             continue
         y = c["largo"] / 2 - 0.5
         for j, id_dr in enumerate(ids):
-            lo = not id_dr.endswith("!")          # "id!" = modelo completo (planos cercanos)
-            id_dr = id_dr.rstrip("!")
+            lo = id_dr.endswith("~")              # "id~" = modelo reducido del juego (sus UV salen deformadas: sólo para muy lejos)
+            id_dr = id_dr.rstrip("!~")
             meta = VD.meta_dr(id_dr)
             largo_auto = meta.get("L", 4.5)
             y -= largo_auto / 2

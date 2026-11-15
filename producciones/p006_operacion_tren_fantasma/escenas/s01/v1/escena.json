@@ -425,8 +425,8 @@
      "inicio_s": 0,
      "pos": [
       0,
-      0,
-      -0.95
+      0.05,
+      -0.5
      ],
      "mirando_deg": 90,
      "repetir": 40
@@ -451,8 +451,8 @@
      "inicio_s": 0,
      "pos": [
       0,
-      0,
-      -0.95
+      0.05,
+      -0.5
      ],
      "mirando_deg": 90,
      "repetir": 40
@@ -477,8 +477,8 @@
      "inicio_s": 0,
      "pos": [
       0,
-      0,
-      -0.95
+      0.05,
+      -0.5
      ],
      "mirando_deg": 90,
      "repetir": 40
@@ -503,8 +503,8 @@
      "inicio_s": 0,
      "pos": [
       0,
-      0,
-      -0.95
+      0.05,
+      -0.5
      ],
      "mirando_deg": 90,
      "repetir": 40
@@ -648,15 +648,15 @@
    "movil": "moto_1",
    "punto_base": "",
    "desp_local": [
-    3.0,
-    3.0,
-    0.2
+    4.5,
+    7.0,
+    0.9
    ],
    "objetivo": {
     "movil": "moto_1",
     "punto": "piloto"
    },
-   "lente_mm": 40,
+   "lente_mm": 50,
    "retardo": 1.0
   },
   {
@@ -774,5 +774,6 @@
   "exposicion": 0.0
  },
  "estado": "borrador",
- "bloqueada": false
+ "bloqueada": false,
+ "huella_v": 2
 }

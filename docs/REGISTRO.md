@@ -128,6 +128,29 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Verificado con capturas en ventana 720×1440 y 1600×900 (INICIO, AJUSTES, PELÍCULAS, EDITOR con la escena CQB).
   **No probado en un teléfono** (el giro real lo hace Android).
 
+## 15/11/2026 — OPERACIÓN TREN FANTASMA (p006): física, cabinas y pilotos de Dream Rally; vía real
+
+- Guion, desglose de 8 secuencias (600 s, 18.000 fotogramas), inventario con procedencia (555 recursos) y secuencia 1
+  en construcción: `producciones/p006_operacion_tren_fantasma/`. Render final bloqueado hasta «APROBADO. INICIÁ EL
+  RENDER FINAL DE LOS 10 MINUTOS» con la huella de las 8 versiones.
+- **Física de Dream Rally** (pedido del dueño): `estudio/fisica_dr/` corre `vehicle_physics.gd` del juego tal cual en
+  Godot sin cabeza con un conductor que sigue la trayectoria y hornea por cuadro carrocería, suspensión, ruedas,
+  dirección, rpm y deslizamiento; caché versionada en `datos/fisica_dr/`. **Cabina y pilotos del juego**
+  (`cockpit.gd`, `rig_pilot.gd`, `crew_motion.gd`) exportados como GLB animado con el mismo estado; vidrios del juego
+  portados a Cycles (`vidrios_dr.py`). Detalle: `docs/FISICA_DREAM_RALLY.md`. Los blindados de s01 ya la usan.
+- **Vía férrea real** (`estudio/blender/via_ferrea.py`): balasto de piedra, durmientes de quebracho con variación,
+  rieles de perfil Vignole con banda pulida, placas, clips y tirafondos, eclisas cada 18 m, tendido telegráfico con
+  crucetas, aisladores y 8 cables con catenaria, alambrado de 5 hilos, mojones y carteles km, señales luminosas,
+  paso a nivel con cruces de San Andrés, línea de media tensión y delineadores en la ruta.
+- **Paisaje** (`estudio/blender/paisaje.py`): parcelas cultivadas con surcos (alfalfa, trigo, arada, soja, rastrojo)
+  y pastura en el corredor; los árboles de Sweet Home ganan copa sólida (de lejos eran palos) y material los que no
+  tenían (pino, acacia).
+- Arreglos encontrados al probar: el GLB del blindado tiene el largo en X (iba cruzado 80°: `giro_modelo`); durmientes
+  y líneas de la ruta iban girados 90°; armar miles de piezas con bmesh era cuadrático (el armado de s01 pasó de >20 min
+  a menos de 1 min); colores del campo en lineal; cielo físico más bajo (se lavaba todo).
+- La huella de las escenas nuevas (`"huella_v": 2`) incluye los módulos que importa el generador (física, vía,
+  paisaje…): un cambio de código invalida la aprobación. Las escenas viejas conservan su huella.
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.

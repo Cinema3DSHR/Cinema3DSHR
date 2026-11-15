@@ -61,8 +61,19 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     seguidos = {t.get("movil") for t in manifiesto["tomas"]} | {
         (t.get(k) or {}).get("movil") for t in manifiesto["tomas"] for k in ("objetivo", "desde", "hasta", "centro", "foco")
         if isinstance(t.get(k), dict)}
-    for spec in manifiesto.get("personajes", []):
-        pjs[spec["id"]] = P.crear(spec, fps)
+    # el retarget evalúa la escena hueso por hueso y cuadro por cuadro: con el escenario afuera de la capa de vista
+    # (miles de objetos: árboles, vía, tren) no se re-evalúa todo en cada paso
+    excluidas = []
+    for lc in s.view_layers[0].layer_collection.children:
+        if not lc.exclude:
+            lc.exclude = True
+            excluidas.append(lc)
+    try:
+        for spec in manifiesto.get("personajes", []):
+            pjs[spec["id"]] = P.crear(spec, fps)
+    finally:
+        for lc in excluidas:
+            lc.exclude = False
     duracion_f = int(round(manifiesto["duracion_s"] * fps))
     for pid, pj in pjs.items():
         if pid in seguidos:

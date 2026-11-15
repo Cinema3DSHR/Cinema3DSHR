@@ -16,7 +16,8 @@ import random
 import bpy
 from mathutils import Vector, noise
 from mathutils.kdtree import KDTree
-from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD
+from estudio.blender import kit as K, importar as I, tren as TR, vehiculos_dr as VD, via_ferrea as VF, paisaje as PA
+from estudio import fisica_dr as FD
 
 PARAMETROS = {"secuencia": 1, "semilla": 3, "velocidad_tren": 21.0, "s_cabeza_inicial": 620.0, "duracion_s": 75.0,
               "lado_ruta": 34.0, "arboles": 900, "nubes": 26}
@@ -25,56 +26,33 @@ PARAMETROS = {"secuencia": 1, "semilla": 3, "velocidad_tren": 21.0, "s_cabeza_in
 DEPENDENCIAS = [
     "mixamo:modelos_pelicula/locomotora_diesel.glb", "mixamo:modelos_pelicula/vagon_plano.glb",
     "mixamo:modelos_pelicula/vagon_cerrado.glb", "mixamo:modelos_pelicula/vehiculo_blindado_policial.glb",
-    "rally:godot/game/models/cars/buggy.json",
-    "rally:godot/game/models/cars/buggy_lo.glb",
-    "rally:godot/game/models/cars/camo.json",
-    "rally:godot/game/models/cars/camo_lo.glb",
-    "rally:godot/game/models/cars/clasico60.json",
-    "rally:godot/game/models/cars/clasico60_lo.glb",
-    "rally:godot/game/models/cars/genesis.json",
-    "rally:godot/game/models/cars/genesis_lo.glb",
-    "rally:godot/game/models/cars/gt.json",
-    "rally:godot/game/models/cars/gt3.json",
-    "rally:godot/game/models/cars/gt3_lo.glb",
-    "rally:godot/game/models/cars/gt_lo.glb",
-    "rally:godot/game/models/cars/hatch2.json",
-    "rally:godot/game/models/cars/hatch2_lo.glb",
-    "rally:godot/game/models/cars/hyper.glb",
-    "rally:godot/game/models/cars/hyper.json",
-    "rally:godot/game/models/cars/kl5.json",
-    "rally:godot/game/models/cars/kl5_lo.glb",
-    "rally:godot/game/models/cars/kodiak.json",
-    "rally:godot/game/models/cars/kodiak_lo.glb",
-    "rally:godot/game/models/cars/moust.json",
-    "rally:godot/game/models/cars/moust_lo.glb",
-    "rally:godot/game/models/cars/muscle.json",
-    "rally:godot/game/models/cars/muscle_lo.glb",
-    "rally:godot/game/models/cars/police.json",
-    "rally:godot/game/models/cars/police_lo.glb",
-    "rally:godot/game/models/cars/pro_gt.json",
-    "rally:godot/game/models/cars/pro_gt_lo.glb",
-    "rally:godot/game/models/cars/rally80.json",
-    "rally:godot/game/models/cars/rally80_lo.glb",
-    "rally:godot/game/models/cars/strix.json",
-    "rally:godot/game/models/cars/strix_lo.glb",
-    "rally:godot/game/models/cars/suv.json",
-    "rally:godot/game/models/cars/suv_lo.glb",
-    "rally:godot/game/models/cars/titan.json",
-    "rally:godot/game/models/cars/titan_lo.glb",
-    "rally:godot/game/models/cars/torito.json",
-    "rally:godot/game/models/cars/torito_lo.glb",
-    "rally:godot/game/models/cars/trilux.json",
-    "rally:godot/game/models/cars/trilux_gt.json",
-    "rally:godot/game/models/cars/trilux_gt_lo.glb",
-    "rally:godot/game/models/cars/trilux_lo.glb",
-    "rally:godot/game/models/cars/veltor.json",
-    "rally:godot/game/models/cars/veltor_gtr.glb",
-    "rally:godot/game/models/cars/veltor_gtr.json",
-    "rally:godot/game/models/cars/veltor_lo.glb",
+    "rally:godot/game/models/cars/buggy.json", "rally:godot/game/models/cars/buggy.glb",
+    "rally:godot/game/models/cars/camo.json", "rally:godot/game/models/cars/camo.glb",
+    "rally:godot/game/models/cars/clasico60.json", "rally:godot/game/models/cars/clasico60.glb",
+    "rally:godot/game/models/cars/genesis.json", "rally:godot/game/models/cars/genesis.glb",
+    "rally:godot/game/models/cars/gt.json", "rally:godot/game/models/cars/gt.glb",
+    "rally:godot/game/models/cars/gt3.json", "rally:godot/game/models/cars/gt3.glb",
+    "rally:godot/game/models/cars/hatch2.json", "rally:godot/game/models/cars/hatch2.glb",
+    "rally:godot/game/models/cars/hyper.json", "rally:godot/game/models/cars/hyper.glb",
+    "rally:godot/game/models/cars/kl5.json", "rally:godot/game/models/cars/kl5.glb",
+    "rally:godot/game/models/cars/kodiak.json", "rally:godot/game/models/cars/kodiak.glb",
+    "rally:godot/game/models/cars/moust.json", "rally:godot/game/models/cars/moust.glb",
+    "rally:godot/game/models/cars/muscle.json", "rally:godot/game/models/cars/muscle.glb",
+    "rally:godot/game/models/cars/police.json", "rally:godot/game/models/cars/police.glb",
+    "rally:godot/game/models/cars/pro_gt.json", "rally:godot/game/models/cars/pro_gt.glb",
+    "rally:godot/game/models/cars/rally80.json", "rally:godot/game/models/cars/rally80.glb",
+    "rally:godot/game/models/cars/strix.json", "rally:godot/game/models/cars/strix.glb",
+    "rally:godot/game/models/cars/suv.json", "rally:godot/game/models/cars/suv.glb",
+    "rally:godot/game/models/cars/titan.json", "rally:godot/game/models/cars/titan.glb",
+    "rally:godot/game/models/cars/torito.json", "rally:godot/game/models/cars/torito.glb",
+    "rally:godot/game/models/cars/trilux.json", "rally:godot/game/models/cars/trilux.glb",
+    "rally:godot/game/models/cars/trilux_gt.json", "rally:godot/game/models/cars/trilux_gt.glb",
+    "rally:godot/game/models/cars/veltor.json", "rally:godot/game/models/cars/veltor.glb",
+    "rally:godot/game/models/cars/veltor_gtr.json", "rally:godot/game/models/cars/veltor_gtr.glb",
     "sh3d:models/tree_lombardy_poplar.glb", "sh3d:models/tree_tree.glb", "sh3d:models/tree_birch.glb",
     "sh3d:models/tree_weeping_willow.glb", "sh3d:models/tree_black_tupelo.glb", "sh3d:models/tree_quaking_aspen.glb",
     "sh3d:models/tree_sassafras.glb", "sh3d:models/sc_pine.glb", "sh3d:models/sc_cypress.glb", "sh3d:models/sc_acacia.glb",
-    "sh3d:models/bush_plant.glb", "sh3d:models/sc_lavender_bush.glb", "sh3d:models/door_front_door.glb",
+    "sh3d:models/sc_lavender_bush.glb", "sh3d:models/door_front_door.glb",
     "sh3d:models/window_five_panes_window.glb", "sh3d:models/window_double_small_window_with_sill.glb",
     "sh3d:models/door_garage_door.glb", "sh3d:models/sc_yamaha_yzr_r6.glb", "sh3d:models/fence_fence_post.glb",
 ]
@@ -90,6 +68,11 @@ VIA = [(-1600, -260), (-1000, -210), (-500, -90), (0, 0), (420, 110), (820, 170)
        (2000, 790), (2350, 1150)]
 
 
+# blindado de la película con la física de Dream Rally del Cóndor T6 («camo»), con sus medidas y su peso
+PARAMS_BLINDADO = {"wheelBase": 3.27, "weightFront": 0.474, "trackF": 1.72, "trackR": 1.72, "wheelRadius": 0.46,
+                   "mass": 4300.0, "comHeight": 0.95, "rideOffset": 0.0, "Ixx": 2200.0, "Iyy": 7800.0, "Izz": 8600.0}
+
+
 def _sh3d(nombre: str, col_proto: dict):
     """Colección prototipo con un modelo Sweet Home (se instancia sin copiar mallas)."""
     if nombre in col_proto:
@@ -98,6 +81,8 @@ def _sh3d(nombre: str, col_proto: dict):
     I.importar(f"sh3d:models/{nombre}.glb", c)
     for o in c.objects:          # Sweet Home viene en Y arriba → el importador ya lo pone en Z arriba
         o["visor_lod"] = "bajo"
+    if nombre.startswith(("tree_", "sc_pine", "sc_acacia", "sc_cypress", "bush_", "sc_lavender")):
+        PA.arbolar(c, semilla=len(col_proto) + 1)      # copa sólida (las hojas de Sweet Home son triángulos sueltos)
     col_proto[nombre] = c
     return c
 
@@ -130,30 +115,15 @@ def _tira(nombre, via, s0, s1, paso, perfil, mat, col, desp=0.0, z0=0.0):
 
 
 def _cajas_por_via(nombre, via, s0, s1, paso, tam, mat, col, desp=0.0, z=0.0, alternar=0.0):
-    """Muchas cajas (durmientes, postes) en una sola malla: rápido de construir y de renderizar."""
-    import bmesh
-    bm = bmesh.new()
-    s = s0
-    k = 0
+    """Muchas cajas (líneas, postes) en una sola malla. tam = (lateral, a lo largo, alto)."""
+    lote = VF.Lote()
+    s, k = s0, 0
     while s <= s1:
-        p, t = via.en(s)
-        ang = math.atan2(t.y, t.x)
-        n = Vector((t.y, -t.x, 0)).normalized()
-        c = p + n * (desp + (alternar if k % 2 else 0)) + Vector((0, 0, z))
-        r = bmesh.ops.create_cube(bm, size=1.0)["verts"]
-        for v in r:
-            v.co = Vector((v.co.x * tam[0], v.co.y * tam[1], v.co.z * tam[2]))
-            v.co.rotate(__import__("mathutils").Euler((0, 0, ang), "XYZ"))
-            v.co += c
+        p, t, n, ang = VF.marco(via, s)
+        lote.caja(p + n * (desp + (alternar if k % 2 else 0)) + Vector((0, 0, z)), ang, tam)
         s += paso
         k += 1
-    me = bpy.data.meshes.new(nombre)
-    bm.to_mesh(me)
-    bm.free()
-    ob = bpy.data.objects.new(nombre, me)
-    me.materials.append(mat)
-    col.objects.link(ob)
-    return ob
+    return lote.objeto(nombre, mat, col)
 
 
 def construir(parametros: dict | None = None) -> dict:
@@ -183,15 +153,15 @@ def construir(parametros: dict | None = None) -> dict:
             continue
     elev, azim = math.radians(24), math.radians(215)
     for attr, val in (("sun_elevation", elev), ("sun_rotation", azim), ("altitude", 300.0), ("air_density", 1.0),
-                      ("dust_density", 2.2), ("sun_intensity", 0.6)):
+                      ("dust_density", 0.9), ("sun_intensity", 0.6)):
         if hasattr(sky, attr):
             setattr(sky, attr, val)
     bg = nt.nodes.new("ShaderNodeBackground")
-    bg.inputs["Strength"].default_value = 0.35
+    bg.inputs["Strength"].default_value = 0.12          # el cielo de dispersión múltiple ya es físico: con más se lava todo
     out = nt.nodes.new("ShaderNodeOutputWorld")
     nt.links.new(sky.outputs["Color"], bg.inputs["Color"])
     nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
-    sol = K.luz("sol", "SUN", (0, 0, 100), 4.2, (1.0, 0.88, 0.72), col,
+    sol = K.luz("sol", "SUN", (0, 0, 100), 2.8, (1.0, 0.88, 0.72), col,
                 rot=(math.pi / 2 - elev, 0, azim + math.pi / 2))
     sol.data.angle = math.radians(0.8)
 
@@ -205,7 +175,7 @@ def construir(parametros: dict | None = None) -> dict:
     bm = bmesh.new()
     X0, X1, Y0, Y1, paso = -2600, 3400, -2200, 3200, 30
     nx, ny = int((X1 - X0) / paso) + 1, int((Y1 - Y0) / paso) + 1
-    grid = []
+    grid, campo = [], []
     for j in range(ny):
         fila = []
         for i in range(nx):
@@ -218,6 +188,7 @@ def construir(parametros: dict | None = None) -> dict:
             sierra = (lejos ** 1.5) * (260 + 180 * noise.noise(Vector((x / 900, y / 900, 4.0)))) * (1.3 if y > 0 else 0.8)
             cresta = abs(noise.noise(Vector((x / 340, y / 340, 7.0)))) * 90 * min(1.0, lejos)
             fila.append(bm.verts.new((x, y, plano * (lomas + sierra + cresta) - 0.05)))
+            campo.append(min(1.0, max(0.0, (d - 45.0) / 60.0)) * (0.0 if lejos > 0.35 else 1.0))
         grid.append(fila)
     for j in range(ny - 1):
         for i in range(nx - 1):
@@ -229,23 +200,16 @@ def construir(parametros: dict | None = None) -> dict:
         f.use_smooth = True
     terreno = bpy.data.objects.new("terreno", me)
     c_terr.objects.link(terreno)
-    pasto = M("pasto_llanura", (0.16, 0.24, 0.07), 0.92, ruido=0.45, escala_ruido=0.05, relieve=0.25)
-    me.materials.append(pasto)
+    at = me.attributes.new("campo", "FLOAT", "POINT")         # 1 = parcelas cultivadas · 0 = pastura (corredor, sierra)
+    at.data.foreach_set("value", campo)
+    me.materials.append(PA.material_campos())
     terreno["visor_lod"] = "bajo"
 
-    # ------------------------------------------------------------------ vía: terraplén, durmientes, rieles
-    s_vis0, s_vis1 = 0.0, via.largo
-    balasto = M("balasto", (0.33, 0.31, 0.28), 0.95, ruido=0.5, escala_ruido=8, relieve=0.6)
-    _tira("terraplen", via, s_vis0, s_vis1, 3.0, [(-3.6, -0.05), (-2.2, 0.28), (2.2, 0.28), (3.6, -0.05)], balasto, c_via)
-    madera = M("durmiente", (0.22, 0.16, 0.11), 0.85, ruido=0.35, escala_ruido=6)
-    _cajas_por_via("durmientes", via, s_vis0, s_vis1, 0.65, (2.6, 0.24, 0.16), madera, c_via, z=0.33)
-    acero = M("riel", (0.42, 0.4, 0.38), 0.35, 1.0, ruido=0.2, escala_ruido=10)
-    for lado in (-1, 1):
-        _tira(f"riel_{lado}", via, s_vis0, s_vis1, 2.0,
-              [(-0.036, 0.0), (-0.036, 0.12), (0.036, 0.12), (0.036, 0.0)], acero, c_via, desp=lado * 0.7535, z0=TR.Z_RIEL - 0.12)
-    poste = M("poste_telegrafo", (0.2, 0.15, 0.1), 0.8)
-    _cajas_por_via("postes_telegrafo", via, 30, s_vis1 - 30, 55.0, (0.22, 0.22, 8.0), poste, c_via, desp=-7.5, z=4.0)
-    _cajas_por_via("crucetas", via, 30, s_vis1 - 30, 55.0, (0.12, 1.8, 0.12), poste, c_via, desp=-7.5, z=7.4)
+    # ------------------------------------------------------------------ vía férrea con detalle real (estudio/blender/via_ferrea.py)
+    s_det0 = p["s_cabeza_inicial"] - 420.0
+    s_det1 = p["s_cabeza_inicial"] + p["velocidad_tren"] * p["duracion_s"] + 120.0
+    vf = VF.construir(via, c_via, s_detalle0=s_det0, s_detalle1=s_det1, lado_ruta=p["lado_ruta"], semilla=p["semilla"],
+                 pasos_a_nivel=(p["s_cabeza_inicial"] + 760.0,), senales=(p["s_cabeza_inicial"] + 420.0, p["s_cabeza_inicial"] + 1380.0))
 
     # ------------------------------------------------------------------ ruta paralela
     lado = p["lado_ruta"]
@@ -351,7 +315,7 @@ def construir(parametros: dict | None = None) -> dict:
         n = Vector((t.y, -t.x, 0)).normalized()
         q = pp + n * rnd.choice((-1, 1)) * rnd.uniform(9, 60)
         if libre(q):
-            K.instancia(f"arbusto_{j}", _sh3d(rnd.choice(["bush_plant", "sc_lavender_bush"]), protos), (q.x, q.y, 0),
+            K.instancia(f"arbusto_{j}", _sh3d("sc_lavender_bush", protos), (q.x, q.y, 0),
                         rnd.uniform(0, 6.3), rnd.uniform(1.2, 2.6), c_deco)
 
     # ------------------------------------------------------------------ nubes (planos altos con ruido)
@@ -419,17 +383,44 @@ def construir(parametros: dict | None = None) -> dict:
     ruedas_blindado = [{"x": sx * 0.86, "y": yy, "z": 0.46, "radio": 0.46, "ancho": 0.32, "lado": sx, "delantera": yy > 0}
                        for yy in (1.72, -1.55) for sx in (-1, 1)]
     negro = M("negro_halcon", (0.015, 0.015, 0.017), 0.35, 0.3)
+    # los blindados se manejan con la física REAL de Dream Rally (estudio/fisica_dr): suspensión, transferencia de peso,
+    # gomas y caja de cambios del juego; el conductor sigue su carril a la par del tren.
+    s0c, dur, previo = p["s_cabeza_inicial"], p["duracion_s"], 3.0
+    plan = {"fps": fps, "hz": 120, "cuadros": nf, "suelo": {"tipo": "plano", "altura": 0.06, "superficie": 0}, "vehiculos": []}
+    escoltas = []
     for k, (desfase, lat) in enumerate(((10.0, -1.8), (150.0, -1.8))):
-        rig = VD.vehiculo(f"escolta_{k + 1}", c_veh, ref="mixamo:modelos_pelicula/vehiculo_blindado_policial.glb", largo=5.6,
-                          ruedas=ruedas_blindado, alto_caja=0.18)
-        tray = VD.animar(rig, frames, por_ruta(desfase, lat, v, 0.4, k))
+        lat_fn = (lambda s_, d_=desfase, l_=lat, k_=k: lado + l_ + 0.4 * math.sin((s_ - s0c + d_) / v * 0.35 + k_))
+        pts, sv = VD.ruta_paralela(via, max(1.0, s0c - desfase - v * (previo + 3) - 30),
+                                   min(via.largo - 1.0, s0c - desfase + v * (dur + 3) + 30), lat_fn)
+        hor = VD.horario_siguiendo(pts, sv, (lambda t, d_=desfase: s0c + v * t - d_), -previo - 1.0, dur + 1.0)
+        plan["vehiculos"].append({"id": f"escolta_{k + 1}", "dr": "camo", "ruta": pts, "horario": hor, "previo_s": previo,
+                                  "params": PARAMS_BLINDADO})
+        escoltas.append(VD.vehiculo(f"escolta_{k + 1}", c_veh, ref="mixamo:modelos_pelicula/vehiculo_blindado_policial.glb",
+                                    largo=5.6, ruedas=ruedas_blindado, alto_caja=0.18,
+                                    giro_modelo=math.pi / 2))     # el GLB del blindado tiene el largo en X
+    fis = FD.simular(plan)
+    for k, rig in enumerate(escoltas):
+        tray = VD.aplicar_fisica(rig, fis["vehiculos"][f"escolta_{k + 1}"], frames)
         moviles[f"escolta_{k + 1}"] = {"tray": tray, "anclas": VD.ANCLAS_VEHICULO}
     motos = []
     for k in range(4):
         raiz = K.vacio(f"VEH_moto_{k + 1}", (0, 0, 0), c_veh)
         caja = K.vacio(f"VEH_moto_{k + 1}_caja", (0, 0, 0), c_veh)
         caja.parent = raiz
-        m = K.instancia(f"moto_{k + 1}_modelo", _sh3d("sc_yamaha_yzr_r6", protos), (0, 0, 0), 0.0, 1.0, c_veh)
+        proto_moto = _sh3d("sc_yamaha_yzr_r6", protos)
+        if k == 0:                                   # motos de Halcón Negro: carenado negro brillante, mecánica grafito
+            pintura = {"white": M("moto_negro", (0.012, 0.012, 0.014), 0.22, 0.4), "yellow": M("moto_negro", (0, 0, 0)),
+                       "red": M("moto_negro", (0, 0, 0)), "tires": M("goma_moto", (0.02, 0.02, 0.022), 0.85),
+                       "metal": M("moto_grafito", (0.06, 0.06, 0.065), 0.45, 0.8), "grey": M("moto_grafito", (0, 0, 0)),
+                       "tap": M("moto_grafito", (0, 0, 0)), "black": M("moto_grafito", (0, 0, 0))}
+            for o in proto_moto.objects:              # en el modelo de Sweet Home cada pieza se llama como su material
+                if o.type != "MESH":
+                    continue
+                clave = next((c for c in pintura if o.name.lower().startswith(c) or c in o.name.lower().split("-")), None)
+                if clave:
+                    o.data.materials.clear()
+                    o.data.materials.append(pintura[clave])
+        m = K.instancia(f"moto_{k + 1}_modelo", proto_moto, (0, 0, 0), 0.0, 1.0, c_veh)
         m.parent = caja
         asiento = K.vacio(f"moto_{k + 1}_asiento", (0, -0.15, 0.55), c_veh)
         asiento.parent = caja
@@ -444,4 +435,7 @@ def construir(parametros: dict | None = None) -> dict:
                                        for f, q in zip(frames, por_ruta(120.0, 4.0, 15.5))}, "anclas": {"": (0, 0, 1.4)}}
 
     anclas = {"via_centro": tuple(via.en(1200)[0]), "casa_1": tuple(casas[1].location), "casa_3": tuple(casas[3].location)}
+    for k, (sp_, pp_, nn_) in enumerate(vf["pasos_a_nivel"]):
+        anclas[f"paso_nivel_{k + 1}"] = tuple(pp_)
+        anclas[f"paso_nivel_{k + 1}_camino"] = tuple(pp_ + nn_ * -14.0 + Vector((0, 0, 1.6)))
     return {"anclas": anclas, "animables": {"tren": tren, "via": via}, "parametros": p, "moviles": moviles}

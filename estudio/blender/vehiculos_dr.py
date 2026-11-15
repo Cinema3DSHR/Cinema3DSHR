@@ -23,7 +23,8 @@ from estudio.blender import kit as K, importar as I, ruedas as RU, animar as AN
 DR_AUTOS = "rally:godot/game/models/cars"
 
 
-def _importar(ref: str, col, escala: float = 1.0, normalizar_largo: float | None = None, eje_largo: str = "Y", mira_y: int = -1):
+def _importar(ref: str, col, escala: float = 1.0, normalizar_largo: float | None = None, eje_largo: str = "Y", mira_y: int = -1,
+              giro: float | None = None):
     objs = I.importar(ref, col)
     raices = [o for o in objs if o.parent is None]
     soporte = bpy.data.objects.new("carroceria_" + ref.split("/")[-1].split(".")[0], None)
@@ -36,6 +37,8 @@ def _importar(ref: str, col, escala: float = 1.0, normalizar_largo: float | None
     rz = math.pi if mira_y < 0 else 0.0   # casi todos miran a −Y → girar para que miren a +Y (el auto rampa ya mira a +Y)
     if eje_largo == "X":
         rz = -math.pi / 2                  # vagón cerrado: largo en X
+    if giro is not None:
+        rz = giro                          # giro explícito (blindado y helicóptero: largo en X, trompa hacia +X → π/2)
     soporte.rotation_euler = (0, 0, rz)
     for o in objs:
         if o.type == "MESH":
@@ -59,7 +62,7 @@ def ruedas_dr(meta: dict, ancho: float = 0.27) -> list[dict]:
 
 def vehiculo(nombre: str, col, *, dr: str | None = None, variante: str = "", ref: str | None = None, largo: float | None = None,
              ruedas: list[dict] | None = None, color_llanta=(0.55, 0.56, 0.58), material_carroceria=None, alto_caja: float = 0.0,
-             mira_y: int = -1):
+             mira_y: int = -1, giro_modelo: float | None = None):
     """Arma el rig. dr = id de Dream Rally (con su .json) o ref = modelo entregado (normalizado) + largo + ruedas."""
     raiz = K.vacio(f"VEH_{nombre}", (0, 0, 0), col)
     caja = K.vacio(f"VEH_{nombre}_caja", (0, 0, 0), col)
@@ -71,7 +74,7 @@ def vehiculo(nombre: str, col, *, dr: str | None = None, variante: str = "", ref
         entre_ejes = meta.get("wheelbase", 2.6)
     else:
         meta = {}
-        sop, objs = _importar(ref, col, normalizar_largo=largo, mira_y=mira_y)
+        sop, objs = _importar(ref, col, normalizar_largo=largo, mira_y=mira_y, giro=giro_modelo)
         sop.location.z = alto_caja
         ys = sorted({r["y"] for r in ruedas})
         entre_ejes = (ys[-1] - ys[0]) if len(ys) > 1 else 2.6
@@ -156,6 +159,117 @@ def animar(rig: dict, frames: list[int], posiciones: list, fps: int = 30, derrap
             ang = [max(-0.6, min(0.6, math.atan(ee * c) + (d * 1.2 if abs(d) > 0.05 else 0))) for c, d in zip(curv, der)]
             AN.curva(w["maza"], "rotation_euler", 2, frames, ang)
     return {f: (P[i], rumbo[i] + der[i], rapidez[i]) for i, f in enumerate(frames)}
+
+
+def aplicar_fisica(rig: dict, reg: dict, frames: list[int]) -> dict:
+    """Hornea una grabación de la física REAL de Dream Rally (`estudio.fisica_dr.simular`) en el rig: la raíz toma la
+    posición y la orientación de la carrocería (cabeceo, rolido, derrape), cada rueda su altura de suspensión, su giro y
+    la dirección. Las ruedas se asignan por eje y lado (0 del. izq · 1 del. der · 2 tras. izq · 3 tras. der del juego);
+    con más de dos ejes, los intermedios copian el trasero. Devuelve la trayectoria {frame: (pos en el piso, rumbo, v)}."""
+    from mathutils import Matrix
+    n = len(frames)
+    pos = reg["pos"][:n]
+    eul, prev = [], None
+    for r in reg["rot"][:n]:
+        m = Matrix(((r[0], r[1], r[2]), (r[3], r[4], r[5]), (r[6], r[7], r[8])))
+        e = m.to_euler("XYZ", prev) if prev is not None else m.to_euler("XYZ")
+        eul.append(tuple(e))
+        prev = e
+    AN.transformacion(rig["raiz"], frames, pos, eul)
+    AN.transformacion(rig["caja"], frames, [(0, 0, 0)] * n, [(0, 0, 0)] * n)
+    for w in rig["ruedas"]:
+        k = (0 if w.get("delantera") else 2) + (0 if w.get("lado", 1) < 0 else 1)
+        AN.curva(w["maza"], "location", 2, frames, [z[k] for z in reg["ruedas_z"][:n]])
+        AN.curva(w["giro"], "rotation_euler", 0, frames, [-g[k] for g in reg["ruedas_giro"][:n]])
+        if w.get("delantera"):
+            AN.curva(w["maza"], "rotation_euler", 2, frames, reg["direccion"][:n])
+    rig["telemetria"] = {k: reg[k][:n] for k in ("v", "rpm", "marcha", "desliz", "contacto", "entradas")}
+    out = {}
+    for i, f in enumerate(frames):
+        r = reg["rot"][i]
+        rumbo = math.atan2(-r[1], r[4])       # columna Y (adelante) de la orientación
+        out[f] = (Vector(pos[i]), rumbo, abs(reg["v"][i]))
+    return out
+
+
+# desde afuera sólo queda lo que cabe dentro de la carrocería real: butacas, tablero, consola, piso, jaula, pilotos, volante,
+# palancas y pedales (el techo, las puertas, los parantes y el capó del habitáculo del juego están hechos para la cámara de
+# adentro: son un poco más grandes que el auto)
+VISIBLE_DESDE_AFUERA = ("cab_seat", "cab_dash", "cab_carbon", "cab_floor", "cab_cage", "cab_pad", "cab_metal", "cab_red",
+                        "cab_trim", "cab_acc")
+MOVILES_CABINA = ("cab_rim", "cab_gear_lever", "cab_hb_lever", "cab_pedal_thr", "cab_pedal_brk")
+
+
+def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool = True) -> list:
+    """Cuelga del auto la cabina de Dream Rally exportada por `estudio.fisica_dr` (habitáculo, butacas, tablero, volante,
+    palancas, pedales y los dos pilotos con su animación cuadro a cuadro). Va en el mismo marco que el modelo del auto
+    (la carrocería importada), así que coincide como en el juego. exterior=True esconde lo que en el juego sólo se ve con
+    la cámara de adentro (techo, paneles de puertas, vidrios y capó propios del habitáculo); los vidrios del auto pasan a
+    translúcidos para que se vea la tripulación (como la opción «Ver los pilotos desde las cámaras de afuera»)."""
+    from estudio.blender import vidrios_dr as VI
+    escena = bpy.context.scene
+    objs = I.importar(glb, col)
+    escena.render.fps = escena.render.fps            # el importador lee la hora del GLB con los cuadros por segundo de la escena
+    def _cadena(o):
+        while o is not None:
+            yield o
+            o = o.parent
+    for o in objs:
+        if o.parent is None:
+            o.parent = rig["carroceria"]
+    for o in objs:
+        if o.type != "MESH":
+            continue
+        o["visor_lod"] = "alto"
+        nombres = [a.name for a in _cadena(o)]
+        piloto = any(a.type == "ARMATURE" for a in _cadena(o)) or o.find_armature() is not None
+        if o.name.startswith("Icosphere"):                 # esfera auxiliar del pilot.glb (el juego la esconde)
+            ocultar = True
+        elif not exterior:
+            ocultar = False
+        else:
+            ocultar = not (piloto or o.name.startswith(VISIBLE_DESDE_AFUERA)
+                           or any(n.startswith(MOVILES_CABINA) for n in nombres))
+        if ocultar:
+            o.hide_render = True
+            o.hide_viewport = True
+            o["visor_omitir"] = True
+    if rig.get("meta"):
+        VI.aplicar(rig["objetos"], rig["meta"], claro=vidrios_claros)
+    rig["cabina"] = objs
+    return objs
+
+
+def ruta_paralela(via, s0: float, s1: float, lateral, paso: float = 2.0) -> tuple[list, list]:
+    """Puntos [(x, y)] de un camino paralelo a `via` (desplazado `lateral(s)` m a la derecha) y su largo acumulado,
+    para el conductor de la física. Devuelve (puntos, s_via) con s_via = posición sobre la vía de cada punto."""
+    pts, sv = [], []
+    s = s0
+    while s <= s1:
+        pp, t = via.en(s)
+        nrm = Vector((t.y, -t.x, 0)).normalized()
+        q = pp + nrm * (lateral(s) if callable(lateral) else lateral)
+        pts.append([round(q.x, 3), round(q.y, 3)])
+        sv.append(s)
+        s += paso
+    return pts, sv
+
+
+def horario_siguiendo(pts: list, s_via: list, s_via_de_t, t0: float, t1: float, dt: float = 0.25) -> list:
+    """Horario [[t, s_camino]] para que el vehículo vaya a la par de un punto de la vía que avanza según s_via_de_t(t)."""
+    import bisect
+    acc = [0.0]
+    for a, b in zip(pts, pts[1:]):
+        acc.append(acc[-1] + math.hypot(b[0] - a[0], b[1] - a[1]))
+    def mapa(sv):
+        i = max(1, min(len(s_via) - 1, bisect.bisect_left(s_via, sv)))
+        k = (sv - s_via[i - 1]) / max(1e-6, s_via[i] - s_via[i - 1])
+        return acc[i - 1] + (acc[i] - acc[i - 1]) * k
+    out, t = [], t0
+    while t <= t1 + 1e-6:
+        out.append([round(t, 3), round(mapa(s_via_de_t(t)), 4)])
+        t += dt
+    return out
 
 
 ANCLAS_VEHICULO = {"": (0, 0, 0.8), "techo": (0, 0, 1.8), "capo": (0, 1.2, 1.25), "interior": (-0.35, -0.1, 1.15),

@@ -42,7 +42,7 @@ def soldado_patrulla(pid, modelo, arma, carro, x, y0, y1, z):
 def motociclista(k):
     return {"id": f"motero_{k}", "modelo": "rally:piloto", "sobre": f"moto_{k}_asiento",
             "material": {"color": [0.02, 0.02, 0.022], "rugosidad": 0.45},
-            "acciones": [{"clip": "mixamo:animaciones/sentado_manejar/Driving.fbx", "inicio_s": 0, "pos": [0, 0, -0.95],
+            "acciones": [{"clip": "mixamo:animaciones/sentado_manejar/Driving.fbx", "inicio_s": 0, "pos": [0, 0.05, -0.5],
                           "mirando_deg": 90, "repetir": 40}]}
 
 
@@ -76,7 +76,7 @@ tomas = [
     toma(5, "seguimiento", "blindado de escolta de Halcón Negro por la ruta, el tren detrás", 32, 40,
          movil="escolta_1", punto_base="", desp_local=[4.5, 10, 0.6], objetivo=M("escolta_1"), lente_mm=35, retardo=1.0),
     toma(6, "seguimiento", "motos de escolta en fila, pilotos de negro", 40, 46,
-         movil="moto_1", punto_base="", desp_local=[3.0, 3.0, 0.2], objetivo=M("moto_1", "piloto"), lente_mm=40, retardo=1.0),
+         movil="moto_1", punto_base="", desp_local=[4.5, 7.0, 0.9], objetivo=M("moto_1", "piloto"), lente_mm=50, retardo=1.0),
     toma(7, "seguimiento", "guardia patrullando entre los autos", 46, 55,
          movil="carro_05", punto_base="", desp_local=[-5.8, 5.5, 1.5], objetivo=M("carro_05", "cubierta"), lente_mm=35, retardo=1.0),
     toma(8, "seguimiento", "desde un vagón hacia la locomotora que entra en la curva; al fondo, la sierra", 55, 64,
@@ -95,7 +95,7 @@ escena = {
     "moviles_escenario": [f"carro_{i:02d}" for i in range(21)] + ["escolta_1", "escolta_2", "moto_1", "moto_2", "moto_3", "moto_4", "auto_camara"],
     "sonido": {"generador": "procedural", "ambiente": "tren_llanura", "eventos": []},
     "render": {"calidad": "revision", "fps": FPS, "exposicion": 0.0},
-    "estado": "borrador", "bloqueada": False,
+    "estado": "borrador", "bloqueada": False, "huella_v": 2,
 }
 salida = Path(__file__).resolve().parents[1] / "escenas/s01/v1/escena.json"
 salida.parent.mkdir(parents=True, exist_ok=True)
