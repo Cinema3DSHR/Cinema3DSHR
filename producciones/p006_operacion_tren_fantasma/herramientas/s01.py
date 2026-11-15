@@ -1,4 +1,4 @@
-"""Genera escenas/s01/v2/escena.json — SECUENCIA 1: EL TRANSPORTE (75 s, 2.250 fotogramas).
+"""Genera escenas/s01/v3/escena.json — SECUENCIA 1: EL TRANSPORTE (75 s, 2.250 fotogramas).
 
 Soldados de Halcón Negro viajando sobre los vagones (sus posiciones están en el marco del vagón: +Y adelante, z = altura
 sobre la vía), motociclistas de negro sobre las motos de escolta y 9 tomas que presentan el tren.
@@ -106,7 +106,7 @@ sonido = {"generador": "procedural", "ambiente": "tren_llanura", "eventos": [
 ] + [{"tipo": "motor", "movil": f"moto_{k}", "clase": "moto", "volumen": 0.6} for k in (1, 2, 3, 4)]}
 escena = {
     "tipo": "escena", "id": "p006_operacion_tren_fantasma-s01", "produccion": "p006_operacion_tren_fantasma", "numero": 1,
-    "version": 2, "titulo": "El transporte",
+    "version": 3, "titulo": "El transporte",
     "guion": "EXT. LLANURA AL PIE DE LA SIERRA — MEDIA TARDE. El tren de Halcón Negro cruza la llanura con veinte vagones "
              "cargados de autos de lujo, custodiado por blindados, motos y soldados sobre los vagones.",
     "duracion_s": DUR,
@@ -117,9 +117,10 @@ escena = {
     "sonido": sonido,
     "render": {"calidad": "revision", "fps": FPS, "exposicion": 0.0},
     "estado": "borrador", "bloqueada": False, "huella_v": 2,
-    "historial": [{"desde_version": 1, "motivo": "pedido del dueño: los 28 autos de Dream Rally en el tren con toma de desfile, música épica y ambientación profesional"}],
+    "historial": [{"desde_version": 1, "motivo": "pedido del dueño: los 28 autos de Dream Rally en el tren con toma de desfile, música épica y ambientación profesional"},
+                  {"desde_version": 2, "motivo": "pedido del dueño: ruedas más afuera (medidas del juego); el Titán gris tira del acoplado y el Mamut viaja en el tren"}],
 }
-salida = Path(__file__).resolve().parents[1] / "escenas/s01/v2/escena.json"
+salida = Path(__file__).resolve().parents[1] / "escenas/s01/v3/escena.json"
 salida.parent.mkdir(parents=True, exist_ok=True)
 salida.write_text(json.dumps(escena, ensure_ascii=False, indent=1))
 print("escrito", salida, len(personajes), "personajes", len(tomas), "tomas")

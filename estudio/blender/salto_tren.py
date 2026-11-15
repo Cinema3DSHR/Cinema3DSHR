@@ -20,7 +20,7 @@ from estudio.blender import kit as K, vehiculos_dr as VD, animar as AN
 
 FBX_RAMPA = "mixamo:vehiculos_pelicula/auto_rampa/tripo_convert_c55be429-e003-45f0-afff-4bc05c1d9fdf.fbx"
 # medidas tomadas sobre el modelo entregado (escala 5 m; la cuña adelante): ejes a +0,93 y −1,52 m, rueda de 0,34 m
-RUEDAS_RAMPA = [{"x": sx * 0.86, "y": yy, "z": 0.34, "radio": 0.34, "ancho": 0.3, "lado": sx, "delantera": yy > 0}
+RUEDAS_RAMPA = [{"x": sx * 0.93, "y": yy, "z": 0.34, "radio": 0.34, "ancho": 0.32, "lado": sx, "delantera": yy > 0}
                 for yy in (0.93, -1.52) for sx in (-1, 1)]
 # física: la del Altair GT3 RS del juego con las medidas y el peso del auto rampa (la cuña de acero carga la trompa)
 PARAMS_RAMPA = {"wheelBase": 2.45, "weightFront": 0.62, "trackF": 1.72, "trackR": 1.72, "wheelRadius": 0.34,
@@ -37,8 +37,9 @@ PILOTOS = [{"ref": "mixamo:personajes_pelicula/protagonista_femenina/tripo_conve
 # acoplado (chasis portacontenedores entregado): 13 m, cama a 1,59 m, tres ejes atrás
 ACOPLADO = "mixamo:modelos_pelicula/trailer_plano_camion.glb"
 CAMA = 1.59
-RUEDAS_ACOPLADO = [{"x": sx * 1.0, "y": yy, "z": 0.52, "radio": 0.52, "ancho": 0.36, "lado": sx, "delantera": False}
-                   for yy in (-4.9, -3.0, -1.25) for sx in (-1, 1)]
+# gemelas bajo los guardabarros (el chasis tiene 1,69 m de semiancho con los guardabarros)
+RUEDAS_ACOPLADO = [{"x": sx * x, "y": yy, "z": 0.52, "radio": 0.52, "ancho": 0.34, "lado": sx, "delantera": False}
+                   for yy in (-4.9, -3.0, -1.25) for sx in (-1, 1) for x in (1.36, 0.98)]
 # rampa en la punta, 24° hacia la izquierda (hacia las vías), de la cama a 3,0 m en 3 m: cruza 3,6 m de costado y cae casi paralelo al tren
 RAMPA = {"cx": -0.35, "cy": 4.4, "ang": math.radians(24), "largo": 3.0, "ancho": 2.0, "h0": CAMA, "h1": 3.0}
 INICIO_LOCAL = (0.3, -4.3, 0.0)        # ruedas traseras dentro de la cama (termina en −6,5)
@@ -130,7 +131,7 @@ def construir(via, tren, trays, frames, fps, c_veh, p, moviles) -> dict:
     fis = FD.simular(plan)
     reg = fis["vehiculos"]["auto_rampa"]
 
-    # acoplado y camión (Colossus Mamut del juego) por la ruta
+    # acoplado y camión (Colossus Titán T4 del juego) por la ruta
     acop = VD.vehiculo("acoplado", c_veh, ref=ACOPLADO, largo=13.0, ruedas=RUEDAS_ACOPLADO)
     pos_ac, rot_ac = [], []
     for f in frames:
@@ -157,12 +158,12 @@ def construir(via, tren, trays, frames, fps, c_veh, p, moviles) -> dict:
         pata.location = (fin.x, fin.y, RAMPA["h0"] + alto / 2)
     tray_ac = {f: (Vector(pos_ac[i]), rot_ac[i][2], v_camion) for i, f in enumerate(frames)}
     moviles["acoplado"] = {"tray": tray_ac, "anclas": {"": (0, 0, 2.0), "cama": (0, 0, CAMA), "rampa": (RAMPA["cx"], RAMPA["cy"], 2.6)}}
-    camion = VD.vehiculo("camion", c_veh, dr="truck")
+    camion = VD.vehiculo("camion", c_veh, dr="titan")      # el camión gris (Colossus Titán T4) tira del acoplado
     pos_cam = []
     for f in frames:
         x, y, r = pose_acoplado((f - 1) / fps)
         fwd = Vector((-math.sin(r), math.cos(r), 0))
-        pos_cam.append(tuple(Vector((x, y, 0)) + fwd * 9.2))
+        pos_cam.append(tuple(Vector((x, y, 0)) + fwd * 7.7))     # la punta del acoplado apoya sobre la quinta rueda
     moviles["camion"] = {"tray": VD.animar(camion, frames, pos_cam, fps), "anclas": VD.ANCLAS_VEHICULO}
 
     # auto rampa con su física y la cabina del juego con Lucía y Mateo

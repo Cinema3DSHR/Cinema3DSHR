@@ -37,46 +37,31 @@ TÍTULO SOBRE EL PAISAJE: **OPERACIÓN TREN FANTASMA**.
 
 EXT. RUTA ABIERTA — CONTINUO
 
-Un camión con semirremolque plano tapado con una lona negra avanza por una ruta recta. 
-INT. CABINA DEL CAMIÓN: MATEO maneja el camión; revisa un reloj; LUCÍA, a su lado, se ajusta los guantes.
+El camión gris (el COLOSSUS TITÁN T4, el mismo modelo que viaja sobre el tren) tira de un acoplado plano tapado con
+una lona negra por una ruta recta.
+INT. CABINA DEL CAMIÓN: Mateo maneja, mira el reloj; Lucía, a su lado, se ajusta los guantes.
 
 MATEO: «Siete minutos hasta el puente.»
 LUCÍA: «Me sobran cuatro.»
 
-Mateo pasa a la parte trasera: arnés, cuerda, un estuche. El camión entra a un túnel bajo la sierra.
-Oscuridad. Luces de sodio. Ruido amplificado del motor.
+El camión entra a un túnel bajo la sierra. Oscuridad. Luces de sodio. Al salir —el paisaje se abre de golpe— la lona
+vuela: sobre el acoplado, el AUTO RAMPA (negro, jaula antivuelco, alerón, una cuña de acero en la trompa: lo
+construyeron para dar vuelta autos y para que otros salten sobre él).
 
-Al salir del túnel — el paisaje se abre de golpe — la lona vuela: sobre el remolque, el auto especial: el AUTO RAMPA
-(negro, jaula antivuelco, alerón, una cuña de acero en la trompa: lo construyeron para dar vuelta autos y para que
-otros salten sobre él). Mateo pasa por la pasarela del remolque y se mete por la ventanilla al asiento del
-acompañante. LUCÍA ya está al volante, con el motor en marcha. El auto sigue amarrado al acoplado: todavía no se baja.
-Las cadenas se sueltan una por una. La rampa hidráulica de la punta del remolque se levanta, apuntando en diagonal
-hacia las vías.
+## SECUENCIA 3 — EL AUTO RAMPA (02:20–03:40)
 
-## SECUENCIA 3 — EL SALTO (02:20–03:40)
+EXT. RUTA PEGADA A LAS VÍAS — CONTINUO
 
-EXT. RUTA PARALELA A LAS VÍAS
+El tren corre a la izquierda; la escolta de Halcón Negro (blindados y motos) va por la ruta, cerca del camión.
 
-La ruta se acerca a las vías: el tren reaparece a la izquierda, a doce metros. Un blindado de escolta va entre la
-ruta y el terraplén. El camión acelera hasta ponerse a la par de la plataforma 9.
-
-INT. AUTO RAMPA: Lucía mira el velocímetro; Mateo se agarra de la jaula. Cámara sobre el capó, cámara baja junto a
-las ruedas: el auto todavía sobre el acoplado.
-
-LUCÍA: «Agarrate.»
-
-Lucía acelera a fondo SOBRE EL REMOLQUE EN MOVIMIENTO: el auto se baja del acoplado por la rampa — la única vez que
-el auto rampa salta en toda la película — y vuela en diagonal hacia el tren.
-
-CÁMARA LENTA: la suspensión se estira al dejar la rampa, las ruedas siguen girando en el aire, los dos se despegan
-de los asientos contra los arneses, pasa por encima del blindado de escolta (los soldados levantan la vista), la
-sombra cruza el terraplén y los rieles. Toma aérea: la trayectoria contra el tren entero.
-
-Aterrizaje sobre la plataforma del vagón 9 (física real): la suspensión se comprime hasta el tope, los cuerpos se
-hunden en las butacas y rebotan, el auto derrapa sobre la madera y frena a medio metro del deportivo amarrado.
-Silencio de un segundo. Vuelve la velocidad normal.
-
-LUCÍA: «Te dije que me sobraban.»
+1. **El único salto del auto rampa.** El auto rampa se baja del acoplado MARCHA ATRÁS, en movimiento: deja la cama por
+   atrás, vuela y cae en la ruta (cámara lenta: suspensión, ruedas, el piloto sacudido en la cabina).
+2. Gira sobre sí mismo, acelera, pasa al camión por el costado.
+3. **La cuña en acción:** alcanza a la escolta y la hace volar: un blindado sube por la cuña y sale dando vueltas, las
+   motos saltan por encima y caen.
+4. **El auto rampa vuelve y se planta DE FRENTE** en la ruta, con la cuña mirando al auto de los tres protagonistas,
+   que viene a fondo: el auto sube por la cuña del auto rampa y vuela hasta el tren (cámara lenta), cae en la
+   plataforma libre, derrapa y frena contra los obstáculos. Los protagonistas se bajan sobre el tren.
 
 ## SECUENCIA 4 — ASALTO E INFILTRACIÓN (03:40–05:35)
 

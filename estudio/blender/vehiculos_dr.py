@@ -50,13 +50,45 @@ def meta_dr(id_dr: str) -> dict:
     return json.loads(config.resolver(f"{DR_AUTOS}/{id_dr}.json").read_text())
 
 
-def ruedas_dr(meta: dict, ancho: float = 0.27) -> list[dict]:
+_VEH = {}
+
+
+def params_dr(id_dr: str) -> dict:
+    """Parámetros de fábrica del auto en el juego (data/vehicles.json)."""
+    if not _VEH:
+        _VEH.update(json.loads(config.resolver("rally:godot/game/data/vehicles.json").read_text()))
+    return _VEH.get(id_dr, {})
+
+
+AFUERA = 0.04       # pedido del dueño: las ruedas un poco más afuera que en el juego (se escondían en los pasos de rueda)
+
+
+def ruedas_dr(meta: dict, id_dr: str | None = None, ancho: float = 0.27) -> list[dict]:
+    """Ruedas como las arma el juego (car_parts.gd): trocha de la física + corrimiento propio del auto, ejes a/−b de
+    la física, ancho de cubierta del modelo y gemelas atrás en los camiones que las llevan."""
+    V = params_dr(id_dr or meta.get("id", "")) if (id_dr or meta.get("id")) else {}
+    W = meta.get("wheel", {})
+    if not V:
+        out = []
+        for a in meta["arches"]:
+            for lado in (-1, 1):
+                out.append({"x": lado * (a["x_out"] - ancho / 2 + 0.02), "y": a["z"], "z": meta["R"], "radio": meta["R"],
+                            "ancho": ancho, "lado": lado, "delantera": a["z"] > 0})
+        return out
+    R = float(V["wheelRadius"])
+    wb, wf = float(V["wheelBase"]), float(V.get("weightFront", 0.5))
+    ejes = [(wb * (1 - wf), True), (-wb * wf, False)]
     out = []
-    for a in meta["arches"]:
-        delantera = a["z"] > 0
+    for y, delantera in ejes:
+        tr = float(V["trackF"] if delantera else V.get("trackR", V["trackF"]))
+        xo = float(W.get("x_off", 0.0) if delantera else W.get("x_off_r", W.get("x_off", 0.0)) or 0.0)
+        tw = float(W.get("tw", ancho) if delantera else W.get("tw_r", W.get("tw", ancho)))
         for lado in (-1, 1):
-            out.append({"x": lado * (a["x_out"] - ancho / 2 - 0.02), "y": a["z"], "z": meta["R"], "radio": meta["R"],
-                        "ancho": ancho, "lado": lado, "delantera": delantera})
+            x = lado * (tr / 2 + xo + AFUERA)
+            out.append({"x": x, "y": y, "z": R, "radio": R, "ancho": tw, "lado": lado, "delantera": delantera})
+            if W.get("dual") and not delantera:            # gemela de adentro (Titán)
+                out.append({"x": x - lado * (tw + 0.03), "y": y, "z": R, "radio": R, "ancho": tw, "lado": lado,
+                            "delantera": False, "gemela": True})
     return out
 
 
@@ -74,8 +106,9 @@ def vehiculo(nombre: str, col, *, dr: str | None = None, variante: str = "", ref
             for o in objs:
                 if o.type == "MESH":
                     o["visor_lo"] = f"{DR_AUTOS}/{dr}_lo.glb"      # el EDITOR 3D del teléfono usa la versión liviana del juego
-        ruedas = ruedas or ruedas_dr(meta)
+        ruedas = ruedas or ruedas_dr(meta, dr)
         entre_ejes = meta.get("wheelbase", 2.6)
+        alto_dr = float(params_dr(dr).get("rideOffset", 0.0))      # el juego levanta la carrocería sobre las ruedas
     else:
         meta = {}
         sop, objs = _importar(ref, col, normalizar_largo=largo, mira_y=mira_y, giro=giro_modelo)
@@ -83,6 +116,8 @@ def vehiculo(nombre: str, col, *, dr: str | None = None, variante: str = "", ref
         ys = sorted({r["y"] for r in ruedas})
         entre_ejes = (ys[-1] - ys[0]) if len(ys) > 1 else 2.6
     sop.parent = caja
+    if dr:
+        sop.location.z = alto_dr
     if material_carroceria is not None:
         for o in objs:
             if o.type == "MESH":
@@ -171,6 +206,8 @@ def aplicar_fisica(rig: dict, reg: dict, frames: list[int]) -> dict:
     la dirección. Las ruedas se asignan por eje y lado (0 del. izq · 1 del. der · 2 tras. izq · 3 tras. der del juego);
     con más de dos ejes, los intermedios copian el trasero. Devuelve la trayectoria {frame: (pos en el piso, rumbo, v)}."""
     from mathutils import Matrix
+    if rig.get("meta"):
+        rig["carroceria"].location.z = 0.0  # la física ya trae el origen de la carrocería (con el levante del juego)
     if reg.get("cuadros"):                  # grabación con varias muestras por cuadro (cámara lenta): claves fraccionarias
         frames = reg["cuadros"]
     n = len(frames)

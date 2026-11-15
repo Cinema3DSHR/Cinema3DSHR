@@ -47,6 +47,7 @@ DEPENDENCIAS = [
     "rally:godot/game/models/cars/strix.json", "rally:godot/game/models/cars/strix.glb", "rally:godot/game/models/cars/strix_lo.glb",
     "rally:godot/game/models/cars/suv.json", "rally:godot/game/models/cars/suv.glb", "rally:godot/game/models/cars/suv_lo.glb",
     "rally:godot/game/models/cars/titan.json", "rally:godot/game/models/cars/titan.glb", "rally:godot/game/models/cars/titan_lo.glb",
+    "rally:godot/game/models/cars/truck.json",
     "rally:godot/game/models/cars/torito.json", "rally:godot/game/models/cars/torito.glb", "rally:godot/game/models/cars/torito_lo.glb",
     "rally:godot/game/models/cars/trilux.json", "rally:godot/game/models/cars/trilux.glb", "rally:godot/game/models/cars/trilux_lo.glb",
     "rally:godot/game/models/cars/trilux_gt.json", "rally:godot/game/models/cars/trilux_gt.glb", "rally:godot/game/models/cars/trilux_gt_lo.glb",
@@ -70,11 +71,11 @@ DEPENDENCIAS = [
     "sh3d:models/door_garage_door.glb", "sh3d:models/sc_yamaha_yzr_r6.glb", "sh3d:models/fence_fence_post.glb",
 ]
 
-# Composición: 0 = locomotora. Viajan los 28 autos de Dream Rally (todos menos el camión Mamut, que es el camión de la
-# secuencia 2): dos por plataforma; la 9 lleva un solo deportivo adelante (atrás aterriza el auto rampa en la secuencia 3)
+# Composición: 0 = locomotora. Viajan los 28 autos de Dream Rally (todos menos el Colossus Titán T4, el camión gris que
+# tira del acoplado del auto rampa en las secuencias 2 y 3): dos por plataforma; la 9 lleva un solo deportivo adelante (atrás aterriza el auto rampa en la secuencia 3)
 COMPOSICION = ["loco", "plano", "plano", "cerrado", "plano", "plano", "plano", "cerrado", "plano", "plano", "plano",
                "cerrado", "plano", "cerrado", "cerrado", "plano", "plano", "plano", "plano", "plano", "plano"]
-CARGA = {1: ["gt3", "kodiak"], 2: ["hyper", "suv"], 4: ["veltor_s", "muscle"], 5: ["titan", "strix"],
+CARGA = {1: ["gt3", "kodiak"], 2: ["hyper", "suv"], 4: ["veltor_s", "muscle"], 5: ["truck", "strix"],
          6: ["kl5", "trilux_gt"], 8: ["rally80", "pro_gt"], 9: ["veltor_gtr"], 10: ["gt", "genesis"],
          12: ["torito", "clasico60"], 15: ["police", "camo"], 16: ["veltor", "hatch2"], 17: ["pickup", "hatch"],
          18: ["buggy", "trilux"], 19: ["f1", "trilux_s"], 20: ["moust"]}
@@ -398,7 +399,7 @@ def construir(parametros: dict | None = None) -> dict:
             n = Vector((tt.y, -tt.x, 0)).normalized()
             out.append(tuple(pp + n * (lado + lateral + oscila * math.sin(t * 0.35 + fase))))
         return out
-    ruedas_blindado = [{"x": sx * 0.86, "y": yy, "z": 0.46, "radio": 0.46, "ancho": 0.32, "lado": sx, "delantera": yy > 0}
+    ruedas_blindado = [{"x": sx * 0.95, "y": yy, "z": 0.46, "radio": 0.46, "ancho": 0.34, "lado": sx, "delantera": yy > 0}
                        for yy in (1.72, -1.55) for sx in (-1, 1)]
     negro = M("negro_halcon", (0.015, 0.015, 0.017), 0.35, 0.3)
     # los blindados se manejan con la física REAL de Dream Rally (estudio/fisica_dr): suspensión, transferencia de peso,
