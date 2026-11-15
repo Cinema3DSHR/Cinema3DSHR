@@ -397,6 +397,38 @@ def cielo_noche(escena, cenit=(0.0008, 0.0012, 0.004), horizonte=(0.009, 0.008, 
         nt.links.new(vol.outputs["Volume"], out.inputs["Volume"])
     return w
 
+def cielo_dia(escena, cenit=(0.10, 0.28, 0.80), horizonte=(0.50, 0.68, 0.95), fuerza=1.0):
+    """Cielo diurno procedural: degradé horizonte→cenit (barato; el sol es una luz SUN aparte)."""
+    w = bpy.data.worlds.new("cielo_dia")
+    escena.world = w
+    w.use_nodes = True
+    nt = w.node_tree
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    out = nt.nodes.new("ShaderNodeOutputWorld")
+    bg = nt.nodes.new("ShaderNodeBackground")
+    bg.inputs["Strength"].default_value = fuerza
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    sep = nt.nodes.new("ShaderNodeSeparateXYZ")
+    nt.links.new(tc.outputs["Generated"], sep.inputs["Vector"])
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.elements[0].position = 0.5
+    ramp.color_ramp.elements[0].color = (*horizonte, 1)
+    ramp.color_ramp.elements[1].position = 0.85
+    ramp.color_ramp.elements[1].color = (*cenit, 1)
+    nt.links.new(sep.outputs["Z"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], bg.inputs["Color"])
+    nt.links.new(bg.outputs["Background"], out.inputs["Surface"])
+    return w
+
+
+def apagar_emisores(materiales, factor=0.0):
+    """Baja la emisión de materiales ya creados (modo día)."""
+    for m in materiales:
+        for n in m.node_tree.nodes:
+            if n.type == "BSDF_PRINCIPLED" and "Emission Strength" in n.inputs and not n.inputs["Emission Strength"].is_linked:
+                n.inputs["Emission Strength"].default_value *= factor
+
 # ----------------------------------------------------------------------------------------------- animación
 
 def clave(ob, ruta, frame, valor=None, indice=-1):

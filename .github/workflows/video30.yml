@@ -11,6 +11,7 @@ on:
       trabajos: {description: "Trabajos de render en paralelo (máx. 19: el plan gratis admite 20 simultáneos y uno es el audio)", required: false, default: "19"}
       limite: {description: "ENSAYO: renderizar sólo los primeros N fotogramas (0 = todos)", required: false, default: "0"}
       etiqueta: {description: "Tag de la release", required: false, default: "p003_futbol_30s-cycles6"}
+      nombre: {description: "Nombre del MP4 de salida (sin extensión)", required: false, default: "futbol_30s_cycles6"}
 
 permissions:
   contents: write
@@ -21,6 +22,8 @@ concurrency:
 
 env:
   CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
+  CINE_NEXUS_DIR: ${{ github.workspace }}/recursos/nexus/fuente
+  CINE_EXTRACTION_DIR: ${{ github.workspace }}/recursos/extraction/public
 
 jobs:
   planificar:
@@ -29,18 +32,23 @@ jobs:
       trozos: ${{ steps.plan.outputs.trozos }}
       total: ${{ steps.plan.outputs.total }}
       mixamo: ${{ steps.plan.outputs.mixamo }}
+      nexus: ${{ steps.plan.outputs.nexus }}
+      extraction: ${{ steps.plan.outputs.extraction }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: "3.13"}
-      - name: Acceso a los recursos privados (mixamo-respaldo)
+      - name: Acceso a los recursos privados (mixamo-respaldo, Operaci-n-Nexus-1, Extraction-tactical)
         env:
           TOKEN: ${{ secrets.ASSETS_TOKEN }}
         run: |
           if [ -z "$TOKEN" ]; then
-            echo "::error::Falta el secreto ASSETS_TOKEN (token fine-grained, Contents: Read sobre mixamo-respaldo). Sin él los jugadores y el estadio no se pueden bajar."; exit 1
+            echo "::error::Falta el secreto ASSETS_TOKEN (token fine-grained, Contents: Read sobre mixamo-respaldo, Operaci-n-Nexus-1 y Extraction-tactical). Sin él los modelos y animaciones no se pueden bajar."; exit 1
           fi
           git ls-remote "https://x-access-token:${TOKEN}@github.com/webmaletin-art/mixamo-respaldo.git" "refs/heads/${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}" | grep -q refs || { echo "::error::ASSETS_TOKEN no puede leer la rama de mixamo-respaldo"; exit 1; }
+          for R in Operaci-n-Nexus-1 Extraction-tactical; do
+            git ls-remote "https://x-access-token:${TOKEN}@github.com/webmaletin-art/${R}.git" HEAD | grep -q HEAD || echo "::warning::ASSETS_TOKEN no puede leer ${R} (hace falta sólo si la escena usa soldados o armas)"
+          done
           echo "Acceso OK"
       - name: Repartir los fotogramas
         id: plan
@@ -62,10 +70,13 @@ jobs:
           trozos = [{"n": f"{i:02d}", "desde": d, "hasta": min(total, d + tam - 1)} for i, d in enumerate(range(1, total + 1, tam))]
           assert sum(t["hasta"] - t["desde"] + 1 for t in trozos) == total          # ni faltantes ni repetidos
           assert all(a["hasta"] + 1 == b["desde"] for a, b in zip(trozos, trozos[1:]))
-          mix = "\n".join(d.split(":", 1)[1] for d in MF.dependencias(m) if d.startswith("mixamo:"))
+          deps = MF.dependencias(m)
+          def lista(fuente, prefijo=""):      # rutas dentro del repositorio de esa fuente (nexus vive en fuente/, extraction en public/)
+              return "\n".join(prefijo + d.split(":", 1)[1] for d in deps if d.startswith(fuente + ":"))
+          mix, nex, ext = lista("mixamo"), lista("nexus", "fuente/"), lista("extraction", "public/")
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write(f"trozos={json.dumps(trozos)}\ntotal={total}\nmixamo<<EOF\n{mix}\nEOF\n")
-          print(f"{total} fotogramas en {len(trozos)} trozos de hasta {tam}"); print(mix)
+              f.write(f"trozos={json.dumps(trozos)}\ntotal={total}\nmixamo<<EOF\n{mix}\nEOF\nnexus<<EOF\n{nex}\nEOF\nextraction<<EOF\n{ext}\nEOF\n")
+          print(f"{total} fotogramas en {len(trozos)} trozos de hasta {tam}"); print(mix); print(nex); print(ext)
           PY
 
   render:
@@ -93,6 +104,26 @@ jobs:
           token: ${{ secrets.ASSETS_TOKEN }}
           path: recursos/mixamo-respaldo
           sparse-checkout: ${{ needs.planificar.outputs.mixamo }}
+          sparse-checkout-cone-mode: false
+      - name: Recursos de Operaci-n-Nexus-1 (sólo lo que usa la escena)
+        if: ${{ needs.planificar.outputs.nexus != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/Operaci-n-Nexus-1
+          ref: ${{ vars.NEXUS_REF }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/nexus
+          sparse-checkout: ${{ needs.planificar.outputs.nexus }}
+          sparse-checkout-cone-mode: false
+      - name: Recursos de Extraction-tactical (sólo lo que usa la escena)
+        if: ${{ needs.planificar.outputs.extraction != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/Extraction-tactical
+          ref: ${{ vars.EXTRACTION_REF }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/extraction
+          sparse-checkout: ${{ needs.planificar.outputs.extraction }}
           sparse-checkout-cone-mode: false
       - name: Renderizar fotogramas ${{ matrix.trozo.desde }}–${{ matrix.trozo.hasta }}
         run: |
@@ -129,6 +160,26 @@ jobs:
           path: recursos/mixamo-respaldo
           sparse-checkout: ${{ needs.planificar.outputs.mixamo }}
           sparse-checkout-cone-mode: false
+      - name: Recursos de Operaci-n-Nexus-1 (sólo lo que usa la escena)
+        if: ${{ needs.planificar.outputs.nexus != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/Operaci-n-Nexus-1
+          ref: ${{ vars.NEXUS_REF }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/nexus
+          sparse-checkout: ${{ needs.planificar.outputs.nexus }}
+          sparse-checkout-cone-mode: false
+      - name: Recursos de Extraction-tactical (sólo lo que usa la escena)
+        if: ${{ needs.planificar.outputs.extraction != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/Extraction-tactical
+          ref: ${{ vars.EXTRACTION_REF }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/extraction
+          sparse-checkout: ${{ needs.planificar.outputs.extraction }}
+          sparse-checkout-cone-mode: false
       - name: Audio original de la escena
         run: python -I pruebas/video_30s/audio_escena.py "${{ inputs.escena }}" audio_out 2>&1 | grep -E "^AUDIO|Traceback|Error" || true; test -f audio_out/audio.wav
       - uses: actions/upload-artifact@v4
@@ -149,7 +200,7 @@ jobs:
           mkdir -p frames && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d frames; done
           ls frames | grep -c '^f_.*png$'
       - name: Verificar, codificar el MP4 y armar el informe
-        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --run-iniciado "${{ github.run_started_at }}"
+        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --nombre "${{ inputs.nombre }}" --run-iniciado "${{ github.run_started_at }}"
       - name: Publicar en la release (sólo si no es ensayo)
         if: ${{ inputs.limite == '0' }}
         env:
@@ -158,6 +209,6 @@ jobs:
           R=${{ github.repository }}; T="${{ inputs.etiqueta }}"
           gh release view "$T" --repo "$R" >/dev/null 2>&1 || gh release create "$T" --repo "$R" --latest=false \
             --title "Prueba 30 s — Cycles ${{ inputs.muestras }} muestras, 720p" --notes "Video de 30 s renderizado en paralelo en GitHub Actions. Informe en informe_rendimiento.json. Secuencia de fotogramas en frames_NN.zip."
-          gh release upload "$T" salida/futbol_30s_cycles6.mp4 salida/informe_rendimiento.json descargas/audio/audio.wav descargas/frames-*/frames_*.zip --repo "$R" --clobber
+          gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/informe_rendimiento.json descargas/audio/audio.wav descargas/frames-*/frames_*.zip --repo "$R" --clobber
       - uses: actions/upload-artifact@v4
         with: {name: entrega, path: salida/, retention-days: 14}

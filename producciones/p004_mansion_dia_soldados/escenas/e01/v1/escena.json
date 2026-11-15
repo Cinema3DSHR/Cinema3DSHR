@@ -1,0 +1,383 @@
+{
+  "tipo": "escena",
+  "id": "p004_mansion_dia_soldados-e01",
+  "produccion": "p004_mansion_dia_soldados",
+  "numero": 1,
+  "version": 1,
+  "titulo": "Infiltración de día",
+  "guion": "EXT. MANSIÓN — DÍA. Cuatro soldados cruzan la calle, entran por el portón y corren por el camino; al llegar a la casa avanzan agachados junto a la fachada y se apilan frente a la puerta principal, que se abre.",
+  "duracion_s": 30.0,
+  "escenario": {
+    "id": "mansion_moderna_dia",
+    "generador": "mansion_moderna",
+    "parametros": {
+      "hora": "dia",
+      "suelo_mojado": false,
+      "semilla": 7
+    }
+  },
+  "eventos": [
+    {
+      "accion": "abrir_porton",
+      "inicio_s": 0.0,
+      "duracion_f": 60
+    },
+    {
+      "accion": "abrir_puerta",
+      "inicio_s": 23.0,
+      "duracion_f": 45
+    }
+  ],
+  "vehiculos": [],
+  "personajes": [
+    {
+      "id": "s1",
+      "modelo": "soldado:ch49",
+      "arma": "M4A1",
+      "acciones": [
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 0.0,
+          "repetir": 14,
+          "mirando_deg": 89.54,
+          "pos": [
+            13.75,
+            -37.0
+          ]
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 7.0,
+          "repetir": 4,
+          "mirando_deg": 145.34,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/walk_crouching_forward.fbx",
+          "inicio_s": 9.0,
+          "repetir": 4,
+          "mirando_deg": -167.15,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/idle_crouching_aiming.fbx",
+          "inicio_s": 13.0,
+          "encadenar": true,
+          "repetir": 10,
+          "mirando_deg": 180
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "modelo": "soldado:ch15",
+      "arma": "AK47",
+      "acciones": [
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 0.0,
+          "repetir": 16,
+          "mirando_deg": 90.43,
+          "pos": [
+            14.25,
+            -39.3
+          ]
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 8.0,
+          "repetir": 1,
+          "mirando_deg": 166.0,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/walk_crouching_forward.fbx",
+          "inicio_s": 8.5,
+          "repetir": 6,
+          "mirando_deg": 176.53,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/idle_crouching_aiming.fbx",
+          "inicio_s": 14.5,
+          "encadenar": true,
+          "repetir": 9,
+          "mirando_deg": 180
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "modelo": "soldado:ch35",
+      "arma": "M4A1",
+      "acciones": [
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 0.0,
+          "repetir": 17,
+          "mirando_deg": 89.6,
+          "pos": [
+            13.75,
+            -41.6
+          ]
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 8.5,
+          "repetir": 3,
+          "mirando_deg": 165.68,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/walk_crouching_forward.fbx",
+          "inicio_s": 10.0,
+          "repetir": 3,
+          "mirando_deg": -176.2,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/idle_crouching_aiming.fbx",
+          "inicio_s": 13.0,
+          "encadenar": true,
+          "repetir": 10,
+          "mirando_deg": 180
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "modelo": "soldado:operador",
+      "arma": "M4A1",
+      "acciones": [
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 0.0,
+          "repetir": 17,
+          "mirando_deg": 90.38,
+          "pos": [
+            14.25,
+            -43.9
+          ]
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/run_forward.fbx",
+          "inicio_s": 8.5,
+          "repetir": 2,
+          "mirando_deg": 144.37,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/walk_crouching_forward.fbx",
+          "inicio_s": 9.5,
+          "repetir": 4,
+          "mirando_deg": 172.96,
+          "encadenar": true
+        },
+        {
+          "clip": "mixamo:packs/Pro_Rifle_Pack/idle_crouching_aiming.fbx",
+          "inicio_s": 13.5,
+          "encadenar": true,
+          "repetir": 9,
+          "mirando_deg": 180
+        }
+      ]
+    }
+  ],
+  "tomas": [
+    {
+      "id": "t01_calle",
+      "tipo": "estatica",
+      "plano": "cruzan la calle hacia el portón que se abre",
+      "inicio_s": 0,
+      "duracion_s": 3.0,
+      "desde": [
+        19,
+        -29,
+        0.9
+      ],
+      "objetivo": {
+        "movil": "s1",
+        "punto": "cadera"
+      },
+      "lente_mm": 35,
+      "apertura": 4.0,
+      "luz_relleno": 0
+    },
+    {
+      "id": "t02_camino",
+      "tipo": "dolly",
+      "plano": "travelling lateral por el camino de entrada",
+      "inicio_s": 3.0,
+      "duracion_s": 3.5,
+      "desde": [
+        8.5,
+        -22,
+        1.3
+      ],
+      "hasta": [
+        8.5,
+        -8,
+        1.3
+      ],
+      "objetivo": {
+        "movil": "s1",
+        "punto": "cadera"
+      },
+      "lente_mm": 40,
+      "apertura": 4.0,
+      "luz_relleno": 0
+    },
+    {
+      "id": "t03_seguimiento",
+      "tipo": "seguimiento",
+      "plano": "seguimiento por detrás del jefe de la patrulla",
+      "inicio_s": 6.5,
+      "duracion_s": 3.5,
+      "movil": "s1",
+      "punto_base": "cadera",
+      "desp_local": [
+        0,
+        -3.6,
+        1.0
+      ],
+      "objetivo": {
+        "movil": "s1",
+        "punto": "cabeza"
+      },
+      "lente_mm": 35,
+      "luz_relleno": 0,
+      "retardo": 0.2,
+      "temblor": 0.012
+    },
+    {
+      "id": "t04_fachada",
+      "tipo": "estatica",
+      "plano": "avanzan agachados junto a la fachada",
+      "inicio_s": 10.0,
+      "duracion_s": 4.0,
+      "desde": [
+        -5.5,
+        -5.5,
+        1.0
+      ],
+      "objetivo": {
+        "movil": "s1",
+        "punto": "cabeza"
+      },
+      "lente_mm": 50,
+      "apertura": 2.8,
+      "luz_relleno": 0
+    },
+    {
+      "id": "t05_primer_plano",
+      "tipo": "estatica",
+      "plano": "primer plano del jefe apuntando",
+      "inicio_s": 14.0,
+      "duracion_s": 4.0,
+      "desde": [
+        2.6,
+        -5.2,
+        1.45
+      ],
+      "objetivo": {
+        "movil": "s1",
+        "punto": "cabeza"
+      },
+      "lente_mm": 70,
+      "apertura": 2.0,
+      "luz_relleno": 0
+    },
+    {
+      "id": "t06_fila",
+      "tipo": "estatica",
+      "plano": "la fila apilada frente a la puerta",
+      "inicio_s": 18.0,
+      "duracion_s": 4.0,
+      "desde": [
+        8.5,
+        -3.6,
+        1.5
+      ],
+      "objetivo": [
+        -0.5,
+        -1.9,
+        1.2
+      ],
+      "lente_mm": 32,
+      "apertura": 4.0,
+      "luz_relleno": 0
+    },
+    {
+      "id": "t07_puerta",
+      "tipo": "estatica",
+      "plano": "la puerta se abre",
+      "inicio_s": 22.0,
+      "duracion_s": 4.0,
+      "desde": {
+        "ancla": "entrada",
+        "desp": [
+          5.5,
+          -5.0,
+          1.6
+        ]
+      },
+      "objetivo": {
+        "ancla": "entrada",
+        "desp": [
+          -0.2,
+          0,
+          1.4
+        ]
+      },
+      "lente_mm": 40,
+      "apertura": 4.0,
+      "luz_relleno": 0
+    },
+    {
+      "id": "t08_grua",
+      "tipo": "grua",
+      "plano": "grúa que se eleva sobre el jardín",
+      "inicio_s": 26.0,
+      "duracion_s": 4.0,
+      "desde": [
+        -5,
+        -11.5,
+        2.5
+      ],
+      "hasta": [
+        -4,
+        -10,
+        10.0
+      ],
+      "objetivo": {
+        "ancla": "entrada",
+        "desp": [
+          1.0,
+          0,
+          0.5
+        ]
+      },
+      "lente_mm": 28,
+      "luz_relleno": 0
+    }
+  ],
+  "sonido": {
+    "generador": "procedural",
+    "ambiente": "dia_suburbio",
+    "eventos": [
+      {
+        "tipo": "porton_motor",
+        "inicio_s": 0.0,
+        "duracion_s": 2.0,
+        "ancla": "porton"
+      }
+    ]
+  },
+  "render": {
+    "calidad": "revision",
+    "fps": 30,
+    "exposicion": 0.0
+  },
+  "estado": "borrador",
+  "bloqueada": false
+}

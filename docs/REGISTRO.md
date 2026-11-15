@@ -76,6 +76,20 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Medido localmente: 11,5 s/fotograma a 6 muestras; 132 s de armado de escena por trabajo; 3,3 GB de RAM. Estimación en Actions: ~13–15 min de reloj.
 - El ensayo (4 fotogramas) falló en `planificar`: **falta el secreto `ASSETS_TOKEN`** (lectura de mixamo-respaldo). Creación del secreto: sólo el dueño.
 
+## 15/11/2026 — Video de 30 s «Infiltración» (mansión de día, soldados) — preparado, **bloqueado por ASSETS_TOKEN**
+
+- Pedido: «otro de día con soldados». Producción `p004_mansion_dia_soldados`: 4 soldados (Ch49, Ch15, Ch35 de Extraction-tactical y el operador de Nexus)
+  con fusil (M4A1 ×3, AK47 ×1) cruzan la calle, entran por el portón, corren por el camino, avanzan agachados junto a la fachada y se apilan
+  frente a la puerta, que se abre. 8 tomas, 900 fotogramas. La escena se genera con `producciones/p004_mansion_dia_soldados/herramientas/generar_escena.py`
+  (los recorridos usan ciclos enteros de clip; el script elige los ciclos que mejor llegan al punto).
+- Nuevo en el estudio (sin tocar versiones publicadas): `estudio/blender/armas.py` (acopla el arma a la mano derecha y apoya la izquierda en el guardamanos,
+  calibrado con la pose de apuntar; verificado a ojo con los 4 modelos en apuntar/caminar/correr), modelos `soldado:*`, modo `hora: "dia"` de la mansión
+  (cielo, sol, sin luces nocturnas, pasto/asfalto claros), evento `abrir_puerta`, ambiente `dia_suburbio`.
+- Error propio corregido: el centro de la palma se calculaba con la «cola» del hueso de la mano (el importador la inventa y mide metros) → ahora se usa
+  hasta la base del dedo medio.
+- Verificado: `validar` OK, 8 fijas revisadas, audio generado, 2 fotogramas reales a 6 muestras (≈13 s/fot., ≈130 s de armado). **No se corrió en Actions.**
+- `video30.yml` ahora baja también recursos de Nexus y Extraction (parámetros `nombre`, variables `NEXUS_REF`/`EXTRACTION_REF`); `ASSETS_TOKEN` debe leer los 3 repos.
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.

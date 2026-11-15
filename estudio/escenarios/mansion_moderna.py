@@ -1,4 +1,4 @@
-"""Escenario procedural: mansión moderna de lujo (noche por defecto).
+"""Escenario procedural: mansión moderna de lujo (noche por defecto; hora="dia" para luz de sol).
 
 Incluye fachada de dos volúmenes (planta baja vidriada + planta alta en voladizo revestida de madera), garaje con
 portón seccional, sala de seguridad con monitores, living, cocina, dormitorio, piscina iluminada, jardín con
@@ -17,7 +17,7 @@ import random
 from estudio.blender import kit as K
 
 PARAMETROS = {
-    "hora": "noche",          # noche | atardecer (por ahora sólo noche)
+    "hora": "noche",          # noche | dia
     "suelo_mojado": True,      # asfalto con charcos y reflejos
     "niebla": 0.0,             # densidad de niebla volumétrica (0 = sin niebla, más barato)
     "arboles": 26,
@@ -42,7 +42,11 @@ def construir(parametros: dict | None = None) -> dict:
     p = {**PARAMETROS, **(parametros or {})}
     rnd = random.Random(p["semilla"])
     s = K.bpy.context.scene
-    K.cielo_noche(s, niebla=p["niebla"])
+    dia = p["hora"] == "dia"
+    if dia:
+        K.cielo_dia(s)
+    else:
+        K.cielo_noche(s, niebla=p["niebla"])
 
     col = K.coleccion("ESCENARIO_mansion")
     c_arq = K.coleccion("arquitectura", col)
@@ -62,8 +66,8 @@ def construir(parametros: dict | None = None) -> dict:
     metal_osc = M("metal_negro", (0.03, 0.03, 0.035), 0.35, 0.9)
     aluminio = M("aluminio", (0.55, 0.56, 0.58), 0.3, 1.0)
     vid = K.vidrio("vidrio_fachada", (0.45, 0.55, 0.6), 0.28)
-    cesped = M("cesped", (0.035, 0.09, 0.025), 0.9, ruido=0.35, escala_ruido=1.5, relieve=0.3)
-    asfalto = M("asfalto_mojado" if p["suelo_mojado"] else "asfalto", (0.035, 0.035, 0.038),
+    cesped = M("cesped", (0.12, 0.3, 0.06) if dia else (0.035, 0.09, 0.025), 0.9, ruido=0.35, escala_ruido=1.5, relieve=0.3)
+    asfalto = M("asfalto_mojado" if p["suelo_mojado"] else "asfalto", (0.16, 0.16, 0.17) if dia else (0.035, 0.035, 0.038),
                 0.18 if p["suelo_mojado"] else 0.8, ruido=0.25, escala_ruido=0.6, relieve=0.05,
                 rug_var=0.35 if p["suelo_mojado"] else 0.0)
     vereda = M("vereda", (0.25, 0.25, 0.24), 0.6, ladrillo=((0.21, 0.21, 0.2), 1.4), rug_var=0.2)
@@ -71,8 +75,8 @@ def construir(parametros: dict | None = None) -> dict:
     agua = M("agua_piscina", (0.02, 0.18, 0.22), 0.04, transmision=0.6, ior=1.33, relieve=0.25,
              escala_ruido=1.2, animar_ruido=0.6)
     azulejo = K.emisivo("azulejo_piscina_luz", (0.05, 0.45, 0.7), 0.7)
-    seto = M("seto", (0.02, 0.06, 0.02), 0.85, ruido=0.4, escala_ruido=6, relieve=0.6)
-    hojas = M("hojas", (0.025, 0.07, 0.025), 0.8, ruido=0.45, escala_ruido=5, relieve=0.5)
+    seto = M("seto", (0.06, 0.2, 0.05) if dia else (0.02, 0.06, 0.02), 0.85, ruido=0.4, escala_ruido=6, relieve=0.6)
+    hojas = M("hojas", (0.08, 0.24, 0.06) if dia else (0.025, 0.07, 0.025), 0.8, ruido=0.45, escala_ruido=5, relieve=0.5)
     tronco = M("tronco", (0.08, 0.05, 0.03), 0.9, ruido=0.3, escala_ruido=10)
     luz_calida = K.emisivo("emisor_calido", (1.0, 0.72, 0.42), 18.0)
     luz_sodio = K.emisivo("emisor_sodio", (1.0, 0.55, 0.2), 25.0)
@@ -83,14 +87,14 @@ def construir(parametros: dict | None = None) -> dict:
     pared_int = M("pared_interior", (0.78, 0.75, 0.7), 0.9)
     pantalla = M("pantalla_vigilancia", (0.0, 0.0, 0.0), 0.3, emision=(0.3, 0.5, 0.42), fuerza=0.55,
                  ruido=0.9, escala_ruido=9, animar_ruido=3.0, ruido_en_emision=True)
-    ciudad = M("edificio_lejano", (0.006, 0.006, 0.009), 0.9, fuerza=1.4,
+    ciudad = M("edificio_lejano", (0.45, 0.5, 0.58) if dia else (0.006, 0.006, 0.009), 0.9, fuerza=1.4,
                ventanas=((1.0, 0.72, 0.42), 0.3))  # fachada oscura con ventanas encendidas al azar
 
     caja, cil = K.caja, K.cilindro
 
     # ---------------------------------------------------------------- terreno, calle, vereda
     K.plano("cesped_terreno", (0, 3, 0), (64, 54), cesped, c_jar)
-    K.plano("suelo_lejano", (0, 0, -0.05), (900, 900), M("suelo_noche", (0.02, 0.025, 0.02), 0.95), c_fondo)
+    K.plano("suelo_lejano", (0, 0, -0.05), (900, 900), M("suelo_noche", (0.18, 0.22, 0.12) if dia else (0.02, 0.025, 0.02), 0.95), c_fondo)
     caja("calle", (0, -31.5, -0.04), (220, 9, 0.1), asfalto, c_arq)
     caja("vereda_frente", (0, -25.8, 0.06), (220, 2.6, 0.12), vereda, c_arq)
     caja("vereda_enfrente", (0, -37.2, 0.06), (220, 2.4, 0.12), vereda, c_arq)
@@ -253,6 +257,9 @@ def construir(parametros: dict | None = None) -> dict:
     zonas_libres = [(-15, -13, -1, -3.5), (9, -25, 19, 1), (-14, -1, 11, 13), (9.5, -1, 19, 11),
                     (-3.5, -14, -0.5, 0)]
 
+    if dia:   # franja frente a la fachada y camino de acceso: libres de árboles (la usan los soldados y las cámaras)
+        zonas_libres += [(-3, -9, 12, -1)]
+
     def libre(x, y, margen=1.5):
         for x0, y0, x1, y1 in zonas_libres:
             if x0 - margen < x < x1 + margen and y0 - margen < y < y1 + margen:
@@ -317,9 +324,17 @@ def construir(parametros: dict | None = None) -> dict:
             ed = K.caja(f"edificio_{i}", (x, y, h / 2 - 2), (rnd.uniform(14, 30), rnd.uniform(14, 30), h),
                         ciudad, c_fondo, rot_z=rnd.uniform(0, 1.5))
             ed.visible_shadow = False
-    # luna (sol frío y tenue) + luz de relleno del cielo
-    K.luz("luna", "SUN", (0, 0, 50), 0.45, (0.55, 0.65, 1.0), c_luz,
-          rot=(math.radians(55), 0, math.radians(-35)))
+    if dia:
+        # de día: sin luces nocturnas ni emisores; sol alto de media tarde, algo desde el frente-oeste
+        for ob in list(c_luz.objects):
+            K.bpy.data.objects.remove(ob, do_unlink=True)
+        K.apagar_emisores([luz_calida, luz_sodio, azulejo, pantalla], 0.08)
+        K.luz("sol", "SUN", (0, 0, 50), 4.2, (1.0, 0.95, 0.85), c_luz,
+              rot=(math.radians(48), math.radians(8), math.radians(-35)))
+    else:
+        # luna (sol frío y tenue) + luz de relleno del cielo
+        K.luz("luna", "SUN", (0, 0, 50), 0.45, (0.55, 0.65, 1.0), c_luz,
+              rot=(math.radians(55), 0, math.radians(-35)))
 
     # ---------------------------------------------------------------- anclas (puntos de interés)
     anclas = {
@@ -356,3 +371,10 @@ def abrir_garaje(animables, frame_inicio: int, duracion_f: int = 90):
     pg = animables["porton_garaje"]
     K.clave(pg, "location", frame_inicio, 1.4, 2)
     K.clave(pg, "location", frame_inicio + duracion_f, 4.1, 2)
+
+
+def abrir_puerta(animables, frame_inicio: int, duracion_f: int = 40, angulo_deg: float = 80.0):
+    """Anima la puerta principal pivotante (se abre hacia adentro de la casa)."""
+    piv = animables["puerta_principal"]
+    K.clave(piv, "rotation_euler", frame_inicio, 0.0, 2)
+    K.clave(piv, "rotation_euler", frame_inicio + duracion_f, math.radians(angulo_deg), 2)

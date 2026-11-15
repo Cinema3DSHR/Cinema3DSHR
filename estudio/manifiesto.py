@@ -114,7 +114,7 @@ def dependencias(m: dict) -> list[str]:
     """Recursos externos ("fuente:ruta") que necesita la escena: sirven para bajar SÓLO eso en Actions.
     Lee la lista DEPENDENCIAS del generador sin importarlo (el planificador no tiene Blender)."""
     import ast
-    from estudio.blender_deps import MODELOS_DEPS
+    from estudio.blender_deps import MODELOS_DEPS, armas_deps
     deps = set()
     src = (config.RAIZ / "estudio" / "escenarios" / f"{m['escenario']['generador']}.py").read_text(encoding="utf-8")
     for nodo in ast.parse(src).body:
@@ -122,5 +122,7 @@ def dependencias(m: dict) -> list[str]:
             deps.update(ast.literal_eval(nodo.value))
     for pj in m.get("personajes", []):
         deps.update(MODELOS_DEPS.get(pj.get("modelo", "futbol:jugador"), []))
-        deps.update(a["clip"] for a in pj.get("acciones", []) if str(a.get("clip", "")).startswith("mixamo:"))
+        deps.update(a["clip"] for a in pj.get("acciones", []) if str(a.get("clip", "")).split(":")[0] in ("mixamo", "nexus", "extraction"))
+        if pj.get("arma"):
+            deps.update(armas_deps(pj["arma"]))
     return sorted(deps)

@@ -3,7 +3,7 @@ Uso: python montar.py FRAMES_DIR AUDIO.wav SALIDA_DIR --total 900 [--run-iniciad
 import argparse, collections, datetime as dt, hashlib, json, re, statistics, subprocess
 from pathlib import Path
 ap = argparse.ArgumentParser(); ap.add_argument("frames"); ap.add_argument("audio"); ap.add_argument("salida")
-ap.add_argument("--total", type=int, required=True); ap.add_argument("--run-iniciado", default=""); ap.add_argument("--crf", type=int, default=22)
+ap.add_argument("--total", type=int, required=True); ap.add_argument("--run-iniciado", default=""); ap.add_argument("--crf", type=int, default=22); ap.add_argument("--nombre", default="futbol_30s_cycles6")
 a = ap.parse_args(); F = Path(a.frames); S = Path(a.salida); S.mkdir(parents=True, exist_ok=True)
 def sh(*c): return subprocess.run([str(x) for x in c], capture_output=True, text=True)
 # 1) integridad: ni faltantes ni sobrantes ni números repetidos
@@ -26,7 +26,7 @@ s_lim = {n: ssim(n) for n in limites}
 dentro = [ssim(n) for n in range(2, a.total, 17) if n not in limites and n + 1 <= a.total]
 med, mn = statistics.median(dentro), min(dentro)
 # 4) MP4: 30 fps constantes, 1280x720, audio original normalizado como en producción
-mp4 = S / "futbol_30s_cycles6.mp4"
+mp4 = S / f"{a.nombre}.mp4"
 cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-framerate", "30", "-start_number", "1", "-i", str(F / "f_%04d.png")]
 if Path(a.audio).exists(): cmd += ["-i", a.audio, "-map", "0:v", "-map", "1:a", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
 cmd += ["-c:v", "libx264", "-preset", "slow", "-crf", str(a.crf), "-pix_fmt", "yuv420p", "-r", "30", "-fps_mode", "cfr", "-movflags", "+faststart", str(mp4)]

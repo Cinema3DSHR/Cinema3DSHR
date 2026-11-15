@@ -92,6 +92,29 @@ def ambiente_noche_suburbio(n, rng):
     return st
 
 
+def ambiente_dia_suburbio(n, rng):
+    """Mediodía de barrio residencial: brisa, rumor lejano de tránsito y pájaros (trinos de barrido rápido)."""
+    viento = _ruido_color(n, rng, -6, 40, 1500) * 0.3
+    viento *= 0.65 + 0.35 * np.sin(np.arange(n) / SR * 2 * np.pi * 0.09 + rng.uniform(0, 6))
+    transito = _ruido_color(n, rng, -4.5, 30, 350) * 0.10
+    aves = np.zeros(n)
+    t = rng.uniform(0.2, 1.0)
+    while t < n / SR - 0.5:
+        f0 = rng.uniform(2600, 4200)
+        for k in range(int(rng.integers(2, 6))):      # trino: notas cortas con barrido descendente
+            ini = int((t + k * 0.11) * SR)
+            dur = int(0.07 * SR)
+            if ini + dur >= n:
+                break
+            tt = np.arange(dur) / SR
+            fi = f0 * (1.0 - 0.18 * tt / 0.07)
+            fase = 2 * np.pi * np.cumsum(fi) / SR
+            aves[ini:ini + dur] += np.sin(fase) * np.hanning(dur) * rng.uniform(0.03, 0.08)
+        t += rng.uniform(1.5, 5.0)
+    base = viento + transito
+    return np.stack([base + aves * 0.9, base + np.roll(aves, 2400) * 0.9], axis=1)
+
+
 def motor(pistas, movil, n, rng):
     fps = pistas["fps"]
     m = pistas["moviles"][movil]
@@ -216,6 +239,8 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
     amb = son.get("ambiente")
     if amb == "noche_suburbio":
         mezcla += ambiente_noche_suburbio(n, rng) * 0.5
+    elif amb == "dia_suburbio":
+        mezcla += ambiente_dia_suburbio(n, rng) * 0.6
     elif amb == "estadio":
         mezcla += ambiente_estadio(n, rng) * 0.35
     for ev in pistas.get("eventos", []):
