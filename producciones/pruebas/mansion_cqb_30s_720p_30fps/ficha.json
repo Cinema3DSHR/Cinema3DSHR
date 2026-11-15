@@ -1,0 +1,22 @@
+{
+ "nombre": "mansion_cqb_30s_720p_30fps",
+ "produccion": "p005_mansion_cqb_30s_720p_30fps",
+ "release": "https://github.com/webmaletin-art/Cinema3DSHR/releases/tag/p005_mansion_cqb_30s_720p_30fps",
+ "nota": "Por regla del proyecto (CLAUDE.md, regla 5) el MP4 y el AAC no se guardan en el historial de Git: viven en la release. Esta carpeta guarda el informe y las huellas.",
+ "archivos": {
+  "video.mp4": {
+   "url": "https://github.com/webmaletin-art/Cinema3DSHR/releases/download/p005_mansion_cqb_30s_720p_30fps/video.mp4",
+   "sha256": "4a63dca203a94bc777b8f6fdeaaa425a450b0901391b6af83f115f4b3521d3c6"
+  },
+  "audio.aac": {
+   "url": "https://github.com/webmaletin-art/Cinema3DSHR/releases/download/p005_mansion_cqb_30s_720p_30fps/audio.aac",
+   "sha256": "bbc6a3df817ead537ed8681540c33594c7659e1ea964be173d06666fb1242dbf"
+  },
+  "informe.json": {
+   "url": "https://github.com/webmaletin-art/Cinema3DSHR/releases/download/p005_mansion_cqb_30s_720p_30fps/informe.json",
+   "sha256": "39da3e0b3bc93c963933335a05303704fbed39310dee02ff2e8a11aa2f8c1fe1"
+  }
+ },
+ "configuracion": "Cycles CPU, 1280x720, 30 fps, 900 fotogramas, 6 muestras, adaptativo 0,05, OIDN, 6 rebotes, árbol de luces, semilla 0",
+ "comparar_con": "futuras pruebas de calidad: misma escena (producciones/p005_mansion_cqb_30s_720p_30fps/escenas/e01/v1/escena.json) y mismo informe.json"
+}

@@ -90,6 +90,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Verificado: `validar` OK, 8 fijas revisadas, audio generado, 2 fotogramas reales a 6 muestras (≈13 s/fot., ≈130 s de armado). **No se corrió en Actions.**
 - `video30.yml` ahora baja también recursos de Nexus y Extraction (parámetros `nombre`, variables `NEXUS_REF`/`EXTRACTION_REF`); `ASSETS_TOKEN` debe leer los 3 repos.
 
+## 15/11/2026 — Video «Mansión CQB» 30 s (p005) — **ENTREGADO**
+
+- Producción `p005_mansion_cqb_30s_720p_30fps`: entrada táctica de 4 operadores a un estudio de lujo, enemigo armado, intercambio de disparos, caída y aseguramiento. Escenario nuevo `estudio/escenarios/mansion_cqb.py` (pasillo, puerta que se abre de patada, estudio con biblioteca/escritorio/sofá, jardín visible por los ventanales), efectos `estudio/blender/efectos.py` (fogonazos por fotograma), giro suave del rumbo en `personajes.py` y audio procedural CQB con reverberación (`procedural.py`). Coreografía generada por `herramientas/generar_escena.py` (11 tomas, 65 disparos sincronizados).
+- Render en Actions (corrida 43696801076): 900 fotogramas, 19 trabajos en paralelo, Cycles CPU 1280×720 30 fps 6 muestras, adaptativo 0,05, OIDN, 6 rebotes, árbol de luces, semilla 0. Reloj real 1592 s (26,5 min); render acumulado 16 348 s (18,2 s/fotograma de media, 10–27 s); RAM pico 1758 MB. Integridad: 900/900 sin faltantes ni duplicados.
+- Entregables en la release `p005_mansion_cqb_30s_720p_30fps` (video.mp4 6,4 MB, audio.aac, informe.json, portada, miniatura, info). Los fotogramas quedaron sólo como artefactos temporales de Actions. Informe y huellas en `producciones/pruebas/mansion_cqb_30s_720p_30fps/`.
+- Límites conocidos: el enemigo usa el modelo Ch49 (uniforme de otra época, lo diferencia pero desentona); en la reacción al impacto la mano izquierda suelta el arma unos 0,4 s; árboles y jardín de baja poligonación; el catálogo de la app lo muestra recién cuando esta rama se fusione a la rama por defecto y corra `catalogo.yml`.
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.
