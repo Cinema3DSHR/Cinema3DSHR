@@ -44,6 +44,15 @@ MODELOS["mixamo:jefa"] = {
     "frente": math.pi / 2,   # el modelo mira a −Y; con mirando_deg = 0 debe mirar a +X
     "adelante_deg": -90,     # hacia dónde mira el modelo en su propio marco (0 = +X, −90 = −Y); lo usan las cámaras
 }
+for _id, _ref in (("ch49", "extraction:characters/personajes/Ch49.glb"), ("ch15", "extraction:characters/personajes/Ch15.glb"),
+                  ("ch35", "extraction:characters/personajes/Ch35.glb"), ("operador", "nexus:personajes/operador_character.fbx")):
+    MODELOS[f"soldado:{_id}"] = {
+        "tipo": "mixamo65", "ref": _ref, "escala": 1.0,          # miden ~1,8 m nativos (medido)
+        "ocultar": ["Icosphere"], "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase",
+        "pie_izq": "mixamorig:LeftToeBase", "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand",
+        "frente": math.pi / 2, "adelante_deg": -90,              # miran a −Y (medido con el avance de «walk_forward»)
+        "clip_arma": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx", "frame_arma": 20,
+    }
 UNIFORME_DEFECTO = {"camiseta": (0.72, 0.04, 0.05), "short": (0.05, 0.12, 0.62), "medias": (0.9, 0.9, 0.9),
                     "botines": (0.03, 0.03, 0.035), "piel": (0.62, 0.40, 0.29), "pelo": (0.12, 0.07, 0.04)}
 
@@ -320,6 +329,27 @@ def _raiz_en(tr: dict, t: float):
 _RETARGETS: dict[tuple, bpy.types.Action] = {}
 
 
+def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str):
+    """Acción retargeteada de un clip FBX de Mixamo para ESTE personaje (con caché por personaje)."""
+    from estudio.blender import retarget as R
+    clave = (dueno, ref)
+    if clave not in _RETARGETS or _RETARGETS[clave].name not in bpy.data.actions:
+        antes = set(bpy.data.actions)
+        tmp = I.importar(ref)
+        acc = next(a for a in bpy.data.actions if a not in antes)
+        tarm = next(o for o in tmp if o.type == "ARMATURE")
+        raiz.rotation_euler = (0, 0, 0)
+        raiz.location = (0, 0, 0)
+        nombre = f"rt_{dueno}_{Path(ref).stem}"
+        _RETARGETS[clave] = R.retarget(tarm, acc, arm, nombre, info["cadera"])
+        for o in tmp:
+            bpy.data.objects.remove(o)
+        for ac in list(bpy.data.actions):          # el clip original ya no hace falta (ahorra memoria)
+            if ac == acc:
+                bpy.data.actions.remove(ac)
+    return _RETARGETS[clave]
+
+
 def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     """Personaje con esqueleto mixamorig de 65 huesos (p. ej. la Jefa). Sus clips son FBX de Mixamo
     ("clip": "mixamo:packs/…/walking.fbx") que se RETARGETEAN al esqueleto del personaje (estudio/blender/retarget.py)."""
@@ -341,6 +371,12 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     arm = next(o for o in objs if o.type == "ARMATURE")
     malla = next(o for o in objs if o.type == "MESH" and o.name.split(".")[0] not in info["ocultar"])
     arm.animation_data_create()
+    arma_obj = None
+    if spec.get("arma"):
+        from estudio.blender import armas as AR
+        ref_acc = _rt(modelo, info["clip_arma"], arm, raiz, info, pid)
+        arma_obj = AR.acoplar(arm, spec["arma"], ref_acc, info.get("frame_arma", 20), col)
+        arma_obj.name = f"ARMA_{pid}"
     pista = arm.animation_data.nla_tracks.new()
     pista.name = "acciones"
     pos = Vector((0, 0, 0))
@@ -349,19 +385,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     llaves = []
     for i, ac in enumerate(spec.get("acciones", [])):
         ref = ac["clip"]
-        clave = (modelo, ref)
-        if clave not in _RETARGETS or _RETARGETS[clave].name not in bpy.data.actions:
-            antes = set(bpy.data.actions)
-            tmp = I.importar(ref)
-            acc = next(a for a in bpy.data.actions if a not in antes)
-            tarm = next(o for o in tmp if o.type == "ARMATURE")
-            raiz.rotation_euler = (0, 0, 0)
-            raiz.location = (0, 0, 0)
-            nombre = f"rt_{modelo.split(':')[-1]}_{Path(ref).stem}"
-            _RETARGETS[clave] = R.retarget(tarm, acc, arm, nombre, info["cadera"])
-            for o in tmp:
-                bpy.data.objects.remove(o)
-        accion = _RETARGETS[clave]
+        accion = _rt(modelo, ref, arm, raiz, info, f"{pid}")
         f0 = int(round(ac["inicio_s"] * fps)) + 1
         if ac.get("encadenar") and tramos:
             pos, rumbo = tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"]
@@ -405,7 +429,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
             for k in fc.keyframe_points:
                 k.interpolation = "CONSTANT"
     fin = max((t["fin"] for t in tramos), default=1)
-    return {"id": pid, "raiz": raiz, "armadura": arm, "malla": malla, "tramos": tramos, "info": info, "fin": fin}
+    return {"id": pid, "raiz": raiz, "armadura": arm, "malla": malla, "tramos": tramos, "info": info, "fin": fin, "arma": arma_obj}
 
 
 def _cadera_local(arm, raiz, accion, frame: float, cadera: str) -> Vector:
