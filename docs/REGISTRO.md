@@ -116,6 +116,18 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   corregido en la prueba: el GLB pone el cuadro f en f/fps (las cámaras móviles se desfasaban un cuadro).
 - **No probado en un teléfono.** Detalle y límites en `docs/EDITOR_3D.md`.
 
+## 15/11/2026 — App en vertical y horizontal (AJUSTES → PANTALLA)
+
+- Pedido del dueño: usar la app en vertical y horizontal, elegible en configuración. AJUSTES → PANTALLA: HORIZONTAL,
+  VERTICAL o AUTOMÁTICA (gira con el teléfono; `DisplayServer.screen_set_orientation`), guardado en `user://ajustes.json`.
+- La interfaz se reacomoda sola al girar: en vertical la base pasa a 720×1280, la barra se compacta, PELÍCULAS y
+  ESCENARIOS van en una columna, INICIO en fichas de 2, la página de escena pone el video arriba y el panel debajo, el
+  EDITOR 3D pone la vista 16:9 arriba, los paneles debajo y la línea de tiempo al pie.
+- Arreglos encontrados en la prueba: títulos largos de INICIO ensanchaban la página (en vertical se salía) y el aviso
+  inferior salía corrido a la izquierda (también en horizontal, venía de antes).
+- Verificado con capturas en ventana 720×1440 y 1600×900 (INICIO, AJUSTES, PELÍCULAS, EDITOR con la escena CQB).
+  **No probado en un teléfono** (el giro real lo hace Android).
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.

@@ -15,8 +15,10 @@ func al_actualizar_catalogo() -> void:
 		_col.add_child(Tema.etiqueta("Todavía no hay datos del estudio. Revisá la conexión y tocá ⟳.", 20, Tema.TEXTO2, true))
 		return
 	var r: Dictionary = cat.get("resumen", {})
-	var fichas := HBoxContainer.new()
-	fichas.add_theme_constant_override("separation", 14)
+	var fichas := GridContainer.new()
+	fichas.columns = 2 if vertical else 5
+	fichas.add_theme_constant_override("h_separation", 14)
+	fichas.add_theme_constant_override("v_separation", 14)
 	for f in [["PRODUCCIONES", str(int(r.get("producciones", 0))), Tema.TEXTO],
 			["PARA REVISAR", str(int(r.get("pendientes_revision", 0))), Tema.ACENTO],
 			["RENDERIZANDO", str(int(r.get("renderizando", 0))), Tema.AZUL],
@@ -94,6 +96,8 @@ func _lista_escenas(nombre: String, filas: Array, vacio: String) -> void:
 		var v: Dictionary = e["versiones"].back()
 		var b := Tema.boton("", func(): app.ir("escena", {"produccion": f["p"]["id"], "escena": e["id"]}))
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.clip_text = true                     # un título largo no debe ensanchar la página (en vertical se sale)
+		b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		b.custom_minimum_size.y = 64
 		b.text = "  %s  ·  Escena %02d — %s  ·  v%d  ·  %s" % [f["p"].get("titulo", ""), int(e.get("numero", 0)),
 			e.get("titulo", ""), int(v.get("version", 1)), Tema.ESTADOS.get(v.get("estado", ""), [""])[0]]

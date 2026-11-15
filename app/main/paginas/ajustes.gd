@@ -12,6 +12,21 @@ func abrir(_d: Dictionary) -> void:
 func _construir() -> void:
 	limpiar(_col)
 	_col.add_child(titulo("Ajustes"))
+	# ---- pantalla
+	var pp := Tema.panel()
+	var vp := VBoxContainer.new()
+	pp.add_child(vp)
+	vp.add_child(Tema.etiqueta("PANTALLA", 17, Tema.ACENTO))
+	vp.add_child(Tema.etiqueta("Orientación de la app. «Automática» gira con el teléfono (vertical u horizontal).", 16, Tema.TEXTO2, true))
+	var fo := HFlowContainer.new()
+	for par in [["horizontal", "▭  HORIZONTAL"], ["vertical", "▯  VERTICAL"], ["automatica", "⟳  AUTOMÁTICA"]]:
+		var b := Tema.boton(par[1], func():
+			app.aplicar_orientacion(par[0])
+			app.mostrar_aviso("Orientación: " + par[1].substr(3).to_lower(), 2.0)
+			_construir.call_deferred(), "acento" if app.orientacion == par[0] else "", 17)
+		fo.add_child(b)
+	vp.add_child(fo)
+	_col.add_child(pp)
 	# ---- cuenta
 	var p := Tema.panel()
 	var v := VBoxContainer.new()
@@ -32,7 +47,7 @@ func _construir() -> void:
 		campo.text = ""
 		_probar(), "acento"))
 	v.add_child(h)
-	var h2 := HBoxContainer.new()
+	var h2 := HFlowContainer.new()
 	h2.add_child(Tema.boton("PROBAR CONEXIÓN", _probar))
 	h2.add_child(Tema.boton("DESVINCULAR", func(): api.borrar_token(); _construir(); app.mostrar_aviso("Cuenta desvinculada."), "rojo"))
 	h2.add_child(Tema.boton("CREAR TOKEN (abre GitHub)", func():

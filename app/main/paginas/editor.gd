@@ -69,6 +69,10 @@ var _velmov_lbl: Label
 var _modo_lbl: Label
 var _dialogo: Control
 var _cargando := ""
+var _medio: BoxContainer
+var _marco: Control
+var _tabs: TabContainer
+var _btn_colocar: Button
 var _acc_t := 0.0
 
 # ================================================================================================= construcción
@@ -83,13 +87,15 @@ func abrir(datos: Dictionary) -> void:
 	raiz.add_theme_constant_override("separation", 4)
 	add_child(raiz)
 	raiz.add_child(_barra_superior())
-	var medio := HBoxContainer.new()
+	var medio := BoxContainer.new()
+	_medio = medio
 	medio.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	medio.add_theme_constant_override("separation", 6)
 	raiz.add_child(medio)
 	medio.add_child(_vista())
 	medio.add_child(_panel_lateral())
 	raiz.add_child(_linea_de_tiempo())
+	_acomodar()
 	_cargar_estado()
 	# archivos: desde el catálogo (archivos.previa / archivos.previa_datos) o rutas locales (pruebas)
 	if datos.has("glb_local"):
@@ -113,6 +119,21 @@ func abrir(datos: Dictionary) -> void:
 				return
 			_cargar(ruta_glb, ruta_json)))
 
+## Vertical: la vista 3D (16:9) arriba a lo ancho, los paneles debajo y la línea de tiempo al pie.
+func _acomodar() -> void:
+	_medio.vertical = vertical
+	_marco.size_flags_vertical = Control.SIZE_FILL if vertical else Control.SIZE_EXPAND_FILL
+	_marco.custom_minimum_size.y = 400 if vertical else 0
+	_tabs.custom_minimum_size.x = 0 if vertical else 330
+	_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_modo_lbl.visible = not vertical
+	_btn_colocar.text = "🎥 COLOCAR" if vertical else "🎥 COLOCAR CÁMARA"
+	_hora.custom_minimum_size.x = 112 if vertical else 150
+
+func al_orientar(v: bool) -> void:
+	vertical = v
+	_acomodar()
+
 func _exit_tree() -> void:
 	if app:
 		app.pantalla_completa(false)
@@ -134,12 +155,14 @@ func _barra_superior() -> Control:
 		b.custom_minimum_size = Vector2(0, 46)
 		h.add_child(b)
 	var colocar := Tema.boton("🎥 COLOCAR CÁMARA", _colocar_camara, "acento", 17)
+	_btn_colocar = colocar
 	colocar.custom_minimum_size = Vector2(0, 46)
 	h.add_child(colocar)
 	return h
 
 func _vista() -> Control:
 	var marco := Tema.panel(0, Color.BLACK, 6)
+	_marco = marco
 	marco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	marco.size_flags_stretch_ratio = 2.6
 	var asp := AspectRatioContainer.new()
@@ -208,6 +231,7 @@ func _vista() -> Control:
 
 func _panel_lateral() -> Control:
 	var tabs := TabContainer.new()
+	_tabs = tabs
 	tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tabs.custom_minimum_size.x = 330
 	tabs.add_theme_font_size_override("font_size", 16)
@@ -1099,11 +1123,12 @@ func _formulario(titulo: String, campos: Array, al_aceptar: Callable) -> void:
 	_dialogo = fondo
 	var p := Tema.panel(18, Tema.PANEL, 12)
 	p.set_anchors_preset(Control.PRESET_CENTER)
-	p.custom_minimum_size = Vector2(620, 0)
-	p.position = Vector2(-310, -260)
+	var ancho := 660.0 if vertical else 620.0
+	p.custom_minimum_size = Vector2(ancho, 0)
+	p.position = Vector2(-ancho / 2, -260)
 	fondo.add_child(p)
 	var sc := ScrollContainer.new()
-	sc.custom_minimum_size = Vector2(600, 440)
+	sc.custom_minimum_size = Vector2(ancho - 20, 440)
 	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	p.add_child(sc)
 	var v := VBoxContainer.new()

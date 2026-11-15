@@ -18,7 +18,8 @@ func al_actualizar_catalogo() -> void:
 	if p.is_empty():
 		_col.add_child(Tema.etiqueta("La producción ya no está en el catálogo.", 20, Tema.TEXTO2))
 		return
-	var cab := HBoxContainer.new()
+	var cab := BoxContainer.new()
+	cab.vertical = vertical
 	cab.add_theme_constant_override("separation", 24)
 	var marco := Tema.panel(0, Tema.PANEL2, 14)
 	marco.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
@@ -38,7 +39,7 @@ func al_actualizar_catalogo() -> void:
 		n_vers += e.get("versiones", []).size()
 	info.add_child(Tema.etiqueta("Duración: %s   ·   Escenas: %d   ·   Versiones: %d   ·   Creada: %s" % [
 		Tema.duracion(float(p.get("duracion_s", 0))), escenas.size(), n_vers, str(p.get("creada", ""))], 17, Tema.TEXTO2, true))
-	var acc := HBoxContainer.new()
+	var acc := HFlowContainer.new()
 	var final_ = p.get("final")
 	if final_ is Dictionary and not final_.is_empty():
 		acc.add_child(Tema.boton("▶  VER PELÍCULA COMPLETA", func(): app.ir("escena", {"produccion": _id, "pelicula": true}), "acento"))

@@ -15,8 +15,8 @@ func al_actualizar_catalogo() -> void:
 		_col.add_child(Tema.etiqueta("Todavía no hay producciones. Pedile una a Claude: «Creá una película sobre…».", 20, Tema.TEXTO2, true))
 		return
 	var g := GridContainer.new()
-	g.columns = 3
+	g.columns = 1 if vertical else 3
 	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	for p in prods:
-		g.add_child(tarjeta_produccion(p, 380))
+		g.add_child(tarjeta_produccion(p, 640 if vertical else 380))
 	_col.add_child(g)

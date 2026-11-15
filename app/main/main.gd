@@ -20,6 +20,10 @@ var _nav: Dictionary = {}
 var _barra: Control
 var _aviso: Label
 var _aviso_t := 0.0
+var _logo: Label
+var vertical := false
+var orientacion := "horizontal"     # horizontal | vertical | automatica (AJUSTES)
+const ARCH_AJUSTES := "user://ajustes.json"
 
 func _ready() -> void:
 	theme = Tema.tema_global()
@@ -56,13 +60,56 @@ func _ready() -> void:
 	sb.content_margin_bottom = 10
 	_aviso.add_theme_stylebox_override("normal", sb)
 	_aviso.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	_aviso.custom_minimum_size = Vector2(700, 0)
-	_aviso.position = Vector2(-350, -90)
+	_ubicar_aviso(700.0)
 	_aviso.visible = false
 	add_child(_aviso)
 
+	var aj = JSON.parse_string(FileAccess.get_file_as_string(ARCH_AJUSTES)) if FileAccess.file_exists(ARCH_AJUSTES) else null
+	if aj is Dictionary:
+		orientacion = str(aj.get("orientacion", "horizontal"))
+	get_window().size_changed.connect(_revisar_orientacion)
+	aplicar_orientacion(orientacion, false)
+	_revisar_orientacion(true)
 	ir("inicio", {}, true)
 	api.cargar_catalogo()
+
+## Orientación elegida en AJUSTES: el teléfono gira y la interfaz se reacomoda (720×1280 en vertical).
+func aplicar_orientacion(modo: String, guardar := true) -> void:
+	orientacion = modo
+	var o: int = {"vertical": DisplayServer.SCREEN_SENSOR_PORTRAIT, "automatica": DisplayServer.SCREEN_SENSOR}.get(modo, DisplayServer.SCREEN_SENSOR_LANDSCAPE)
+	DisplayServer.screen_set_orientation(o)
+	if guardar:
+		var f := FileAccess.open(ARCH_AJUSTES, FileAccess.WRITE)
+		if f:
+			f.store_string(JSON.stringify({"orientacion": modo}))
+	_revisar_orientacion.call_deferred()
+
+## El aviso queda centrado abajo (con márgenes relativos al ancla, no con una posición absoluta).
+func _ubicar_aviso(ancho: float) -> void:
+	_aviso.custom_minimum_size = Vector2(ancho, 0)
+	_aviso.offset_left = -ancho / 2
+	_aviso.offset_right = ancho / 2
+	_aviso.offset_top = -110
+	_aviso.offset_bottom = -40
+	_aviso.grow_vertical = Control.GROW_DIRECTION_BEGIN
+
+func _revisar_orientacion(forzar := false) -> void:
+	var s := DisplayServer.window_get_size()
+	var v := s.y > s.x
+	if v == vertical and not forzar:
+		return
+	vertical = v
+	get_window().content_scale_size = Vector2i(720, 1280) if v else Vector2i(1280, 720)
+	_logo.text = "  3D FS" if v else "  3D FILM STUDIO"
+	_logo.custom_minimum_size.x = 90 if v else 250
+	for k in _nav:
+		_nav[k].custom_minimum_size.x = 0 if v else 150
+		_nav[k].add_theme_font_size_override("font_size", 15 if v else 18)
+		_nav[k].size_flags_horizontal = Control.SIZE_EXPAND_FILL if v else Control.SIZE_FILL
+	_ubicar_aviso(640.0 if v else 700.0)
+	for e in _pila:
+		if e["nodo"].has_method("al_orientar"):
+			e["nodo"].call("al_orientar", v)
 
 func _construir_barra() -> Control:
 	var p := Tema.panel(10, Color("0f0f14"), 0)
@@ -71,6 +118,7 @@ func _construir_barra() -> Control:
 	p.add_child(h)
 	var logo := Tema.etiqueta("  3D FILM STUDIO", 24, Tema.ACENTO)
 	logo.custom_minimum_size.x = 250
+	_logo = logo
 	h.add_child(logo)
 	for par in [["inicio", "INICIO"], ["peliculas", "PELÍCULAS"], ["escenarios", "ESCENARIOS"], ["ajustes", "AJUSTES"]]:
 		var b := Tema.boton(par[1], ir.bind(par[0], {}, true), "", 18)
@@ -97,6 +145,7 @@ func ir(nombre: String, datos := {}, raiz := false) -> void:
 	var n: Control = PAGINAS[nombre].new()
 	n.set_anchors_preset(Control.PRESET_FULL_RECT)
 	n.set("app", self)
+	n.set("vertical", vertical)
 	_contenido.add_child(n)
 	_pila.append({"nombre": nombre, "datos": datos, "nodo": n})
 	n.call("abrir", datos)

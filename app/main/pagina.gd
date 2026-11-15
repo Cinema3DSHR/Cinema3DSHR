@@ -3,12 +3,19 @@ extends Control
 ## Base de las páginas: acceso a la app y al API, contenedor con desplazamiento y márgenes.
 
 var app  # main.gd
+var vertical := false   # true con la pantalla en vertical (lo ajusta main.gd antes de abrir y al girar)
 var api: EstudioApi:
 	get:
 		return app.api
 
 func abrir(_datos: Dictionary) -> void:
 	pass
+
+## La pantalla giró: por defecto, las páginas que se arman desde el catálogo se vuelven a armar.
+func al_orientar(v: bool) -> void:
+	vertical = v
+	if has_method("al_actualizar_catalogo"):
+		call("al_actualizar_catalogo")
 
 ## Crea un ScrollContainer con una columna con márgenes y la devuelve.
 func columna_desplazable(margen := 24) -> VBoxContainer:

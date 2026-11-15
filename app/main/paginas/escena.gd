@@ -18,12 +18,15 @@ var _info: VBoxContainer
 var _nota: TextEdit
 var _url_cargando := ""
 var _pantalla_completa := false
+var _caja: BoxContainer
+var _izq: VBoxContainer
 
 func abrir(d: Dictionary) -> void:
 	_pid = str(d.get("produccion", ""))
 	_eid = str(d.get("escena", ""))
 	_es_pelicula = bool(d.get("pelicula", false))
-	var h := HBoxContainer.new()
+	var h := BoxContainer.new()
+	_caja = h
 	h.set_anchors_preset(Control.PRESET_FULL_RECT)
 	h.offset_left = 16
 	h.offset_right = -16
@@ -33,6 +36,7 @@ func abrir(d: Dictionary) -> void:
 	add_child(h)
 	# --- reproductor
 	var izq := VBoxContainer.new()
+	_izq = izq
 	izq.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	h.add_child(izq)
 	var marco := Tema.panel(0, Color.BLACK, 12)
@@ -77,7 +81,20 @@ func abrir(d: Dictionary) -> void:
 	_info = VBoxContainer.new()
 	_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sc.add_child(_info)
+	_acomodar()
 	al_actualizar_catalogo()
+
+## Vertical: el video arriba (ancho completo) y el panel debajo; horizontal: video a la izquierda y panel a la derecha.
+func _acomodar() -> void:
+	_caja.vertical = vertical
+	_lado.custom_minimum_size.x = 0 if vertical else 430
+	_lado.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_izq.size_flags_vertical = Control.SIZE_FILL if vertical else Control.SIZE_EXPAND_FILL
+	_izq.custom_minimum_size.y = 470 if vertical else 0
+
+func al_orientar(v: bool) -> void:
+	vertical = v
+	_acomodar()
 
 func _escena() -> Dictionary:
 	for e in api.produccion(_pid).get("escenas", []):

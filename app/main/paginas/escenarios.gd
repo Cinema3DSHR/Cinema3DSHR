@@ -15,10 +15,10 @@ func al_actualizar_catalogo() -> void:
 		_col.add_child(Tema.etiqueta("Todavía no hay escenarios publicados. Pedile uno a Claude: «Creá una mansión moderna de lujo».", 20, Tema.TEXTO2, true))
 		return
 	var g := GridContainer.new()
-	g.columns = 3
+	g.columns = 1 if vertical else 3
 	for e in lista:
 		var p := Tema.panel(12)
-		p.custom_minimum_size.x = 380
+		p.custom_minimum_size.x = 640 if vertical else 380
 		var v := VBoxContainer.new()
 		p.add_child(v)
 		v.add_child(Tema.imagen(api, e.get("portada"), Vector2(356, 200)))
