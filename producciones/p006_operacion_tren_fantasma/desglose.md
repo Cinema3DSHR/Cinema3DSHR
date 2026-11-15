@@ -33,8 +33,8 @@ película entera antes del render final (que sólo arranca con «APROBADO. INICI
 | Locomotora | `modelos_pelicula/locomotora_diesel.glb` | entregado (mixamo-respaldo) | escala 18 m; bogies y ruedas de acero animadas (estudio) |
 | Vagón plataforma | `modelos_pelicula/vagon_plano.glb` | entregado | escala 14 m; ruedas de acero; amarres; autos encima |
 | Vagón cerrado | `modelos_pelicula/vagon_cerrado.glb` | entregado | escala 13,7 m; ruedas de acero; puerta corrediza (s04–s05) |
-| Autos transportados | 26 autos de Dream Rally (`godot/game/models/cars/*.glb` + `.json`) | Rally-Sim-movile | ruedas generadas con las medidas de cada `.json` (arcos, radio, trocha) |
-| Auto rampa (Lucía) | `vehiculos_pelicula/auto_rampa` (FBX entregado; cuña delantera, jaula, alerón) | entregado (mixamo-respaldo) | escala 5 m; ruedas Dream Rally; dinámica del estudio. En s03 salta por el remolque inclinado del camión; en s06 su cuña da vuelta un blindado |
+| Autos transportados | los 28 autos de Dream Rally (todos menos el camión Mamut) (`godot/game/models/cars/*.glb` + `.json`) | Rally-Sim-movile | ruedas generadas con las medidas de cada `.json` (arcos, radio, trocha) |
+| Auto rampa (Lucía) | `vehiculos_pelicula/auto_rampa` (FBX entregado; cuña delantera, jaula, alerón) | entregado (mixamo-respaldo) | escala 5 m; ruedas y física de Dream Rally; cabina del juego con Lucía y Mateo. **Salta una sola vez**: en s03, al bajarse del acoplado del camión hasta el tren (cámara lenta). Después son los otros los que saltan sobre su cuña (la camioneta en s05, una moto en s06) o los que salen volando (el blindado en s06) |
 | Camioneta robada | `modelos_pelicula/pickup_arena.glb` | entregado | ruedas Dream Rally (radio de la pickup del juego); torreta remota construida |
 | Blindados de escolta | `modelos_pelicula/vehiculo_blindado_policial.glb` | entregado | ruedas Dream Rally; rotulado de ficción (Halcón Negro); torreta |
 | Camión + remolque | Dream Rally `truck` (tractor) + `modelos_pelicula/trailer_plano_camion.glb` | Rally-Sim-movile + entregado | ruedas Dream Rally en los 3 ejes del remolque; rampas hidráulicas |

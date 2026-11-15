@@ -93,6 +93,19 @@
    "variantes": 0,
    "volumen_db": -12,
    "prompt": "crujido de una puerta de madera pesada abriéndose lentamente, bisagras antiguas"
+  },
+  {
+   "id": "mus_d2418ad6c9d1b449",
+   "nombre": "Epic cinematic trailer title hit: massive orchestral brass and taiko impact, low",
+   "categoria": "musica",
+   "archivo": "audio/biblioteca/mus_d2418ad6c9d1b449.mp3",
+   "duracion_s": 10.03,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "Epic cinematic trailer title hit: massive orchestral brass and taiko impact, low string swell, then a long reverb tail fading to silence. Hybrid orchestral, no vocals, 10 seconds."
   }
  ],
  "fuentes_existentes_para_importar": [

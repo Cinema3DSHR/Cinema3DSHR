@@ -29,15 +29,18 @@ DEPENDENCIAS = [
     "rally:godot/game/models/cars/buggy.json", "rally:godot/game/models/cars/buggy.glb", "rally:godot/game/models/cars/buggy_lo.glb",
     "rally:godot/game/models/cars/camo.json", "rally:godot/game/models/cars/camo.glb", "rally:godot/game/models/cars/camo_lo.glb",
     "rally:godot/game/models/cars/clasico60.json", "rally:godot/game/models/cars/clasico60.glb", "rally:godot/game/models/cars/clasico60_lo.glb",
+    "rally:godot/game/models/cars/f1.json", "rally:godot/game/models/cars/f1.glb", "rally:godot/game/models/cars/f1_lo.glb",
     "rally:godot/game/models/cars/genesis.json", "rally:godot/game/models/cars/genesis.glb", "rally:godot/game/models/cars/genesis_lo.glb",
     "rally:godot/game/models/cars/gt.json", "rally:godot/game/models/cars/gt.glb", "rally:godot/game/models/cars/gt_lo.glb",
     "rally:godot/game/models/cars/gt3.json", "rally:godot/game/models/cars/gt3.glb", "rally:godot/game/models/cars/gt3_lo.glb",
+    "rally:godot/game/models/cars/hatch.json", "rally:godot/game/models/cars/hatch.glb", "rally:godot/game/models/cars/hatch_lo.glb",
     "rally:godot/game/models/cars/hatch2.json", "rally:godot/game/models/cars/hatch2.glb", "rally:godot/game/models/cars/hatch2_lo.glb",
     "rally:godot/game/models/cars/hyper.json", "rally:godot/game/models/cars/hyper.glb", "rally:godot/game/models/cars/hyper_lo.glb",
     "rally:godot/game/models/cars/kl5.json", "rally:godot/game/models/cars/kl5.glb", "rally:godot/game/models/cars/kl5_lo.glb",
     "rally:godot/game/models/cars/kodiak.json", "rally:godot/game/models/cars/kodiak.glb", "rally:godot/game/models/cars/kodiak_lo.glb",
     "rally:godot/game/models/cars/moust.json", "rally:godot/game/models/cars/moust.glb", "rally:godot/game/models/cars/moust_lo.glb",
     "rally:godot/game/models/cars/muscle.json", "rally:godot/game/models/cars/muscle.glb", "rally:godot/game/models/cars/muscle_lo.glb",
+    "rally:godot/game/models/cars/pickup.json", "rally:godot/game/models/cars/pickup.glb", "rally:godot/game/models/cars/pickup_lo.glb",
     "rally:godot/game/models/cars/police.json", "rally:godot/game/models/cars/police.glb", "rally:godot/game/models/cars/police_lo.glb",
     "rally:godot/game/models/cars/pro_gt.json", "rally:godot/game/models/cars/pro_gt.glb", "rally:godot/game/models/cars/pro_gt_lo.glb",
     "rally:godot/game/models/cars/rally80.json", "rally:godot/game/models/cars/rally80.glb", "rally:godot/game/models/cars/rally80_lo.glb",
@@ -47,8 +50,10 @@ DEPENDENCIAS = [
     "rally:godot/game/models/cars/torito.json", "rally:godot/game/models/cars/torito.glb", "rally:godot/game/models/cars/torito_lo.glb",
     "rally:godot/game/models/cars/trilux.json", "rally:godot/game/models/cars/trilux.glb", "rally:godot/game/models/cars/trilux_lo.glb",
     "rally:godot/game/models/cars/trilux_gt.json", "rally:godot/game/models/cars/trilux_gt.glb", "rally:godot/game/models/cars/trilux_gt_lo.glb",
+    "rally:godot/game/models/cars/trilux_s.json", "rally:godot/game/models/cars/trilux_s.glb", "rally:godot/game/models/cars/trilux_s_lo.glb",
     "rally:godot/game/models/cars/veltor.json", "rally:godot/game/models/cars/veltor.glb", "rally:godot/game/models/cars/veltor_lo.glb",
     "rally:godot/game/models/cars/veltor_gtr.json", "rally:godot/game/models/cars/veltor_gtr.glb", "rally:godot/game/models/cars/veltor_gtr_lo.glb",
+    "rally:godot/game/models/cars/veltor_s.json", "rally:godot/game/models/cars/veltor_s.glb", "rally:godot/game/models/cars/veltor_s_lo.glb",
     "sh3d:models/tree_lombardy_poplar.glb", "sh3d:models/tree_tree.glb", "sh3d:models/tree_birch.glb",
     "sh3d:models/tree_weeping_willow.glb", "sh3d:models/tree_black_tupelo.glb", "sh3d:models/tree_quaking_aspen.glb",
     "sh3d:models/tree_sassafras.glb", "sh3d:models/sc_pine.glb", "sh3d:models/sc_cypress.glb", "sh3d:models/sc_acacia.glb",
@@ -57,13 +62,14 @@ DEPENDENCIAS = [
     "sh3d:models/door_garage_door.glb", "sh3d:models/sc_yamaha_yzr_r6.glb", "sh3d:models/fence_fence_post.glb",
 ]
 
-# Composición: 0 = locomotora; los autos van en las plataformas ("!" = modelo completo, para planos cercanos)
+# Composición: 0 = locomotora. Viajan los 28 autos de Dream Rally (todos menos el camión Mamut, que es el camión de la
+# secuencia 2): dos por plataforma; la 9 lleva un solo deportivo adelante (atrás aterriza el auto rampa en la secuencia 3)
 COMPOSICION = ["loco", "plano", "plano", "cerrado", "plano", "plano", "plano", "cerrado", "plano", "plano", "plano",
-               "cerrado", "plano", "cerrado", "cerrado", "plano", "plano", "cerrado", "plano", "plano", "plano"]
-CARGA = {1: ["gt3", "kodiak"], 2: ["hyper!", "suv"], 4: ["veltor_gtr!", "muscle"], 5: ["titan", "strix"],
-         6: ["kl5", "trilux_gt"], 8: ["rally80", "pro_gt"], 9: ["moust", "camo"], 10: ["gt", "genesis"],
-         12: ["torito", "clasico60"], 15: ["kodiak", "police"], 16: ["veltor", "hatch2"], 18: ["buggy", "gt3"],
-         19: ["suv", "trilux"], 20: ["muscle", "kl5"]}
+               "cerrado", "plano", "cerrado", "cerrado", "plano", "plano", "plano", "plano", "plano", "plano"]
+CARGA = {1: ["gt3", "kodiak"], 2: ["hyper", "suv"], 4: ["veltor_s", "muscle"], 5: ["titan", "strix"],
+         6: ["kl5", "trilux_gt"], 8: ["rally80", "pro_gt"], 9: ["veltor_gtr"], 10: ["gt", "genesis"],
+         12: ["torito", "clasico60"], 15: ["police", "camo"], 16: ["veltor", "hatch2"], 17: ["pickup", "hatch"],
+         18: ["buggy", "trilux"], 19: ["f1", "trilux_s"], 20: ["moust"]}
 VIA = [(-1600, -260), (-1000, -210), (-500, -90), (0, 0), (420, 110), (820, 170), (1220, 300), (1620, 500),
        (2000, 790), (2350, 1150)]
 

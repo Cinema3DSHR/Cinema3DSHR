@@ -47,23 +47,34 @@ Mateo pasa a la parte trasera: arnés, cuerda, un estuche. El camión entra a un
 Oscuridad. Luces de sodio. Ruido amplificado del motor.
 
 Al salir del túnel — el paisaje se abre de golpe — la lona vuela: sobre el remolque, el auto especial: el AUTO RAMPA
-(negro, jaula antivuelco, alerón, una cuña de acero en la trompa: lo construyeron para dar vuelta autos). Las rampas hidráulicas del remolque bajan. El auto sale MARCHA ATRÁS, toca el asfalto, gira
-sobre sí mismo, queda de frente y acelera; Mateo salta a su asiento en el último segundo. El camión sigue adelante.
-El remolque queda inclinado: es una rampa.
+(negro, jaula antivuelco, alerón, una cuña de acero en la trompa: lo construyeron para dar vuelta autos y para que
+otros salten sobre él). Mateo pasa por la pasarela del remolque y se mete por la ventanilla al asiento del
+acompañante. LUCÍA ya está al volante, con el motor en marcha. El auto sigue amarrado al acoplado: todavía no se baja.
+Las cadenas se sueltan una por una. La rampa hidráulica de la punta del remolque se levanta, apuntando en diagonal
+hacia las vías.
 
 ## SECUENCIA 3 — EL SALTO (02:20–03:40)
 
 EXT. RUTA PARALELA A LAS VÍAS
 
-El tren reaparece a la izquierda. Los blindados de escolta van entre la ruta y las vías.
-LUCÍA mira el cuentakilómetros: 140. El camión, adelante, frena y se cruza con el remolque inclinado hacia el tren.
+La ruta se acerca a las vías: el tren reaparece a la izquierda, a doce metros. Un blindado de escolta va entre la
+ruta y el terraplén. El camión acelera hasta ponerse a la par de la plataforma 9.
 
-Cámara interior, cámara sobre el capó, cámara baja junto a las ruedas.
-El auto sube por la rampa del remolque y DESPEGA. Cámara lenta: el auto vuela por encima de un blindado de escolta,
-las ruedas giran en el aire, los soldados levantan la vista. Toma aérea: la trayectoria contra la longitud del tren.
+INT. AUTO RAMPA: Lucía mira el velocímetro; Mateo se agarra de la jaula. Cámara sobre el capó, cámara baja junto a
+las ruedas: el auto todavía sobre el acoplado.
 
-Aterrizaje sobre la plataforma del vagón 9: la suspensión se comprime hasta el tope, el auto rebota, derrapa sobre la
-madera y frena a medio metro de un deportivo amarrado. Silencio de un segundo.
+LUCÍA: «Agarrate.»
+
+Lucía acelera a fondo SOBRE EL REMOLQUE EN MOVIMIENTO: el auto se baja del acoplado por la rampa — la única vez que
+el auto rampa salta en toda la película — y vuela en diagonal hacia el tren.
+
+CÁMARA LENTA: la suspensión se estira al dejar la rampa, las ruedas siguen girando en el aire, los dos se despegan
+de los asientos contra los arneses, pasa por encima del blindado de escolta (los soldados levantan la vista), la
+sombra cruza el terraplén y los rieles. Toma aérea: la trayectoria contra el tren entero.
+
+Aterrizaje sobre la plataforma del vagón 9 (física real): la suspensión se comprime hasta el tope, los cuerpos se
+hunden en las butacas y rebotan, el auto derrapa sobre la madera y frena a medio metro del deportivo amarrado.
+Silencio de un segundo. Vuelve la velocidad normal.
 
 LUCÍA: «Te dije que me sobraban.»
 
@@ -93,8 +104,11 @@ Tablero: pantallas que se encienden. Arranca. Las cadenas de amarre saltan. Por 
 MATEO: «La tengo.»
 LUCÍA: «Rampa en el vagón 16. Te espero abajo.»
 
-Lucía sale primero del tren por la plataforma inclinada del 16 (los autos amarrados la hacen rampa) y cae a la ruta.
-Mateo la sigue con la camioneta: atraviesa dos plataformas, salta al costado y aterriza en la banquina.
+El auto rampa NO salta: Lucía lo pone de culata en el borde de la plataforma 16, con la cuña apuntando afuera.
+El camión vuelve a la par con el acoplado bajo. Mateo acelera la camioneta por las plataformas, SUBE POR LA CUÑA
+DEL AUTO RAMPA y vuela al acoplado del camión (los autos amarrados le hacen de pista). Las rampas hidráulicas del
+acoplado se tienden hacia el tren como un puente; Lucía cruza manejando, sin saltar, y baja al acoplado. El
+camión frena, el acoplado se inclina y los dos vehículos bajan a la ruta por la rampa trasera.
 
 ## SECUENCIA 6 — PERSECUCIÓN EN LA MONTAÑA (06:35–08:15)
 
@@ -104,6 +118,7 @@ Los dos vehículos suben la sierra a fondo. Detrás: dos blindados de Halcón Ne
 Derrapes controlados en las horquillas, humo de neumáticos, suspensión trabajando sobre los baches.
 Un blindado intenta encerrar a Lucía: ella frena, lo deja pasar y lo empuja contra el guardarraíl.
 Una moto adelanta por adentro; Mateo cierra la puerta — la moto cae y se desliza.
+Otra moto toma la cuña del auto rampa como trampolín y sale volando por encima del guardarraíl.
 El primer blindado vuelve a la carga por detrás de Lucía: ella frena de golpe, el blindado sube por la CUÑA del auto
 rampa, sale despedido girando en el aire y cae dando tumbos por la ladera. (El auto rampa hace para lo que fue hecho.)
 
