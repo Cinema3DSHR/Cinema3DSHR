@@ -148,6 +148,9 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Arreglos encontrados al probar: el GLB del blindado tiene el largo en X (iba cruzado 80°: `giro_modelo`); durmientes
   y líneas de la ruta iban girados 90°; armar miles de piezas con bmesh era cuadrático (el armado de s01 pasó de >20 min
   a menos de 1 min); colores del campo en lineal; cielo físico más bajo (se lavaba todo).
+- Previsualización de s01 para el EDITOR 3D: el GLB pasó de 252 a 64 MB (mallas reducidas una vez y compartidas, autos
+  del juego con su versión `_lo` sólo en el visor, ruedas y ejes quietos en el visor, muestreo cada 3 cuadros en
+  escenas de más de 60 s). Godot lo abre en 3 s. **No probado en un teléfono** (memoria: ~0,8 GB).
 - La huella de las escenas nuevas (`"huella_v": 2`) incluye los módulos que importa el generador (física, vía,
   paisaje…): un cambio de código invalida la aprobación. Las escenas viejas conservan su huella.
 
