@@ -46,10 +46,11 @@ jobs:
             echo "::error::Falta el secreto ASSETS_TOKEN (token fine-grained, Contents: Read sobre mixamo-respaldo, Operaci-n-Nexus-1 y Extraction-tactical). Sin él los modelos y animaciones no se pueden bajar."; exit 1
           fi
           # La cabecera se pasa con `git -c` SÓLO a cada comando (no se guarda en ninguna configuración). Hace falta porque
-          # actions/checkout deja una cabecera con el GITHUB_TOKEN del flujo que pisa las credenciales de la URL; el `-c http.extraheader=` vacío la anula sólo para ese comando.
+          # actions/checkout deja una cabecera con el GITHUB_TOKEN del flujo que pisa las credenciales de la URL (clave http.https://github.com/.extraheader).
           B64=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0)
           echo "::add-mask::$B64"
-          remoto() { git -c http.extraheader= -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote "https://github.com/webmaletin-art/$1.git" "$2"; }
+          cd "$RUNNER_TEMP"   # fuera del repositorio: no se lee su configuración local (la cabecera del GITHUB_TOKEN de checkout)
+          remoto() { git -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote "https://github.com/webmaletin-art/$1.git" "$2"; }
           remoto mixamo-respaldo "refs/heads/${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}" | grep -q refs || { echo "::error::ASSETS_TOKEN no puede leer la rama de mixamo-respaldo"; exit 1; }
           for R in Operaci-n-Nexus-1 Extraction-tactical; do
             remoto "$R" HEAD | grep -q HEAD || echo "::warning::ASSETS_TOKEN no puede leer ${R} (hace falta sólo si la escena usa soldados o armas)"
