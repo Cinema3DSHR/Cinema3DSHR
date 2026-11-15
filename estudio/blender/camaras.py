@@ -38,6 +38,15 @@ class Contexto:
         self.fps = fps
         self.eventos: list[dict] = []           # patadas, goles… (para el sonido y la app)
 
+    @staticmethod
+    def _rango(m: dict) -> tuple:
+        """(primer, último) cuadro de la trayectoria, calculado una vez (min/max sobre miles de claves era lo más lento)."""
+        r = m.get("_rango")
+        if r is None or r[2] != len(m["tray"]):
+            r = (min(m["tray"]), max(m["tray"]), len(m["tray"]))
+            m["_rango"] = r
+        return r
+
     def punto(self, spec, frame: int) -> Vector:
         if spec is None:
             raise ValueError("punto vacío")
@@ -51,7 +60,7 @@ class Contexto:
         if "movil" in spec:
             m = self.moviles[spec["movil"]]
             tray = m["tray"]
-            f = min(max(frame, min(tray)), max(tray))
+            f = min(max(frame, self._rango(m)[0]), self._rango(m)[1])
             local = m["anclas"].get(spec.get("punto", ""), (0, 0, 0.8))
             if spec.get("desp_local"):
                 l = spec["desp_local"]
@@ -60,8 +69,9 @@ class Contexto:
         raise ValueError(f"Punto no reconocido: {spec}")
 
     def rumbo(self, movil: str, frame: int) -> float:
-        tray = self.moviles[movil]["tray"]
-        f = min(max(frame, min(tray)), max(tray))
+        m = self.moviles[movil]
+        tray = m["tray"]
+        f = min(max(frame, self._rango(m)[0]), self._rango(m)[1])
         return tray[f][1]
 
 

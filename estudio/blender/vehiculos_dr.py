@@ -70,6 +70,10 @@ def vehiculo(nombre: str, col, *, dr: str | None = None, variante: str = "", ref
     if dr:
         meta = meta_dr(dr)
         sop, objs = _importar(f"{DR_AUTOS}/{dr}{variante}.glb", col)     # variante "_lo": misma forma, menos polígonos
+        if not variante:
+            for o in objs:
+                if o.type == "MESH":
+                    o["visor_lo"] = f"{DR_AUTOS}/{dr}_lo.glb"      # el EDITOR 3D del teléfono usa la versión liviana del juego
         ruedas = ruedas or ruedas_dr(meta)
         entre_ejes = meta.get("wheelbase", 2.6)
     else:

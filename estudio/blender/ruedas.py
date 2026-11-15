@@ -68,6 +68,7 @@ def rueda_auto(nombre: str, radio: float, ancho: float, col, lado: int = 1, colo
     maza = K.vacio(f"{nombre}_maza", (0, 0, 0), col)
     giro = K.vacio(f"{nombre}_giro", (0, 0, 0), col)
     giro.parent = maza
+    giro["visor_sin_anim"] = True
     cub = bpy.data.objects.new(f"{nombre}_cubierta", _revolucion("cubierta_%.3f_%.3f" % (radio, ancho), perfil_cubierta, 56))
     cub.data.materials.append(_mat_goma()) if not cub.data.materials else None
     col.objects.link(cub)
@@ -112,6 +113,7 @@ def _mat_bastidor():
 def rueda_tren(nombre: str, col, radio: float = 0.46, trocha: float = 1.435):
     """Eje montado: dos ruedas de acero con pestaña unidas por el eje. Gira en X (local)."""
     giro = K.vacio(f"{nombre}_eje", (0, 0, 0), col)
+    giro["visor_sin_anim"] = True
     perfil = [(-0.07, radio * 0.25), (-0.07, radio * 0.93), (-0.07, radio * 1.07), (-0.045, radio * 1.07),
               (-0.03, radio), (0.07, radio * 0.97), (0.07, radio * 0.25)]
     me = _revolucion("rueda_tren_%.3f" % radio, perfil, 40)

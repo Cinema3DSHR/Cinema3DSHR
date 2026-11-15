@@ -79,7 +79,8 @@ def _lente(cam) -> dict:
             "fov_h_deg": round(math.degrees(fov_h), 4), "fov_v_deg": round(math.degrees(fov_v), 4)}
 
 
-def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path, max_poligonos: int = 60000) -> dict:
+def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path, max_poligonos: int = 60000,
+             presupuesto: int = 700000) -> dict:
     s = res["escena"]
     fps = s.render.fps
     ruta_glb.parent.mkdir(parents=True, exist_ok=True)
@@ -90,24 +91,65 @@ def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path, max_p
             o.hide_set(True)
     # escenas grandes: las mallas pesadas que no son personajes se alivianan SÓLO en el GLB del teléfono (la escena del
     # render no se toca: es un modificador temporal); con más de 40 s, la animación se muestrea cada 2 cuadros
-    temporales = []
+    # mallas livianas para el teléfono: cada malla se reduce UNA vez y se reasigna a todos los objetos que la usan (así el
+    # GLB la sigue compartiendo: los 21 vagones son la misma malla); los autos de Dream Rally usan su versión «_lo» del
+    # juego. La escena del render no cambia: las mallas originales se devuelven después de exportar.
+    pesadas = [o for o in bpy.data.objects if o.type == "MESH" and o.visible_get()
+               and not any(m.type == "ARMATURE" for m in o.modifiers)]
+    total = sum(len(o.data.polygons) for o in pesadas)
+    proporcion = min(1.0, presupuesto / total) if total else 1.0
+    originales, reemplazo, lo_cache = [], {}, {}
+    dg = bpy.context.evaluated_depsgraph_get()
+    for o in pesadas:
+        me = o.data
+        if me.name not in reemplazo:
+            nuevo = None
+            ref_lo = o.get("visor_lo")
+            if ref_lo:
+                if ref_lo not in lo_cache:
+                    from estudio.blender import importar as I
+                    objs = I.importar(ref_lo)
+                    m_lo = next((x.data for x in objs if x.type == "MESH"), None)
+                    for x in objs:
+                        bpy.data.objects.remove(x)
+                    lo_cache[ref_lo] = m_lo
+                nuevo = lo_cache[ref_lo]
+            else:
+                n = len(me.polygons)
+                r = min(proporcion if n > 1500 else 1.0, max_poligonos / n if n > max_poligonos else 1.0)
+                if r < 0.98:
+                    tmp = bpy.data.objects.new("_previa_tmp", me)
+                    s.collection.objects.link(tmp)
+                    mod = tmp.modifiers.new("d", "DECIMATE")
+                    mod.ratio = max(0.02, r)
+                    dg.update()
+                    nuevo = bpy.data.meshes.new_from_object(tmp.evaluated_get(dg))
+                    bpy.data.objects.remove(tmp)
+            reemplazo[me.name] = nuevo
+        if reemplazo[me.name] is not None:
+            originales.append((o, me))
+            o.data = reemplazo[me.name]
+    print(f"previa: {total} polígonos en {len(pesadas)} mallas, proporción {proporcion:.3f}, {len(originales)} reemplazadas")
+    # piezas que sólo giran (ruedas, ejes): en el visor quedan quietas (la animación muestreada pesaba decenas de MB)
+    sin_anim = []
     for o in bpy.data.objects:
-        if o.type != "MESH" or not o.visible_get() or any(m.type == "ARMATURE" for m in o.modifiers):
-            continue
-        n = len(o.data.polygons)
-        if n > max_poligonos:
-            m = o.modifiers.new("previa_alivianar", "DECIMATE")
-            m.ratio = max(0.04, max_poligonos / n)
-            temporales.append((o, m))
-    paso = 2 if s.frame_end > 40 * fps else 1
+        if o.get("visor_sin_anim") and o.animation_data and o.animation_data.action:
+            sin_anim.append((o, o.animation_data.action, o.animation_data.action_slot))
+            o.animation_data.action = None
+    dur = s.frame_end / fps
+    paso = 1 if dur <= 40 else (2 if dur <= 60 else 3)
     bpy.ops.export_scene.gltf(
-        filepath=str(ruta_glb), export_format="GLB", use_visible=True, export_apply=bool(temporales),
+        filepath=str(ruta_glb), export_format="GLB", use_visible=True, export_apply=False,
         export_lights=True, export_cameras=True, export_extras=True, export_yup=True,
         export_animations=True, export_animation_mode="SCENE", export_force_sampling=True,
         export_frame_range=True, export_frame_step=paso, export_optimize_animation_size=True,
         export_image_format="WEBP")
-    for o, m in temporales:
-        o.modifiers.remove(m)
+    for o, a, slot in sin_anim:
+        o.animation_data.action = a
+        if slot is not None:
+            o.animation_data.action_slot = slot
+    for o, me in originales:
+        o.data = me
     actores = []
     for spec in manifiesto.get("personajes", []):
         pj = res["personajes"][spec["id"]]
