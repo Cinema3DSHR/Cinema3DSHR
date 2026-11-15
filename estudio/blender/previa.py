@@ -79,7 +79,7 @@ def _lente(cam) -> dict:
             "fov_h_deg": round(math.degrees(fov_h), 4), "fov_v_deg": round(math.degrees(fov_v), 4)}
 
 
-def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path) -> dict:
+def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path, max_poligonos: int = 60000) -> dict:
     s = res["escena"]
     fps = s.render.fps
     ruta_glb.parent.mkdir(parents=True, exist_ok=True)
@@ -88,12 +88,26 @@ def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path) -> di
     for o in bpy.data.objects:
         if o.get("visor_omitir"):
             o.hide_set(True)
+    # escenas grandes: las mallas pesadas que no son personajes se alivianan SÓLO en el GLB del teléfono (la escena del
+    # render no se toca: es un modificador temporal); con más de 40 s, la animación se muestrea cada 2 cuadros
+    temporales = []
+    for o in bpy.data.objects:
+        if o.type != "MESH" or not o.visible_get() or any(m.type == "ARMATURE" for m in o.modifiers):
+            continue
+        n = len(o.data.polygons)
+        if n > max_poligonos:
+            m = o.modifiers.new("previa_alivianar", "DECIMATE")
+            m.ratio = max(0.04, max_poligonos / n)
+            temporales.append((o, m))
+    paso = 2 if s.frame_end > 40 * fps else 1
     bpy.ops.export_scene.gltf(
-        filepath=str(ruta_glb), export_format="GLB", use_visible=True, export_apply=False,
+        filepath=str(ruta_glb), export_format="GLB", use_visible=True, export_apply=bool(temporales),
         export_lights=True, export_cameras=True, export_extras=True, export_yup=True,
         export_animations=True, export_animation_mode="SCENE", export_force_sampling=True,
-        export_frame_range=True, export_frame_step=1, export_optimize_animation_size=True,
+        export_frame_range=True, export_frame_step=paso, export_optimize_animation_size=True,
         export_image_format="WEBP")
+    for o, m in temporales:
+        o.modifiers.remove(m)
     actores = []
     for spec in manifiesto.get("personajes", []):
         pj = res["personajes"][spec["id"]]

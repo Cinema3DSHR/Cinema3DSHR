@@ -28,6 +28,8 @@ env:
   CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
   CINE_NEXUS_DIR: ${{ github.workspace }}/recursos/nexus/fuente
   CINE_EXTRACTION_DIR: ${{ github.workspace }}/recursos/extraction/public
+  CINE_SH3D_DIR: ${{ github.workspace }}/recursos/nexus/game/assets/sh3d
+  CINE_RALLY_DIR: ${{ github.workspace }}/recursos/rally
 
 jobs:
   planificar:
@@ -39,6 +41,7 @@ jobs:
       nexus: ${{ steps.plan.outputs.nexus }}
       inicio: ${{ steps.t0.outputs.inicio }}
       extraction: ${{ steps.plan.outputs.extraction }}
+      rally: ${{ steps.plan.outputs.rally }}
     steps:
       - name: Hora de inicio (para medir el reloj real hasta el MP4)
         id: t0
@@ -117,9 +120,10 @@ jobs:
           deps = MF.dependencias(m)
           def lista(fuente, prefijo=""):      # rutas dentro del repositorio de esa fuente (nexus vive en fuente/, extraction en public/)
               return "\n".join(prefijo + d.split(":", 1)[1] for d in deps if d.startswith(fuente + ":"))
-          mix, nex, ext = lista("mixamo"), lista("nexus", "fuente/"), lista("extraction", "public/")
+          mix, ext, ral = lista("mixamo"), lista("extraction", "public/"), lista("rally")
+          nex = "\n".join(x for x in (lista("nexus", "fuente/"), lista("sh3d", "game/assets/sh3d/")) if x)
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write(f"trozos={json.dumps(trozos)}\ntotal={total}\nmixamo<<EOF\n{mix}\nEOF\nnexus<<EOF\n{nex}\nEOF\nextraction<<EOF\n{ext}\nEOF\n")
+              f.write(f"trozos={json.dumps(trozos)}\ntotal={total}\nmixamo<<EOF\n{mix}\nEOF\nnexus<<EOF\n{nex}\nEOF\nextraction<<EOF\n{ext}\nEOF\nrally<<EOF\n{ral}\nEOF\n")
           print(f"{total} fotogramas en {len(trozos)} trozos de hasta {tam}"); print(mix); print(nex); print(ext)
           PY
 
@@ -168,6 +172,15 @@ jobs:
           token: ${{ secrets.ASSETS_TOKEN }}
           path: recursos/extraction
           sparse-checkout: ${{ needs.planificar.outputs.extraction }}
+          sparse-checkout-cone-mode: false
+      - name: Recursos de Dream Rally (repo público, sólo lo que usa la escena)
+        if: ${{ needs.planificar.outputs.rally != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/Rally-Sim-movile
+          ref: ${{ vars.RALLY_REF }}
+          path: recursos/rally
+          sparse-checkout: ${{ needs.planificar.outputs.rally }}
           sparse-checkout-cone-mode: false
       - name: Renderizar fotogramas ${{ matrix.trozo.desde }}–${{ matrix.trozo.hasta }}
         run: |
@@ -223,6 +236,15 @@ jobs:
           token: ${{ secrets.ASSETS_TOKEN }}
           path: recursos/extraction
           sparse-checkout: ${{ needs.planificar.outputs.extraction }}
+          sparse-checkout-cone-mode: false
+      - name: Recursos de Dream Rally (repo público, sólo lo que usa la escena)
+        if: ${{ needs.planificar.outputs.rally != '' }}
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/Rally-Sim-movile
+          ref: ${{ vars.RALLY_REF }}
+          path: recursos/rally
+          sparse-checkout: ${{ needs.planificar.outputs.rally }}
           sparse-checkout-cone-mode: false
       - name: Audio original de la escena
         run: python -I pruebas/video_30s/audio_escena.py "${{ inputs.escena }}" audio_out 2>&1 | grep -E "^AUDIO|Traceback|Error" || true; test -f audio_out/audio.wav

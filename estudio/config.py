@@ -21,6 +21,10 @@ FUENTES = {
     "nexus": Path(os.environ.get("CINE_NEXUS_DIR", RAIZ.parent / "Operaci-n-Nexus-1" / "fuente")),
     # Armas ya procesadas con puntos de agarre (Extraction-tactical). Repo privado.
     "extraction": Path(os.environ.get("CINE_EXTRACTION_DIR", RAIZ.parent / "Extraction-tactical" / "public")),
+    # Dream Rally (repo público): autos con sus medidas (.json), piloto, vegetación, rutas.
+    "rally": Path(os.environ.get("CINE_RALLY_DIR", RAIZ.parent / "Rally-Sim-movile")),
+    # Biblioteca Sweet Home 3D de Nexus (724 GLB a escala real; mismo contenido que sweethome3d-models-master).
+    "sh3d": Path(os.environ.get("CINE_SH3D_DIR", RAIZ.parent / "Operaci-n-Nexus-1" / "game" / "assets" / "sh3d")),
     # Recursos propios del estudio (generados por el propio sistema; viven en este repo o en Releases).
     "estudio": RAIZ / "recursos",
 }

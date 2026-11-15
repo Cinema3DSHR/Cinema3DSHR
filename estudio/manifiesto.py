@@ -68,7 +68,7 @@ def validar(m: dict) -> list[str]:
     gen = m["escenario"].get("generador")
     if not gen or not (config.RAIZ / "estudio" / "escenarios" / f"{gen}.py").exists():
         err.append(f"generador de escenario '{gen}' inexistente")
-    movs = {v["id"] for v in m.get("vehiculos", [])} | {p["id"] for p in m.get("personajes", [])}
+    movs = {v["id"] for v in m.get("vehiculos", [])} | {p["id"] for p in m.get("personajes", [])} | set(m.get("moviles_escenario", []))
     if m.get("pelota"):
         movs.add("pelota")
     for t in m["tomas"]:
@@ -124,7 +124,7 @@ def dependencias(m: dict) -> list[str]:
             deps.update(ast.literal_eval(nodo.value))
     for pj in m.get("personajes", []):
         deps.update(MODELOS_DEPS.get(pj.get("modelo", "futbol:jugador"), []))
-        deps.update(a["clip"] for a in pj.get("acciones", []) if str(a.get("clip", "")).split(":")[0] in ("mixamo", "nexus", "extraction"))
+        deps.update(a["clip"] for a in pj.get("acciones", []) if str(a.get("clip", "")).split(":")[0] in ("mixamo", "nexus", "extraction", "rally", "sh3d"))
         if pj.get("arma"):
             deps.update(armas_deps(pj["arma"]))
     return sorted(deps)

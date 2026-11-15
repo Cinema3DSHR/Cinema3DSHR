@@ -144,6 +144,10 @@ def crear_toma(spec: dict, ctx: Contexto, col=None) -> dict:
         elif tipo in ("seguimiento", "detalle", "subjetiva"):
             movil = spec["movil"]
             desp = spec.get("desp_local", (0, -7, 2))
+            if spec.get("desp_local_final"):
+                d1 = spec["desp_local_final"]
+                e = _ease(t, suave)
+                desp = tuple(desp[i] + (d1[i] - desp[i]) * e for i in range(3))
             rumbo = ctx.rumbo(movil, f)
             base = ctx.punto({"movil": movil, "punto": spec.get("punto_base", "")}, f)
             c, s_ = math.cos(rumbo), math.sin(rumbo)

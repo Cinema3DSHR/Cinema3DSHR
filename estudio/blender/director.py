@@ -33,6 +33,7 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     mod = _modulo_escenario(esc["generador"])
     info = mod.construir(esc.get("parametros", {}))
     ctx = C.Contexto(info["anclas"], fps)
+    ctx.moviles.update(info.get("moviles", {}))      # vehículos y vagones animados por el propio escenario
 
     # eventos del escenario (abrir portón, encender luces…)
     for ev in manifiesto.get("eventos", []):

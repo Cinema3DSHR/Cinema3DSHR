@@ -18,3 +18,8 @@ for _id, _ref in (("ch49", "extraction:characters/personajes/Ch49.glb"), ("ch15"
 def armas_deps(arma: str) -> list[str]:
     """Archivos de un arma («M4A1», «AK47»…): el modelo y la tabla de puntos de agarre."""
     return [f"extraction:characters/armas/{_ARMAS[arma]}.glb", "extraction:characters/armas/armas_puntos.json"]
+
+MODELOS_DEPS["pelicula:lucia"] = ["mixamo:personajes_pelicula/protagonista_femenina"]
+MODELOS_DEPS["pelicula:mateo"] = ["mixamo:personajes_pelicula/protagonista_masculino"]
+MODELOS_DEPS["rally:piloto"] = ["rally:godot/game/models/pilot.glb", "rally:godot/game/models/pilot_Ch20_1001_Diffuse.jpg",
+                               "rally:godot/game/models/pilot_Ch20_1001_Normal.jpg", "rally:godot/game/models/pilot_ao_met_rough_Ch20_1001_Glossiness.jpg"]

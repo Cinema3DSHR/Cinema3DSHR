@@ -22,6 +22,8 @@ env:
   CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
   CINE_NEXUS_DIR: ${{ github.workspace }}/recursos/nexus/fuente
   CINE_EXTRACTION_DIR: ${{ github.workspace }}/recursos/extraction/public
+  CINE_SH3D_DIR: ${{ github.workspace }}/recursos/nexus/game/assets/sh3d
+  CINE_RALLY_DIR: ${{ github.workspace }}/recursos/rally
 
 jobs:
   previa:
@@ -47,8 +49,9 @@ jobs:
           eid = m["id"].split("-")[-1]
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               f.write(f"produccion={m['produccion']}\neid={eid}\nversion={m['version']}\n")
-              for k, f2, pre in (("mixamo", "mixamo", ""), ("nexus", "nexus", "fuente/"), ("extraction", "extraction", "public/")):
-                  f.write(f"{k}<<EOF\n{lista(f2, pre)}\nEOF\n")
+              nexus = "\n".join(x for x in (lista("nexus", "fuente/"), lista("sh3d", "game/assets/sh3d/")) if x)
+              for k, val in (("mixamo", lista("mixamo")), ("nexus", nexus), ("extraction", lista("extraction", "public/")), ("rally", lista("rally"))):
+                  f.write(f"{k}<<EOF\n{val}\nEOF\n")
           PY
       - name: Acceso a los recursos privados
         env:
@@ -71,6 +74,9 @@ jobs:
       - uses: actions/checkout@v4
         if: ${{ steps.plan.outputs.extraction != '' }}
         with: {repository: webmaletin-art/Extraction-tactical, ref: "${{ vars.EXTRACTION_REF }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/extraction, sparse-checkout: "${{ steps.plan.outputs.extraction }}", sparse-checkout-cone-mode: false}
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.rally != '' }}
+        with: {repository: webmaletin-art/Rally-Sim-movile, ref: "${{ vars.RALLY_REF }}", path: recursos/rally, sparse-checkout: "${{ steps.plan.outputs.rally }}", sparse-checkout-cone-mode: false}
       - name: Exportar la previsualización (misma escena que el render)
         run: python -m estudio previa "${{ inputs.escena }}" --salida previa_out 2>&1 | grep -vE "INFO:|CUEW|FBX version|User property" | tail -20; ls -la previa_out
       - name: Publicar en la release de la producción

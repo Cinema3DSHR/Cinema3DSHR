@@ -53,6 +53,21 @@ for _id, _ref in (("ch49", "extraction:characters/personajes/Ch49.glb"), ("ch15"
         "frente": math.pi / 2, "adelante_deg": -90,              # miran a −Y (medido con el avance de «walk_forward»)
         "clip_arma": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx", "frame_arma": 20,
     }
+# Protagonistas de «Operación Tren Fantasma» (Tripo3D → FBX, normalizados a 1 m de alto) y piloto de Dream Rally.
+for _id, _ref, _alto in (("lucia", "mixamo:personajes_pelicula/protagonista_femenina/tripo_convert_5669269a-5647-4c37-ad7b-71abe72fe517.fbx", 1.68),
+                         ("mateo", "mixamo:personajes_pelicula/protagonista_masculino/tripo_convert_83c2a1e7-3bcc-46c6-b430-400ef54f0b81.fbx", 1.80)):
+    MODELOS[f"pelicula:{_id}"] = {
+        "tipo": "mixamo65", "ref": _ref, "escala": _alto,        # miden 1,0 m al importar (medido)
+        "ocultar": [], "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase",
+        "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90,
+        "clip_arma": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx", "frame_arma": 20,
+    }
+MODELOS["rally:piloto"] = {
+    "tipo": "mixamo65", "ref": "rally:godot/game/models/pilot.glb", "escala": 1.0, "ocultar": ["Icosphere"],
+    "renombrar_huesos": ("mixamorig6:", "mixamorig:"),          # el piloto del juego usa otro prefijo
+    "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase",
+    "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90,
+}
 UNIFORME_DEFECTO = {"camiseta": (0.72, 0.04, 0.05), "short": (0.05, 0.12, 0.62), "medias": (0.9, 0.9, 0.9),
                     "botines": (0.03, 0.03, 0.035), "piel": (0.62, 0.40, 0.29), "pelo": (0.12, 0.07, 0.04)}
 
@@ -369,6 +384,17 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
             o.parent = raiz
     raiz.scale = (info["escala"],) * 3
     arm = next(o for o in objs if o.type == "ARMATURE")
+    if info.get("renombrar_huesos"):
+        viejo, nuevo = info["renombrar_huesos"]
+        for b in arm.data.bones:
+            if b.name.startswith(viejo):
+                b.name = nuevo + b.name[len(viejo):]       # Blender renombra también los grupos de vértices
+    if spec.get("material"):
+        mt = K.material(f"ropa_{pid}", tuple(spec["material"]["color"]), spec["material"].get("rugosidad", 0.6))
+        for o in objs:
+            if o.type == "MESH" and o.name.split(".")[0] not in info["ocultar"]:
+                o.data.materials.clear()
+                o.data.materials.append(mt)
     malla = next(o for o in objs if o.type == "MESH" and o.name.split(".")[0] not in info["ocultar"])
     arm.animation_data_create()
     arma_obj = None
@@ -440,6 +466,11 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
             for k in fc.keyframe_points:
                 k.interpolation = "CONSTANT"
     fin = max((t["fin"] for t in tramos), default=1)
+    if spec.get("sobre"):
+        padre = bpy.data.objects.get(spec["sobre"])
+        if padre is None:
+            raise KeyError(f"{pid}: no existe el objeto '{spec['sobre']}' para viajar encima")
+        raiz.parent = padre                  # las posiciones y rumbos de las acciones quedan en el marco del objeto
     if arma_obj is not None and spec.get("disparos"):
         from estudio.blender import efectos as EF
         EF.fogonazos(arma_obj, [int(round(t * fps)) + 1 for t in spec["disparos"]], col)
