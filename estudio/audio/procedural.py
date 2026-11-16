@@ -419,6 +419,9 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
         elif ev["tipo"] == "viento_conduccion":
             from estudio.audio import dream_rally as DR
             mezcla += DR.viento(n, rng, pistas, ev["movil"], ev.get("volumen", 0.12))
+        elif ev["tipo"] == "turbo":
+            from estudio.audio import dream_rally as DR
+            mezcla += DR.turbo(n, pistas, ev["movil"], ev.get("volumen", 0.35))
         elif ev["tipo"] == "rotor_helicoptero":
             from estudio.audio import dream_rally as DR
             mezcla += DR.rotor_helicoptero(n, pistas, ev["movil"], ev["inicio_s"], ev.get("volumen", 0.5))

@@ -138,12 +138,12 @@
   {
    "id": "t06_grua",
    "tipo": "grua",
-   "plano": "aérea: los dos autos tomando la curva 1, la policía cerrando distancia",
+   "plano": "aérea: los dos autos tomando la curva 2, la policía cerrando distancia",
    "inicio_s": 16.0,
    "duracion_s": 4.0,
    "luz_relleno": 0,
    "desde": {
-    "ancla": "curva_1",
+    "ancla": "curva_2",
     "desp": [
      -24,
      -14,
@@ -151,7 +151,7 @@
     ]
    },
    "hasta": {
-    "ancla": "curva_1",
+    "ancla": "curva_2",
     "desp": [
      10,
      16,
@@ -159,7 +159,8 @@
     ]
    },
    "objetivo": {
-    "ancla": "curva_1"
+    "movil": "bisonte",
+    "punto": ""
    },
    "lente_mm": 24
   },
@@ -171,7 +172,7 @@
    "duracion_s": 4.5,
    "luz_relleno": 0,
    "desde": {
-    "ancla": "curva_1",
+    "ancla": "curva_2",
     "desp": [
      12,
      -7,
@@ -291,23 +292,26 @@
    "duracion_s": 2.5,
    "luz_relleno": 0,
    "desde": {
-    "ancla": "cruce_titan",
-    "desp": [
+    "movil": "titan",
+    "punto": "",
+    "desp_local": [
      20,
      -30,
      22
     ]
    },
    "hasta": {
-    "ancla": "cruce_titan",
-    "desp": [
+    "movil": "titan",
+    "punto": "",
+    "desp_local": [
      60,
      -5,
      16
     ]
    },
    "objetivo": {
-    "ancla": "cruce_titan"
+    "movil": "titan",
+    "punto": ""
    },
    "lente_mm": 22
   },
@@ -354,7 +358,7 @@
    "desp_local": [
     0,
     0,
-    -3.0
+    -0.25
    ],
    "objetivo": {
     "movil": "helicoptero",
@@ -539,6 +543,16 @@
     "tipo": "viento_conduccion",
     "movil": "bisonte",
     "volumen": 0.14
+   },
+   {
+    "tipo": "turbo",
+    "movil": "bisonte",
+    "volumen": 0.4
+   },
+   {
+    "tipo": "turbo",
+    "movil": "titan",
+    "volumen": 0.3
    },
    {
     "tipo": "derrape",

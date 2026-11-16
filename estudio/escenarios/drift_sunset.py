@@ -282,11 +282,16 @@ def construir(parametros: dict | None = None) -> dict:
         pos_ac.append((q.x, q.y, 0.0))
         rot_ac.append((0, 0, math.atan2(t.y, t.x) - math.pi / 2))
     ACOPLADO = "mixamo:modelos_pelicula/trailer_plano_camion.glb"
-    RUEDAS_ACOP = [{"x": sx * 1.36, "y": yy, "z": 0.52, "radio": 0.52, "ancho": 0.34, "lado": sx, "delantera": False}
-                   for yy in (-4.9, -3.0, -1.25) for sx in (-1, 1)]
+    # mismas medidas que salto_tren.py (tomadas sobre el modelo): gemelas bajo los guardabarros, no una sola por lado
+    RUEDAS_ACOP = [{"x": sx * x, "y": yy, "z": 0.52, "radio": 0.52, "ancho": 0.34, "lado": sx, "delantera": False}
+                   for yy in (-4.9, -3.0, -1.25) for sx in (-1, 1) for x in (1.36, 0.98)]
     rig_ac = VD.vehiculo("acoplado_titan", c_veh, ref=ACOPLADO, largo=13.0, ruedas=RUEDAS_ACOP)
     yaws_ac = AN.desenrollar([r[2] for r in rot_ac])
     AN.transformacion(rig_ac["raiz"], frames, pos_ac, [(0, 0, a) for a in yaws_ac])
+    # giro de las ruedas del acoplado (no tiene física propia: eje no motriz, siempre a la velocidad del Titán)
+    giro_ac = [-(pl["v_titan"] * (f - 1) / fps) / RUEDAS_ACOP[0]["radio"] for f in frames]
+    for w in rig_ac["ruedas"]:
+        AN.curva(w["giro"], "rotation_euler", 0, frames, giro_ac)
     CAMA = 1.59
     moviles["acoplado"] = {"tray": {f: (Vector(pos_ac[i]), rot_ac[i][2], pl["v_titan"]) for i, f in enumerate(frames)},
                           "objeto": rig_ac["raiz"], "anclas": {"": (0, 0, 2.0), "cama": (0, 0, CAMA)}}

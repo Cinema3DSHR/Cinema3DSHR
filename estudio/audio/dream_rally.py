@@ -84,6 +84,23 @@ def viento(n: int, rng, pistas: dict, movil: str, volumen: float = 0.12) -> np.n
     return np.stack([mono, mono], axis=1)
 
 
+def turbo(n: int, pistas: dict, movil: str, volumen: float = 0.35) -> np.ndarray:
+    """Silbido del turbo (turbo.wav del juego): como en Dream Rally, sólo carga mientras el motor acelera fuerte
+    (rpm subiendo), no todo el tiempo ni atado a la rpm en sí."""
+    from estudio.audio.procedural import _espacial, _a_estereo, _interp_por_frame
+    rpm = (pistas.get("rpm") or {}).get(movil)
+    if not rpm:
+        return np.zeros((n, 2))
+    base = _wav("turbo")
+    fps = pistas["fps"]
+    rpm_m = _interp_por_frame(np.asarray(rpm, dtype=float), n, fps)
+    carga = np.clip(np.gradient(rpm_m) * fps / 4000.0, 0.0, 1.0) ** 1.5
+    mono = _tile(base, n) * carga * volumen
+    pos = [f[:3] for f in pistas["moviles"][movil]]
+    g, pan = _espacial(pistas, pos, n)
+    return _a_estereo(mono, np.clip(g * 1.8, 0.0, 1.0), pan)
+
+
 def rotor_helicoptero(n: int, pistas: dict, movil: str, t0: float, volumen: float = 0.5) -> np.ndarray:
     """Aleteo del rotor (síntesis simple: una onda moduladora de baja frecuencia sobre ruido filtrado), desde que el
     helicóptero entra en escena, espacializado por su posición."""

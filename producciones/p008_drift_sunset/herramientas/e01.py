@@ -67,13 +67,13 @@ rigida("CORTE A INTERIOR: Lucía… no, el doble de riesgo, a fondo hacia la pri
 # =================================================================================================== 0:12–0:20 persecución
 toma("seguimiento", "detrás del Bisonte: aparece la camioneta policial con la baliza encendida", 12.0, 16.0,
      movil="policia", punto_base="", desp_local=[0, -11.0, 2.4], objetivo=Mv("bisonte"), lente_mm=26, retardo=0.5)
-toma("grua", "aérea: los dos autos tomando la curva 1, la policía cerrando distancia", 16.0, 20.0,
-     desde=A("curva_1", [-24, -14, 14]), hasta=A("curva_1", [10, 16, 20]), objetivo=A("curva_1"), lente_mm=24)
+toma("grua", "aérea: los dos autos tomando la curva 2, la policía cerrando distancia", 16.0, 20.0,
+     desde=A("curva_2", [-24, -14, 14]), hasta=A("curva_2", [10, 16, 20]), objetivo=Mv("bisonte"), lente_mm=24)
 
 # =================================================================================================== 0:20–0:28 drift intenso
 cursor = 20.0
 toma("estatica", "CÁMARA FIJA en la curva: el Bisonte entra derrapando, humo de los neumáticos", cursor, cursor + 4.5,
-     desde=A("curva_1", [12, -7, 1.3]), objetivo=Mv("bisonte"), lente_mm=35)
+     desde=A("curva_2", [12, -7, 1.3]), objetivo=Mv("bisonte"), lente_mm=35)
 cursor += 4.5
 seguir("sale del derrape levantando polvo de la banquina; la policía detrás", cursor, 28.0, "bisonte", (0, -8.5, 1.8),
        lente=30)
@@ -90,7 +90,7 @@ seguir("el Bisonte adelanta por el carril contrario; la policía, atrás, esquiv
        "bisonte", (3.2, -9.0, 2.0), lente=26)
 cursor += 2.5
 toma("grua", "aérea general: Bisonte adelante, Titán en el medio, policía atrás", cursor, 40.0,
-     desde=A("cruce_titan", [20, -30, 22]), hasta=A("cruce_titan", [60, -5, 16]), objetivo=A("cruce_titan"),
+     desde=Mv("titan", "", [20, -30, 22]), hasta=Mv("titan", "", [60, -5, 16]), objetivo=Mv("titan"),
      lente_mm=22)
 cursor = 40.0
 
@@ -100,7 +100,8 @@ toma("grua", "el helicóptero policial se acerca sobre los árboles", cursor, cu
      lente_mm=30)
 cursor += 4.0
 rigida("desde abajo: el helicóptero pasa sobre la cámara, los rotores girando", cursor, cursor + 3.0,
-       "helicoptero", "", (0, 0, -3.0), "helicoptero", "", (0, 0, 0), lente=20)
+       "helicoptero", "", (0, 0, -3.0 / 12.0), "helicoptero", "", (0, 0, 0), lente=20)
+# desp_local se multiplica por la escala del objeto ("helicoptero" tiene escala 12): /12.0 para que sean 3 m reales
 cursor += 3.0
 seguir("plano desde el helicóptero: el Bisonte visto desde arriba, en seguimiento", cursor, cursor + 2.0,
        "helicoptero", (0, -22, -3), lente=24, retardo=0.25)
@@ -174,6 +175,8 @@ sonido = {"generador": "procedural", "ambiente": None, "eventos": [
     {"tipo": "motor", "movil": "policia", "clase": "diesel", "volumen": 0.6},
     {"tipo": "motor", "movil": "titan", "clase": "diesel", "volumen": 0.7},
     {"tipo": "viento_conduccion", "movil": "bisonte", "volumen": 0.14},
+    {"tipo": "turbo", "movil": "bisonte", "volumen": 0.4},
+    {"tipo": "turbo", "movil": "titan", "volumen": 0.3},
     {"tipo": "derrape", "ventanas": [[t0, t0 + d] for t0, d in DERRAPES], "volumen": 0.9},
     {"tipo": "sirena", "movil": "policia", "inicio_s": 11.5, "fin_s": 56.5, "volumen": 0.7},
     {"tipo": "rotor_helicoptero", "movil": "helicoptero", "inicio_s": t_heli, "volumen": 0.55},
