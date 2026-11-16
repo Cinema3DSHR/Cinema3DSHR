@@ -95,105 +95,143 @@ def t_apreta(s, de, vel, efecto, t_contacto):
     return None, ev
 
 
+# ---------------------------------------------------------------- el banco de animaciones del juego (SpClips / SpReactions)
+CAT = json.loads((RAIZ / "catalogo" / "futbol.json").read_text())["clips"]
+
+
+def _meta(c):
+    return RAICES.get(c, {}).get("meta", {})
+
+
+def _recorrido(c, hasta=None):
+    rp = RAICES.get(c, {}).get("root_path") or [[0, 0]]
+    n = len(rp) if hasta is None else min(len(rp), int(hasta * 30) + 1)
+    return max((rp[i][0] ** 2 + rp[i][1] ** 2) ** 0.5 for i in range(n))
+
+
+def pool(acciones_, max_root=9.0, min_len=0.0, max_len=99.0, sin_giro=True):
+    """Como SpReactions.pick / SpShooter.IDLE_ROLES: clips del rol, sin bucles largos, con poco recorrido."""
+    out = []
+    for x in CAT:
+        if x["accion"] in acciones_ and not x["espejo"] and min_len <= x["duracion_s"] <= max_len \
+                and _recorrido(x["clip"]) <= max_root and not (sin_giro and _meta(x["clip"]).get("heading_mode") == "turn"):
+            out.append(x["clip"])
+    return out
+
+
+ESPERAS = pool(("idle_ready", "idle"), max_root=0.3, min_len=1.5)                      # SpShooter.stance
+FESTEJOS = pool(("celebrate_scorer", "celebrate"), max_root=0.9, min_len=1.5, max_len=5.0)  # GOAL_SCORER (con borde cerca)
+LAMENTOS = pool(("angry", "dejected"), max_root=0.9, min_len=1.2, max_len=5.0)         # MISS_SHOOTER
+CAIDAS = [c for c in pool(("fall",), min_len=0.5) if _recorrido(c, 0.9) <= 0.15]     # BotonCaida.fall_clips
+TROTES = [(x["clip"], _meta(x["clip"]).get("natural_speed_json", 0)) for x in CAT
+          if x["accion"] in ("walk", "jog", "loco_jog") and not x["espejo"] and _meta(x["clip"]).get("natural_speed_json", 0) > 0.2]
+print(f"banco del juego: {len(ESPERAS)} esperas, {len(FESTEJOS)} festejos, {len(LAMENTOS)} lamentos/enojos, {len(CAIDAS)} caídas, {len(TROTES)} trotes")
+
+
+def trote_para(v):
+    """SpShooter._loop_for: el bucle de caminar/trotar con la velocidad natural más cercana."""
+    return min(TROTES, key=lambda x: abs(x[1] - v))
+
+
+def velocidad_raiz(clip, t):
+    a, b = raiz(clip, t), raiz(clip, t + 0.1)
+    return (b - a).length / 0.1
+
+
+def elegir(lista, n):
+    return lista[(n * 7 + 3) % len(lista)]
+
+
+# ---------------------------------------------------------------- tiempos del juego (Minigame: AIM → RUNUP → FLIGHT → RESOLVE)
+RESOLVE_T = 2.2                            # el cartel del resultado
+ESPERA_T = 2.0                             # lo que tarda en patear (una persona: 2–3 s; la CPU piensa 0,9 s)
 acciones = {MESSI: [], CR7: []}
 turnos, caidas, llamaradas = [], [], []
-pendiente_subir = None
-patea = 0.0                                # (el primero se ajusta para pegarle en el segundo 1,25)
+inicio_turno = 0.0
+cayo_antes = None                           # quién cayó en el turno anterior: reaparece al empezar este
 uso = {MESSI: 0, CR7: 0}
 for n, (s, res, de) in enumerate(PLAN):
     r = 1 - s
-    rem = REMATE[s][uso[s] % 2] if n != len(PLAN) - 1 else REMATE[s][0]    # el último: el remate «firma»
+    ultimo = n == len(PLAN) - 1
+    rem = REMATE[s][uso[s] % len(REMATE[s])] if not ultimo else REMATE[s][0]
     uso[s] += 1
     origen, desde, salto = encuadre(s, rem)
-    if n == 0:                              # el primer remate pega en el segundo 1,25 (gancho)
-        patea = round(1.25 - (rem["tc"] - desde), 3)
-    t_c = patea + rem["tc"] - desde
+    espera = 1.2 if n == 0 else (ESPERA_T + (0.6 if ultimo else 0.0))
+    # SpShooter.execute: trota al punto de la carrera más cercano (a la velocidad de la raíz ahí) y entra al clip
+    a_ = Vector((ADELANTE[s], 0, 0))
+    der = Vector((a_.y, -a_.x, 0))
+    rc = raiz(rem["clip"], desde)
+    entrada = Vector(origen + [0]) + a_ * rc.x + der * rc.y
+    v_tr = min(max(velocidad_raiz(rem["clip"], desde), 1.6), 5.0)
+    clip_tr, v_nat = trote_para(v_tr)
+    t_trote = salto / v_tr if salto > 0.35 else 0.0
+    t_aim = inicio_turno + espera
+    t_kick = t_aim + t_trote
+    t_c = t_kick + rem["tc"] - desde
     t_p, ev = t_apreta(s, de, rem["vel"], rem["efecto"], t_c)
     ok = (t_p is not None) == (res == "boton")
-    print(f"turno {n}: {PJ[s]:9s} {res:8s} remate {rem['clip'][-4:]} contacto {t_c:5.2f} aprieta {t_p}  "
-          f"{'OK' if ok else '¡NO COINCIDE!'}  {[(e['tipo'], e['lado'], e['impacto']) for e in ev[:2]]}")
-    inicio = patea - 1.0
-    tu = {"tirador": s, "personaje": PJ[s], "clip": rem["clip"], "patea_s": round(patea, 3), "resultado": res,
-          "destino": de, "velocidad": rem["vel"], "efecto": list(rem["efecto"]), "aparece_s": round(inicio, 2), "sube_dur": 1.6,
-          "desde_s": desde}
-    if pendiente_subir is not None:
-        tu["sube_s"], tu["sube_lado"] = pendiente_subir[1], pendiente_subir[0]
-        pendiente_subir = None
+    t_res = t_p if t_p is not None else t_c + (1.0 if res == "tablero" else 1.3)
+    print(f"turno {n}: {PJ[s]:9s} {res:8s} espera {espera:.1f} s, trote {t_trote:.2f} s ({clip_tr}, {v_tr:.1f} m/s), "
+          f"contacto {t_c:5.2f}, resultado {t_res:5.2f}  {'OK' if ok else '¡NO COINCIDE!'}")
+    tu = {"tirador": s, "personaje": PJ[s], "clip": rem["clip"], "patea_s": round(t_kick, 3), "resultado": res,
+          "destino": de, "velocidad": rem["vel"], "efecto": list(rem["efecto"]), "aparece_s": round(inicio_turno, 2),
+          "desde_s": desde, "inicio_turno_s": round(inicio_turno, 3), "contacto_s": round(t_c, 3), "resultado_s": round(t_res, 3)}
+    if cayo_antes is not None:              # como el juego (_restore_mechanisms): reaparece en su lugar al empezar el turno
+        tu["sube_s"], tu["sube_lado"], tu["sube_dur"] = round(inicio_turno, 3), cayo_antes, 0.0
+        cayo_antes = None
     turnos.append(tu)
-    # el que patea espera al costado de la pelota (sobre su trampilla) y entra a la carrera del clip desde ahí;
-    # Cristiano en su parada de tiro libre (piernas abiertas, brazos en «A»)
-    if s == CR7:
-        acciones[s].append({"clip": F + "s_jn_warmup_2878", "inicio_s": round(inicio, 3), "pos": [0.0, 0.0],
-                            "mirando_deg": MIRA[s], "pose": "pose_a", "pose_dur_s": round(patea - inicio + 0.2, 2)})
-    else:
-        acciones[s].append({"clip": F + "s_jn_idle_ready_0150", "inicio_s": round(inicio, 3), "pos": [0.0, 0.0], "mirando_deg": MIRA[s]})
-    acciones[s].append({"clip": rem["clip"], "inicio_s": round(patea, 3), "pos": origen, "mirando_deg": MIRA[s],
-                        "desde_s": desde, "desde_pos": [0.0, 0.0], "empalme_s": round(min(1.3, 0.35 + salto / 2.6), 2)})
-    print(f"   {PJ[s]}: entra al clip en {desde:.2f} s (a {salto} m de donde espera)")
-    reac = patea + rem["dur"] - desde - 0.1
-    ultimo = n == len(PLAN) - 1
-    if res == "boton" and not ultimo:
-        acciones[s].append({"clip": F + FESTEJOS[n % len(FESTEJOS)], "inicio_s": round(reac, 3), "encadenar": True})
-        acciones[s].append({"clip": F + TAUNTS[n % len(TAUNTS)], "inicio_s": round(reac + 2.6, 3), "encadenar": True})
-    elif res == "tablero":
-        acciones[s].append({"clip": F + "s_jn_gesture_0944", "inicio_s": round(reac - 0.4, 3), "encadenar": True})
-        acciones[s].append({"clip": F + "f_jn_angry_0356", "inicio_s": round(reac + 1.0, 3), "encadenar": True})
-    elif res == "afuera":
-        acciones[s].append({"clip": F + "f_jn_dejected_0102", "inicio_s": round(reac - 0.3, 3), "encadenar": True})
-        acciones[s].append({"clip": F + "s_jn_dejected_0948", "inicio_s": round(reac + 1.8, 3), "encadenar": True})
-    # el rival espera parado sobre su trampilla (salvo que esté subiendo en el ascensor)
-    if tu.get("sube_lado") != r:
-        acciones[r].append({"clip": F + ("s_jn_idle_fidget_0148" if n % 2 else "f_jn_idle_0520"), "inicio_s": round(inicio, 3),
-                            "pos": [0.0, 0.0], "mirando_deg": MIRA[r], "repetir": 3})
+    # los dos en su lugar al empezar el turno (SpShooter.stance): esperas del banco
+    for k in (s, r):
+        clip_e = ("s_jn_warmup_2878" if (k == CR7 and k == s) else elegir(ESPERAS, n + 3 * k))
+        ac = {"clip": F + clip_e, "inicio_s": round(inicio_turno, 3), "pos": [0.0, 0.0], "mirando_deg": MIRA[k], "repetir": 4}
+        if k == CR7 and k == s:
+            ac["pose"], ac["pose_dur_s"] = "pose_a", round(espera + 0.2, 2)     # la parada «A» de Cristiano
+        acciones[k].append(ac)
+    # trote hasta la carrera y el remate
+    if t_trote > 0:
+        rumbo_tr = __import__("math").degrees(__import__("math").atan2(entrada.y, entrada.x))
+        acciones[s].append({"clip": F + clip_tr, "inicio_s": round(t_aim, 3), "pos": [0.0, 0.0], "mirando_deg": round(rumbo_tr, 1),
+                            "mover_a": [round(entrada.x, 3), round(entrada.y, 3)], "mover_s": round(t_trote, 3),
+                            "repetir": 6, "velocidad": round(v_tr / max(v_nat, 0.5), 3)})
+    acciones[s].append({"clip": rem["clip"], "inicio_s": round(t_kick, 3), "pos": origen, "mirando_deg": MIRA[s], "desde_s": desde})
+    # reacción del que pateó (SpShooter.react): al saberse el resultado, con el seguimiento de la pierna hecho
+    t_reac = max(t_res + 0.1, t_c + 0.45)
+    if not ultimo:
+        lista = FESTEJOS if res == "boton" else LAMENTOS
+        acciones[s].append({"clip": F + elegir(lista, n), "inicio_s": round(t_reac, 3), "encadenar": True})
     if res == "boton":
-        for k, c in enumerate(CAIDA):
-            a = {"clip": c["clip"], "inicio_s": round(t_p + c["dt"], 3), "encadenar": True}
-            if c.get("repetir"):
-                a["repetir"] = c["repetir"]
-            acciones[r].append(a)
+        # el rival pierde el piso (caída del juego sin desplazamiento) y se va al vacío agitándose (Mixamo)
+        acciones[r].append({"clip": F + elegir(CAIDAS, n), "inicio_s": round(t_p + 0.02, 3), "encadenar": True})
+        acciones[r].append({"clip": MX + "caidas_muertes/Falling.fbx", "inicio_s": round(t_p + 0.55, 3), "encadenar": True,
+                            "repetir": 3})
         caidas.append((r, t_p))
         llamaradas.append([round(t_p + 0.05, 3), r])
-        if not ultimo:
-            t_s = round(t_p + 1.25, 2)
-            pendiente_subir = (r, t_s)
-            acciones[r].append({"clip": F + ENOJOS[n % len(ENOJOS)], "inicio_s": t_s, "pos": [0.0, 0.0], "mirando_deg": MIRA[r]})
-            # el que cayó vuelve en el ascensor (1,6 s); si es el próximo en patear, recién arriba se va atrás a tomar carrera
-            patea = round(t_s + 1.6 + 1.05, 3) if r == PLAN[n + 1][0] else round(t_p + 1.8, 3)
-        else:
-            patea = None
-    else:                                   # el rival se salvó: lo provoca
-        acciones[r].append({"clip": F + TAUNTS[(n + 2) % len(TAUNTS)], "inicio_s": round(t_c + 1.15, 3), "pos": [0.0, 0.0],
+        cayo_antes = r
+    elif n + 1 < len(PLAN):
+        # se salvó: provoca al que falló
+        acciones[r].append({"clip": F + TAUNTS[n % len(TAUNTS)], "inicio_s": round(t_res + 0.5, 3), "pos": [0.0, 0.0],
                             "mirando_deg": MIRA[r]})
-    if res == "tablero":
-        patea = round(t_c + 2.9, 3)
-    elif res == "afuera":
-        patea = round(t_c + 2.7, 3)
+    inicio_turno = round(t_res + RESOLVE_T, 3)
 t_final = caidas[-1][1]
-# festejo final del ganador (cámara lenta en el salto del «Siu»)
+# festejo final del ganador
 if ganador == CR7:
-    t_siu = round(t_final + 1.4, 2)
-    acciones[CR7].append({"clip": MX + "saltos_parkour/Joyful_Jump.fbx", "inicio_s": t_siu, "pos": [ADELANTE[CR7] * 0.6, 0.0],
+    t_siu = round(t_final + 1.0, 2)
+    acciones[CR7].append({"clip": MX + "saltos_parkour/Joyful_Jump.fbx", "inicio_s": t_siu, "pos": [ADELANTE[CR7] * 1.2, 0.0],
                           "mirando_deg": (MIRA[CR7] + 180) % 360, "giro_deg": 180, "giro_desde_s": 0.42, "giro_dur_s": 0.55})
     acciones[CR7].append({"clip": F + "f_jn_celebrate_scorer_0942", "inicio_s": round(t_siu + 1.45, 2), "encadenar": True,
                           "pose": "siu", "pose_dur_s": 5.0})
     t_festejo = t_siu
 else:
-    t_festejo = round(t_final + 1.3, 2)
-    acciones[MESSI].append({"clip": F + "f_jn_celebrate_scorer_0942", "inicio_s": t_festejo, "pos": [ADELANTE[MESSI] * 0.6, 0.0],
+    t_festejo = round(t_final + 0.9, 2)
+    acciones[MESSI].append({"clip": F + "f_jn_celebrate_scorer_0942", "inicio_s": t_festejo, "pos": [ADELANTE[MESSI] * 1.2, 0.0],
                             "mirando_deg": MIRA[MESSI], "pose": "dedos_al_cielo", "pose_dur_s": 5.2})
-ESCENA_S = round(t_festejo + 7.2, 2)
-# el perdedor vuelve derrotado en el ascensor al final
-t_vuelve = round(t_final + 4.4, 2)
-turnos[-1]["sube_s"], turnos[-1]["sube_lado"] = t_vuelve, perdedor
-acciones[perdedor].append({"clip": F + "s_jn_angry_0372", "inicio_s": t_vuelve, "pos": [0.0, 0.0], "mirando_deg": MIRA[perdedor]})
-acciones[perdedor].append({"clip": F + "f_jn_dejected_0104", "inicio_s": round(t_vuelve + 2.4, 2), "encadenar": True})   # de rodillas
+ESCENA_S = round(t_festejo + 6.5, 2)
 for k in (MESSI, CR7):
     acciones[k].sort(key=lambda a: a["inicio_s"])
 
-# cámara lenta: la primera caída (gancho), el último remate y su caída, y el salto del festejo
-t1 = caidas[0][1]
-tc_fin = turnos[-1]["patea_s"] + REMATE[ganador][0]["tc"] - turnos[-1]["desde_s"]
-LENTAS = [(t1 - 0.2, t1 + 1.3, 2.5), (tc_fin - 0.35, t_final + 1.6, 2.2), (max(t_festejo + 0.2, t_final + 1.7), t_festejo + 1.5, 2.0)]
+# cámara lenta sólo en el final (el último remate y la caída)
+tc_fin = turnos[-1]["contacto_s"]
+LENTAS = [(tc_fin - 0.3, t_final + 1.4, 1.8)]
 MAPA = [[0.0, 0.0]]
 tp = te = 0.0
 for a, b, k in LENTAS:
@@ -203,10 +241,10 @@ for a, b, k in LENTAS:
     MAPA.append([round(tp, 3), round(b, 3)])
     te = b
 DUR = round(tp + (ESCENA_S - te), 3)
-# la película dura 60 s: el festejo se estira o se corta para llegar justo
-ESCENA_S = round(ESCENA_S + (60.0 - DUR), 3)
+ESCENA_S = round(ESCENA_S + (60.0 - DUR), 3)       # la película dura 60 s: el festejo final se ajusta
 DUR = 60.0
 MAPA.append([DUR, ESCENA_S])
+print(f"escena {ESCENA_S:.1f} s; festejo final desde {t_festejo:.1f} s")
 
 
 def peli(t):
@@ -230,30 +268,26 @@ def toma(tipo, plano, e0, e1, **k):
 
 
 def lado(s):
-    """+1 si espera a la izquierda de la plataforma (en Y del mundo), −1 a la derecha."""
     return 1.0 if AV.trampilla(s).y > 0 else -1.0
 
 
-def espalda(s, e0, e1, plano):
-    """Detrás y afuera de donde espera el que patea, alta: el jugador, la pelota, el vacío y el rival con su botón."""
-    toma("estatica", plano, e0, e1, desde=A(f"trampa_{s}", [-ADELANTE[s] * 2.6, lado(s) * 1.3, 2.2]),
-         objetivo=A(f"pelota_{s}", [ADELANTE[s] * 7.0, 0, 0.2]), lente_mm=22)
+def juego(s, e0, e1, plano):
+    """La cámara del juego (Boton de caída: detrás y arriba del que patea, mirando adelante), vertical."""
+    toma("estatica", plano, e0, e1, desde=A(f"pelota_{s}", [-ADELANTE[s] * 6.0, lado(s) * 2.6, 3.6]),
+         objetivo=A(f"pelota_{s}", [ADELANTE[s] * 6.0, lado(s) * 0.4, 0.4]), lente_mm=22)
 
 
 def lateral(s, e0, e1, plano):
-    """Del otro costado de la pelota y bajo: la carrera llega y le pega."""
     toma("estatica", plano, e0, e1, desde=A(f"pelota_{s}", [ADELANTE[s] * 0.8, -lado(s) * 3.4, 0.45]),
          objetivo=A(f"pelota_{s}", [-ADELANTE[s] * 0.6, lado(s) * 0.6, 0.7]), lente_mm=24)
 
 
 def victima(r, e0, e1, plano):
-    """Delante y hacia el centro del que espera, bajo: él arriba de su trampilla y el botón detrás."""
     toma("estatica", plano, e0, e1, desde=A(f"trampa_{r}", [ADELANTE[r] * 2.4, -lado(r) * 2.0, 0.55]),
          objetivo=A(f"trampa_{r}", [0, 0, 1.3]), lente_mm=22)
 
 
 def abajo(r, e0, e1, plano):
-    """Desde arriba, mirando por la trampilla: el jugador se va al vacío, hacia la niebla iluminada por el haz."""
     toma("estatica", plano, e0, e1, desde=A(f"trampa_{r}", [-ADELANTE[r] * 0.5, -lado(r) * 0.6, 4.6]),
          objetivo=A(f"trampa_{r}", [0, 0, -8.0]), lente_mm=22)
 
@@ -263,46 +297,41 @@ def pelota(n, e0, e1, plano):
          objetivo=Mv(f"pelota_{n}", [0, 6, 0]), lente_mm=26, retardo=0.6)
 
 
+def reaccion(s, e0, e1, plano):
+    toma("orbita", plano, e0, e1, centro=A(f"pelota_{s}", [-ADELANTE[s] * 0.3, 0, 1.0]), radio=4.5, altura=1.4,
+         angulo_inicial=30, angulo_final=60, lente_mm=28)
+
+
 Nm = {MESSI: "MESSI", CR7: "CRISTIANO"}
-cursor = 0.0
 for n, tu in enumerate(turnos):
     s, r = tu["tirador"], 1 - tu["tirador"]
-    rem = next(x for x in REMATE[s] if x["clip"] == tu["clip"])
-    t_c = tu["patea_s"] + rem["tc"] - tu["desde_s"]
-    t_p = next((tp_ for lado, tp_ in caidas if lado == r and tp_ > t_c and tp_ < t_c + 2.0), None)
+    ini, t_c, t_res = tu["inicio_turno_s"], tu["contacto_s"], tu["resultado_s"]
+    fin = turnos[n + 1]["inicio_turno_s"] if n + 1 < len(turnos) else None
     if n == 0:
-        toma("grua", "aérea sobre el vacío: el estadio lleno, las plataformas; CRISTIANO / MESSI ya corre hacia la pelota",
-             0.0, t_c - 0.15, desde=A("centro", [-3, -26, 15]), hasta=A(f"trampa_{s}", [-ADELANTE[s] * 3, -7, 3.5]),
+        toma("grua", "el estadio de noche, las dos plataformas sobre el vacío; CRISTIANO / MESSI se prepara", 0.0, t_c - 0.7,
+             desde=A("centro", [-3, -26, 15]), hasta=A(f"pelota_{s}", [-ADELANTE[s] * 6.0, lado(s) * 2.6, 3.6]),
              objetivo=A(f"boton_{r}"), lente_mm=22)
     else:
-        espalda(s, cursor, t_c - 0.6, f"{Nm[s]} toma carrera")
-        lateral(s, t_c - 0.6, t_c + 0.12, f"{Nm[s]}: " + ("empeine, a matar" if s == CR7 else "zurda con rosca"))
-    if t_p is not None:
-        pelota(n, t_c + 0.12 if n else t_c - 0.15, t_p - 0.25, "la pelota cruza el vacío hacia el botón")
-        victima(r, t_p - 0.25, t_p + 0.3, "el botón se pone ROJO: alarma, se abre el piso")
-        abajo(r, t_p + 0.3, t_p + 1.6, f"{Nm[r]} cae al vacío")
-        cursor = t_p + 1.6
-        if n != len(turnos) - 1:
-            toma("orbita", f"{Nm[s]} festeja; el público estalla", cursor, cursor + 1.0,
-                 centro=A(f"pelota_{s}", [-ADELANTE[s] * 0.3, 0, 1.0]), radio=4.5, altura=1.4, angulo_inicial=30, angulo_final=70,
-                 lente_mm=28)
-            cursor += 1.0
-            if tu.get("sube_s") is None:
-                pass
+        juego(s, ini, t_c - 0.7, f"turno de {Nm[s]}: espera, toma carrera")
+    lateral(s, t_c - 0.7, t_c + 0.25, f"{Nm[s]}: " + ("empeine, a matar" if s == CR7 else "zurda con rosca"))
+    if tu["resultado"] == "boton":
+        pelota(n, t_c + 0.25, t_res - 0.3, "la pelota cruza el vacío hacia el botón")
+        victima(r, t_res - 0.3, t_res + 0.3, "el botón se pone ROJO: alarma, se abre el piso")
+        abajo(r, t_res + 0.3, t_res + 1.7, f"{Nm[r]} cae al vacío")
+        if fin is not None:
+            reaccion(s, t_res + 1.7, fin, f"{Nm[s]} festeja; el público estalla")
+        cierre = t_res + 1.7
     else:
-        fin = t_c + (1.6 if tu["resultado"] == "tablero" else 1.4)
-        if tu["resultado"] == "tablero":
-            victima(r, t_c + 0.12, fin, "pega arriba del botón: el tablero tiembla")
-        else:
-            pelota(n, t_c + 0.12, fin, "se le abre y se pierde en el vacío")
-        cursor = fin
-# subidas en el ascensor (si quedó tiempo entre tomas, se ven en las de espalda del siguiente)
-festejo_txt = ("CRISTIANO: carrera, salto, media vuelta en el aire… ¡SIUUU!" if ganador == CR7
-               else "MESSI: los dos índices al cielo")
+        pelota(n, t_c + 0.25, t_res + 0.2, "pega en el tablero" if tu["resultado"] == "tablero" else "se le abre al vacío")
+        victima(r, t_res + 0.2, t_res + 1.3, f"{Nm[r]} se salvó y lo provoca")
+        reaccion(s, t_res + 1.3, fin, f"{Nm[s]} se lamenta")
+        cierre = fin
+festejo_txt = ("CRISTIANO: salto, media vuelta en el aire… ¡SIUUU!" if ganador == CR7 else "MESSI: los dos índices al cielo")
+cursor = turnos[-1]["resultado_s"] + 1.7
 toma("orbita", festejo_txt, cursor, ESCENA_S - 2.4, centro=A(f"trampa_{ganador}", [ADELANTE[ganador] * 0.6, 0, 1.1]),
      radio=4.2, altura=1.4, angulo_inicial=-40 if ganador == CR7 else 140, angulo_final=40 if ganador == CR7 else 220,
      lente_mm=26)
-toma("grua", "final: la cámara sube sobre el estadio; papelitos; el perdedor vuelve derrotado en el ascensor",
+toma("grua", "final: la cámara sube sobre el estadio; papelitos",
      ESCENA_S - 2.4, ESCENA_S, desde=A("centro", [0, -9, 3]), hasta=A("centro", [0, -20, 18]), objetivo=A("centro"), lente_mm=22)
 
 personajes = [{"id": PJ[k], "modelo": MODELO[k], "sobre": f"soporte_{k}", "acciones": acciones[k]} for k in (MESSI, CR7)]

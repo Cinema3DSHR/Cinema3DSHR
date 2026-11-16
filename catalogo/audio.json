@@ -262,6 +262,19 @@
    "variantes": 0,
    "volumen_db": -12,
    "prompt": "football stadium crowd chanting Messi Messi Messi rhythmically"
+  },
+  {
+   "id": "mus_75e7626fd939496e",
+   "nombre": "High energy sports arena track, 60 seconds, no vocals: hard-hitting trap drums, ",
+   "categoria": "musica",
+   "archivo": "audio/biblioteca/mus_75e7626fd939496e.mp3",
+   "duracion_s": 60.03,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "High energy sports arena track, 60 seconds, no vocals: hard-hitting trap drums, deep 808 bass and an epic stadium brass hook, built for a viral football duel video; constant forward drive with short breaks, a dramatic tension build in the last third and a huge drop at the winning moment around 47s, then a triumphant outro."
   }
  ],
  "fuentes_existentes_para_importar": [

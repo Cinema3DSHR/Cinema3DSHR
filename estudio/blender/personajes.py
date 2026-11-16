@@ -659,12 +659,22 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
                 q = ac["desde_pos"]
                 ofs = Vector((q[0], q[1], 0.0)) - p_ini
             emp = max(1e-3, float(ac.get("empalme_s", 0.45)))
+            mover = ac.get("mover_a")                    # SpActor.move_to del juego: trota de pos a mover_a (clip en bucle)
+            mover_s = float(ac.get("mover_s", 1.0))
             for j in range(largo_f + 1):
+                if mover is not None:
+                    u = min(1.0, (j / fps) / max(1e-3, mover_s))
+                    pj_ = pos + (Vector((mover[0], mover[1], 0.0)) - pos) * u
+                    llaves.append((f0 + j, pj_, rumbo + info["frente"]))
+                    continue
                 pj_, rj = _raiz_en(fut, j / fps)
                 u = min(1.0, (j / fps) / emp)
                 pj_ = pj_ + ofs * (1 - u * u * (3 - 2 * u))
                 llaves.append((f0 + j, pj_, rj + extra(j / fps) + info["frente"]))
             pfin, rfin = _raiz_en(fut, largo_f / fps)
+            if mover is not None:
+                pfin, rfin = Vector((mover[0], mover[1], 0.0)), rumbo
+                fut["mover"] = (pos.copy(), pfin.copy(), mover_s)
             tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"] = pfin, rfin + extra(1e9)
             fut["extra"] = extra
             continue

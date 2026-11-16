@@ -706,6 +706,12 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
             z_claves[lado].append((f0 - 0.5, -46.0))
             z_claves[lado].append((f0, -9.0))
             dur = float(tu.get("sube_dur", 1.6))
+            if dur <= 0.0:                       # como el juego: al empezar el turno reaparece en su lugar
+                z_claves[lado].append((f0, 0.0))
+                puerta[lado].append((f0 - 0.6, 1.0))
+                puerta[lado].append((f0, 0.0))
+                ctx.eventos.append({"tipo": "reaparece", "t": sube, "lado": lado})
+                continue
             for k in range(1, int(dur * fps) + 1):
                 u = k / (dur * fps)
                 z_claves[lado].append((f0 + k, -9.0 * (1 - u) ** 3))
@@ -719,7 +725,7 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
             continue
         _clave_hide(disco, 1, True)
         for tu in turnos:
-            if tu.get("sube_s") is not None and int(tu.get("sube_lado", tu["tirador"])) == k:
+            if tu.get("sube_s") is not None and int(tu.get("sube_lado", tu["tirador"])) == k and float(tu.get("sube_dur", 1.6)) > 0:
                 f_a = tu["sube_s"] * fps + 1
                 _clave_hide(disco, f_a, False)
                 _clave_hide(disco, f_a + (float(tu.get("sube_dur", 1.6)) + 0.35) * fps, True)
@@ -756,7 +762,7 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
             _clave_hide(boton, f, True)
             t_r = next((t for t in subidas if t > t_p), None)
             if t_r is not None:
-                f2 = int(round((t_r + 1.6) * fps)) + 1
+                f2 = int(round((t_r + max(0.0, float(next((x.get("sube_dur", 1.6) for x in turnos if x.get("sube_s") == t_r), 1.6))) + 0.05) * fps)) + 1
                 _clave_hide(boton_v, f2, True)
                 _clave_hide(boton, f2, False)
         _constantes(boton)
