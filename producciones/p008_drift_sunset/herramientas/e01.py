@@ -83,7 +83,7 @@ cursor = 28.0
 toma("estatica", "frente del Titán con el acoplado; el Súper GT amarrado arriba", cursor, cursor + 4.0,
      desde=A("cruce_titan", [-14, 8, 2.0]), objetivo=Mv("titan"), lente_mm=28)
 cursor += 4.0
-rigida("las ruedas del acoplado pasando", cursor, cursor + 3.0, "acoplado", "", (-1.8, -2.0, -1.3),
+rigida("las ruedas del acoplado pasando", cursor, cursor + 3.0, "acoplado", "", (-3.2, -2.0, -0.8),
        "acoplado", "", (1.5, -3.0, -1.48), lente=32)
 cursor += 3.0
 seguir("el Bisonte adelanta por el carril contrario; la policía, atrás, esquiva al Titán", cursor, cursor + 2.5,
