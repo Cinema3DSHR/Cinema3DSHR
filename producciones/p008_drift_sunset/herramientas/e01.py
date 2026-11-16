@@ -54,8 +54,8 @@ def seguir(plano, t0, t1, movil, desp, obj_desp=(0, 2, 0.6), lente=28, retardo=0
 # =================================================================================================== 0:00–0:05 presentación
 toma("estatica", "el Bisonte XR en la ruta, motor en marcha; el sol bajo detrás", 0.0, 3.2,
      desde=A("inicio", [-9.5, -5.0, 1.4]), objetivo=Mv("bisonte"), lente_mm=32)
-rigida("detalle de la rueda delantera: arranca", 3.2, 5.0, "bisonte", "rueda_del_izq", (-0.3, 0.1, 0.05),
-       "bisonte", "", (0, 4, 0), lente=50)
+rigida("detalle de la rueda delantera: arranca", 3.2, 5.0, "bisonte", "rueda_del_izq", (-1.1, 0.4, 0.0),
+       "bisonte", "rueda_del_izq", (0, 0, 0), lente=35)
 
 # =================================================================================================== 0:05–0:12 entrada al drift
 toma("seguimiento", "primeras curvas, baja y afuera (se ven las ruedas)", 5.0, 8.4,
@@ -83,8 +83,8 @@ cursor = 28.0
 toma("estatica", "frente del Titán con el acoplado; el Súper GT amarrado arriba", cursor, cursor + 4.0,
      desde=A("cruce_titan", [-14, 8, 2.0]), objetivo=Mv("titan"), lente_mm=28)
 cursor += 4.0
-rigida("las ruedas del acoplado pasando", cursor, cursor + 3.0, "acoplado", "", (-2.1, 1.0, -0.6),
-       "acoplado", "", (0, 4, 0.3), lente=38)
+rigida("las ruedas del acoplado pasando", cursor, cursor + 3.0, "acoplado", "", (-1.8, -2.0, -1.3),
+       "acoplado", "", (1.5, -3.0, -1.48), lente=32)
 cursor += 3.0
 seguir("el Bisonte adelanta por el carril contrario; la policía, atrás, esquiva al Titán", cursor, cursor + 2.5,
        "bisonte", (3.2, -9.0, 2.0), lente=26)
