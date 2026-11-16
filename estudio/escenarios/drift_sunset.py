@@ -76,12 +76,18 @@ def planificar(p: dict, fps: int) -> dict:
                              "cabina": {"tipo": "genesis", "pintura": [0.04, 0.05, 0.08], "acento": [0.85, 0.45, 0.05]}}]}
     fis_b = FD.simular(plan_b)
     rb = fis_b["vehiculos"]["bisonte"]
+    # posición REAL del Bisonte (no la del horario pedido: en los derrapes la física no la cumple al pie de la letra,
+    # se queda atrás y recupera despacio); se integra la velocidad real cuadro a cuadro para ubicar a la policía justo
+    # detrás sin que la distancia real entre los dos autos se achique de más (y hasta se toquen) por ese desfasaje
+    s_real_b = [s0_b]
+    for v in rb["v"][1:nf]:
+        s_real_b.append(s_real_b[-1] + abs(v) / fps)
 
-    def s_de_t_bisonte(t):
-        f = min(nf - 1, max(0, int(round(t * fps))))
-        return hor_b_eval(f)
+    def s_real_b_en(f):
+        return s_real_b[min(len(s_real_b) - 1, max(0, f))]
 
-    # s(t) real del Bisonte (para ubicar al resto de los móviles y las cámaras): integrado del horario pedido
+    # s(t) ideal del Bisonte (el horario pedido, sin la física): para las cámaras y los anclajes, donde un desfasaje
+    # de medio segundo no se nota
     def hor_b_eval(f):
         t = f / fps
         H = hor_b
@@ -99,7 +105,7 @@ def planificar(p: dict, fps: int) -> dict:
                 k = (t - ta) / max(1e-6, tb - ta)
                 return ga + (gb - ga) * k
         return gap[-1][1]
-    hor_p = [[round(t, 3), round(hor_b_eval(min(nf - 1, int(round(t * fps)))) - gap_en(t), 3)]
+    hor_p = [[round(t, 3), round(s_real_b_en(int(round(t * fps))) - gap_en(t), 3)]
              for t in [x * 0.1 for x in range(-50, int((dur + 2) * 10))]]
     plan_p = {"fps": fps, "hz": 120, "cuadros": nf, "suelo": {"tipo": "plano", "altura": 0.06, "superficie": 0},
               "vehiculos": [{"id": "policia", "dr": "police", "ruta": plan_b["vehiculos"][0]["ruta"],
