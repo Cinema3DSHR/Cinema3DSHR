@@ -138,12 +138,28 @@ def exportar(res: dict, manifiesto: dict, ruta_glb: Path, ruta_json: Path, max_p
             o.animation_data.action = None
     dur = s.frame_end / fps
     paso = 1 if dur <= 40 else (2 if dur <= 60 else 3)
+    # lo que aparece y desaparece (pelotas de cada turno, fogonazos) entra al GLB aunque esté oculto en el cuadro de
+    # exportación: la app lo prende y apaga con los tramos de `visibilidad` del JSON
+    from estudio.blender import kit as KT
+    silenciadas = []
+    for nombre in vis:
+        o = bpy.data.objects.get(nombre)
+        if o is None or o.get("visor_omitir"):
+            continue
+        for fc in KT._fcurves(o.animation_data.action):
+            if fc.data_path in ("hide_render", "hide_viewport") and not fc.mute:
+                fc.mute = True
+                silenciadas.append(fc)
+        o.hide_render = o.hide_viewport = False
+        o.hide_set(False)
     bpy.ops.export_scene.gltf(
         filepath=str(ruta_glb), export_format="GLB", use_visible=True, export_apply=False,
         export_lights=True, export_cameras=True, export_extras=True, export_yup=True,
         export_animations=True, export_animation_mode="SCENE", export_force_sampling=True,
         export_frame_range=True, export_frame_step=paso, export_optimize_animation_size=True,
         export_image_format="WEBP")
+    for fc in silenciadas:
+        fc.mute = False
     for o, a, slot in sin_anim:
         o.animation_data.action = a
         if slot is not None:
