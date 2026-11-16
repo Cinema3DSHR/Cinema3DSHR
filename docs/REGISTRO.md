@@ -194,6 +194,22 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   (`godot/tests/audio_render.gd` graba `car_audio.gd`; falta alimentarlo con la telemetría de la física).
 - `producciones/p006_operacion_tren_fantasma/produccion.json` → `"estado": "suspendida"`. No se borró nada.
 
+## 16/11/2026 — p007 «Al vacío»: Messi vs. Cristiano (previsualización publicada)
+
+- El minijuego «Botón de caída» de Free Kick Swipe (s4muy3ni-lang/Free-Kick-Swipe) recreado y mejorado: 60 s
+  verticales (9:16) sin HUD. Escenario `estudio/escenarios/al_vacio.py` (plataformas sobre el vacío, botón verde que
+  se pone rojo con alarma, trampilla, torres de hierro, niebla, estadio con el público del juego, llamaradas, ascensor,
+  papelitos). Física de la pelota contra tablero y botón (impacto ≥ 2,5 m/s, como el juego).
+- Messi y Cristiano: modelos Tripo3D del dueño en `mixamo-respaldo/personajes_pelicula/` (autorizado a escribir);
+  nombre «RONALDO 7» corregido proyectando la foto de referencia (`estudio/blender/proyectar_textura.py`, textura
+  nueva). Animaciones del juego retargeteadas a Mixamo (`futbol:<clip>` con su root_path): remates (Cristiano diestro
+  de empeine 0704/3352/3354; Messi zurdo con rosca 2258/2260), espera al costado de la pelota (STANCE 2,4 × 2,3 del
+  juego; la trampilla ahí, el botón libre), entrada a la carrera como ShotCatalog, reacciones (enojos, provocaciones,
+  lamentos), festejos de autor de gol; «Siu» y dedos al cielo armados con poses (el juego no los tiene).
+- Dos finales: e01 gana Cristiano, e02 gana Messi. Audio: sonidos del juego + ElevenLabs (estimado 860 créditos).
+- Previsualización publicada (previa.yml, corridas 9 y 10): las 7 pelotas, los dos jugadores, botones. **Sin render
+  final**: espera la revisión del dueño en EDITOR 3D.
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.
