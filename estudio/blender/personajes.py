@@ -397,7 +397,9 @@ def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str):
         try:
             nueva = R.retarget(origen, acc, arm, f"rt_{dueno}_{clip}", info["cadera"],
                                nombres={b.name: b.name.replace("mixamorig:", "mixamorig_") for b in arm.data.bones},
-                               cadera_origen="mixamorig_Hips")
+                               cadera_origen="mixamorig_Hips",
+                               # el futbolista mira a +X (adelante_deg 0); el modelo Mixamo, a su «adelante_deg» (−90 = −Y)
+                               giro_z=math.radians(info.get("adelante_deg", -90.0)))
         finally:
             lib["coleccion"].hide_viewport = True
         nueva["futbol_clip"] = clip

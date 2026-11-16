@@ -42,14 +42,18 @@ def altura_hueso(arm, nombre) -> float:
 
 def retarget(origen, accion_origen, destino, nombre: str, hueso_cadera="mixamorig:Hips",
              escala_pos: float | None = None, fotogramas: tuple[int, int] | None = None,
-             nombres: dict | None = None, cadera_origen: str | None = None):
+             nombres: dict | None = None, cadera_origen: str | None = None, giro_z: float = 0.0):
     """`nombres` = {hueso destino: hueso origen} cuando los esqueletos nombran distinto lo mismo (p. ej. el futbolista
     del juego usa «mixamorig_Hips» y el de Mixamo «mixamorig:Hips»)."""
     return _retarget(origen, accion_origen, destino, nombre, hueso_cadera, escala_pos, fotogramas,
-                     nombres or {}, cadera_origen or hueso_cadera)
+                     nombres or {}, cadera_origen or hueso_cadera, giro_z)
 
 
-def _retarget(origen, accion_origen, destino, nombre, hueso_cadera, escala_pos, fotogramas, nombres, cadera_origen):
+def _retarget(origen, accion_origen, destino, nombre, hueso_cadera, escala_pos, fotogramas, nombres, cadera_origen,
+              giro_z=0.0):
+    """giro_z: cuánto hay que girar (en Z) el marco del origen para llevarlo al del destino cuando no miran al mismo lado
+    (el futbolista del juego mira a +X y los modelos Mixamo a −Y: −90°). Sin esto, un brazo que va adelante en el origen
+    iba al costado en el destino (brazos y piernas torcidos)."""
     """Devuelve una acción nueva para `destino` con la animación de `accion_origen` (que anima `origen`)."""
     sc = bpy.context.scene
     ad_o = origen.animation_data_create()
@@ -80,14 +84,19 @@ def _retarget(origen, accion_origen, destino, nombre, hueso_cadera, escala_pos, 
     mw_d_inv = destino.matrix_world.inverted()
     escala_obj = destino.matrix_world.to_scale()
     cad0 = cad1 = None
+    C = Quaternion((0, 0, 1), giro_z)
     for f in range(f0, f1 + 1):
         sc.frame_set(f)
         for n in comunes:
             pose_o = _mundo_hueso(origen, o_de(n), pose=True)
             delta = pose_o.to_quaternion() @ rest_o[n].to_quaternion().inverted()
+            if giro_z:
+                delta = C @ delta @ C.inverted()
             q_obj = delta @ rest_d[n].to_quaternion()
             if n == hueso_cadera:
                 despl = (pose_o.translation - rest_o[n].translation) * escala_pos
+                if giro_z:
+                    despl = C @ despl
                 pos = rest_d[n].translation + despl
                 cad0 = pos.copy() if cad0 is None else cad0
                 cad1 = pos.copy()
