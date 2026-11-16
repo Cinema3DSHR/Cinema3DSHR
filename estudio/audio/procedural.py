@@ -387,7 +387,20 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
             mezcla += ovacion(n, rng, ev["t"] + 0.15, 6.0) * 0.8
     for ev in son.get("eventos", []):
         if ev["tipo"] in ("voz", "efecto", "musica"):
-            mezcla += audio_de_biblioteca(pistas, ev, n)
+            if ev.get("radio"):
+                # diálogo de radio (Dream Racing/Drift Sunset): la misma voz de ElevenLabs ("voz" normal: cuenta
+                # igual para el costo y la biblioteca), pero pasada por el filtro de radio antes de mezclar (banda
+                # angosta, compresión, estática, cortes) y sin posición ni reverbe de sala (no es un cuarto)
+                from estudio.audio import elevenlabs as EL, radio as RD
+                x = _decodificar(EL.ruta_en_biblioteca(ev))
+                if np.abs(x).max() > 1e-6:
+                    x = x / np.abs(x).max() * 0.7
+                x = RD.filtro(x, rng)
+                tmp = np.zeros((n, 2))
+                _poner(tmp, x, ev["inicio_s"], ev.get("volumen", 1.0), 0.0)
+                mezcla += tmp
+            else:
+                mezcla += audio_de_biblioteca(pistas, ev, n)
         elif ev["tipo"] == "motor":
             if ev.get("clase") or (pistas.get("rpm") or {}).get(ev["movil"]):
                 from estudio.audio import tren as TRA
@@ -397,6 +410,18 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
         elif ev["tipo"] == "tren":
             from estudio.audio import tren as TRA
             mezcla += TRA.tren(pistas, n, rng, ev["tipos"], ev.get("s_inicial", 0.0)) * ev.get("volumen", 1.0)
+        elif ev["tipo"] == "derrape":
+            from estudio.audio import dream_rally as DR
+            mezcla += DR.derrape(n, rng, [tuple(v) for v in ev["ventanas"]], ev.get("volumen", 0.8))
+        elif ev["tipo"] == "sirena":
+            from estudio.audio import dream_rally as DR
+            mezcla += DR.sirena(n, pistas, ev["movil"], ev["inicio_s"], ev["fin_s"], ev.get("volumen", 0.75))
+        elif ev["tipo"] == "viento_conduccion":
+            from estudio.audio import dream_rally as DR
+            mezcla += DR.viento(n, rng, pistas, ev["movil"], ev.get("volumen", 0.12))
+        elif ev["tipo"] == "rotor_helicoptero":
+            from estudio.audio import dream_rally as DR
+            mezcla += DR.rotor_helicoptero(n, pistas, ev["movil"], ev["inicio_s"], ev.get("volumen", 0.5))
         elif ev["tipo"] == "puerta_patada":
             _poner(seco, puerta_patada(rng), ev["inicio_s"], 1.0, -0.05)
         elif ev["tipo"] == "pasos":

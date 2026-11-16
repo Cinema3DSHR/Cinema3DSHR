@@ -1,0 +1,725 @@
+{
+ "tipo": "escena",
+ "id": "p008_drift_sunset-e01",
+ "produccion": "p008_drift_sunset",
+ "numero": 1,
+ "version": 1,
+ "titulo": "Drift Sunset",
+ "guion": "Ruta rural al atardecer. El Bisonte XR derrapa curva tras curva perseguido por una camioneta policial; se cruzan con el camión Titán y su acoplado, que lleva un Súper GT amarrado, y lo pasan. Un helicóptero policial se suma al seguimiento desde el aire. El derrape final, el más largo, y el Bisonte se pierde entre los árboles con la policía y el helicóptero detrás. Radio policial todo el tiempo, con interferencias.",
+ "duracion_s": 60.0,
+ "escenario": {
+  "id": "drift_sunset",
+  "generador": "drift_sunset",
+  "parametros": {
+   "semilla": 11,
+   "duracion_s": 60.0,
+   "arboles": 260
+  }
+ },
+ "eventos": [],
+ "vehiculos": [],
+ "personajes": [],
+ "tomas": [
+  {
+   "id": "t01_estatica",
+   "tipo": "estatica",
+   "plano": "el Bisonte XR en la ruta, motor en marcha; el sol bajo detrás",
+   "inicio_s": 0.0,
+   "duracion_s": 3.2,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "inicio",
+    "desp": [
+     -9.5,
+     -5.0,
+     1.4
+    ]
+   },
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": ""
+   },
+   "lente_mm": 32
+  },
+  {
+   "id": "t02_estatica",
+   "tipo": "estatica",
+   "plano": "detalle de la rueda delantera: arranca",
+   "inicio_s": 3.2,
+   "duracion_s": 1.8,
+   "luz_relleno": 0,
+   "rigido": true,
+   "movil": "bisonte",
+   "punto_base": "rueda_del_izq",
+   "desp_local": [
+    -0.3,
+    0.1,
+    0.05
+   ],
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": "",
+    "desp_local": [
+     0,
+     4,
+     0
+    ]
+   },
+   "lente_mm": 50
+  },
+  {
+   "id": "t03_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "primeras curvas, baja y afuera (se ven las ruedas)",
+   "inicio_s": 5.0,
+   "duracion_s": 3.4,
+   "luz_relleno": 0,
+   "movil": "bisonte",
+   "punto_base": "rueda_tra_izq",
+   "desp_local": [
+    -2.0,
+    -3.0,
+    0.1
+   ],
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": ""
+   },
+   "lente_mm": 30,
+   "retardo": 0.4
+  },
+  {
+   "id": "t04_estatica",
+   "tipo": "estatica",
+   "plano": "CORTE A INTERIOR: Lucía… no, el doble de riesgo, a fondo hacia la primera curva",
+   "inicio_s": 8.4,
+   "duracion_s": 3.6,
+   "luz_relleno": 0,
+   "rigido": true,
+   "movil": "bisonte",
+   "punto_base": "interior",
+   "desp_local": [
+    0,
+    0.3,
+    0
+   ],
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": "cabina",
+    "desp_local": [
+     0,
+     10,
+     0.3
+    ]
+   },
+   "lente_mm": 16
+  },
+  {
+   "id": "t05_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "detrás del Bisonte: aparece la camioneta policial con la baliza encendida",
+   "inicio_s": 12.0,
+   "duracion_s": 4.0,
+   "luz_relleno": 0,
+   "movil": "policia",
+   "punto_base": "",
+   "desp_local": [
+    0,
+    -11.0,
+    2.4
+   ],
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": ""
+   },
+   "lente_mm": 26,
+   "retardo": 0.5
+  },
+  {
+   "id": "t06_grua",
+   "tipo": "grua",
+   "plano": "aérea: los dos autos tomando la curva 1, la policía cerrando distancia",
+   "inicio_s": 16.0,
+   "duracion_s": 4.0,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "curva_1",
+    "desp": [
+     -24,
+     -14,
+     14
+    ]
+   },
+   "hasta": {
+    "ancla": "curva_1",
+    "desp": [
+     10,
+     16,
+     20
+    ]
+   },
+   "objetivo": {
+    "ancla": "curva_1"
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t07_estatica",
+   "tipo": "estatica",
+   "plano": "CÁMARA FIJA en la curva: el Bisonte entra derrapando, humo de los neumáticos",
+   "inicio_s": 20.0,
+   "duracion_s": 4.5,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "curva_1",
+    "desp": [
+     12,
+     -7,
+     1.3
+    ]
+   },
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": ""
+   },
+   "lente_mm": 35
+  },
+  {
+   "id": "t08_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "sale del derrape levantando polvo de la banquina; la policía detrás",
+   "inicio_s": 24.5,
+   "duracion_s": 3.5,
+   "luz_relleno": 0,
+   "movil": "bisonte",
+   "punto_base": "",
+   "desp_local": [
+    0,
+    -8.5,
+    1.8
+   ],
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": "",
+    "desp_local": [
+     0,
+     2,
+     0.6
+    ]
+   },
+   "lente_mm": 30,
+   "retardo": 0.5
+  },
+  {
+   "id": "t09_estatica",
+   "tipo": "estatica",
+   "plano": "frente del Titán con el acoplado; el Súper GT amarrado arriba",
+   "inicio_s": 28.0,
+   "duracion_s": 4.0,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "cruce_titan",
+    "desp": [
+     -14,
+     8,
+     2.0
+    ]
+   },
+   "objetivo": {
+    "movil": "titan",
+    "punto": ""
+   },
+   "lente_mm": 28
+  },
+  {
+   "id": "t10_estatica",
+   "tipo": "estatica",
+   "plano": "las ruedas del acoplado pasando",
+   "inicio_s": 32.0,
+   "duracion_s": 3.0,
+   "luz_relleno": 0,
+   "rigido": true,
+   "movil": "acoplado",
+   "punto_base": "",
+   "desp_local": [
+    -2.1,
+    1.0,
+    -0.6
+   ],
+   "objetivo": {
+    "movil": "acoplado",
+    "punto": "",
+    "desp_local": [
+     0,
+     4,
+     0.3
+    ]
+   },
+   "lente_mm": 38
+  },
+  {
+   "id": "t11_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "el Bisonte adelanta por el carril contrario; la policía, atrás, esquiva al Titán",
+   "inicio_s": 35.0,
+   "duracion_s": 2.5,
+   "luz_relleno": 0,
+   "movil": "bisonte",
+   "punto_base": "",
+   "desp_local": [
+    3.2,
+    -9.0,
+    2.0
+   ],
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": "",
+    "desp_local": [
+     0,
+     2,
+     0.6
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.5
+  },
+  {
+   "id": "t12_grua",
+   "tipo": "grua",
+   "plano": "aérea general: Bisonte adelante, Titán en el medio, policía atrás",
+   "inicio_s": 37.5,
+   "duracion_s": 2.5,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "cruce_titan",
+    "desp": [
+     20,
+     -30,
+     22
+    ]
+   },
+   "hasta": {
+    "ancla": "cruce_titan",
+    "desp": [
+     60,
+     -5,
+     16
+    ]
+   },
+   "objetivo": {
+    "ancla": "cruce_titan"
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t13_grua",
+   "tipo": "grua",
+   "plano": "el helicóptero policial se acerca sobre los árboles",
+   "inicio_s": 40.0,
+   "duracion_s": 4.0,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "inicio",
+    "desp": [
+     0,
+     260,
+     150
+    ]
+   },
+   "hasta": {
+    "movil": "helicoptero",
+    "punto": "",
+    "desp_local": [
+     0,
+     -18,
+     -6
+    ]
+   },
+   "objetivo": {
+    "movil": "helicoptero",
+    "punto": ""
+   },
+   "lente_mm": 30
+  },
+  {
+   "id": "t14_estatica",
+   "tipo": "estatica",
+   "plano": "desde abajo: el helicóptero pasa sobre la cámara, los rotores girando",
+   "inicio_s": 44.0,
+   "duracion_s": 3.0,
+   "luz_relleno": 0,
+   "rigido": true,
+   "movil": "helicoptero",
+   "punto_base": "",
+   "desp_local": [
+    0,
+    0,
+    -3.0
+   ],
+   "objetivo": {
+    "movil": "helicoptero",
+    "punto": "",
+    "desp_local": [
+     0,
+     0,
+     0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t15_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "plano desde el helicóptero: el Bisonte visto desde arriba, en seguimiento",
+   "inicio_s": 47.0,
+   "duracion_s": 2.0,
+   "luz_relleno": 0,
+   "movil": "helicoptero",
+   "punto_base": "",
+   "desp_local": [
+    0,
+    -22,
+    -3
+   ],
+   "objetivo": {
+    "movil": "helicoptero",
+    "punto": "",
+    "desp_local": [
+     0,
+     2,
+     0.6
+    ]
+   },
+   "lente_mm": 24,
+   "retardo": 0.25
+  },
+  {
+   "id": "t16_grua",
+   "tipo": "grua",
+   "plano": "la ruta entera con los tres vehículos y el helicóptero arriba",
+   "inicio_s": 49.0,
+   "duracion_s": 1.0,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "climax",
+    "desp": [
+     -30,
+     20,
+     22
+    ]
+   },
+   "hasta": {
+    "ancla": "climax",
+    "desp": [
+     18,
+     -14,
+     30
+    ]
+   },
+   "objetivo": {
+    "ancla": "climax"
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t17_estatica",
+   "tipo": "estatica",
+   "plano": "CÁMARA FIJA, última curva: el derrape más largo, humo y polvo; la policía muy cerca",
+   "inicio_s": 50.0,
+   "duracion_s": 4.5,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "climax",
+    "desp": [
+     -13,
+     9,
+     1.4
+    ]
+   },
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": ""
+   },
+   "lente_mm": 32
+  },
+  {
+   "id": "t18_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "sale controlado del derrape; el helicóptero sigue desde arriba",
+   "inicio_s": 54.5,
+   "duracion_s": 1.5,
+   "luz_relleno": 0,
+   "movil": "bisonte",
+   "punto_base": "",
+   "desp_local": [
+    0,
+    -9.5,
+    2.1
+   ],
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": "",
+    "desp_local": [
+     0,
+     2,
+     0.6
+    ]
+   },
+   "lente_mm": 28,
+   "retardo": 0.5
+  },
+  {
+   "id": "t19_grua",
+   "tipo": "grua",
+   "plano": "aérea alejándose: el Bisonte entre los árboles al atardecer, el helicóptero en seguimiento",
+   "inicio_s": 56.0,
+   "duracion_s": 4.0,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "final",
+    "desp": [
+     -8,
+     -22,
+     10
+    ]
+   },
+   "hasta": {
+    "ancla": "final",
+    "desp": [
+     -40,
+     -70,
+     55
+    ]
+   },
+   "objetivo": {
+    "movil": "bisonte",
+    "punto": ""
+   },
+   "lente_mm": 26
+  }
+ ],
+ "moviles_escenario": [
+  "bisonte",
+  "policia",
+  "titan",
+  "acoplado",
+  "super_gt",
+  "helicoptero"
+ ],
+ "sonido": {
+  "generador": "procedural",
+  "ambiente": null,
+  "eventos": [
+   {
+    "tipo": "musica",
+    "prompt": "Epic cinematic chase score, 60 seconds, no vocals: a slow tense opening with low strings and a distant pulse, building through heavy orchestral percussion, driving synth bass and brass stabs as the chase intensifies, a dramatic drop around 30s when the big truck appears, rising tension through the helicopter's arrival around 40s, and an all-out percussive climax at the final drift around 50s with soaring brass, resolving into a triumphant but driving outro that ends on a hard cinematic hit at the very last second.",
+    "duracion_s": 60.0,
+    "inicio_s": 0.0,
+    "volumen": 0.42
+   },
+   {
+    "tipo": "motor",
+    "movil": "bisonte",
+    "clase": "deportivo",
+    "volumen": 0.85
+   },
+   {
+    "tipo": "motor",
+    "movil": "policia",
+    "clase": "diesel",
+    "volumen": 0.6
+   },
+   {
+    "tipo": "motor",
+    "movil": "titan",
+    "clase": "diesel",
+    "volumen": 0.7
+   },
+   {
+    "tipo": "viento_conduccion",
+    "movil": "bisonte",
+    "volumen": 0.14
+   },
+   {
+    "tipo": "derrape",
+    "ventanas": [
+     [
+      8.6,
+      9.9
+     ],
+     [
+      22.6,
+      24.1
+     ],
+     [
+      43.6,
+      45.300000000000004
+     ],
+     [
+      54.0,
+      55.4
+     ]
+    ],
+    "volumen": 0.9
+   },
+   {
+    "tipo": "sirena",
+    "movil": "policia",
+    "inicio_s": 11.5,
+    "fin_s": 56.5,
+    "volumen": 0.7
+   },
+   {
+    "tipo": "rotor_helicoptero",
+    "movil": "helicoptero",
+    "inicio_s": 40.5,
+    "volumen": 0.55
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "radio",
+    "texto": "Central a todas las unidades, tenemos un vehículo deportivo circulando a alta velocidad por la ruta rural. Mantengan posición.",
+    "inicio_s": 0.3,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "Unidad en camino. Visual del objetivo.",
+    "inicio_s": 3.6,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "¡Central, lo tenemos a la vista! Está entrando a las curvas a una velocidad increíble.",
+    "inicio_s": 10.0,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "radio",
+    "texto": "Unidad, mantenga distancia. No se acerque demasiado.",
+    "inicio_s": 14.2,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "¡Este está loco! ¡Está cruzando toda la ruta!",
+    "inicio_s": 17.8,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "radio",
+    "texto": "Solicite apoyo. Repito, solicite apoyo.",
+    "inicio_s": 19.6,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "¡Necesitamos refuerzos inmediatamente!",
+    "inicio_s": 21.6,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "radio",
+    "texto": "Central... el vehículo perdió adherencia... ¡pero recuperó el control!",
+    "inicio_s": 24.9,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "¿Cómo demonios sigue controlándolo?",
+    "inicio_s": 27.4,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "radio",
+    "texto": "Central, tenemos tráfico pesado en la ruta. Un camión de gran porte con un vehículo transportado.",
+    "inicio_s": 26.5,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "Copiado. Atención a todas las unidades, refuercen el operativo.",
+    "inicio_s": 31.5,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_grave",
+    "texto": "Central, unidad aérea en posición. Tenemos visual del vehículo desde arriba.",
+    "inicio_s": 41.0,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "radio",
+    "texto": "Unidad aérea, mantenga seguimiento y comunique sus movimientos.",
+    "inicio_s": 43.9,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_grave",
+    "texto": "Copiado. Este tipo está haciendo drift en plena persecución. ¡No puedo creerlo!",
+    "inicio_s": 46.5,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "¡Está perdiendo tracción! ¡Está perdiendo tracción!",
+    "inicio_s": 50.6,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "hombre_joven",
+    "texto": "¡No, volvió a controlarlo! ¡Este tipo está completamente loco!",
+    "inicio_s": 52.6,
+    "volumen": 0.85
+   },
+   {
+    "tipo": "voz",
+    "radio": true,
+    "rol": "radio",
+    "texto": "Todas las unidades, continúen el seguimiento. No perdemos ese vehículo.",
+    "inicio_s": 56.6,
+    "volumen": 0.85
+   }
+  ]
+ },
+ "render": {
+  "calidad": "revision",
+  "fps": 30,
+  "exposicion": 0.1,
+  "muestras": 6
+ },
+ "estado": "borrador",
+ "bloqueada": false,
+ "huella_v": 2
+}
