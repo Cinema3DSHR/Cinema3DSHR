@@ -711,6 +711,18 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
             puerta[lado].append((f0 + dur * fps, 1.0))
             puerta[lado].append((f0 + (dur + 0.3) * fps, 0.0))
             ctx.eventos.append({"tipo": "subida", "t": sube, "lado": lado})
+    # el disco del ascensor sólo se ve mientras sube (en la caída no acompaña al jugador)
+    for k in (0, 1):
+        disco = bpy.data.objects.get(f"ascensor_{k}")
+        if disco is None:
+            continue
+        _clave_hide(disco, 1, True)
+        for tu in turnos:
+            if tu.get("sube_s") is not None and int(tu.get("sube_lado", tu["tirador"])) == k:
+                f_a = tu["sube_s"] * fps + 1
+                _clave_hide(disco, f_a, False)
+                _clave_hide(disco, f_a + (float(tu.get("sube_dur", 1.6)) + 0.35) * fps, True)
+        _constantes(disco)
     for k in (0, 1):
         so = soportes[k]
         base = Vector(so.location)

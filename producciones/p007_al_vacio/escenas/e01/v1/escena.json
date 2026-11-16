@@ -327,13 +327,13 @@
      "repetir": 3
     },
     {
-     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "clip": "futbol:f_jn_stumble_1262",
      "inicio_s": 2.241,
      "encadenar": true
     },
     {
      "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
-     "inicio_s": 3.071,
+     "inicio_s": 2.621,
      "encadenar": true,
      "repetir": 3
     },
@@ -444,13 +444,13 @@
      "repetir": 3
     },
     {
-     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "clip": "futbol:f_jn_stumble_1262",
      "inicio_s": 21.235,
      "encadenar": true
     },
     {
      "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
-     "inicio_s": 22.065,
+     "inicio_s": 21.615,
      "encadenar": true,
      "repetir": 3
     },
@@ -508,13 +508,13 @@
      "repetir": 3
     },
     {
-     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "clip": "futbol:f_jn_stumble_1262",
      "inicio_s": 33.021,
      "encadenar": true
     },
     {
      "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
-     "inicio_s": 33.851,
+     "inicio_s": 33.401,
      "encadenar": true,
      "repetir": 3
     },
@@ -641,13 +641,13 @@
      "encadenar": true
     },
     {
-     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "clip": "futbol:f_jn_stumble_1262",
      "inicio_s": 15.61,
      "encadenar": true
     },
     {
      "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
-     "inicio_s": 16.441,
+     "inicio_s": 15.99,
      "encadenar": true,
      "repetir": 3
     },
@@ -707,13 +707,13 @@
      "repetir": 3
     },
     {
-     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "clip": "futbol:f_jn_stumble_1262",
      "inicio_s": 27.397,
      "encadenar": true
     },
     {
      "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
-     "inicio_s": 28.227,
+     "inicio_s": 27.777,
      "encadenar": true,
      "repetir": 3
     },
@@ -864,9 +864,9 @@
    "desde": {
     "ancla": "trampa_0",
     "desp": [
-     1.5,
-     -7.5,
-     -6.5
+     -0.5,
+     0.6,
+     4.6
     ]
    },
    "objetivo": {
@@ -874,10 +874,10 @@
     "desp": [
      0,
      0,
-     -3.0
+     -8.0
     ]
    },
-   "lente_mm": 20
+   "lente_mm": 22
   },
   {
    "id": "t05_orbita",
@@ -1162,9 +1162,9 @@
    "desde": {
     "ancla": "trampa_1",
     "desp": [
-     -1.5,
-     -7.5,
-     -6.5
+     0.5,
+     0.6,
+     4.6
     ]
    },
    "objetivo": {
@@ -1172,10 +1172,10 @@
     "desp": [
      0,
      0,
-     -3.0
+     -8.0
     ]
    },
-   "lente_mm": 20
+   "lente_mm": 22
   },
   {
    "id": "t17_orbita",
@@ -1309,9 +1309,9 @@
    "desde": {
     "ancla": "trampa_0",
     "desp": [
-     1.5,
-     -7.5,
-     -6.5
+     -0.5,
+     0.6,
+     4.6
     ]
    },
    "objetivo": {
@@ -1319,10 +1319,10 @@
     "desp": [
      0,
      0,
-     -3.0
+     -8.0
     ]
    },
-   "lente_mm": 20
+   "lente_mm": 22
   },
   {
    "id": "t23_orbita",
@@ -1456,9 +1456,9 @@
    "desde": {
     "ancla": "trampa_1",
     "desp": [
-     -1.5,
-     -7.5,
-     -6.5
+     0.5,
+     0.6,
+     4.6
     ]
    },
    "objetivo": {
@@ -1466,10 +1466,10 @@
     "desp": [
      0,
      0,
-     -3.0
+     -8.0
     ]
    },
-   "lente_mm": 20
+   "lente_mm": 22
   },
   {
    "id": "t29_orbita",
@@ -1603,9 +1603,9 @@
    "desde": {
     "ancla": "trampa_0",
     "desp": [
-     1.5,
-     -7.5,
-     -6.5
+     -0.5,
+     0.6,
+     4.6
     ]
    },
    "objetivo": {
@@ -1613,10 +1613,10 @@
     "desp": [
      0,
      0,
-     -3.0
+     -8.0
     ]
    },
-   "lente_mm": 20
+   "lente_mm": 22
   },
   {
    "id": "t35_orbita",

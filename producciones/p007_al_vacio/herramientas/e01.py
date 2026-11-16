@@ -68,8 +68,10 @@ REMATE = {
 # reacciones del juego (catálogo: nombres originales del dueño, animaciones_futbol5_nombres_originales)
 TAUNTS = ["s_jn_nis_misc_2864", "s_jn_nis_misc_2860", "s_jn_nis_misc_2866", "s_jn_nis_misc_2858", "s_jn_nis_misc_2862"]
 ENOJOS = ["f_jn_angry_0366", "s_jn_angry_0372", "f_jn_angry_0368", "f_jn_angry_0356"]
-CAIDA = [{"clip": MX + "caidas_muertes/Falling_From_Losing_Balance.fbx", "dt": 0.02},
-         {"clip": MX + "caidas_muertes/Falling.fbx", "dt": 0.85, "repetir": 3}]
+# tropezón del juego (pierde el piso) y la caída en el aire de Mixamo («Falling In The Air»); el «Losing Balance» de
+# Mixamo arranca 0,8 m más alto (está parado en una cornisa) y el jugador flotaba sobre el hueco
+CAIDA = [{"clip": F + "f_jn_stumble_1262", "dt": 0.02},
+         {"clip": MX + "caidas_muertes/Falling.fbx", "dt": 0.4, "repetir": 3}]
 ganador = CR7 if GANA == "cristiano" else MESSI
 perdedor = 1 - ganador
 # (tirador, resultado, destino) — se alternan empezando por el ganador; 7 turnos, 3-2
@@ -251,9 +253,9 @@ def victima(r, e0, e1, plano):
 
 
 def abajo(r, e0, e1, plano):
-    """Desde abajo y afuera de la plataforma: se abre la trampilla y el jugador cae de perfil hacia la niebla."""
-    toma("estatica", plano, e0, e1, desde=A(f"trampa_{r}", [ADELANTE[r] * 1.5, lado(r) * 7.5, -6.5]),
-         objetivo=A(f"trampa_{r}", [0, 0, -3.0]), lente_mm=20)
+    """Desde arriba, mirando por la trampilla: el jugador se va al vacío, hacia la niebla iluminada por el haz."""
+    toma("estatica", plano, e0, e1, desde=A(f"trampa_{r}", [-ADELANTE[r] * 0.5, -lado(r) * 0.6, 4.6]),
+         objetivo=A(f"trampa_{r}", [0, 0, -8.0]), lente_mm=22)
 
 
 def pelota(n, e0, e1, plano):
