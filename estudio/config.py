@@ -25,6 +25,8 @@ FUENTES = {
     "rally": Path(os.environ.get("CINE_RALLY_DIR", RAIZ.parent / "Rally-Sim-movile")),
     # Biblioteca Sweet Home 3D de Nexus (724 GLB a escala real; mismo contenido que sweethome3d-models-master).
     "sh3d": Path(os.environ.get("CINE_SH3D_DIR", RAIZ.parent / "Operaci-n-Nexus-1" / "game" / "assets" / "sh3d")),
+    # Modelos que manda el dueño por el chat (Tripo3D: Messi, Cristiano…): fuera de Git; en Actions los baja el flujo.
+    "subidas": Path(os.environ.get("CINE_SUBIDAS_DIR", RAIZ.parent / "modelos_subidos")),
     # Recursos propios del estudio (generados por el propio sistema; viven en este repo o en Releases).
     "estudio": RAIZ / "recursos",
 }

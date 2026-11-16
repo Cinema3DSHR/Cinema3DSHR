@@ -62,6 +62,17 @@ for _id, _ref, _alto in (("lucia", "mixamo:personajes_pelicula/protagonista_feme
         "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90,
         "clip_arma": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx", "frame_arma": 20,
     }
+# «Al vacío» (p007): Messi y Cristiano Ronaldo, modelos Tripo3D con esqueleto mixamorig que mandó el dueño (fuera de Git)
+for _id, _ref, _alto, _tex in (
+        ("messi", "subidas:messi/tripo_convert_db2fb7b2-b201-48ab-90fe-625fa86f28f4.fbx", 1.70, {}),
+        ("cristiano", "subidas:cristiano/tripo_convert_14aa6baf-3faf-4c85-b305-f9d50faf739f.fbx", 1.87,
+         {"basecolor": "subidas:cristiano/basecolor_nombre_corregido.png"})):   # nombre de la espalda legible
+    MODELOS[f"pelicula:{_id}"] = {
+        "tipo": "mixamo65", "ref": _ref, "escala": _alto, "ocultar": [], "cadera": "mixamorig:Hips",
+        "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase", "cabeza": "mixamorig:Head",
+        "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90, "texturas": _tex,
+        "sin_metal": True,
+    }
 MODELOS["rally:piloto"] = {
     "tipo": "mixamo65", "ref": "rally:godot/game/models/pilot.glb", "escala": 1.0, "ocultar": ["Icosphere"],
     "renombrar_huesos": ("mixamorig6:", "mixamorig:"),          # el piloto del juego usa otro prefijo
@@ -374,6 +385,24 @@ def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str):
     """Acción retargeteada de un clip FBX de Mixamo para ESTE personaje (con caché por personaje)."""
     from estudio.blender import retarget as R
     clave = (dueno, ref)
+    if ref.startswith("futbol:") and (clave not in _RETARGETS or _RETARGETS[clave].name not in bpy.data.actions):
+        # clip del juego (futbolista de Free Kick Swipe, huesos «mixamorig_X»): se retargetea desde la biblioteca
+        lib = biblioteca("futbol:jugador")
+        origen = lib["armadura"]
+        clip = ref.split(":", 1)[1]
+        acc = bpy.data.actions[clip]
+        lib["coleccion"].hide_viewport = False           # oculta, no se evalúa la pose
+        raiz.rotation_euler = (0, 0, 0)
+        raiz.location = (0, 0, 0)
+        try:
+            nueva = R.retarget(origen, acc, arm, f"rt_{dueno}_{clip}", info["cadera"],
+                               nombres={b.name: b.name.replace("mixamorig:", "mixamorig_") for b in arm.data.bones},
+                               cadera_origen="mixamorig_Hips")
+        finally:
+            lib["coleccion"].hide_viewport = True
+        nueva["futbol_clip"] = clip
+        _RETARGETS[clave] = nueva
+        return nueva
     if clave not in _RETARGETS or _RETARGETS[clave].name not in bpy.data.actions:
         antes = set(bpy.data.actions)
         tmp = I.importar(ref)
@@ -389,6 +418,138 @@ def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str):
             if ac == acc:
                 bpy.data.actions.remove(ac)
     return _RETARGETS[clave]
+
+
+def _giro_extra(ac: dict):
+    """Giro adicional del cuerpo (radianes) a t s del inicio del tramo: "giro_deg" entre "giro_desde_s" y
+    "giro_desde_s" + "giro_dur_s" (suave)."""
+    g = math.radians(ac.get("giro_deg", 0.0))
+    a = ac.get("giro_desde_s", 0.0)
+    d = max(1e-3, ac.get("giro_dur_s", 0.5))
+
+    def f(t):
+        u = min(1.0, max(0.0, (t - a) / d))
+        return g * u * u * (3 - 2 * u)
+    return f
+
+
+# Poses superpuestas a un clip (sólo los huesos que nombran; el resto sigue el clip). Direcciones en el marco del
+# personaje: +Z arriba, −Y adelante (los modelos Mixamo miran a −Y), +X su izquierda.
+POSES = {
+    "dedos_al_cielo": {     # el festejo de Messi: los dos índices al cielo, la cabeza arriba
+        "brazos": {"mixamorig:LeftArm": (0.25, -0.15, 1.0), "mixamorig:LeftForeArm": (0.12, -0.12, 1.0),
+                   "mixamorig:LeftHand": (0.05, -0.1, 1.0), "mixamorig:RightArm": (-0.25, -0.15, 1.0),
+                   "mixamorig:RightForeArm": (-0.12, -0.12, 1.0), "mixamorig:RightHand": (-0.05, -0.1, 1.0)},
+        "cerrar": ("Thumb", "Middle", "Ring", "Pinky"), "abrir": ("Index",),
+        "cabeza": 28.0,
+    },
+    "siu": {                # el aterrizaje del «Siu» de Cristiano: brazos rectos hacia abajo y afuera, pecho arriba
+        "brazos": {"mixamorig:LeftArm": (0.62, -0.05, -0.78), "mixamorig:LeftForeArm": (0.6, -0.05, -0.8),
+                   "mixamorig:LeftHand": (0.55, -0.05, -0.83), "mixamorig:RightArm": (-0.62, -0.05, -0.78),
+                   "mixamorig:RightForeArm": (-0.6, -0.05, -0.8), "mixamorig:RightHand": (-0.55, -0.05, -0.83)},
+        "cerrar": (), "abrir": ("Thumb", "Index", "Middle", "Ring", "Pinky"),
+        "cabeza": 14.0,
+    },
+}
+
+
+def _pose_encima(arm, nombre: str, f0: int, f1: int, fps: int, pid: str):
+    """Pista NLA encima de las acciones con la pose `nombre` en los huesos de brazos, dedos y cabeza (entra y sale
+    en 0,35 s). Las rotaciones se calculan una vez, con el cuerpo en reposo."""
+    from mathutils import Quaternion
+    pose = POSES[nombre]
+    sc = bpy.context.scene
+    ad = arm.animation_data
+    viejo_nla = ad.use_nla
+    ad.use_nla = False
+    vieja = ad.action
+    ad.action = None
+    for pb in arm.pose.bones:
+        pb.rotation_mode = "QUATERNION"
+        pb.rotation_quaternion = (1, 0, 0, 0)
+        pb.location = (0, 0, 0)
+    bpy.context.view_layer.update()
+    rot = {}
+    raiz = arm.parent
+    while raiz is not None and raiz.parent is not None and not raiz.name.startswith("PJ_"):
+        raiz = raiz.parent
+    a_personaje = ((raiz.matrix_world.inverted() if raiz else Matrix()) @ arm.matrix_world).to_3x3()
+    a_armadura = a_personaje.inverted()
+    for nb, d in pose["brazos"].items():          # padres primero (el orden del diccionario)
+        pb = arm.pose.bones.get(nb)
+        if pb is None:
+            continue
+        objetivo = (a_armadura @ Vector(d)).normalized()
+        actual = (pb.matrix.to_3x3() @ Vector((0, 1, 0))).normalized()
+        delta = actual.rotation_difference(objetivo)
+        m = pb.matrix.copy()
+        nueva = delta.to_matrix().to_4x4() @ Matrix.Translation(-m.translation) @ m
+        nueva.translation = m.translation
+        pb.matrix = nueva
+        bpy.context.view_layer.update()
+        rot[nb] = pb.rotation_quaternion.copy()
+    for pb in arm.pose.bones:
+        n = pb.name
+        if any(k in n for k in pose["cerrar"]) and ("Hand" in n):
+            rot[n] = Quaternion((1, 0, 0), math.radians(70))
+        elif any(k in n for k in pose["abrir"]) and ("Hand" in n):
+            rot[n] = Quaternion()
+    for nb in ("mixamorig:Neck", "mixamorig:Head"):
+        if arm.pose.bones.get(nb):
+            rot[nb] = Quaternion((1, 0, 0), -math.radians(pose["cabeza"] / 2))
+    accion = bpy.data.actions.new(f"pose_{pid}_{nombre}")
+    ad.action = accion
+    for n, q in rot.items():
+        pb = arm.pose.bones[n]
+        pb.rotation_quaternion = q
+        pb.keyframe_insert("rotation_quaternion", frame=1)
+    ad.action = vieja
+    ad.use_nla = viejo_nla
+    pista = ad.nla_tracks.new()
+    pista.name = f"pose_{nombre}"
+    st = pista.strips.new(f"pose_{nombre}", f0, accion)
+    try:
+        st.action_slot = accion.slots[0]
+    except Exception:
+        pass
+    st.frame_end = max(f0 + 2, f1)
+    st.blend_type = "REPLACE"
+    st.blend_in = st.blend_out = min(0.35 * fps, (st.frame_end - f0) / 2 - 1)
+    st.extrapolation = "NOTHING"
+
+
+def _arreglar_texturas(objs, info: dict):
+    """Las texturas de un FBX de Tripo quedan con la ruta donde se descomprimió: si no existe, se buscan en la carpeta
+    .fbm al lado del modelo. `info["texturas"]` = {parte del nombre: ref} reemplaza una (p. ej. el color corregido)."""
+    base = config.resolver(info["ref"])
+    fbm = base.with_suffix(".fbm")
+    reemplazos = {k: config.resolver(v) for k, v in (info.get("texturas") or {}).items()}
+    for o in objs:
+        if o.type != "MESH":
+            continue
+        for m in o.data.materials:
+            if not m or not m.use_nodes:
+                continue
+            for n in m.node_tree.nodes:
+                if n.type != "TEX_IMAGE" or not n.image:
+                    continue
+                ruta = Path(bpy.path.abspath(n.image.filepath))
+                nueva = next((r for k, r in reemplazos.items() if k in ruta.name.lower()), None)
+                if nueva is None and not ruta.exists() and (fbm / ruta.name).exists():
+                    nueva = fbm / ruta.name
+                if nueva is not None:
+                    cs = n.image.colorspace_settings.name
+                    n.image = bpy.data.images.load(str(nueva), check_existing=True)
+                    n.image.colorspace_settings.name = cs
+            if info.get("sin_metal"):
+                # el mapa metálico de Tripo pinta piel y tela de metal (se ven cromados): tela y piel no son metal
+                b = next((x for x in m.node_tree.nodes if x.type == "BSDF_PRINCIPLED"), None)
+                if b is not None:
+                    for ent in ("Metallic", "Roughness"):
+                        for l in list(b.inputs[ent].links):
+                            m.node_tree.links.remove(l)
+                    b.inputs["Metallic"].default_value = 0.0
+                    b.inputs["Roughness"].default_value = 0.62
 
 
 def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
@@ -409,6 +570,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         if o.parent is None:
             o.parent = raiz
     raiz.scale = (info["escala"],) * 3
+    _arreglar_texturas(objs, info)
     arm = next(o for o in objs if o.type == "ARMATURE")
     if info.get("renombrar_huesos"):
         viejo, nuevo = info["renombrar_huesos"]
@@ -440,6 +602,10 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         accion = _rt(modelo, ref, arm, raiz, info, f"{pid}")
         f0 = int(round(ac["inicio_s"] * fps)) + 1
         if ac.get("encadenar") and tramos:
+            if tramos[-1].get("futbol"):              # clip del juego: termina donde lo dejó su root_path al cortarse
+                _tf = (f0 - tramos[-1]["f0"]) / fps
+                _p, _r = _raiz_en(tramos[-1]["futbol"], _tf)
+                tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"] = _p, _r + tramos[-1]["futbol"].get("extra", lambda s: 0.0)(_tf)
             pos, rumbo = tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"]
         if "pos" in ac:
             p = ac["pos"]
@@ -466,6 +632,30 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         pos_fin = pos + giro @ (d * vueltas)
         tramos.append({"accion": accion, "f0": f0, "fin": st.frame_end, "pos": pos.copy(), "rumbo": rumbo,
                        "strip": st, "pos_fin": pos_fin, "rumbo_fin": rumbo})
+        if accion.get("futbol_clip"):
+            # clip del juego: la raíz sigue su root_path cuadro a cuadro (como el futbolista), no la cadera
+            raices = _raices(MODELOS["futbol:jugador"])
+            fut = {"raiz": raices.get(accion["futbol_clip"], {}), "vel": ac.get("velocidad", 1.0),
+                   "rep": int(st.repeat), "pos": pos.copy(), "rumbo": rumbo}
+            tramos[-1]["futbol"] = fut
+            largo_f = int(st.frame_end - f0)
+            extra = _giro_extra(ac)
+            for j in range(largo_f + 1):
+                pj_, rj = _raiz_en(fut, j / fps)
+                llaves.append((f0 + j, pj_, rj + extra(j / fps) + info["frente"]))
+            pfin, rfin = _raiz_en(fut, largo_f / fps)
+            tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"] = pfin, rfin + extra(1e9)
+            fut["extra"] = extra
+            continue
+        if ac.get("giro_deg"):
+            # giro en el lugar durante el clip (p. ej. el salto con media vuelta del «Siu»)
+            extra = _giro_extra(ac)
+            largo_f = int(st.frame_end - f0)
+            d_cad = Vector(accion.get("desplazamiento_cadera_m", (0, 0, 0)))
+            for j in range(largo_f + 1):
+                llaves.append((f0 + j, pos, rumbo + extra(j / fps) + info["frente"]))
+            tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"] = pos, rumbo + extra(1e9)
+            continue
         # en cada repetición la cadera vuelve al punto de partida del clip: el personaje avanza lo que avanzó el ciclo
         por_ciclo = (st.frame_end - st.frame_start) / vueltas
         # "giro_s": el rumbo pasa del anterior al nuevo de forma suave durante los primeros `giro_s` segundos del tramo
@@ -481,17 +671,36 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
                     llaves.append((f0 + j, pos, rumbo_ant + info["frente"] + dr * u))
             llaves.append((f0 + k * por_ciclo + (nf if k == 0 and nf > 1 else 0), pos + giro @ (d * k), r))
     raiz.animation_data_create()
+    # un tramo nuevo puede empezar antes de que terminen las claves cuadro a cuadro del anterior: manda el nuevo
+    inicios = sorted(tr["f0"] for tr in tramos)
+    def _vigente(f):
+        dueno = max((s for s in inicios if s <= f + 1e-6), default=inicios[0] if inicios else 1)
+        return dueno
+    por_frame = {}
     for f0, pz, rz in llaves:
+        por_frame[round(f0, 3)] = (pz, rz)
+    claves = sorted(por_frame.items())
+    lineal = []
+    prev = None
+    for f0, (pz, rz) in claves:
+        if prev is not None and f0 - prev[0] > 1.001:
+            lineal.append((f0 - 0.01, prev[1], prev[2]))        # sostener hasta el salto (no se arrastra)
+        lineal.append((f0, pz, rz))
+        prev = (f0, pz, rz)
+    for f0, pz, rz in lineal:
         raiz.location = pz
         raiz.rotation_euler = (0, 0, rz)
         raiz.keyframe_insert("location", frame=f0)
         raiz.keyframe_insert("rotation_euler", frame=f0)
-    # (los tramos con repeticiones recortadas por el siguiente dejan claves de más: son inofensivas)
+    # lineal: en cámara lenta (sub-cuadros) el cuerpo no avanza a saltos
     if raiz.animation_data and raiz.animation_data.action:
         for fc in K._fcurves(raiz.animation_data.action):
             for k in fc.keyframe_points:
-                k.interpolation = "CONSTANT"
+                k.interpolation = "LINEAR"
     fin = max((t["fin"] for t in tramos), default=1)
+    for ac, tr in zip(spec.get("acciones", []), tramos):
+        if ac.get("pose"):
+            _pose_encima(arm, ac["pose"], tr["f0"], tr["f0"] + int(ac.get("pose_dur_s", 3.0) * fps), fps, pid)
     if spec.get("sobre"):
         padre = bpy.data.objects.get(spec["sobre"])
         if padre is None:

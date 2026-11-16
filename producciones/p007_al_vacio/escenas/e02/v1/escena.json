@@ -1,0 +1,1716 @@
+{
+ "tipo": "escena",
+ "id": "p007_al_vacio-e02",
+ "produccion": "p007_al_vacio",
+ "numero": 2,
+ "version": 1,
+ "titulo": "Al vacío — Messi vs. Cristiano (gana Messi)",
+ "guion": "Estadio de noche. Dos plataformas sobre el vacío. MESSI contra CRISTIANO, primero a tres: quien le pega fuerte al botón verde del rival lo pone rojo, suena la alarma y se le abre el piso. Cristiano le pega de empeine y muy fuerte; Messi con rosca, colocado. 2-2 y el último remate decide: el otro cae al vacío en cámara lenta. Messi señala el cielo con los dos índices.",
+ "duracion_s": 60.0,
+ "mapa_tiempo": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   1.967,
+   1.967
+  ],
+  [
+   5.717,
+   3.467
+  ],
+  [
+   40.512,
+   38.262
+  ],
+  [
+   47.607,
+   41.487
+  ],
+  [
+   47.707,
+   41.587
+  ],
+  [
+   49.913,
+   42.69
+  ],
+  [
+   60.0,
+   52.777
+  ]
+ ],
+ "escenario": {
+  "id": "al_vacio",
+  "generador": "al_vacio",
+  "parametros": {
+   "semilla": 7,
+   "duracion_s": 52.777,
+   "animo": [
+    [
+     -1.4,
+     "tension"
+    ],
+    [
+     0,
+     "aplauso"
+    ],
+    [
+     2.166999999999997,
+     "festejo"
+    ],
+    [
+     4.366999999999997,
+     "aplauso"
+    ],
+    [
+     5.87,
+     "tension"
+    ],
+    [
+     11.153,
+     "tension"
+    ],
+    [
+     15.445,
+     "tension"
+    ],
+    [
+     18.10333333333333,
+     "festejo"
+    ],
+    [
+     20.30333333333333,
+     "aplauso"
+    ],
+    [
+     21.8,
+     "tension"
+    ],
+    [
+     25.366999999999997,
+     "festejo"
+    ],
+    [
+     27.566999999999997,
+     "aplauso"
+    ],
+    [
+     29.07,
+     "tension"
+    ],
+    [
+     32.62383333333333,
+     "festejo"
+    ],
+    [
+     34.82383333333333,
+     "aplauso"
+    ],
+    [
+     36.32,
+     "tension"
+    ],
+    [
+     39.887,
+     "festejo"
+    ],
+    [
+     42.087,
+     "aplauso"
+    ],
+    [
+     42.087,
+     "salta"
+    ]
+   ],
+   "llamaradas": [
+    [
+     2.217,
+     1
+    ],
+    [
+     18.153,
+     0
+    ],
+    [
+     25.417,
+     1
+    ],
+    [
+     32.674,
+     0
+    ],
+    [
+     39.937,
+     1
+    ]
+   ],
+   "papelitos_s": 40.89
+  }
+ },
+ "duelo": {
+  "turnos": [
+   {
+    "tirador": 0,
+    "personaje": "messi",
+    "clip": "futbol:f_jn_setpiece_shot_2258",
+    "patea_s": -1.2,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.0,
+     "dz": 0.0
+    },
+    "velocidad": 23.0,
+    "efecto": [
+     0,
+     0,
+     28
+    ],
+    "aparece_s": -2.2,
+    "sube_dur": 1.6
+   },
+   {
+    "tirador": 1,
+    "personaje": "cristiano",
+    "clip": "futbol:f_jn_setpiece_shot_0704",
+    "patea_s": 6.07,
+    "resultado": "tablero",
+    "destino": {
+     "dy": 0.1,
+     "dz": 0.85
+    },
+    "velocidad": 29.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 5.07,
+    "sube_dur": 1.6,
+    "sube_s": 3.42,
+    "sube_lado": 1
+   },
+   {
+    "tirador": 0,
+    "personaje": "messi",
+    "clip": "futbol:f_jn_setpiece_shot_2260",
+    "patea_s": 11.353,
+    "resultado": "afuera",
+    "destino": {
+     "dy": -2.2,
+     "dz": 0.4
+    },
+    "velocidad": 23.5,
+    "efecto": [
+     0,
+     0,
+     -24
+    ],
+    "aparece_s": 10.35,
+    "sube_dur": 1.6
+   },
+   {
+    "tirador": 1,
+    "personaje": "cristiano",
+    "clip": "futbol:f_jn_setpiece_shot_2600",
+    "patea_s": 15.645,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.05,
+     "dz": -0.05
+    },
+    "velocidad": 28.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 14.64,
+    "sube_dur": 1.6
+   },
+   {
+    "tirador": 0,
+    "personaje": "messi",
+    "clip": "futbol:f_jn_setpiece_shot_2258",
+    "patea_s": 22.0,
+    "resultado": "boton",
+    "destino": {
+     "dy": -0.08,
+     "dz": 0.08
+    },
+    "velocidad": 23.0,
+    "efecto": [
+     0,
+     0,
+     28
+    ],
+    "aparece_s": 21.0,
+    "sube_dur": 1.6,
+    "sube_s": 19.35,
+    "sube_lado": 0
+   },
+   {
+    "tirador": 1,
+    "personaje": "cristiano",
+    "clip": "futbol:f_jn_setpiece_shot_0704",
+    "patea_s": 29.27,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.0,
+     "dz": 0.05
+    },
+    "velocidad": 29.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 28.27,
+    "sube_dur": 1.6,
+    "sube_s": 26.62,
+    "sube_lado": 1
+   },
+   {
+    "tirador": 0,
+    "personaje": "messi",
+    "clip": "futbol:f_jn_setpiece_shot_2258",
+    "patea_s": 36.52,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.0,
+     "dz": 0.0
+    },
+    "velocidad": 23.0,
+    "efecto": [
+     0,
+     0,
+     28
+    ],
+    "aparece_s": 35.52,
+    "sube_dur": 1.6,
+    "sube_s": 44.29,
+    "sube_lado": 1
+   }
+  ],
+  "primero_a": 3,
+  "gana": "messi"
+ },
+ "eventos": [],
+ "vehiculos": [],
+ "personajes": [
+  {
+   "id": "messi",
+   "modelo": "pelicula:messi",
+   "sobre": "soporte_0",
+   "acciones": [
+    {
+     "clip": "futbol:s_jn_idle_ready_0150",
+     "inicio_s": -2.2,
+     "pos": [
+      -4.53,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_setpiece_shot_2258",
+     "inicio_s": -1.2,
+     "pos": [
+      -4.53,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_celebrate_scorer_0874",
+     "inicio_s": 1.833,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:s_jn_nis_misc_2864",
+     "inicio_s": 4.433,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:s_jn_idle_fidget_0148",
+     "inicio_s": 5.07,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:s_jn_nis_misc_2858",
+     "inicio_s": 9.603,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:s_jn_idle_ready_0150",
+     "inicio_s": 10.353,
+     "pos": [
+      -4.08,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_setpiece_shot_2260",
+     "inicio_s": 11.353,
+     "pos": [
+      -4.08,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_dejected_0102",
+     "inicio_s": 13.303,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:s_jn_idle_fidget_0148",
+     "inicio_s": 14.645,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:s_jn_dejected_0948",
+     "inicio_s": 15.403,
+     "encadenar": true
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "inicio_s": 18.123,
+     "encadenar": true
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
+     "inicio_s": 18.953,
+     "encadenar": true,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:f_jn_angry_0356",
+     "inicio_s": 19.35,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:s_jn_idle_ready_0150",
+     "inicio_s": 21.0,
+     "pos": [
+      -4.53,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_setpiece_shot_2258",
+     "inicio_s": 22.0,
+     "pos": [
+      -4.53,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_celebrate_scorer_0874",
+     "inicio_s": 25.033,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:s_jn_nis_misc_2862",
+     "inicio_s": 27.633,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:s_jn_idle_fidget_0148",
+     "inicio_s": 28.27,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "inicio_s": 32.644,
+     "encadenar": true
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
+     "inicio_s": 33.474,
+     "encadenar": true,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:s_jn_angry_0372",
+     "inicio_s": 33.87,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:s_jn_idle_ready_0150",
+     "inicio_s": 35.52,
+     "pos": [
+      -4.53,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_setpiece_shot_2258",
+     "inicio_s": 36.52,
+     "pos": [
+      -4.53,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "futbol:f_jn_celebrate_scorer_0942",
+     "inicio_s": 41.19,
+     "pos": [
+      0.6,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "pose": "dedos_al_cielo",
+     "pose_dur_s": 5.2
+    }
+   ]
+  },
+  {
+   "id": "cristiano",
+   "modelo": "pelicula:cristiano",
+   "sobre": "soporte_1",
+   "acciones": [
+    {
+     "clip": "futbol:f_jn_idle_0520",
+     "inicio_s": -2.2,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "inicio_s": 2.187,
+     "encadenar": true
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
+     "inicio_s": 3.017,
+     "encadenar": true,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:f_jn_angry_0366",
+     "inicio_s": 3.42,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:s_jn_idle_ready_0150",
+     "inicio_s": 5.07,
+     "pos": [
+      4.03,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:f_jn_setpiece_shot_0704",
+     "inicio_s": 6.07,
+     "pos": [
+      4.03,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:s_jn_gesture_0944",
+     "inicio_s": 8.92,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:f_jn_angry_0356",
+     "inicio_s": 10.32,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:f_jn_idle_0520",
+     "inicio_s": 10.353,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:s_jn_nis_misc_2862",
+     "inicio_s": 14.095,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:s_jn_idle_ready_0150",
+     "inicio_s": 14.645,
+     "pos": [
+      3.86,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:f_jn_setpiece_shot_2600",
+     "inicio_s": 15.645,
+     "pos": [
+      3.86,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:f_jn_celebrate_scorer_0874",
+     "inicio_s": 17.945,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:s_jn_nis_misc_2858",
+     "inicio_s": 20.545,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:f_jn_idle_0520",
+     "inicio_s": 21.0,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "inicio_s": 25.387,
+     "encadenar": true
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
+     "inicio_s": 26.217,
+     "encadenar": true,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:f_jn_angry_0366",
+     "inicio_s": 26.62,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:s_jn_idle_ready_0150",
+     "inicio_s": 28.27,
+     "pos": [
+      4.03,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:f_jn_setpiece_shot_0704",
+     "inicio_s": 29.27,
+     "pos": [
+      4.03,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:f_jn_celebrate_scorer_0874",
+     "inicio_s": 32.52,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:s_jn_nis_misc_2864",
+     "inicio_s": 35.12,
+     "encadenar": true
+    },
+    {
+     "clip": "futbol:f_jn_idle_0520",
+     "inicio_s": 35.52,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling_From_Losing_Balance.fbx",
+     "inicio_s": 39.907,
+     "encadenar": true
+    },
+    {
+     "clip": "mixamo:animaciones/caidas_muertes/Falling.fbx",
+     "inicio_s": 40.737,
+     "encadenar": true,
+     "repetir": 3
+    },
+    {
+     "clip": "futbol:s_jn_angry_0372",
+     "inicio_s": 44.29,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "futbol:f_jn_dejected_0104",
+     "inicio_s": 46.69,
+     "encadenar": true
+    }
+   ]
+  }
+ ],
+ "tomas": [
+  {
+   "id": "t01_grua",
+   "tipo": "grua",
+   "plano": "aérea sobre el vacío: el estadio lleno, las plataformas; CRISTIANO / MESSI ya corre hacia la pelota",
+   "inicio_s": 0.0,
+   "duracion_s": 0.742,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "centro",
+    "desp": [
+     -3,
+     -26,
+     15
+    ]
+   },
+   "hasta": {
+    "ancla": "trampa_0",
+    "desp": [
+     -3.0,
+     -7,
+     3.5
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_1"
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t02_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "la pelota cruza el vacío hacia el botón",
+   "inicio_s": 0.742,
+   "duracion_s": 1.175,
+   "luz_relleno": 0,
+   "movil": "pelota_0",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_0",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t03_estatica",
+   "tipo": "estatica",
+   "plano": "el botón se pone ROJO: alarma, se abre el piso",
+   "inicio_s": 1.917,
+   "duracion_s": 1.3,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t04_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO cae al vacío",
+   "inicio_s": 3.217,
+   "duracion_s": 2.8,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t05_orbita",
+   "tipo": "orbita",
+   "plano": "MESSI festeja; el público estalla",
+   "inicio_s": 6.017,
+   "duracion_s": 1.0,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "trampa_0",
+    "desp": [
+     1.5,
+     0,
+     1.2
+    ]
+   },
+   "radio": 4.5,
+   "altura": 1.5,
+   "angulo_inicial": 30,
+   "angulo_final": 70,
+   "lente_mm": 28
+  },
+  {
+   "id": "t06_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO toma carrera",
+   "inicio_s": 7.017,
+   "duracion_s": 3.086,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     5.4,
+     0.45,
+     2.6
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     -6.0,
+     0,
+     0.3
+    ]
+   },
+   "lente_mm": 21
+  },
+  {
+   "id": "t07_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO: empeine, a matar",
+   "inicio_s": 10.103,
+   "duracion_s": 0.72,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -0.6,
+     -3.6,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     -0.2,
+     0,
+     0.9
+    ]
+   },
+   "lente_mm": 26
+  },
+  {
+   "id": "t08_estatica",
+   "tipo": "estatica",
+   "plano": "pega arriba del botón: el tablero tiembla",
+   "inicio_s": 10.823,
+   "duracion_s": 1.48,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t09_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI toma carrera",
+   "inicio_s": 12.303,
+   "duracion_s": 2.292,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     -5.4,
+     0.45,
+     2.6
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     6.0,
+     0,
+     0.3
+    ]
+   },
+   "lente_mm": 21
+  },
+  {
+   "id": "t10_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI: zurda con rosca",
+   "inicio_s": 14.595,
+   "duracion_s": 0.72,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.6,
+     -3.6,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.2,
+     0,
+     0.9
+    ]
+   },
+   "lente_mm": 26
+  },
+  {
+   "id": "t11_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "se le abre y se pierde en el vacío",
+   "inicio_s": 15.315,
+   "duracion_s": 1.28,
+   "luz_relleno": 0,
+   "movil": "pelota_2",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_2",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t12_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO toma carrera",
+   "inicio_s": 16.595,
+   "duracion_s": 2.15,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     5.4,
+     0.45,
+     2.6
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     -6.0,
+     0,
+     0.3
+    ]
+   },
+   "lente_mm": 21
+  },
+  {
+   "id": "t13_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO: empeine, a matar",
+   "inicio_s": 18.745,
+   "duracion_s": 0.72,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -0.6,
+     -3.6,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     -0.2,
+     0,
+     0.9
+    ]
+   },
+   "lente_mm": 26
+  },
+  {
+   "id": "t14_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "la pelota cruza el vacío hacia el botón",
+   "inicio_s": 19.465,
+   "duracion_s": 0.638,
+   "luz_relleno": 0,
+   "movil": "pelota_3",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_3",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t15_estatica",
+   "tipo": "estatica",
+   "plano": "el botón se pone ROJO: alarma, se abre el piso",
+   "inicio_s": 20.103,
+   "duracion_s": 0.55,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t16_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI cae al vacío",
+   "inicio_s": 20.653,
+   "duracion_s": 1.3,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t17_orbita",
+   "tipo": "orbita",
+   "plano": "CRISTIANO festeja; el público estalla",
+   "inicio_s": 21.953,
+   "duracion_s": 1.0,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "trampa_1",
+    "desp": [
+     -1.5,
+     0,
+     1.2
+    ]
+   },
+   "radio": 4.5,
+   "altura": 1.5,
+   "angulo_inicial": 30,
+   "angulo_final": 70,
+   "lente_mm": 28
+  },
+  {
+   "id": "t18_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI toma carrera",
+   "inicio_s": 22.953,
+   "duracion_s": 2.789,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     -5.4,
+     0.45,
+     2.6
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     6.0,
+     0,
+     0.3
+    ]
+   },
+   "lente_mm": 21
+  },
+  {
+   "id": "t19_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI: zurda con rosca",
+   "inicio_s": 25.742,
+   "duracion_s": 0.72,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.6,
+     -3.6,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.2,
+     0,
+     0.9
+    ]
+   },
+   "lente_mm": 26
+  },
+  {
+   "id": "t20_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "la pelota cruza el vacío hacia el botón",
+   "inicio_s": 26.462,
+   "duracion_s": 0.905,
+   "luz_relleno": 0,
+   "movil": "pelota_4",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_4",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t21_estatica",
+   "tipo": "estatica",
+   "plano": "el botón se pone ROJO: alarma, se abre el piso",
+   "inicio_s": 27.367,
+   "duracion_s": 0.55,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t22_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO cae al vacío",
+   "inicio_s": 27.917,
+   "duracion_s": 1.3,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t23_orbita",
+   "tipo": "orbita",
+   "plano": "MESSI festeja; el público estalla",
+   "inicio_s": 29.217,
+   "duracion_s": 1.0,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "trampa_0",
+    "desp": [
+     1.5,
+     0,
+     1.2
+    ]
+   },
+   "radio": 4.5,
+   "altura": 1.5,
+   "angulo_inicial": 30,
+   "angulo_final": 70,
+   "lente_mm": 28
+  },
+  {
+   "id": "t24_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO toma carrera",
+   "inicio_s": 30.217,
+   "duracion_s": 3.086,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     5.4,
+     0.45,
+     2.6
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     -6.0,
+     0,
+     0.3
+    ]
+   },
+   "lente_mm": 21
+  },
+  {
+   "id": "t25_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO: empeine, a matar",
+   "inicio_s": 33.303,
+   "duracion_s": 0.72,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -0.6,
+     -3.6,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     -0.2,
+     0,
+     0.9
+    ]
+   },
+   "lente_mm": 26
+  },
+  {
+   "id": "t26_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "la pelota cruza el vacío hacia el botón",
+   "inicio_s": 34.023,
+   "duracion_s": 0.601,
+   "luz_relleno": 0,
+   "movil": "pelota_5",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_5",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t27_estatica",
+   "tipo": "estatica",
+   "plano": "el botón se pone ROJO: alarma, se abre el piso",
+   "inicio_s": 34.624,
+   "duracion_s": 0.55,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t28_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI cae al vacío",
+   "inicio_s": 35.174,
+   "duracion_s": 1.3,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t29_orbita",
+   "tipo": "orbita",
+   "plano": "CRISTIANO festeja; el público estalla",
+   "inicio_s": 36.474,
+   "duracion_s": 1.0,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "trampa_1",
+    "desp": [
+     -1.5,
+     0,
+     1.2
+    ]
+   },
+   "radio": 4.5,
+   "altura": 1.5,
+   "angulo_inicial": 30,
+   "angulo_final": 70,
+   "lente_mm": 28
+  },
+  {
+   "id": "t30_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI toma carrera",
+   "inicio_s": 37.474,
+   "duracion_s": 2.788,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     -5.4,
+     0.45,
+     2.6
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     6.0,
+     0,
+     0.3
+    ]
+   },
+   "lente_mm": 21
+  },
+  {
+   "id": "t31_estatica",
+   "tipo": "estatica",
+   "plano": "MESSI: zurda con rosca",
+   "inicio_s": 40.262,
+   "duracion_s": 1.284,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.6,
+     -3.6,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.2,
+     0,
+     0.9
+    ]
+   },
+   "lente_mm": 26
+  },
+  {
+   "id": "t32_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "la pelota cruza el vacío hacia el botón",
+   "inicio_s": 41.546,
+   "duracion_s": 1.991,
+   "luz_relleno": 0,
+   "movil": "pelota_6",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_6",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t33_estatica",
+   "tipo": "estatica",
+   "plano": "el botón se pone ROJO: alarma, se abre el piso",
+   "inicio_s": 43.537,
+   "duracion_s": 1.21,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t34_estatica",
+   "tipo": "estatica",
+   "plano": "CRISTIANO cae al vacío",
+   "inicio_s": 44.747,
+   "duracion_s": 2.86,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t35_orbita",
+   "tipo": "orbita",
+   "plano": "MESSI: los dos índices al cielo",
+   "inicio_s": 47.607,
+   "duracion_s": 9.993,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.6,
+     0,
+     1.1
+    ]
+   },
+   "radio": 4.2,
+   "altura": 1.4,
+   "angulo_inicial": 140,
+   "angulo_final": 220,
+   "lente_mm": 26
+  },
+  {
+   "id": "t36_grua",
+   "tipo": "grua",
+   "plano": "final: la cámara sube sobre el estadio; papelitos; el perdedor vuelve derrotado en el ascensor",
+   "inicio_s": 57.6,
+   "duracion_s": 2.4,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     -9,
+     3
+    ]
+   },
+   "hasta": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     -20,
+     18
+    ]
+   },
+   "objetivo": {
+    "ancla": "centro"
+   },
+   "lente_mm": 22
+  }
+ ],
+ "moviles_escenario": [
+  "pelota_0",
+  "pelota_1",
+  "pelota_2",
+  "pelota_3",
+  "pelota_4",
+  "pelota_5",
+  "pelota_6"
+ ],
+ "sonido": {
+  "generador": "procedural",
+  "ambiente": "arcade_duelo",
+  "publico": 0.45,
+  "eventos": [
+   {
+    "tipo": "musica",
+    "prompt": "High energy sports arena track, 60 seconds, no vocals: hard-hitting trap drums, deep 808 bass and an epic stadium brass hook, built for a viral football duel video; constant forward drive with short breaks, a dramatic tension build in the last third and a huge drop at the winning moment around 44s, then a triumphant outro.",
+    "duracion_s": 60.0,
+    "inicio_s": 0.0,
+    "volumen": 0.5
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive football stadium crowd erupting in wild cheers and screams, tens of thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 2.717,
+    "volumen": 1.0
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive football stadium crowd erupting in wild cheers and screams, tens of thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 20.453,
+    "volumen": 1.0
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive football stadium crowd erupting in wild cheers and screams, tens of thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 27.717,
+    "volumen": 1.0
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive football stadium crowd erupting in wild cheers and screams, tens of thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 34.974,
+    "volumen": 1.0
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive football stadium crowd erupting in wild cheers and screams, tens of thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 44.307,
+    "volumen": 1.0
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 2.842,
+    "volumen": 0.75,
+    "movil": "cristiano"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 20.503,
+    "volumen": 0.75,
+    "movil": "messi"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 27.767,
+    "volumen": 0.75,
+    "movil": "cristiano"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 35.024,
+    "volumen": 0.75,
+    "movil": "messi"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 44.417,
+    "volumen": 0.75,
+    "movil": "cristiano"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "football stadium crowd chanting Messi Messi Messi rhythmically",
+    "duracion_s": 5,
+    "inicio_s": 47.61,
+    "volumen": 0.9
+   }
+  ]
+ },
+ "render": {
+  "calidad": "revision",
+  "fps": 30,
+  "exposicion": 0.0,
+  "vertical": true
+ },
+ "estado": "borrador",
+ "bloqueada": false,
+ "huella_v": 2
+}

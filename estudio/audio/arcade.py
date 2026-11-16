@@ -53,6 +53,16 @@ def _factor(mapa, t):
     return 1.0
 
 
+def alarma(dur: float = 2.2) -> np.ndarray:
+    """Sirena de alerta de dos tonos (se abre la compuerta): cuadrada suavizada que alterna 880 / 660 Hz cada 0,18 s."""
+    tt = np.arange(int(dur * SR)) / SR
+    f = np.where((tt // 0.18) % 2 == 0, 880.0, 660.0)
+    fase = np.cumsum(2 * np.pi * f / SR)
+    x = np.tanh(3.0 * np.sin(fase)) * 0.6 + np.sin(2 * fase) * 0.15
+    env = np.minimum(1.0, tt / 0.02) * np.clip((dur - tt) / 0.3, 0, 1)
+    return x * env * 0.5
+
+
 def duelo(pistas: dict, n: int, rng, publico: float = 0.35) -> np.ndarray:
     mezcla = np.zeros((n, 2))
     mapa = pistas.get("mapa_tiempo")
@@ -80,9 +90,11 @@ def duelo(pistas: dict, n: int, rng, publico: float = 0.35) -> np.ndarray:
         elif tipo == "boton":
             _poner(mezcla, _wav("mech_release"), t, 1.0, pan, k)
             _poner(mezcla, _wav("mech_gate"), t + 0.05 * k, 1.0, pan, k)
-        elif tipo == "caida":
-            _poner(mezcla, _wav("cheer"), t + 0.2 * k, 1.0, 0.0)
-            _poner(mezcla, _wav("cheer"), t + 0.9 * k, 0.6, -pan)
+            _poner(mezcla, alarma(), t + 0.02, 0.55, pan)                 # alerta: se abre la compuerta
+        elif tipo == "caida":                                              # el público estalla
+            _poner(mezcla, _wav("cheer"), t + 0.15 * k, 1.4, 0.0)
+            _poner(mezcla, _wav("cheer"), t + 0.7 * k, 1.0, -0.5)
+            _poner(mezcla, _wav("cheer"), t + 1.1 * k, 0.8, 0.5)
         elif tipo == "subida":
             _poner(mezcla, _wav("mech_gate"), t, 0.6, pan)
     return mezcla

@@ -41,7 +41,15 @@ def altura_hueso(arm, nombre) -> float:
 
 
 def retarget(origen, accion_origen, destino, nombre: str, hueso_cadera="mixamorig:Hips",
-             escala_pos: float | None = None, fotogramas: tuple[int, int] | None = None):
+             escala_pos: float | None = None, fotogramas: tuple[int, int] | None = None,
+             nombres: dict | None = None, cadera_origen: str | None = None):
+    """`nombres` = {hueso destino: hueso origen} cuando los esqueletos nombran distinto lo mismo (p. ej. el futbolista
+    del juego usa «mixamorig_Hips» y el de Mixamo «mixamorig:Hips»)."""
+    return _retarget(origen, accion_origen, destino, nombre, hueso_cadera, escala_pos, fotogramas,
+                     nombres or {}, cadera_origen or hueso_cadera)
+
+
+def _retarget(origen, accion_origen, destino, nombre, hueso_cadera, escala_pos, fotogramas, nombres, cadera_origen):
     """Devuelve una acción nueva para `destino` con la animación de `accion_origen` (que anima `origen`)."""
     sc = bpy.context.scene
     ad_o = origen.animation_data_create()
@@ -58,13 +66,14 @@ def retarget(origen, accion_origen, destino, nombre: str, hueso_cadera="mixamori
         ad_d.action_slot = nueva.slots.new(destino.id_type, destino.name) if not nueva.slots else nueva.slots[0]
     except Exception:
         pass
-    comunes = [n for n in _orden_jerarquico(destino) if n in origen.pose.bones]
+    o_de = lambda n: nombres.get(n, n)
+    comunes = [n for n in _orden_jerarquico(destino) if o_de(n) in origen.pose.bones]
     if escala_pos is None:
-        h_o = altura_hueso(origen, hueso_cadera)
+        h_o = altura_hueso(origen, cadera_origen)
         h_d = altura_hueso(destino, hueso_cadera)
         escala_pos = h_d / h_o if h_o else 1.0
     f0, f1 = fotogramas or (int(accion_origen.frame_range[0]), int(accion_origen.frame_range[1]))
-    rest_o = {n: _mundo_hueso(origen, n, pose=False) for n in comunes}
+    rest_o = {n: _mundo_hueso(origen, o_de(n), pose=False) for n in comunes}
     rest_d = {n: _mundo_hueso(destino, n, pose=False) for n in comunes}
     for pb in destino.pose.bones:
         pb.rotation_mode = "QUATERNION"
@@ -74,7 +83,7 @@ def retarget(origen, accion_origen, destino, nombre: str, hueso_cadera="mixamori
     for f in range(f0, f1 + 1):
         sc.frame_set(f)
         for n in comunes:
-            pose_o = _mundo_hueso(origen, n, pose=True)
+            pose_o = _mundo_hueso(origen, o_de(n), pose=True)
             delta = pose_o.to_quaternion() @ rest_o[n].to_quaternion().inverted()
             q_obj = delta @ rest_d[n].to_quaternion()
             if n == hueso_cadera:

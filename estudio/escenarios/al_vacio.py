@@ -2,7 +2,7 @@
 scripts/minigames/boton_caida.gd), recreado y mejorado para video vertical.
 
 Reglas del juego (iguales): dos plataformas enfrentadas sobre un vacío, separadas por un hueco; cada una tiene al fondo
-un tablero blanco con un BOTÓN rojo (aro dorado). Por turnos, cada jugador patea su pelota (física real: vuelo, efecto,
+un tablero blanco con un BOTÓN (aro dorado; en el video verde, rojo al apretarlo). Por turnos, cada jugador patea su pelota (física real: vuelo, efecto,
 rebotes); si la pelota GOLPEA el botón rival con fuerza (impacto contra la cara ≥ 2,5 m/s: un roce no alcanza), el botón
 se hunde y se pone verde, se abre la trampilla de dos hojas bajo los pies del rival y cae al vacío. Gana el primero que
 hace caer al otro las veces pedidas.
@@ -28,10 +28,10 @@ from estudio import config
 from estudio.blender import kit as K, pelota as B
 
 GAP = 12.0          # hueco entre plataformas (nivel 1 «A la vista»)
-DEPTH = 7.5
+DEPTH = 10.5        # (el juego: 7,5) más larga para la carrera de 5 m de los tiros libres de Messi y Cristiano
 WIDTH = 9.0
 HOLE = 2.3
-BUTTON_X = 6.2      # del borde al botón (hacia el fondo)
+BUTTON_X = 9.4      # del borde al botón, al fondo (el juego: 6,2)
 BUTTON_Z = 1.2
 BUTTON_R = 0.55
 CAP = 0.14
@@ -451,8 +451,9 @@ def construir(parametros: dict | None = None) -> dict:
         "flecha": K.material("flecha", (1.0, 0.8, 0.1), 0.5),
         "trampa": K.material("trampilla", (0.95, 0.75, 0.15), 0.45, ruido=0.1, relieve=0.1),
         "tablero": K.material("tablero", (0.95, 0.95, 0.98), 0.35),
-        "boton": K.material("boton_rojo", (0.95, 0.12, 0.1), 0.25, emision=(1.0, 0.08, 0.05), fuerza=2.5),
-        "boton_verde": K.material("boton_verde", (0.2, 0.95, 0.3), 0.25, emision=(0.1, 1.0, 0.2), fuerza=6.0),
+        # pedido del dueño: el botón está VERDE y se pone ROJO cuando la pelota lo aprieta (alarma: se abre el piso)
+        "boton": K.material("boton_verde", (0.2, 0.95, 0.3), 0.25, emision=(0.1, 1.0, 0.2), fuerza=3.0),
+        "boton_verde": K.material("boton_rojo", (0.95, 0.12, 0.1), 0.25, emision=(1.0, 0.08, 0.05), fuerza=8.0),
     }
     plats = [_plataforma(k, c_pl, mats) for k in (0, 1)]
     m_hierro = K.material("hierro_torre", (0.5, 0.52, 0.58), 0.45, 0.8, ruido=0.25, escala_ruido=10)
@@ -624,8 +625,8 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
         rival = 1 - s
         pj = pjs[tu["personaje"]]
         clip = tu["clip"]
-        tr = next(t for t in pj["tramos"] if t["accion"].name == clip and abs((t["f0"] - 1) / fps - tu["patea_s"]) < 0.05)
-        golpeo = D._golpeo(clip) or {}
+        tr = next(t for t in pj["tramos"] if abs((t["f0"] - 1) / fps - tu["patea_s"]) < 0.05)
+        golpeo = D._golpeo(clip.split(":")[-1]) or {}
         tc = golpeo.get("tc", 0.35)
         t_contacto = (tr["f0"] - 1) / fps + tc / (1.0 / tr["strip"].scale)
         f_contacto = t_contacto * fps + 1
@@ -689,9 +690,11 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
         if sube is not None:
             lado = int(tu.get("sube_lado", s))
             f0 = sube * fps + 1
+            # lo que quedaba de la caída (sigue hasta −46 m) se corta: el ascensor lo trae desde la niebla
+            z_claves[lado] = [k for k in z_claves[lado] if k[0] < f0 - 0.5]
             z_claves[lado].append((f0 - 0.5, -46.0))
             z_claves[lado].append((f0, -9.0))
-            dur = 2.2
+            dur = float(tu.get("sube_dur", 1.6))
             for k in range(1, int(dur * fps) + 1):
                 u = k / (dur * fps)
                 z_claves[lado].append((f0 + k, -9.0 * (1 - u) ** 3))
@@ -730,7 +733,7 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
             _clave_hide(boton, f, True)
             t_r = next((t for t in subidas if t > t_p), None)
             if t_r is not None:
-                f2 = int(round((t_r + 2.2) * fps)) + 1
+                f2 = int(round((t_r + 1.6) * fps)) + 1
                 _clave_hide(boton_v, f2, True)
                 _clave_hide(boton, f2, False)
         _constantes(boton)
