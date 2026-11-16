@@ -91,8 +91,42 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     s.frame_start, s.frame_end = 1, int(math.ceil(ctx.cuadro(duracion_f)))     # la escena dura menos si hay cámara lenta
     s.render.fps = fps
     s.camera = tomas[0]["camara"]
+    _cabinas_por_toma(tomas, ctx)
     ajustes_render(s, calidad, manifiesto.get("render", {}))
     return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs, "frames_pelicula": duracion_f}
+
+
+def _cabinas_por_toma(tomas: list, ctx):
+    """La cabina de Dream Rally (habitáculo y pilotos) se ve SÓLO en las tomas «interior» de su auto; desde afuera no."""
+    def descendientes(o):
+        for h in o.children:
+            yield h
+            yield from descendientes(h)
+    for mid, m in ctx.moviles.items():
+        raiz = m.get("objeto")
+        if raiz is None:
+            continue
+        partes = [o for o in descendientes(raiz) if o.get("cabina_dr") and not o.hide_render]
+        if not partes:
+            continue
+        tramos = []
+        for t in tomas:
+            sp = t["spec"]
+            if sp.get("movil") == mid and sp.get("punto_base") == "interior":
+                a, b = ctx.cuadro(t["frame_inicio"]), ctx.cuadro(t["frame_fin"])
+                tramos.append((a - 1e-3, b + (ctx.cuadro(t["frame_fin"] + 1) - b) * 0.5))
+        for o in partes:
+            hasta = float(o.get("oculto_desde", 1e9))      # p. ej. Mateo se baja del auto: desde ahí no está más
+            claves = [(-10.0, True)] + [k for a, b in tramos if a < hasta for k in ((a, False), (min(b, hasta), True))]
+            for fr, oculto in claves:
+                o.hide_render = oculto
+                o.hide_viewport = oculto
+                o.keyframe_insert("hide_render", frame=fr)
+                o.keyframe_insert("hide_viewport", frame=fr)
+            for ruta in ("hide_render", "hide_viewport"):
+                fc = o.animation_data.action.fcurve_ensure_for_datablock(o, ruta)
+                for kp in fc.keyframe_points:
+                    kp.interpolation = "CONSTANT"
 
 
 def ir_a(res: dict, f_pelicula: int):

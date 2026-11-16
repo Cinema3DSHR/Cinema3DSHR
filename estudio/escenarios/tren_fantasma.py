@@ -99,8 +99,10 @@ def _sh3d(nombre: str, col_proto: dict):
     I.importar(f"sh3d:models/{nombre}.glb", c)
     for o in c.objects:          # Sweet Home viene en Y arriba → el importador ya lo pone en Z arriba
         o["visor_lod"] = "bajo"
-    if nombre.startswith(("tree_", "sc_pine", "sc_acacia", "sc_cypress", "bush_", "sc_lavender")):
-        PA.arbolar(c, semilla=len(col_proto) + 1)      # copa sólida (las hojas de Sweet Home son triángulos sueltos)
+    if nombre.startswith("tree_"):
+        PA.vestir(c, semilla=len(col_proto) + 1)       # follaje denso de hojas con forma (pedido del dueño 15/11/2026)
+    elif nombre.startswith(("sc_pine", "sc_acacia", "sc_cypress", "bush_", "sc_lavender")):
+        PA.arbolar(c, semilla=len(col_proto) + 1)
     col_proto[nombre] = c
     return c
 
@@ -320,7 +322,7 @@ def construir(parametros: dict | None = None) -> dict:
                 aspa.rotation_euler = (0, a * math.pi / 6, 0)
 
     # ------------------------------------------------------------------ árboles: cortinas de álamos + montes + sueltos
-    arboles = ["tree_tree", "tree_birch", "tree_black_tupelo", "tree_quaking_aspen", "tree_sassafras", "sc_acacia", "sc_pine", "tree_weeping_willow"]
+    arboles = ["tree_tree", "tree_birch", "tree_black_tupelo", "tree_quaking_aspen", "tree_sassafras", "tree_lombardy_poplar", "tree_weeping_willow"]
     n_arb = 0
     def libre(q):
         _, _, d = kd.find((q.x, q.y, 0))

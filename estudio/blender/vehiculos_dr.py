@@ -245,12 +245,13 @@ VISIBLE_DESDE_AFUERA = ("cab_seat", "cab_dash", "cab_carbon", "cab_floor", "cab_
 MOVILES_CABINA = ("cab_rim", "cab_gear_lever", "cab_hb_lever", "cab_pedal_thr", "cab_pedal_brk")
 
 
-def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool = True, desplazamiento=None) -> list:
+def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool = False, desplazamiento=None) -> list:
     """Cuelga del auto la cabina de Dream Rally exportada por `estudio.fisica_dr` (habitáculo, butacas, tablero, volante,
     palancas, pedales y los dos pilotos con su animación cuadro a cuadro). Va en el mismo marco que el modelo del auto
     (la carrocería importada), así que coincide como en el juego. exterior=True esconde lo que en el juego sólo se ve con
-    la cámara de adentro (techo, paneles de puertas, vidrios y capó propios del habitáculo); los vidrios del auto pasan a
-    translúcidos para que se vea la tripulación (como la opción «Ver los pilotos desde las cámaras de afuera»)."""
+    la cámara de adentro (techo, paneles de puertas, vidrios y capó propios del habitáculo). Además el director
+    (`director._cabinas_por_toma`) muestra la cabina ENTERA sólo en las tomas «interior» de este auto: desde afuera no se
+    ve (pedido del dueño: asomaba por el techo) y los vidrios quedan oscuros como en el juego."""
     from estudio.blender import vidrios_dr as VI
     escena = bpy.context.scene
     objs = I.importar(glb, col)
@@ -273,6 +274,8 @@ def cabina(rig: dict, glb: str, col, exterior: bool = True, vidrios_claros: bool
         if o.type != "MESH":
             continue
         o["visor_lod"] = "alto"
+        o["cabina_dr"] = True          # el director la muestra sólo en las tomas de adentro de este auto
+        o["visor_omitir"] = True       # el visor del teléfono no la lleva (desde afuera asomaba por el techo)
         nombres = [a.name for a in _cadena(o)]
         piloto = any(a.type == "ARMATURE" for a in _cadena(o)) or o.find_armature() is not None
         if o.name.startswith("Icosphere"):                 # esfera auxiliar del pilot.glb (el juego la esconde)

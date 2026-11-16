@@ -66,7 +66,10 @@ MODELOS["rally:piloto"] = {
     "tipo": "mixamo65", "ref": "rally:godot/game/models/pilot.glb", "escala": 1.0, "ocultar": ["Icosphere"],
     "renombrar_huesos": ("mixamorig6:", "mixamorig:"),          # el piloto del juego usa otro prefijo
     "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase",
-    "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90,
+    "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand",
+    # el piloto del juego viene de Godot, que mira a −Z: en Blender queda mirando a +Y (al revés que los de Mixamo);
+    # con «frente» = π/2 los moteros iban sentados al revés en la moto
+    "frente": -math.pi / 2, "adelante_deg": 90,
 }
 UNIFORME_DEFECTO = {"camiseta": (0.72, 0.04, 0.05), "short": (0.05, 0.12, 0.62), "medias": (0.9, 0.9, 0.9),
                     "botines": (0.03, 0.03, 0.035), "piel": (0.62, 0.40, 0.29), "pelo": (0.12, 0.07, 0.04)}

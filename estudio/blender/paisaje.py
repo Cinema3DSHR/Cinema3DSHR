@@ -155,3 +155,140 @@ def material_campos(nombre: str = "campos") -> bpy.types.Material:
     L(surco.outputs[0], bump.inputs["Height"])
     L(bump.outputs["Normal"], bsdf.inputs["Normal"])
     return m
+
+
+def _material_hojas(nombre: str, color, semilla: int):
+    """Hoja con forma (óvalo con punta y nervadura) recortada con transparencia, con variación de color por hoja."""
+    m = bpy.data.materials.get(nombre)
+    if m:
+        return m
+    m = bpy.data.materials.new(nombre)
+    m.use_nodes = True
+    m.blend_method = "HASHED" if hasattr(m, "blend_method") else None
+    nt = m.node_tree
+    N = nt.nodes
+    L = nt.links
+    N.clear()
+    sal = N.new("ShaderNodeOutputMaterial")
+    mix = N.new("ShaderNodeMixShader")
+    trans = N.new("ShaderNodeBsdfTransparent")
+    bsdf = N.new("ShaderNodeBsdfPrincipled")
+    uv = N.new("ShaderNodeTexCoord")
+    sep = N.new("ShaderNodeSeparateXYZ")
+    L.new(uv.outputs["UV"], sep.inputs[0])
+
+    def op(tipo, a, b=None, k=None):
+        n = N.new("ShaderNodeMath")
+        n.operation = tipo
+        for i, v in enumerate((a, b)):
+            if v is None:
+                continue
+            if isinstance(v, (int, float)):
+                n.inputs[i].default_value = v
+            else:
+                L.new(v, n.inputs[i])
+        return n.outputs[0]
+    # u ∈ [0,1] a lo ancho, v ∈ [0,1] a lo largo: óvalo que se afina hacia la punta
+    x = op("SUBTRACT", sep.outputs["X"], 0.5)
+    y = sep.outputs["Y"]
+    ancho = op("MULTIPLY", op("POWER", op("MULTIPLY", op("MULTIPLY", y, op("SUBTRACT", 1.0, y)), 4.0), 0.75), 0.5)
+    adentro = op("LESS_THAN", op("ABSOLUTE", x), ancho)
+    L.new(adentro, mix.inputs["Fac"])
+    L.new(trans.outputs[0], mix.inputs[1])
+    L.new(bsdf.outputs[0], mix.inputs[2])
+    L.new(mix.outputs[0], sal.inputs["Surface"])
+    # color: varía por hoja (posición del objeto no sirve: son instancias) → ruido en coordenadas generadas
+    ruido = N.new("ShaderNodeTexNoise")
+    ruido.inputs["Scale"].default_value = 3.0
+    L.new(uv.outputs["Object"], ruido.inputs["Vector"])
+    rampa = N.new("ShaderNodeValToRGB")
+    c = color
+    rampa.color_ramp.elements[0].color = (c[0] * 0.55, c[1] * 0.6, c[2] * 0.45, 1)
+    rampa.color_ramp.elements[1].color = (min(1, c[0] * 1.35), min(1, c[1] * 1.25), min(1, c[2] * 1.1), 1)
+    L.new(ruido.outputs["Fac"], rampa.inputs["Fac"])
+    nerv = op("LESS_THAN", op("ABSOLUTE", x), 0.025)
+    oscuro = N.new("ShaderNodeMixRGB")
+    oscuro.blend_type = "MULTIPLY"
+    L.new(nerv, oscuro.inputs["Fac"])
+    L.new(rampa.outputs["Color"], oscuro.inputs[1])
+    oscuro.inputs[2].default_value = (0.7, 0.8, 0.6, 1)
+    L.new(oscuro.outputs[0], bsdf.inputs["Base Color"])
+    bsdf.inputs["Roughness"].default_value = 0.55
+    for k in ("Transmission Weight", "Subsurface Weight"):
+        if k in bsdf.inputs:
+            bsdf.inputs[k].default_value = 0.12 if k.startswith("Trans") else 0.0
+    return m
+
+
+VERDES = [(0.10, 0.22, 0.045), (0.13, 0.24, 0.05), (0.08, 0.18, 0.05), (0.15, 0.23, 0.06), (0.09, 0.2, 0.07)]
+
+
+def vestir(col, semilla: int = 1, color=None, hojas_max: int = 14000, tam: float = 0.22) -> None:
+    """Árbol de Sweet Home con follaje de verdad: conserva tronco y ramas del modelo y, donde el modelo tiene sus
+    pocas hojas sueltas (y en las puntas altas de las ramas), cuelga racimos densos de hojas con forma y transparencia
+    (en vez de una copa maciza). Las hojas originales se quedan, pintadas del mismo verde."""
+    rnd = random.Random(semilla)
+    color = color or VERDES[semilla % len(VERDES)]
+    mallas = [o for o in col.objects if o.type == "MESH"]
+    def es_hoja(o):
+        n = (o.name + " " + " ".join(m.name for m in o.data.materials if m)).lower()
+        return any(k in n for k in HOJA)
+    hojas = [o for o in mallas if es_hoja(o)]
+    ramas = [o for o in mallas if o not in hojas]
+    m_tronco = K.material("tronco_sh3d", (0.2, 0.15, 0.1), 0.88, ruido=0.35, escala_ruido=9, relieve=0.5)
+    for o in ramas:
+        if not o.data.materials or not any(m and m.node_tree and any(n.type == "TEX_IMAGE" for n in m.node_tree.nodes)
+                                           for m in o.data.materials):
+            o.data.materials.clear()
+            o.data.materials.append(m_tronco)
+    m_hoja = _material_hojas(f"hojas_{col.name}", color, semilla)
+    for o in hojas:
+        o.data.materials.clear()
+        o.data.materials.append(m_hoja)
+    # dónde van los racimos: centros de las caras de las hojas originales + puntos altos de las ramas
+    puntos = []
+    for o in hojas:
+        mw = o.matrix_world
+        for p in o.data.polygons:
+            puntos.append(mw @ p.center)
+    if ramas:
+        mn, mx = _bbox(ramas)
+        h0 = mn.z + (mx.z - mn.z) * 0.35
+        for o in ramas:
+            mw = o.matrix_world
+            for p in o.data.polygons:
+                q = mw @ p.center
+                if q.z > h0 and p.area < 0.08:           # ramitas finas de arriba (no el tronco grueso)
+                    puntos.append(q)
+    if not puntos:
+        return
+    rnd.shuffle(puntos)
+    por_racimo = 9
+    puntos = puntos[: max(1, hojas_max // por_racimo)]
+    mn, mx = _bbox(mallas)
+    centro = Vector(((mn.x + mx.x) / 2, (mn.y + mx.y) / 2, mn.z))
+    bm = bmesh.new()
+    uvl = bm.loops.layers.uv.new("UVMap")
+    for q in puntos:
+        afuera = (q - centro)
+        afuera.z *= 0.3
+        afuera = afuera.normalized() if afuera.length > 1e-3 else Vector((0, 0, 1))
+        for _ in range(por_racimo):
+            c = q + Vector((rnd.gauss(0, 0.3), rnd.gauss(0, 0.3), rnd.gauss(0, 0.24))) + afuera * rnd.uniform(0, 0.25)
+            s = tam * rnd.uniform(0.7, 1.3)
+            # hoja colgando hacia afuera y algo hacia abajo, girada al azar
+            eje = (afuera + Vector((rnd.uniform(-0.7, 0.7), rnd.uniform(-0.7, 0.7), rnd.uniform(-0.9, 0.3)))).normalized()
+            lado = eje.cross(Vector((rnd.uniform(-1, 1), rnd.uniform(-1, 1), rnd.uniform(-1, 1)))).normalized() * (s * 0.55)
+            largo = eje * s
+            vs = [bm.verts.new(c - lado * 0.5), bm.verts.new(c + lado * 0.5), bm.verts.new(c + lado * 0.5 + largo),
+                  bm.verts.new(c - lado * 0.5 + largo)]
+            f = bm.faces.new(vs)
+            for lp, uvv in zip(f.loops, ((0, 0), (1, 0), (1, 1), (0, 1))):
+                lp[uvl].uv = uvv
+    me = bpy.data.meshes.new(f"follaje_{col.name}")
+    bm.to_mesh(me)
+    bm.free()
+    me.materials.append(m_hoja)
+    ob = bpy.data.objects.new(f"follaje_{col.name}", me)
+    col.objects.link(ob)
+    ob["visor_lod"] = "bajo"

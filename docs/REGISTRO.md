@@ -179,6 +179,21 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   se sostiene con el de mano).
 - s03 dura 37,6 s (el desglose decía 80 s): se reparte al armar las secuencias 2 y 4. **Nada probado en un teléfono.**
 
+## 15–16/11/2026 — Tren Fantasma SUSPENDIDA (pedido del dueño); recursos conservados
+
+- Última tanda antes de suspender: s03 v2 (auto rampa marcha atrás, escolta volteada, rampa para el Bisonte al
+  vagón 20 libre) y **batalla de escoltas** (`estudio/blender/batalla_s03.py`: Vortex, Veltor y Kodiak contra
+  Cóndor T6, Pampero y KL5 con la física de Dream Rally; los embestidos siguen como cuerpo rígido). Fijas revisadas
+  de la base v2; la batalla quedó sin fijas ni previsualización.
+- Arreglos que quedan para la próxima película (Drift): la **cabina de Dream Rally sólo se ve en las tomas
+  «interior»** de su auto (`director._cabinas_por_toma`; desde afuera asomaba por el techo, y el visor del teléfono
+  ya no la lleva); **pilotos de las motos al derecho** (el piloto del juego mira a +Y en Blender); **árboles de
+  Sweet Home con follaje real** (`paisaje.vestir`: racimos densos de hojas con forma y transparencia sobre las ramas
+  del modelo); arranque andando en el grabador (`v_inicial`); motor «deportivo» en el sonido procedural.
+- Ideas anotadas del dueño para Drift: sonidos de motor, aceleración y frenada **del propio Dream Rally**
+  (`godot/tests/audio_render.gd` graba `car_audio.gd`; falta alimentarlo con la telemetría de la física).
+- `producciones/p006_operacion_tren_fantasma/produccion.json` → `"estado": "suspendida"`. No se borró nada.
+
 ### Pendiente / próximo
 - Dueño: crear `ASSETS_TOKEN` (lectura de mixamo-respaldo) para renderizar fútbol en Actions; autorizar fusionar
   la rama de mixamo-respaldo a `main`.

@@ -429,10 +429,7 @@ def construir(via, tren, trays, frames, fps, c_veh, p, moviles, pl) -> dict:
     f_baja = int(round(t_baja * fps)) + 1
     for o in rig_b.get("cabina", []):
         if o.type == "MESH" and o.find_armature() and o.name.startswith("tripo_node_83c2a1e7"):
-            for fr, v in ((1, False), (f_baja, True)):
-                o.hide_render = o.hide_viewport = v
-                o.keyframe_insert("hide_render", frame=fr)
-                o.keyframe_insert("hide_viewport", frame=fr)
+            o["oculto_desde"] = float(f_baja)      # el director lo respeta al mostrar la cabina en las tomas de adentro
     rb_rad = math.radians(rumbo_b)
     der = Vector((math.cos(rb_rad), math.sin(rb_rad)))          # derecha del Bisonte (lado del acompañante)
     puerta = local + der * 1.35 + Vector((-math.sin(rb_rad), math.cos(rb_rad))) * -0.2
