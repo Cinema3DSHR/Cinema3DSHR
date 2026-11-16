@@ -314,6 +314,11 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
             raiz.keyframe_insert("rotation_euler", frame=f)
         tr["pos_fin"], tr["rumbo_fin"] = pf, rf
         ultimo_fin = max(ultimo_fin, f_fin)
+    if spec.get("sobre"):                    # viaja encima de un objeto (plataforma, ascensor): acciones en su marco
+        padre = bpy.data.objects.get(spec["sobre"])
+        if padre is None:
+            raise KeyError(f"{pid}: no existe el objeto '{spec['sobre']}' para viajar encima")
+        raiz.parent = padre
     return {"id": pid, "raiz": raiz, "armadura": arm, "malla": malla, "tramos": tramos, "info": info,
             "fin": ultimo_fin}
 

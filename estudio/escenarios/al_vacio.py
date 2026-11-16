@@ -190,15 +190,19 @@ def _mat_publico(atlas_ruta, animo):
     at_fase.attribute_name = "fase"
     cols = {"calma": 0, "aplauso": 1, "festejo": 2, "salta": 3, "tension": 4, "bronca": 5}
     fps = bpy.context.scene.render.fps
-    expr_col, expr_rit = "0", "40"
+    # ánimo en el tiempo con claves constantes (una expresión anidada larga no entra en un controlador de Blender)
+    base = N.new("ShaderNodeValue")
+    ritmo = N.new("ShaderNodeValue")
     for seg, a in sorted(animo, key=lambda x: x[0]):
         f = int(seg * fps) + 1
-        expr_col = f"({cols.get(a, 0)} if frame >= {f} else {expr_col})"
-        expr_rit = f"({30 if a in ('calma', 'tension') else 4} if frame >= {f} else {expr_rit})"
-    base = N.new("ShaderNodeValue")
-    base.outputs[0].driver_add("default_value").driver.expression = expr_col
-    ritmo = N.new("ShaderNodeValue")
-    ritmo.outputs[0].driver_add("default_value").driver.expression = expr_rit
+        base.outputs[0].default_value = cols.get(a, 0)
+        base.outputs[0].keyframe_insert("default_value", frame=f)
+        ritmo.outputs[0].default_value = 30 if a in ("calma", "tension") else 4
+        ritmo.outputs[0].keyframe_insert("default_value", frame=f)
+    if nt.animation_data and nt.animation_data.action:
+        for fc in K._fcurves(nt.animation_data.action):
+            for kp in fc.keyframe_points:
+                kp.interpolation = "CONSTANT"
     cuadro = N.new("ShaderNodeValue")
     cuadro.outputs[0].driver_add("default_value").driver.expression = "frame"
 
@@ -496,6 +500,13 @@ def construir(parametros: dict | None = None) -> dict:
         lz = K.luz(f"contraluz_{k}", "SPOT", tuple(c), 6000.0, COLOR_EQUIPO[k], c_est, tam=1.0)
         lz.data.spot_size = math.radians(55)
         K.mirar_a(lz, trampilla(k) + Vector((0, 0, 1.2)))
+    # haz desde el fondo del abismo (atraviesa la niebla): ilumina al que cae y a la trampilla desde abajo
+    for k in (0, 1):
+        q = trampilla(k)
+        hz = K.luz(f"haz_abismo_{k}", "SPOT", (q.x, q.y, -26.0), 60000.0, (0.55, 0.45, 1.0), c_est, tam=0.6)
+        hz.data.spot_size = math.radians(16)
+        hz.data.spot_blend = 0.6
+        K.mirar_a(hz, q)
     # llamaradas en las esquinas exteriores de cada plataforma (se disparan cuando alguien cae)
     llamas = {0: [], 1: []}
     for k in (0, 1):

@@ -146,8 +146,8 @@ def toma(tipo, plano, e0, e1, **k):
 def espalda(s, e0, e1, plano, lente=24):
     """Detrás del que patea, por encima del hombro: se ve todo el carril, el vacío y al rival sobre su trampilla."""
     sg = -1 if s == AZUL else 1
-    toma("estatica", plano, e0, e1, desde=A(f"trampa_{s}", [sg * 3.6, 1.1, 2.3]),
-         objetivo=A(f"boton_{1 - s}", [0, 0, -0.6]), lente_mm=lente)
+    toma("estatica", plano, e0, e1, desde=A(f"trampa_{s}", [sg * 1.7, 1.0, 1.95]),
+         objetivo=A(f"boton_{1 - s}", [0, 0, -0.7]), lente_mm=lente)
 
 
 def victima(r, e0, e1, plano):
