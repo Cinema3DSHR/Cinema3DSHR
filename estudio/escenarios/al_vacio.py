@@ -47,6 +47,7 @@ ORO = (1.0, 0.72, 0.25)
 PARAMETROS = {"semilla": 7, "publico": 1.0, "animo": [[0, "tension"]], "llamaradas": [], "papelitos_s": None,
               "duracion_s": 60.0}
 REF_ATLAS = "mixamo:futbol_free_kick_swipe/03_estadio_publico/assets/arcade/crowd_atlas.png"
+DEPENDENCIAS = ["mixamo:futbol_free_kick_swipe/03_estadio_publico/assets/arcade/crowd_atlas.png"]
 
 
 def signo(s: int) -> float:

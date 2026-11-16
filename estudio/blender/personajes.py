@@ -64,9 +64,9 @@ for _id, _ref, _alto in (("lucia", "mixamo:personajes_pelicula/protagonista_feme
     }
 # «Al vacío» (p007): Messi y Cristiano Ronaldo, modelos Tripo3D con esqueleto mixamorig que mandó el dueño (fuera de Git)
 for _id, _ref, _alto, _tex in (
-        ("messi", "subidas:messi/tripo_convert_db2fb7b2-b201-48ab-90fe-625fa86f28f4.fbx", 1.70, {}),
-        ("cristiano", "subidas:cristiano/tripo_convert_14aa6baf-3faf-4c85-b305-f9d50faf739f.fbx", 1.87,
-         {"basecolor": "subidas:cristiano/basecolor_nombre_corregido.png"})):   # nombre de la espalda legible
+        ("messi", "mixamo:personajes_pelicula/messi/tripo_convert_db2fb7b2-b201-48ab-90fe-625fa86f28f4.fbx", 1.70, {}),
+        ("cristiano", "mixamo:personajes_pelicula/cristiano/tripo_convert_14aa6baf-3faf-4c85-b305-f9d50faf739f.fbx", 1.87,
+         {"basecolor": "mixamo:personajes_pelicula/cristiano/basecolor_nombre_corregido.png"})):   # nombre de la espalda legible
     MODELOS[f"pelicula:{_id}"] = {
         "tipo": "mixamo65", "ref": _ref, "escala": _alto, "ocultar": [], "cadera": "mixamorig:Hips",
         "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase", "cabeza": "mixamorig:Head",

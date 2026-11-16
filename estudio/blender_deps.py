@@ -23,3 +23,6 @@ MODELOS_DEPS["pelicula:lucia"] = ["mixamo:personajes_pelicula/protagonista_femen
 MODELOS_DEPS["pelicula:mateo"] = ["mixamo:personajes_pelicula/protagonista_masculino"]
 MODELOS_DEPS["rally:piloto"] = ["rally:godot/game/models/pilot.glb", "rally:godot/game/models/pilot_Ch20_1001_Diffuse.jpg",
                                "rally:godot/game/models/pilot_Ch20_1001_Normal.jpg", "rally:godot/game/models/pilot_ao_met_rough_Ch20_1001_Glossiness.jpg"]
+# «Al vacío» (p007): modelos Tripo3D del dueño; usan los clips del juego (futbol:<clip>): necesitan también al futbolista
+for _id in ("messi", "cristiano"):
+    MODELOS_DEPS[f"pelicula:{_id}"] = [f"mixamo:personajes_pelicula/{_id}"] + MODELOS_DEPS["futbol:jugador"]
