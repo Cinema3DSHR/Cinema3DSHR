@@ -77,8 +77,15 @@ def lugar_pelota(s: int) -> Vector:
     return local(s, BALL_BACK, 0.0, B.RADIO)
 
 
+STANCE = (2.4, 2.3)          # el juego: el que patea espera 2,4 m detrás de la pelota y 2,3 m al costado
+PIE = {0: 1, 1: 1}           # 1 diestro (espera a la izquierda de la pelota), −1 zurdo (a la derecha); lo fija la receta
+
+
 def trampilla(s: int) -> Vector:
-    return local(s, HOLE_BACK, 0.0, 0.0)
+    """Donde espera cada jugador (y su trampilla): como Minigame.stance_point del juego, al costado de la línea de la
+    pelota al botón, así nunca queda delante del botón."""
+    izquierda = 1.0 if s == 0 else -1.0                    # mirando al rival: +Y es la izquierda de la plataforma azul
+    return local(s, BALL_BACK + STANCE[0], izquierda * STANCE[1] * PIE[s], 0.0)
 
 
 # ------------------------------------------------------------------------------------------------ física de la pelota
@@ -361,7 +368,8 @@ def _plataforma(s: int, col, mats):
     hx0, hx1 = h.x - HOLE / 2, h.x + HOLE / 2
     w2 = WIDTH / 2
     xa, xb = sorted((borde_x(s), borde_x(s) + signo(s) * DEPTH))
-    piezas = [((xa, -w2), (hx0, w2)), ((hx1, -w2), (xb, w2)), ((hx0, -w2), (hx1, -HOLE / 2)), ((hx0, HOLE / 2), (hx1, w2))]
+    hy0, hy1 = h.y - HOLE / 2, h.y + HOLE / 2
+    piezas = [((xa, -w2), (hx0, w2)), ((hx1, -w2), (xb, w2)), ((hx0, -w2), (hx1, hy0)), ((hx0, hy1), (hx1, w2))]
     objs = {}
     for k, ((ax, ay), (bx, by)) in enumerate(piezas):
         if bx - ax < 0.01 or by - ay < 0.01:
@@ -391,8 +399,8 @@ def _plataforma(s: int, col, mats):
     # trampilla: dos hojas que giran hacia abajo sobre sus bordes (en Y)
     hojas = []
     for k, sg in enumerate((-1, 1)):
-        bis = K.vacio(f"bisagra_{s}_{k}", (h.x, sg * HOLE / 2, -0.06), col)
-        hoja = K.caja(f"trampa_{s}_{k}", (h.x, sg * HOLE / 4, -0.06), (HOLE, HOLE / 2 - 0.01, 0.12), mats["trampa"], col)
+        bis = K.vacio(f"bisagra_{s}_{k}", (h.x, h.y + sg * HOLE / 2, -0.06), col)
+        hoja = K.caja(f"trampa_{s}_{k}", (h.x, h.y + sg * HOLE / 4, -0.06), (HOLE, HOLE / 2 - 0.01, 0.12), mats["trampa"], col)
         hoja.parent = bis
         hoja.location = (0, -sg * HOLE / 4, 0)
         hojas.append(bis)
@@ -438,6 +446,8 @@ def _llamarada(nombre, pos, col):
 
 def construir(parametros: dict | None = None) -> dict:
     p = {**PARAMETROS, **(parametros or {})}
+    for k, v in (p.get("pie") or {}).items():
+        PIE[int(k)] = int(v)
     rnd = random.Random(p["semilla"])
     s = K.bpy.context.scene
     fps = s.render.fps
@@ -628,7 +638,7 @@ def despues_personajes(info: dict, pjs: dict, ctx, manifiesto: dict, fps: int) -
         tr = next(t for t in pj["tramos"] if abs((t["f0"] - 1) / fps - tu["patea_s"]) < 0.05)
         golpeo = D._golpeo(clip.split(":")[-1]) or {}
         tc = golpeo.get("tc", 0.35)
-        t_contacto = (tr["f0"] - 1) / fps + tc / (1.0 / tr["strip"].scale)
+        t_contacto = (tr["f0"] - 1) / fps + (tc - float(tu.get("desde_s", 0.0))) / (1.0 / tr["strip"].scale)
         f_contacto = t_contacto * fps + 1
         sc = bpy.context.scene
         sc.frame_set(int(math.floor(f_contacto)), subframe=f_contacto - math.floor(f_contacto))

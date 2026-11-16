@@ -352,7 +352,7 @@ def _raiz_en(tr: dict, t: float):
     origen + adelante·x + derecha·y (root_path a 30 fps) y giro del cuerpo si el clip es de tipo "turn"."""
     datos = tr["raiz"]
     rp = datos.get("root_path") or []
-    t_clip = t * tr["vel"]
+    t_clip = t * tr["vel"] + tr.get("desde", 0.0)
     rumbo0 = tr["rumbo"]
     if len(rp) < 2:
         return tr["pos"].copy(), rumbo0
@@ -442,6 +442,13 @@ POSES = {
                    "mixamorig:RightForeArm": (-0.12, -0.12, 1.0), "mixamorig:RightHand": (-0.05, -0.1, 1.0)},
         "cerrar": ("Thumb", "Middle", "Ring", "Pinky"), "abrir": ("Index",),
         "cabeza": 28.0,
+    },
+    "pose_a": {             # la parada de Cristiano antes del tiro libre: piernas abiertas, brazos rectos un poco afuera
+        "brazos": {"mixamorig:LeftArm": (0.3, 0.02, -0.95), "mixamorig:LeftForeArm": (0.28, 0.0, -0.96),
+                   "mixamorig:LeftHand": (0.25, 0.0, -0.97), "mixamorig:RightArm": (-0.3, 0.02, -0.95),
+                   "mixamorig:RightForeArm": (-0.28, 0.0, -0.96), "mixamorig:RightHand": (-0.25, 0.0, -0.97)},
+        "cerrar": (), "abrir": ("Thumb", "Index", "Middle", "Ring", "Pinky"),
+        "cabeza": 6.0,
     },
     "siu": {                # el aterrizaje del «Siu» de Cristiano: brazos rectos hacia abajo y afuera, pecho arriba
         "brazos": {"mixamorig:LeftArm": (0.62, -0.05, -0.78), "mixamorig:LeftForeArm": (0.6, -0.05, -0.8),
@@ -635,13 +642,27 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         if accion.get("futbol_clip"):
             # clip del juego: la raíz sigue su root_path cuadro a cuadro (como el futbolista), no la cadera
             raices = _raices(MODELOS["futbol:jugador"])
+            desde = float(ac.get("desde_s", 0.0))          # entra a mitad del clip (como ShotCatalog.start_time_near)
             fut = {"raiz": raices.get(accion["futbol_clip"], {}), "vel": ac.get("velocidad", 1.0),
-                   "rep": int(st.repeat), "pos": pos.copy(), "rumbo": rumbo}
+                   "rep": int(st.repeat), "pos": pos.copy(), "rumbo": rumbo, "desde": desde}
+            if desde > 0:
+                a0 = st.action_frame_start
+                st.action_frame_start = a0 + desde * fps
+                tramos[-1]["fin"] = st.frame_end
             tramos[-1]["futbol"] = fut
             largo_f = int(st.frame_end - f0)
             extra = _giro_extra(ac)
+            # empalme: desde donde estaba parado hasta la carrera del clip, en `empalme_s`
+            ofs = Vector((0, 0, 0))
+            if ac.get("desde_pos") is not None:
+                p_ini, _r = _raiz_en(fut, 0.0)
+                q = ac["desde_pos"]
+                ofs = Vector((q[0], q[1], 0.0)) - p_ini
+            emp = max(1e-3, float(ac.get("empalme_s", 0.45)))
             for j in range(largo_f + 1):
                 pj_, rj = _raiz_en(fut, j / fps)
+                u = min(1.0, (j / fps) / emp)
+                pj_ = pj_ + ofs * (1 - u * u * (3 - 2 * u))
                 llaves.append((f0 + j, pj_, rj + extra(j / fps) + info["frente"]))
             pfin, rfin = _raiz_en(fut, largo_f / fps)
             tramos[-1]["pos_fin"], tramos[-1]["rumbo_fin"] = pfin, rfin + extra(1e9)
