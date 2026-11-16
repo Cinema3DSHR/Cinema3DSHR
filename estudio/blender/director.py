@@ -76,6 +76,10 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     finally:
         for lc in excluidas:
             lc.exclude = False
+    # el escenario puede jugar algo que depende de los personajes (p. ej. el duelo de «Al vacío»: pelotas en el pie,
+    # trampillas, caídas): antes de muestrear sus trayectorias para las cámaras
+    if hasattr(mod, "despues_personajes"):
+        mod.despues_personajes(info, pjs, ctx, manifiesto, fps)
     duracion_f = int(round(manifiesto["duracion_s"] * fps))
     for pid, pj in pjs.items():
         if pid in seguidos:
@@ -225,6 +229,8 @@ def ajustes_render(s, calidad: str, extra: dict):
     q = {**config.CALIDADES[calidad], **{k: v for k, v in extra.items() if k in ("muestras", "motor")}}
     s.render.engine = q["motor"]
     s.render.resolution_x, s.render.resolution_y = q["ancho"], q["alto"]
+    if extra.get("vertical"):                 # 9:16 para TikTok, Reels y Shorts: misma calidad, cuadro parado
+        s.render.resolution_x, s.render.resolution_y = q["alto"], q["ancho"]
     s.render.resolution_percentage = 100
     s.render.image_settings.file_format = "JPEG"
     s.render.image_settings.quality = 92

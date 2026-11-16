@@ -373,10 +373,13 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
         mezcla += ambiente_dia_suburbio(n, rng) * 0.6
     elif amb == "estadio":
         mezcla += ambiente_estadio(n, rng) * 0.35
+    elif amb == "arcade_duelo":                 # «Al vacío»: los audios del juego en cada evento del duelo
+        from estudio.audio import arcade as AR
+        mezcla += AR.duelo(pistas, n, rng, son.get("publico", 0.35))
     elif amb == "tren_llanura":
         from estudio.audio import tren as TRA
         mezcla += TRA.ambiente_llanura(n, rng) * 0.5
-    for ev in pistas.get("eventos", []):
+    for ev in pistas.get("eventos", []) if amb != "arcade_duelo" else []:
         if ev["tipo"] == "patada":
             mezcla += golpe(n, rng, ev["t"], "patada") * 0.9
         elif ev["tipo"] == "gol":

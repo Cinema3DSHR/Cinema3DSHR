@@ -1,0 +1,10 @@
+{
+ "tipo": "produccion",
+ "id": "p007_al_vacio",
+ "titulo": "Al vacío — el duelo",
+ "genero": "Deportes · Arcade · Redes",
+ "sinopsis": "El minijuego «Botón de caída» de Free Kick Swipe recreado y mejorado: dos jugadores en plataformas sobre el vacío, quien le pega fuerte al botón rival le abre el piso. 60 s verticales para TikTok, Instagram, Facebook y YouTube, sin HUD.",
+ "clase": "escena",
+ "creada": "2026-11-16",
+ "escenas": ["e01"]
+}

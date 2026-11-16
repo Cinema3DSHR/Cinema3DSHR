@@ -1,0 +1,1724 @@
+{
+ "tipo": "escena",
+ "id": "p007_al_vacio-e01",
+ "produccion": "p007_al_vacio",
+ "numero": 1,
+ "version": 1,
+ "titulo": "Al vacío — el duelo",
+ "guion": "Estadio de noche. Dos plataformas sobre el vacío. AZUL contra ROJO, primero a tres: quien le pega fuerte al botón del rival le abre el piso. ROJO golpea primero; AZUL empata; se pasan; 2-2; AZUL roza el aro y ROJO la clava con efecto: AZUL cae al vacío en cámara lenta. Fuego, papelitos y el estadio de pie.",
+ "duracion_s": 60.0,
+ "mapa_tiempo": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   1.988,
+   1.988
+  ],
+  [
+   5.988,
+   3.588
+  ],
+  [
+   42.32,
+   39.92
+  ],
+  [
+   43.72,
+   40.62
+  ],
+  [
+   46.129,
+   43.029
+  ],
+  [
+   52.629,
+   45.629
+  ],
+  [
+   60.0,
+   53.0
+  ]
+ ],
+ "escenario": {
+  "id": "al_vacio",
+  "generador": "al_vacio",
+  "parametros": {
+   "semilla": 7,
+   "duracion_s": 53.0,
+   "animo": [
+    [
+     0,
+     "aplauso"
+    ],
+    [
+     0.742,
+     "tension"
+    ],
+    [
+     2.237833333333331,
+     "festejo"
+    ],
+    [
+     4.637833333333331,
+     "aplauso"
+    ],
+    [
+     7.7,
+     "tension"
+    ],
+    [
+     11.1,
+     "tension"
+    ],
+    [
+     14.299999999999999,
+     "tension"
+    ],
+    [
+     15.841999999999997,
+     "festejo"
+    ],
+    [
+     18.241999999999997,
+     "aplauso"
+    ],
+    [
+     21.3,
+     "tension"
+    ],
+    [
+     24.7,
+     "tension"
+    ],
+    [
+     26.1955,
+     "festejo"
+    ],
+    [
+     28.595499999999998,
+     "aplauso"
+    ],
+    [
+     31.5,
+     "tension"
+    ],
+    [
+     33.041999999999994,
+     "festejo"
+    ],
+    [
+     35.44199999999999,
+     "aplauso"
+    ],
+    [
+     38.7,
+     "tension"
+    ],
+    [
+     42.300000000000004,
+     "tension"
+    ],
+    [
+     43.92883333333334,
+     "festejo"
+    ],
+    [
+     46.328833333333336,
+     "salta"
+    ]
+   ],
+   "llamaradas": [
+    [
+     2.288,
+     0
+    ],
+    [
+     15.892,
+     1
+    ],
+    [
+     26.245,
+     1
+    ],
+    [
+     33.092,
+     0
+    ],
+    [
+     43.979,
+     0
+    ]
+   ],
+   "papelitos_s": 44.93
+  }
+ },
+ "duelo": {
+  "turnos": [
+   {
+    "tirador": 1,
+    "personaje": "rojo",
+    "clip": "f_jn_kick_shot_hard_2548",
+    "patea_s": 0.9,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.0,
+     "dz": 0.0
+    },
+    "velocidad": 24.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": -0.8,
+    "desaparece_s": 6.3
+   },
+   {
+    "tirador": 0,
+    "personaje": "azul",
+    "clip": "f_jn_kick_shot_hard_2550",
+    "patea_s": 8.0,
+    "resultado": "tablero",
+    "destino": {
+     "dy": 0.15,
+     "dz": 0.82
+    },
+    "velocidad": 25.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 6.3,
+    "desaparece_s": 9.7,
+    "sube_s": 4.94,
+    "sube_lado": 0
+   },
+   {
+    "tirador": 1,
+    "personaje": "rojo",
+    "clip": "f_jn_kick_shot_hard_2552",
+    "patea_s": 11.4,
+    "resultado": "afuera",
+    "destino": {
+     "dy": -2.1,
+     "dz": 0.3
+    },
+    "velocidad": 26.0,
+    "efecto": [
+     0,
+     0,
+     20
+    ],
+    "aparece_s": 9.7,
+    "desaparece_s": 12.9
+   },
+   {
+    "tirador": 0,
+    "personaje": "azul",
+    "clip": "f_jn_kick_shot_hard_2544",
+    "patea_s": 14.6,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.05,
+     "dz": -0.05
+    },
+    "velocidad": 25.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 12.9,
+    "desaparece_s": 19.9
+   },
+   {
+    "tirador": 1,
+    "personaje": "rojo",
+    "clip": "f_jn_kick_shot_hard_2548",
+    "patea_s": 21.6,
+    "resultado": "tablero",
+    "destino": {
+     "dy": -0.1,
+     "dz": -0.85
+    },
+    "velocidad": 24.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 19.9,
+    "desaparece_s": 23.3,
+    "sube_s": 18.54,
+    "sube_lado": 1
+   },
+   {
+    "tirador": 0,
+    "personaje": "azul",
+    "clip": "f_jn_kick_shot_hard_2552",
+    "patea_s": 25.0,
+    "resultado": "boton",
+    "destino": {
+     "dy": -0.1,
+     "dz": 0.1
+    },
+    "velocidad": 26.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 23.3,
+    "desaparece_s": 30.1
+   },
+   {
+    "tirador": 1,
+    "personaje": "rojo",
+    "clip": "f_jn_kick_shot_hard_2544",
+    "patea_s": 31.8,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.0,
+     "dz": 0.05
+    },
+    "velocidad": 25.0,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 30.1,
+    "desaparece_s": 37.3,
+    "sube_s": 28.9,
+    "sube_lado": 1
+   },
+   {
+    "tirador": 0,
+    "personaje": "azul",
+    "clip": "f_jn_kick_shot_hard_2550",
+    "patea_s": 39.0,
+    "resultado": "tablero",
+    "destino": {
+     "dy": 0.8,
+     "dz": 0.05
+    },
+    "velocidad": 25.5,
+    "efecto": [
+     0,
+     0,
+     0
+    ],
+    "aparece_s": 37.3,
+    "desaparece_s": 40.9,
+    "sube_s": 35.74,
+    "sube_lado": 0
+   },
+   {
+    "tirador": 1,
+    "personaje": "rojo",
+    "clip": "f_jn_kick_shot_hard_2552",
+    "patea_s": 42.6,
+    "resultado": "boton",
+    "destino": {
+     "dy": 0.0,
+     "dz": 0.0
+    },
+    "velocidad": 23.0,
+    "efecto": [
+     0,
+     0,
+     -25
+    ],
+    "aparece_s": 40.9,
+    "desaparece_s": 54.0,
+    "sube_s": 48.73,
+    "sube_lado": 0
+   }
+  ],
+  "primero_a": 3
+ },
+ "eventos": [],
+ "vehiculos": [],
+ "personajes": [
+  {
+   "id": "azul",
+   "modelo": "futbol:jugador",
+   "uniforme": {
+    "camiseta": [
+     0.03,
+     0.22,
+     0.95
+    ],
+    "short": [
+     0.95,
+     0.95,
+     0.97
+    ],
+    "medias": [
+     0.03,
+     0.22,
+     0.95
+    ],
+    "botines": [
+     1.0,
+     0.45,
+     0.02
+    ],
+    "piel": [
+     0.86,
+     0.63,
+     0.5
+    ],
+    "pelo": [
+     0.78,
+     0.6,
+     0.28
+    ]
+   },
+   "sobre": "soporte_0",
+   "acciones": [
+    {
+     "clip": "f_jn_idle_0520",
+     "inicio_s": -0.8,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "f_jn_stumble_1262",
+     "inicio_s": 2.258,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_fall_0964",
+     "inicio_s": 2.538,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_angry_0366",
+     "inicio_s": 4.94,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 6.3,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2550",
+     "inicio_s": 8.0,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "f_jn_angry_0356",
+     "inicio_s": 8.93,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_idle_0520",
+     "inicio_s": 9.7,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 12.9,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2544",
+     "inicio_s": 14.6,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "f_jn_celebrate_scorer_0874",
+     "inicio_s": 15.547,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_idle_0520",
+     "inicio_s": 19.9,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "s_jn_gesture_0140",
+     "inicio_s": 23.142,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 23.3,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2552",
+     "inicio_s": 25.0,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "f_jn_celebrate_scorer_0874",
+     "inicio_s": 26.03,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_idle_0520",
+     "inicio_s": 30.1,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "f_jn_stumble_1262",
+     "inicio_s": 33.062,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_fall_0964",
+     "inicio_s": 33.342,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_angry_0366",
+     "inicio_s": 35.74,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 37.3,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2550",
+     "inicio_s": 39.0,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 0
+    },
+    {
+     "clip": "f_jn_angry_0356",
+     "inicio_s": 39.93,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_idle_0520",
+     "inicio_s": 40.9,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0,
+     "repetir": 3
+    },
+    {
+     "clip": "f_jn_stumble_1262",
+     "inicio_s": 43.949,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_fall_0964",
+     "inicio_s": 44.229,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_dejected_0104",
+     "inicio_s": 48.73,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 0
+    }
+   ]
+  },
+  {
+   "id": "rojo",
+   "modelo": "futbol:jugador",
+   "uniforme": {
+    "camiseta": [
+     0.9,
+     0.05,
+     0.05
+    ],
+    "short": [
+     0.03,
+     0.03,
+     0.035
+    ],
+    "medias": [
+     0.9,
+     0.05,
+     0.05
+    ],
+    "botines": [
+     1.0,
+     0.9,
+     0.05
+    ],
+    "piel": [
+     0.34,
+     0.2,
+     0.12
+    ],
+    "pelo": [
+     0.02,
+     0.02,
+     0.02
+    ]
+   },
+   "sobre": "soporte_1",
+   "acciones": [
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": -0.8,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2548",
+     "inicio_s": 0.9,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "f_jn_celebrate_scorer_0874",
+     "inicio_s": 1.947,
+     "encadenar": true
+    },
+    {
+     "clip": "s_jn_idle_fidget_0148",
+     "inicio_s": 6.3,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "s_jn_gesture_0140",
+     "inicio_s": 9.517,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 9.7,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2552",
+     "inicio_s": 11.4,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "f_jn_dejected_0102",
+     "inicio_s": 12.43,
+     "encadenar": true
+    },
+    {
+     "clip": "s_jn_idle_fidget_0148",
+     "inicio_s": 12.9,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "f_jn_stumble_1262",
+     "inicio_s": 15.862,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_fall_0964",
+     "inicio_s": 16.142,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_angry_0366",
+     "inicio_s": 18.54,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 19.9,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2548",
+     "inicio_s": 21.6,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "f_jn_angry_0356",
+     "inicio_s": 22.647,
+     "encadenar": true
+    },
+    {
+     "clip": "s_jn_idle_fidget_0148",
+     "inicio_s": 23.3,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "f_jn_stumble_1262",
+     "inicio_s": 26.215,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_fall_0964",
+     "inicio_s": 26.495,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_angry_0366",
+     "inicio_s": 28.9,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 30.1,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2544",
+     "inicio_s": 31.8,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "f_jn_celebrate_scorer_0874",
+     "inicio_s": 32.747,
+     "encadenar": true
+    },
+    {
+     "clip": "s_jn_idle_fidget_0148",
+     "inicio_s": 37.3,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 3
+    },
+    {
+     "clip": "s_jn_gesture_0140",
+     "inicio_s": 40.517,
+     "pos": [
+      0.0,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "s_jn_idle_ready_0150",
+     "inicio_s": 40.9,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180,
+     "repetir": 2
+    },
+    {
+     "clip": "f_jn_kick_shot_hard_2552",
+     "inicio_s": 42.6,
+     "pos": [
+      -0.15,
+      0.0
+     ],
+     "mirando_deg": 180
+    },
+    {
+     "clip": "f_jn_celebrate_scorer_0942",
+     "inicio_s": 43.63,
+     "encadenar": true
+    },
+    {
+     "clip": "f_jn_celebrate_scorer_1952",
+     "inicio_s": 49.33,
+     "encadenar": true
+    }
+   ]
+  }
+ ],
+ "tomas": [
+  {
+   "id": "t01_grua",
+   "tipo": "grua",
+   "plano": "aérea sobre el vacío: el estadio lleno, las dos plataformas y las torres que se pierden en la niebla",
+   "inicio_s": 0.0,
+   "duracion_s": 0.992,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "centro",
+    "desp": [
+     -2,
+     -24,
+     16
+    ]
+   },
+   "hasta": {
+    "ancla": "trampa_1",
+    "desp": [
+     6,
+     -6,
+     4
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_0"
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t02_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "la pelota de ROJO cruza el vacío hacia el botón de AZUL",
+   "inicio_s": 0.992,
+   "duracion_s": 0.996,
+   "luz_relleno": 0,
+   "movil": "pelota_0",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_0",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t03_estatica",
+   "tipo": "estatica",
+   "plano": "CÁMARA LENTA desde el vacío: se abre la trampilla y AZUL cae hacia la cámara",
+   "inicio_s": 1.988,
+   "duracion_s": 4.0,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t04_orbita",
+   "tipo": "orbita",
+   "plano": "el público estalla; las llamaradas en las esquinas de la plataforma azul",
+   "inicio_s": 5.988,
+   "duracion_s": 2.012,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "plataforma_0",
+    "desp": [
+     0,
+     0,
+     1
+    ]
+   },
+   "radio": 11,
+   "altura": 4,
+   "angulo_inicial": 200,
+   "angulo_final": 250,
+   "lente_mm": 20
+  },
+  {
+   "id": "t05_estatica",
+   "tipo": "estatica",
+   "plano": "AZUL vuelve en el ascensor por la trampilla, furioso",
+   "inicio_s": 8.0,
+   "duracion_s": 2.3,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t06_estatica",
+   "tipo": "estatica",
+   "plano": "AZUL patea",
+   "inicio_s": 10.3,
+   "duracion_s": 0.667,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     -3.6,
+     1.1,
+     2.3
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_1",
+    "desp": [
+     0,
+     0,
+     -0.6
+    ]
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t07_estatica",
+   "tipo": "estatica",
+   "plano": "la pelota da en el tablero arriba del botón: ROJO respira",
+   "inicio_s": 10.967,
+   "duracion_s": 2.433,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t08_estatica",
+   "tipo": "estatica",
+   "plano": "ROJO patea con efecto",
+   "inicio_s": 13.4,
+   "duracion_s": 1.083,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     3.6,
+     1.1,
+     2.3
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_0",
+    "desp": [
+     0,
+     0,
+     -0.6
+    ]
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t09_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "se le abre y se pierde en el vacío",
+   "inicio_s": 14.483,
+   "duracion_s": 2.217,
+   "luz_relleno": 0,
+   "movil": "pelota_2",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_2",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t10_estatica",
+   "tipo": "estatica",
+   "plano": "AZUL, revancha",
+   "inicio_s": 16.7,
+   "duracion_s": 0.892,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     -3.6,
+     1.1,
+     2.3
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_1",
+    "desp": [
+     0,
+     0,
+     -0.6
+    ]
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t11_estatica",
+   "tipo": "estatica",
+   "plano": "ROJO ve venir la pelota",
+   "inicio_s": 17.592,
+   "duracion_s": 0.75,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t12_estatica",
+   "tipo": "estatica",
+   "plano": "ROJO cae al vacío",
+   "inicio_s": 18.342,
+   "duracion_s": 1.9,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t13_orbita",
+   "tipo": "orbita",
+   "plano": "AZUL festeja; el estadio de pie",
+   "inicio_s": 20.242,
+   "duracion_s": 3.558,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.2
+    ]
+   },
+   "radio": 4.5,
+   "altura": 1.6,
+   "angulo_inicial": 40,
+   "angulo_final": 95,
+   "lente_mm": 28
+  },
+  {
+   "id": "t14_estatica",
+   "tipo": "estatica",
+   "plano": "ROJO, de nuevo arriba",
+   "inicio_s": 23.8,
+   "duracion_s": 0.842,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     3.6,
+     1.1,
+     2.3
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_0",
+    "desp": [
+     0,
+     0,
+     -0.6
+    ]
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t15_estatica",
+   "tipo": "estatica",
+   "plano": "da abajo del tablero",
+   "inicio_s": 24.642,
+   "duracion_s": 2.558,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t16_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "AZUL le pega fuerte",
+   "inicio_s": 27.2,
+   "duracion_s": 1.345,
+   "luz_relleno": 0,
+   "movil": "pelota_5",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_5",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t17_estatica",
+   "tipo": "estatica",
+   "plano": "ROJO otra vez al vacío",
+   "inicio_s": 28.545,
+   "duracion_s": 1.65,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t18_general",
+   "tipo": "general",
+   "plano": "plano general: 2-1, el público de pie, las balizas rojas",
+   "inicio_s": 30.195,
+   "duracion_s": 3.805,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     -30,
+     6
+    ]
+   },
+   "objetivo": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     0,
+     0
+    ]
+   },
+   "lente_mm": 18
+  },
+  {
+   "id": "t19_estatica",
+   "tipo": "estatica",
+   "plano": "ROJO no se rinde",
+   "inicio_s": 34.0,
+   "duracion_s": 0.792,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     3.6,
+     1.1,
+     2.3
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_0",
+    "desp": [
+     0,
+     0,
+     -0.6
+    ]
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t20_estatica",
+   "tipo": "estatica",
+   "plano": "AZUL mira el botón",
+   "inicio_s": 34.792,
+   "duracion_s": 0.75,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t21_estatica",
+   "tipo": "estatica",
+   "plano": "2-2: AZUL cae",
+   "inicio_s": 35.542,
+   "duracion_s": 1.7,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t22_estatica",
+   "tipo": "estatica",
+   "plano": "el público, tenso: la próxima define",
+   "inicio_s": 37.242,
+   "duracion_s": 3.958,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     6,
+     1.2
+    ]
+   },
+   "objetivo": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     30,
+     3
+    ]
+   },
+   "lente_mm": 35
+  },
+  {
+   "id": "t23_estatica",
+   "tipo": "estatica",
+   "plano": "AZUL, punto de partido",
+   "inicio_s": 41.2,
+   "duracion_s": 1.067,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     -3.6,
+     1.1,
+     2.3
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_1",
+    "desp": [
+     0,
+     0,
+     -0.6
+    ]
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t24_estatica",
+   "tipo": "estatica",
+   "plano": "CÁMARA LENTA: pega al lado del aro, por centímetros",
+   "inicio_s": 42.267,
+   "duracion_s": 1.833,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     -2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t25_estatica",
+   "tipo": "estatica",
+   "plano": "ROJO, punto de partido",
+   "inicio_s": 44.1,
+   "duracion_s": 1.943,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_1",
+    "desp": [
+     3.6,
+     1.1,
+     2.3
+    ]
+   },
+   "objetivo": {
+    "ancla": "boton_0",
+    "desp": [
+     0,
+     0,
+     -0.6
+    ]
+   },
+   "lente_mm": 24
+  },
+  {
+   "id": "t26_seguimiento",
+   "tipo": "seguimiento",
+   "plano": "CÁMARA LENTA: la pelota se curva hacia el botón",
+   "inicio_s": 46.043,
+   "duracion_s": 1.461,
+   "luz_relleno": 0,
+   "movil": "pelota_8",
+   "punto_base": "",
+   "desp_local": [
+    0.6,
+    -2.4,
+    0.5
+   ],
+   "objetivo": {
+    "movil": "pelota_8",
+    "punto": "",
+    "desp_local": [
+     0,
+     6,
+     0
+    ]
+   },
+   "lente_mm": 26,
+   "retardo": 0.6
+  },
+  {
+   "id": "t27_estatica",
+   "tipo": "estatica",
+   "plano": "CÁMARA LENTA: el botón se pone verde",
+   "inicio_s": 47.504,
+   "duracion_s": 1.75,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     2.6,
+     -1.9,
+     0.55
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.3
+    ]
+   },
+   "lente_mm": 22
+  },
+  {
+   "id": "t28_estatica",
+   "tipo": "estatica",
+   "plano": "CÁMARA LENTA: AZUL cae al vacío, el fuego sube por las esquinas",
+   "inicio_s": 49.254,
+   "duracion_s": 3.375,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "trampa_0",
+    "desp": [
+     0.4,
+     0.3,
+     -16.0
+    ]
+   },
+   "objetivo": {
+    "ancla": "trampa_0",
+    "desp": [
+     0,
+     0,
+     1.0
+    ]
+   },
+   "lente_mm": 20
+  },
+  {
+   "id": "t29_orbita",
+   "tipo": "orbita",
+   "plano": "ROJO campeón: festejo, fuego y papelitos",
+   "inicio_s": 52.629,
+   "duracion_s": 4.771,
+   "luz_relleno": 0,
+   "centro": {
+    "ancla": "trampa_1",
+    "desp": [
+     0,
+     0,
+     1.2
+    ]
+   },
+   "radio": 5.0,
+   "altura": 1.8,
+   "angulo_inicial": -30,
+   "angulo_final": 60,
+   "lente_mm": 26
+  },
+  {
+   "id": "t30_grua",
+   "tipo": "grua",
+   "plano": "final: la cámara sube sobre el estadio; abajo, AZUL vuelve derrotado en el ascensor",
+   "inicio_s": 57.4,
+   "duracion_s": 2.6,
+   "luz_relleno": 0,
+   "desde": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     -9,
+     3
+    ]
+   },
+   "hasta": {
+    "ancla": "centro",
+    "desp": [
+     0,
+     -20,
+     18
+    ]
+   },
+   "objetivo": {
+    "ancla": "centro"
+   },
+   "lente_mm": 22
+  }
+ ],
+ "moviles_escenario": [
+  "pelota_0",
+  "pelota_1",
+  "pelota_2",
+  "pelota_3",
+  "pelota_4",
+  "pelota_5",
+  "pelota_6",
+  "pelota_7",
+  "pelota_8"
+ ],
+ "sonido": {
+  "generador": "procedural",
+  "ambiente": "arcade_duelo",
+  "publico": 0.32,
+  "eventos": [
+   {
+    "tipo": "musica",
+    "prompt": "High energy sports arena track, 60 seconds, no vocals: hard-hitting trap drums, deep 808 bass and an epic stadium brass hook, built for a viral sports duel video; constant forward drive with short breaks, a dramatic tension build in the last third and a huge drop at the winning moment around 48s, then a triumphant outro.",
+    "duracion_s": 60.0,
+    "inicio_s": 0.0,
+    "volumen": 0.55
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "whistle blow then a huge stadium crowd roaring",
+    "duracion_s": 3,
+    "inicio_s": 0.0,
+    "volumen": 0.7
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive arena crowd erupting in wild cheers and screams, thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 2.863,
+    "volumen": 0.9
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive arena crowd erupting in wild cheers and screams, thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 18.342,
+    "volumen": 0.9
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive arena crowd erupting in wild cheers and screams, thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 28.695,
+    "volumen": 0.9
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive arena crowd erupting in wild cheers and screams, thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 35.542,
+    "volumen": 0.9
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "massive arena crowd erupting in wild cheers and screams, thousands of fans",
+    "duracion_s": 4,
+    "inicio_s": 48.629,
+    "volumen": 0.9
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 2.988,
+    "volumen": 0.8,
+    "movil": "azul"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 18.392,
+    "volumen": 0.8,
+    "movil": "rojo"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 28.745,
+    "volumen": 0.8,
+    "movil": "rojo"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 35.592,
+    "volumen": 0.8,
+    "movil": "azul"
+   },
+   {
+    "tipo": "efecto",
+    "prompt": "man screaming as he falls down into a deep abyss, voice fading away with echo",
+    "duracion_s": 3,
+    "inicio_s": 48.754,
+    "volumen": 0.8,
+    "movil": "azul"
+   }
+  ]
+ },
+ "render": {
+  "calidad": "revision",
+  "fps": 30,
+  "exposicion": 0.0,
+  "vertical": true
+ },
+ "estado": "borrador",
+ "bloqueada": false,
+ "huella_v": 2
+}
