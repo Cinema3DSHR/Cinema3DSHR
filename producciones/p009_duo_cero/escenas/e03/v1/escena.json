@@ -59,7 +59,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 7.3
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 3.7
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_3.fbx",
@@ -82,7 +83,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 1.9
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 3.1
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_3.fbx",
@@ -105,7 +107,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 16.5
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 2.5
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Talking_2.fbx",
@@ -117,7 +120,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 3.8
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 6.2
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_2.fbx",
@@ -140,7 +144,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 18.4
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 5.6
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_2.fbx",
@@ -163,7 +168,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 13.0
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 5.0
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Talking_2.fbx",
@@ -175,7 +181,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 7.6
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 4.4
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_2.fbx",
@@ -220,7 +227,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 16.8
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 3.2
     }
    ],
    "cara": {
@@ -559,7 +567,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 14.6
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 7.4
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_3.fbx",
@@ -582,7 +591,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 9.2
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 6.8
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_3.fbx",
@@ -616,7 +626,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 11.1
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 1.9
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_2.fbx",
@@ -683,7 +694,8 @@
      ],
      "mirando_deg": 0,
      "mezcla_s": 0.45,
-     "desde_clip_s": 9.5
+     "clip_hasta_s": 18.0,
+     "desde_clip_s": 7.5
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_2.fbx",

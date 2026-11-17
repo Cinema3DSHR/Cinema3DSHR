@@ -103,7 +103,7 @@ def acciones_sentado(n, quien, dur):
         clip = lista[turno % len(lista)]
         turno += 1
         t = max(0.0, p["t_ini"] - (0.25 if habla else -0.2))
-        tramos.append((t, clip, (turno * 7.3) % 20.0 if "Talking" in clip else 0.0))
+        tramos.append((t, clip, (turno * 3.7) % 8.0 if "Talking" in clip else 0.0))
         for (e, q, frag, gclip, dt) in GESTOS:
             if e == n and q == quien and frag in p["texto"]:
                 tramos.append((max(0.0, p["t_ini"] + dt), gclip, 0.0))
@@ -119,6 +119,8 @@ def acciones_sentado(n, quien, dur):
     acc = []
     for i, (t, c, d) in enumerate(limpio):
         a = {"clip": SENT + c, "inicio_s": round(t, 3), "pos": [x, y, PISO], "mirando_deg": 0, "mezcla_s": 0.45}
+        if "Talking" in c:
+            a["clip_hasta_s"] = 18.0             # sólo lo que se usa (desde ≤ 8 s + la línea más larga ≤ 9 s)
         if d:
             a["desde_clip_s"] = round(d, 2)
         if i == 0:
@@ -415,7 +417,7 @@ def escena_4():
     ]
     luna = [
         _acc(SENT + "Sitting_Idle_3.fbx", 0.0, (-1.02, 0.48, PISO)),
-        _acc(SENT + "Sitting_Talking_2.fbx", 2.1, (-1.02, 0.48, PISO), mezcla_s=0.35, desde_clip_s=6.0),
+        _acc(SENT + "Sitting_Talking_2.fbx", 2.1, (-1.02, 0.48, PISO), mezcla_s=0.35, desde_clip_s=6.0, clip_hasta_s=12.0),
         _acc(SENT + "Sit_To_Stand.fbx", 6.75, (-1.02, 0.48, PISO), mezcla_s=0.3),
         _acc(SHOOT + "Grab_Rifle_From_The_Side.fbx", 8.4, encadenar=True, mezcla_s=0.3),
         _acc(RIFLE + "idle.fbx", 9.17, PUERTA_LUNA),

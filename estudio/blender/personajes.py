@@ -399,10 +399,11 @@ def _raiz_en(tr: dict, t: float):
 _RETARGETS: dict[tuple, bpy.types.Action] = {}
 
 
-def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str):
-    """Acción retargeteada de un clip FBX de Mixamo para ESTE personaje (con caché por personaje)."""
+def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str, hasta_s: float | None = None):
+    """Acción retargeteada de un clip FBX de Mixamo para ESTE personaje (con caché por personaje). `hasta_s`: sólo
+    los primeros segundos del clip (los clips de 40 s cuestan minutos y muchas veces se usan 10)."""
     from estudio.blender import retarget as R
-    clave = (dueno, ref)
+    clave = (dueno, ref, hasta_s)
     if ref.startswith("futbol:") and (clave not in _RETARGETS or _RETARGETS[clave].name not in bpy.data.actions):
         # clip del juego (futbolista de Free Kick Swipe, huesos «mixamorig_X»): se retargetea desde la biblioteca
         lib = biblioteca("futbol:jugador")
@@ -431,7 +432,11 @@ def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str):
         raiz.rotation_euler = (0, 0, 0)
         raiz.location = (0, 0, 0)
         nombre = f"rt_{dueno}_{Path(ref).stem}"
-        _RETARGETS[clave] = R.retarget(tarm, acc, arm, nombre, info["cadera"])
+        rango = None
+        if hasta_s:
+            f0c = int(acc.frame_range[0])
+            rango = (f0c, min(int(acc.frame_range[1]), f0c + int(round(hasta_s * 30))))
+        _RETARGETS[clave] = R.retarget(tarm, acc, arm, nombre, info["cadera"], fotogramas=rango)
         for o in tmp:
             bpy.data.objects.remove(o)
         for ac in list(bpy.data.actions):          # el clip original ya no hace falta (ahorra memoria)
@@ -644,7 +649,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     llaves = []
     for i, ac in enumerate(spec.get("acciones", [])):
         ref = ac["clip"]
-        accion = _rt(modelo, ref, arm, raiz, info, f"{pid}")
+        accion = _rt(modelo, ref, arm, raiz, info, f"{pid}", ac.get("clip_hasta_s"))
         f0 = int(round(ac["inicio_s"] * fps)) + 1
         if ac.get("encadenar") and tramos:
             if tramos[-1].get("futbol"):              # clip del juego: termina donde lo dejó su root_path al cortarse

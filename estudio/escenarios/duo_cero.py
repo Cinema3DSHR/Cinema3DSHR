@@ -691,6 +691,7 @@ def despues_personajes(info, pjs, ctx, manifiesto, fps):
     saltos = manifiesto.get("saltos") or []
     if not saltos:
         return
+    info = info.get("info", info)             # el director pasa lo que devolvió construir()
     vag = bpy.data.objects[info["vagon_raiz"]]
     for sj in saltos:
         pj = pjs[sj["pj"]]
