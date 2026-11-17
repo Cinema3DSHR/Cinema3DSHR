@@ -25,6 +25,11 @@ allows 60 concurrent jobs on standard GitHub-hosted runners (5 of them macOS). I
   Windows 0, macOS 0) at the same time, so the plan limit of 60 is recognized but not used.
 - For comparison, the same workflow in the personal account (GitHub Free) ran 20 jobs concurrently earlier today
   (run 44069629391, 19 render jobs simultaneous; run 44076765471, 20 simultaneous).
+- The workflow file and scripts are byte-identical between the run that got 20 concurrent jobs in the personal
+  account (commit d62a847) and the run limited to 5 in the organization (commit 727df1f).
+- A minimal probe with no build step at all (25 jobs that only run `sleep 90`, workflow `concurrencia.yml`, run
+  https://github.com/Cinema3DSHR/Cinema3DSHR/actions/runs/44084086176) also got only **6 jobs running at once** and
+  19 queued, so the cap does not depend on the workload.
 - No self-hosted runners, no larger runners, no macOS or Windows jobs. We did not change any spending limit.
 
 Could you please check whether a lower concurrency limit is applied to our organization (for example because it is
