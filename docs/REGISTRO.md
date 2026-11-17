@@ -251,4 +251,9 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   quedaban «sentados en el aire»); el retarget dejaba una posición sin clave en los huesos que no son la cadera y se
   acumulaba (el cuerpo de Nico terminaba a kilómetros del esqueleto y no salía en cámara); cámaras de la escena 4
   medidas sobre las cabezas reales.
+- Render distribuido del episodio (`episodio.yml`, `pruebas/episodio/`): 5 400 fotogramas en 19 bloques parejos,
+  configuración verificada (960×540, Cycles 6 muestras, adaptativo 0,05, OIDN, 6 rebotes, árbol de luces, semilla 0).
+  Prueba de 114 fotogramas (run 44069629391): 19/19 simultáneos y sin error, 8 min 45 s, 12,2 s/fotograma; proyección
+  del episodio ~82 min de render (70–98). Informe: `docs/informes/duo_cero_ep01_tiempos.md`. La animática local quedó
+  cancelada (sin GPU no es viable).
 - **Sin render final**: espera «APROBADO. INICIÁ EL RENDER FINAL DE DÚO CERO — EPISODIO 01».
