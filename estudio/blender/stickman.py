@@ -966,4 +966,104 @@ def preparar(pj: dict, spec: dict, fps: int, nf: int):
     actuar(partes, spec.get("cara", {}), fps, nf, semilla=sum(map(ord, spec["id"])))
     pj["cara"] = partes
     pj["cabeza"] = cab
+    if spec.get("arma_stickman"):
+        armar(pj, spec["arma_stickman"], fps, nf)
+    if spec.get("mochila"):
+        mochila(pj, spec["mochila"], fps, nf)
+    if spec.get("en_mano"):
+        en_mano(pj, spec["en_mano"], fps, nf)
     return pj
+
+
+def en_mano(pj: dict, d: dict, fps: int, nf: int):
+    """Un objeto chico en la mano derecha (hoy: la radio portátil), visible en los tramos [[t0, t1], …]."""
+    M = _modelo_a_armadura(pj)
+    negro = K.material(f"radio_mano_{pj['id']}", (0.02, 0.02, 0.022), 0.45)
+    led = K.material("led_verde_radio", (0.1, 1.0, 0.2), 0.3, emision=(0.1, 1.0, 0.2), fuerza=8.0)
+    import bmesh
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    for v in bm.verts:                       # cuerpo de la radio (unidades del modelo de 0,9 m)
+        v.co.x *= 0.022
+        v.co.y *= 0.014
+        v.co.z *= 0.048
+    bmesh.ops.bevel(bm, geom=list(bm.edges), offset=0.003, segments=2, affect="EDGES")
+    ant = bmesh.ops.create_cone(bm, cap_ends=True, segments=6, radius1=0.0025, radius2=0.002, depth=0.04)
+    for v in ant["verts"]:
+        v.co += Vector((0.008, 0.0, 0.044))
+    bm2 = bmesh.new()
+    bmesh.ops.create_cube(bm2, size=1.0)
+    me_led = bpy.data.meshes.new("tmp_led")
+    me = bpy.data.meshes.new(f"RADIO_{pj['id']}")
+    bm.to_mesh(me)
+    bm.free()
+    bm2.free()
+    bpy.data.meshes.remove(me_led)
+    lado = -1.0                             # mano derecha: −X del modelo
+    me.transform(Matrix.Translation((lado * 0.395, -0.012, 0.60)))
+    me.transform(M)
+    me.materials.append(negro)
+    me.materials.append(led)
+    ob = bpy.data.objects.new(f"RADIO_{pj['id']}", me)
+    pj["raiz"].users_collection[0].objects.link(ob)
+    _a_hueso(ob, pj, "mixamorig:RightHand")
+    tramos = d.get("visible", [[0.0, nf / fps]])
+    claves = [(0, True)]
+    for t0, t1 in tramos:
+        claves += [(int(round(t0 * fps)) + 1, False), (int(round(t1 * fps)) + 1, True)]
+    for f, oculto in claves:
+        ob.hide_render = ob.hide_viewport = oculto
+        ob.keyframe_insert("hide_render", frame=f)
+        ob.keyframe_insert("hide_viewport", frame=f)
+    for fc in K._fcurves(ob.animation_data.action):
+        for kp in fc.keyframe_points:
+            kp.interpolation = "CONSTANT"
+    return ob
+
+
+def armar(pj: dict, a: dict, fps: int, nf: int):
+    """Arma del pack en la mano derecha («tipo»: fusil, subfusil, ak, escopeta, pistola), visible en los tramos
+    [[t0, t1], …] (por defecto toda la escena) y con fogonazos en cada «disparos» (segundos)."""
+    from estudio.blender import armas_stickman as AS, personajes as P
+    info = pj["info"]
+    ref = a.get("pose_ref", info["clip_arma"])
+    acc = P._rt(pj.get("modelo", ""), ref, pj["armadura"], pj["raiz"], info, pj["id"])
+    sop = AS.acoplar(pj, a["tipo"], acc, a.get("frame_ref", info.get("frame_arma", 20)))
+    tramos = [(int(round(t0 * fps)) + 1, int(round(t1 * fps)) + 1) for t0, t1 in a.get("visible", [[0, nf / fps]])]
+    AS.visible(sop, tramos)
+    if a.get("disparos"):
+        from estudio.blender import efectos as EF
+        EF.fogonazos(sop, [int(round(t * fps)) + 1 for t in a["disparos"]], energia=a.get("energia_fogonazo", 900.0))
+    pj["arma"] = sop
+    return sop
+
+
+def mochila(pj: dict, m: dict, fps: int, nf: int):
+    """Mochila táctica a la espalda (colgada del hueso Spine2), visible desde «desde_s»."""
+    M = _modelo_a_armadura(pj)
+    mat = K.material(f"mochila_{pj['id']}", (0.11, 0.13, 0.06), 0.85, ruido=0.2, escala_ruido=20)
+    import bmesh
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    for v in bm.verts:
+        v.co.x *= 0.095
+        v.co.y *= 0.05
+        v.co.z *= 0.12
+    bmesh.ops.bevel(bm, geom=list(bm.edges), offset=0.018, segments=3, affect="EDGES")
+    me = bpy.data.meshes.new(f"MOCHILA_{pj['id']}")
+    bm.to_mesh(me)
+    bm.free()
+    me.transform(Matrix.Translation((0.0, 0.085, 0.555)))          # en la espalda (+Y del modelo), a la altura del pecho
+    me.transform(M)
+    for p_ in me.polygons:
+        p_.use_smooth = True
+    me.materials.append(mat)
+    ob = bpy.data.objects.new(f"MOCHILA_{pj['id']}", me)
+    pj["raiz"].users_collection[0].objects.link(ob)
+    _a_hueso(ob, pj, "mixamorig:Spine2")
+    f0 = int(round(m.get("desde_s", 0.0) * fps)) + 1
+    for f, oculto in ((0, True), (f0, False)):
+        ob.hide_render = ob.hide_viewport = oculto
+        ob.keyframe_insert("hide_render", frame=f)
+        ob.keyframe_insert("hide_viewport", frame=f)
+    return ob

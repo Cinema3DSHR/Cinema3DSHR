@@ -1,0 +1,857 @@
+{
+ "tipo": "escena",
+ "id": "p009_duo_cero-e06",
+ "produccion": "p009_duo_cero",
+ "numero": 6,
+ "version": 1,
+ "titulo": "Cierre y presentación de la misión",
+ "guion": "Central, estamos en posición. Recibido, Dúo Cero. Adelante. ¿Ves? Todo salió perfecto. Acabamos de saltar de un tren en movimiento y nos recibieron a tiros. Pero estamos acá. Sos imposible. Y aun así me elegiste como compañero. No te acostumbres. Título: DÚO CERO.",
+ "duracion_s": 22.7,
+ "escenario": {
+  "id": "duo_cero_noche",
+  "generador": "duo_cero",
+  "parametros": {
+   "escena": 6,
+   "T0": 155.8,
+   "duracion_escena_s": 22.7,
+   "T_salto": 127.183
+  }
+ },
+ "eventos": [],
+ "vehiculos": [],
+ "personajes": [
+  {
+   "id": "nico",
+   "modelo": "stickman:masculino",
+   "alto_m": 1.78,
+   "vestuario": {
+    "estilo": "tactico",
+    "pelo": "puntas",
+    "color_pelo": [
+     0.2,
+     0.09,
+     0.03
+    ]
+   },
+   "acciones": [
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/walk_forward.fbx",
+     "inicio_s": 0.0,
+     "mirando_deg": 119.8,
+     "repetir": 4,
+     "pos": [
+      15.75,
+      17.55,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 3.85,
+     "mirando_deg": 119.8,
+     "mezcla_s": 0.4,
+     "pos": [
+      11.796,
+      24.449,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/hablar_conversacion/Talking_3.fbx",
+     "inicio_s": 3.95,
+     "mirando_deg": 119.8,
+     "mezcla_s": 0.35,
+     "pos": [
+      11.796,
+      24.449,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 6.2,
+     "mirando_deg": 119.8,
+     "mezcla_s": 0.4,
+     "pos": [
+      11.796,
+      24.449,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/hablar_conversacion/Talking_6.fbx",
+     "inicio_s": 13.0,
+     "mirando_deg": 119.8,
+     "mezcla_s": 0.35,
+     "pos": [
+      11.796,
+      24.449,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 16.0,
+     "mirando_deg": 119.8,
+     "mezcla_s": 0.4,
+     "pos": [
+      11.796,
+      24.449,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/walk_forward.fbx",
+     "inicio_s": 18.174,
+     "mirando_deg": 6.4,
+     "mezcla_s": 0.4,
+     "repetir": 4,
+     "pos": [
+      11.796,
+      24.449,
+      0.0
+     ]
+    }
+   ],
+   "cara": {
+    "expresiones": [
+     {
+      "t": 0.0,
+      "expr": "neutral"
+     },
+     {
+      "t": 0.0,
+      "expr": "confiado"
+     },
+     {
+      "t": 0.756,
+      "expr": "neutral"
+     },
+     {
+      "t": 3.743,
+      "expr": "confiado"
+     },
+     {
+      "t": 6.415,
+      "expr": "picara"
+     },
+     {
+      "t": 9.963,
+      "expr": "sonrisa"
+     },
+     {
+      "t": 11.121,
+      "expr": "picara"
+     },
+     {
+      "t": 12.949,
+      "expr": "picara"
+     },
+     {
+      "t": 15.959,
+      "expr": "picara"
+     },
+     {
+      "t": 16.844,
+      "expr": "risa"
+     },
+     {
+      "t": 18.273542168673593,
+      "expr": "picara"
+     }
+    ],
+    "habla": [
+     {
+      "inicio_s": 3.893,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_b8ebbc2c4142cc43.mp3",
+      "recorte_s": [
+       0.0,
+       2.19
+      ],
+      "texto": "[smug] ¿Ves? Todo salió perfecto."
+     },
+     {
+      "inicio_s": 10.113,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_db7c36ec68ba55f3.mp3",
+      "recorte_s": [
+       0.039999999999999994,
+       0.64
+      ],
+      "texto": "Pero estamos acá."
+     },
+     {
+      "inicio_s": 13.099,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_1fe8181c386b1db6.mp3",
+      "recorte_s": [
+       0.12000000000000001,
+       2.88
+      ],
+      "texto": "[playful] Y aun así me elegiste como compañero."
+     }
+    ],
+    "miradas": [
+     {
+      "t": 0.556,
+      "hasta": 2.436,
+      "u": 0.55
+     },
+     {
+      "t": 3.893,
+      "hasta": 6.083,
+      "u": 0.44000000000000006
+     },
+     {
+      "t": 6.215,
+      "hasta": 10.305,
+      "u": 0.55
+     },
+     {
+      "t": 10.113,
+      "hasta": 10.713,
+      "u": 0.44000000000000006
+     },
+     {
+      "t": 10.921,
+      "hasta": 13.291,
+      "u": 0.55
+     },
+     {
+      "t": 13.099,
+      "hasta": 15.859,
+      "u": 0.44000000000000006
+     },
+     {
+      "t": 15.859,
+      "hasta": 16.544,
+      "u": 0.55
+     },
+     {
+      "t": 16.644,
+      "hasta": 18.374,
+      "u": 0.55
+     }
+    ]
+   },
+   "arma_stickman": {
+    "tipo": "fusil"
+   },
+   "mochila": {
+    "desde_s": 0.0
+   }
+  },
+  {
+   "id": "luna",
+   "modelo": "stickman:femenino",
+   "alto_m": 1.68,
+   "vestuario": {
+    "estilo": "tactico",
+    "pelo": "luna",
+    "color_pelo": [
+     0.06,
+     0.025,
+     0.012
+    ]
+   },
+   "acciones": [
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 0.0,
+     "mirando_deg": -60.2,
+     "pos": [
+      11.05,
+      25.75,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/hablar_conversacion/Talking_5.fbx",
+     "inicio_s": 6.0,
+     "mirando_deg": -60.2,
+     "mezcla_s": 0.35,
+     "pos": [
+      11.05,
+      25.75,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 9.9,
+     "mirando_deg": -60.2,
+     "mezcla_s": 0.4,
+     "pos": [
+      11.05,
+      25.75,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/emociones/Laughing.fbx",
+     "inicio_s": 10.7,
+     "mirando_deg": -60.2,
+     "mezcla_s": 0.35,
+     "pos": [
+      11.05,
+      25.75,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 12.9,
+     "mirando_deg": -60.2,
+     "mezcla_s": 0.4,
+     "pos": [
+      11.05,
+      25.75,
+      0.0
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/walk_forward.fbx",
+     "inicio_s": 18.824,
+     "mirando_deg": 5.9,
+     "mezcla_s": 0.4,
+     "repetir": 4,
+     "pos": [
+      11.05,
+      25.75,
+      0.0
+     ]
+    }
+   ],
+   "cara": {
+    "expresiones": [
+     {
+      "t": 0.0,
+      "expr": "neutral"
+     },
+     {
+      "t": 0.306,
+      "expr": "concentrada"
+     },
+     {
+      "t": 2.444433734939448,
+      "expr": "concentrada"
+     },
+     {
+      "t": 3.784433734939448,
+      "expr": "sonrisa_suave"
+     },
+     {
+      "t": 4.193,
+      "expr": "incredula"
+     },
+     {
+      "t": 5.965,
+      "expr": "incredula"
+     },
+     {
+      "t": 10.413,
+      "expr": "sonrisa_suave"
+     },
+     {
+      "t": 10.671,
+      "expr": "sonrisa"
+     },
+     {
+      "t": 13.399,
+      "expr": "avergonzada"
+     },
+     {
+      "t": 15.959,
+      "expr": "carinosa"
+     },
+     {
+      "t": 16.394,
+      "expr": "carinosa"
+     },
+     {
+      "t": 18.473542168673593,
+      "expr": "carinosa"
+     }
+    ],
+    "habla": [
+     {
+      "inicio_s": 0.456,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_31e6c1026dfb0ad0.mp3",
+      "recorte_s": [
+       0.0,
+       1.68
+      ],
+      "texto": "Central, estamos en posición."
+     },
+     {
+      "inicio_s": 6.115,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_354f0b1146954f7a.mp3",
+      "recorte_s": [
+       0.03,
+       3.92
+      ],
+      "texto": "[incredulous] Acabamos de saltar de un tren en movimiento y nos recibieron a tiros."
+     },
+     {
+      "inicio_s": 10.821,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_ed310089c18f0d4f.mp3",
+      "recorte_s": [
+       0.039999999999999994,
+       2.21
+      ],
+      "texto": "[laughs softly] Sos imposible."
+     },
+     {
+      "inicio_s": 16.544,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_1a220243735afde3.mp3",
+      "recorte_s": [
+       0.09999999999999999,
+       1.6300000000000001
+      ],
+      "texto": "[smiling] No te acostumbres."
+     }
+    ],
+    "miradas": [
+     {
+      "t": 0.456,
+      "hasta": 2.136,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 3.993,
+      "hasta": 6.383,
+      "u": -0.55
+     },
+     {
+      "t": 6.115,
+      "hasta": 10.005,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 10.213,
+      "hasta": 11.013,
+      "u": -0.55
+     },
+     {
+      "t": 10.821,
+      "hasta": 12.991,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 13.199,
+      "hasta": 16.159,
+      "u": -0.55
+     },
+     {
+      "t": 15.859,
+      "hasta": 16.544,
+      "u": -0.55
+     },
+     {
+      "t": 16.544,
+      "hasta": 18.074,
+      "u": -0.44000000000000006
+     }
+    ]
+   },
+   "arma_stickman": {
+    "tipo": "subfusil",
+    "visible": [
+     [
+      4.084433734939448,
+      22.7
+     ]
+    ]
+   },
+   "en_mano": {
+    "visible": [
+     [
+      0.0,
+      4.084433734939448
+     ]
+    ]
+   },
+   "poses": [
+    {
+     "pose": "radio_boca",
+     "inicio_s": 0.10628915662629879,
+     "dur_s": 2.1799999999999997
+    },
+    {
+     "pose": "radio_mano",
+     "inicio_s": 2.2862891566262986,
+     "dur_s": 1.6481445783131492
+    }
+   ],
+   "mochila": {
+    "desde_s": 0.0
+   }
+  }
+ ],
+ "tomas": [
+  {
+   "id": "t01_luna_radio",
+   "tipo": "seguimiento",
+   "plano": "Luna por radio: «Central, estamos en posición»",
+   "inicio_s": 0.0,
+   "duracion_s": 2.2333,
+   "movil": "luna",
+   "punto_base": "",
+   "desp_local": [
+    0.3,
+    1.8,
+    0.6
+   ],
+   "objetivo": {
+    "movil": "luna",
+    "punto": "cabeza"
+   },
+   "lente_mm": 45,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t02_central",
+   "tipo": "estatica",
+   "plano": "la radio contesta con interferencia; Nico se acerca",
+   "inicio_s": 2.2333,
+   "duracion_s": 1.6667,
+   "desde": [
+    6.0,
+    16.5,
+    1.6
+   ],
+   "objetivo": {
+    "movil": "luna",
+    "punto": "pecho"
+   },
+   "lente_mm": 28,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t03_nico_perfecto",
+   "tipo": "seguimiento",
+   "plano": "Nico: «¿Ves? Todo salió perfecto»",
+   "inicio_s": 3.9,
+   "duracion_s": 2.1667,
+   "movil": "nico",
+   "punto_base": "",
+   "desp_local": [
+    -0.3,
+    1.9,
+    0.6
+   ],
+   "objetivo": {
+    "movil": "nico",
+    "punto": "cabeza"
+   },
+   "lente_mm": 45,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t04_os_luna_tiros",
+   "tipo": "seguimiento",
+   "plano": "Luna: «Acabamos de saltar de un tren en movimiento y nos recibieron a tiros»",
+   "inicio_s": 6.0667,
+   "duracion_s": 3.9333,
+   "movil": "nico",
+   "punto_base": "",
+   "desp_local": [
+    0.45,
+    -0.85,
+    0.72
+   ],
+   "objetivo": {
+    "movil": "luna",
+    "punto": "cabeza"
+   },
+   "lente_mm": 40,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t05_nico_aca",
+   "tipo": "seguimiento",
+   "plano": "Nico: «Pero estamos acá»",
+   "inicio_s": 10.0,
+   "duracion_s": 0.8333,
+   "movil": "nico",
+   "punto_base": "",
+   "desp_local": [
+    -0.3,
+    1.9,
+    0.6
+   ],
+   "objetivo": {
+    "movil": "nico",
+    "punto": "cabeza"
+   },
+   "lente_mm": 45,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t06_luna_imposible",
+   "tipo": "seguimiento",
+   "plano": "Luna se ríe: «Sos imposible»",
+   "inicio_s": 10.8333,
+   "duracion_s": 2.2667,
+   "movil": "luna",
+   "punto_base": "",
+   "desp_local": [
+    0.3,
+    1.8,
+    0.6
+   ],
+   "objetivo": {
+    "movil": "luna",
+    "punto": "cabeza"
+   },
+   "lente_mm": 50,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t07_nico_elegiste",
+   "tipo": "seguimiento",
+   "plano": "Nico: «Y aun así me elegiste como compañero»",
+   "inicio_s": 13.1,
+   "duracion_s": 2.7667,
+   "movil": "nico",
+   "punto_base": "",
+   "desp_local": [
+    -0.35,
+    1.9,
+    0.62
+   ],
+   "objetivo": {
+    "movil": "nico",
+    "punto": "cabeza"
+   },
+   "lente_mm": 45,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t08_luna_mira",
+   "tipo": "seguimiento",
+   "plano": "Luna lo observa un instante",
+   "inicio_s": 15.8667,
+   "duracion_s": 0.6667,
+   "movil": "luna",
+   "punto_base": "",
+   "desp_local": [
+    0.2,
+    1.45,
+    0.62
+   ],
+   "objetivo": {
+    "movil": "luna",
+    "punto": "cabeza"
+   },
+   "lente_mm": 85,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t09_luna_acostumbres",
+   "tipo": "seguimiento",
+   "plano": "Luna: «No te acostumbres»",
+   "inicio_s": 16.5334,
+   "duracion_s": 1.5333,
+   "movil": "luna",
+   "punto_base": "",
+   "desp_local": [
+    0.3,
+    1.8,
+    0.6
+   ],
+   "objetivo": {
+    "movil": "luna",
+    "punto": "cabeza"
+   },
+   "lente_mm": 50,
+   "retardo": 0.25,
+   "luz_relleno": 25
+  },
+  {
+   "id": "t10_final",
+   "tipo": "grua",
+   "plano": "se van hacia la base; la cámara sube y aparece el título",
+   "inicio_s": 18.0667,
+   "duracion_s": 4.633299999999998,
+   "desde": {
+    "movil": "nico",
+    "punto": "",
+    "desp": [
+     -5.5,
+     -2.0,
+     0.6
+    ]
+   },
+   "hasta": [
+    -18.204,
+    16.449,
+    26.0
+   ],
+   "objetivo": [
+    210.0,
+    60.0,
+    4.0
+   ],
+   "lente_mm": 24,
+   "montaje": {
+    "efecto": "titulo",
+    "lineas": [
+     "DÚO CERO",
+     "EPISODIO 01 — UN MINUTO PARA SALTAR"
+    ],
+    "desde_s": 1.5
+   }
+  }
+ ],
+ "moviles_escenario": [
+  "vagon",
+  "loco",
+  "cola"
+ ],
+ "sonido": {
+  "generador": "procedural",
+  "ambiente": null,
+  "eventos": [
+   {
+    "tipo": "musica",
+    "prompt": "Warm, confident end-title theme, 23 seconds, no vocals: starts soft with a hopeful guitar and strings under light banter, then at second 18 the full heroic action-series theme with drums and brass rising as the camera lifts, ending on a strong final hit",
+    "duracion_s": 22.7,
+    "inicio_s": 0.0,
+    "volumen": 0.32
+   },
+   {
+    "tipo": "pasos",
+    "t": [
+     0.2,
+     0.7,
+     1.2,
+     1.7,
+     2.2,
+     2.7,
+     3.2,
+     3.7,
+     18.27,
+     18.77,
+     19.27,
+     19.77,
+     20.27,
+     20.77,
+     21.27,
+     21.77,
+     22.27
+    ]
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "Central, estamos en posición.",
+    "inicio_s": 0.456,
+    "recorte_s": [
+     0.0,
+     1.68
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "central_ar",
+    "texto": "Recibido, Dúo Cero. Adelante.",
+    "inicio_s": 2.244,
+    "recorte_s": [
+     0.0,
+     1.54
+    ],
+    "volumen": 1.0,
+    "radio": true
+   },
+   {
+    "tipo": "voz",
+    "rol": "nico",
+    "texto": "[smug] ¿Ves? Todo salió perfecto.",
+    "inicio_s": 3.893,
+    "recorte_s": [
+     0.0,
+     2.19
+    ],
+    "volumen": 1.0,
+    "movil": "nico"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[incredulous] Acabamos de saltar de un tren en movimiento y nos recibieron a tiros.",
+    "inicio_s": 6.085,
+    "recorte_s": [
+     0.03,
+     3.92
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "nico",
+    "texto": "Pero estamos acá.",
+    "inicio_s": 10.073,
+    "recorte_s": [
+     0.04,
+     0.64
+    ],
+    "volumen": 1.0,
+    "movil": "nico"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[laughs softly] Sos imposible.",
+    "inicio_s": 10.781,
+    "recorte_s": [
+     0.04,
+     2.21
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "nico",
+    "texto": "[playful] Y aun así me elegiste como compañero.",
+    "inicio_s": 12.979,
+    "recorte_s": [
+     0.12,
+     2.88
+    ],
+    "volumen": 1.0,
+    "movil": "nico"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[smiling] No te acostumbres.",
+    "inicio_s": 16.444,
+    "recorte_s": [
+     0.1,
+     1.63
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   }
+  ]
+ },
+ "render": {
+  "calidad": "revision",
+  "fps": 30,
+  "exposicion": 0.6,
+  "muestras": 6
+ },
+ "estado": "borrador",
+ "bloqueada": false,
+ "huella_v": 2
+}

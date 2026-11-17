@@ -119,6 +119,8 @@ def personaje_de_rol(rol: str) -> str | None:
 
 # ------------------------------------------------------------------------------------------------ tiempos reales
 DURACION_TOTAL = 180.0
+# cámara lenta del salto (escena 4): desde t (película), `pelicula` s de pantalla muestran `contenido` s de acción
+CAMARA_LENTA = {4: {"t": 20.0, "pelicula": 2.6, "contenido": 1.1}}
 MINIMOS = {"salto": 5.5, "tiroteo": 11.0, "caminan_y_titulo": 4.6, "aerea_tren": 3.4}
 SOLAPE = 0.12                    # interrupciones naturales en los intercambios rápidos
 
@@ -196,7 +198,38 @@ def plan() -> dict:
         d = round(d * 30) / 30
         if i == len(ESCENAS) - 1:
             d += resto
-        res[n] = {"pasos": pasos, "duracion_s": round(d, 4), "T0": round(T0, 4), "k_pausa": k}
-        T0 += d
+        cl = CAMARA_LENTA.get(n)
+        contenido = d - (cl["pelicula"] - cl["contenido"]) if cl else d
+        res[n] = {"pasos": pasos, "duracion_s": round(d, 4), "T0": round(T0, 4), "k_pausa": k,
+                  "contenido_s": round(contenido, 4), "camara_lenta": cl}
+        T0 += contenido
     _RECORTES["plan"] = res
     return res
+
+
+def a_escena(n: int, t: float) -> float:
+    """Tiempo de película → tiempo de la escena (el contenido), teniendo en cuenta la cámara lenta."""
+    cl = CAMARA_LENTA.get(n)
+    if not cl or t <= cl["t"]:
+        return t
+    if t <= cl["t"] + cl["pelicula"]:
+        return cl["t"] + (t - cl["t"]) * cl["contenido"] / cl["pelicula"]
+    return t - (cl["pelicula"] - cl["contenido"])
+
+
+def mapa_tiempo(n: int, dur: float):
+    cl = CAMARA_LENTA.get(n)
+    if not cl:
+        return None
+    return [[0.0, 0.0], [cl["t"], cl["t"]], [cl["t"] + cl["pelicula"], cl["t"] + cl["contenido"]],
+            [dur, a_escena(n, dur)]]
+
+
+def a_pelicula(n: int, t: float) -> float:
+    """Inversa de a_escena: tiempo de la escena → tiempo de película."""
+    cl = CAMARA_LENTA.get(n)
+    if not cl or t <= cl["t"]:
+        return t
+    if t <= cl["t"] + cl["contenido"]:
+        return cl["t"] + (t - cl["t"]) * cl["pelicula"] / cl["contenido"]
+    return t + (cl["pelicula"] - cl["contenido"])

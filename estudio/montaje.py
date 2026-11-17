@@ -12,6 +12,7 @@ import subprocess
 from pathlib import Path
 
 FUENTE_MONO = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf"
+FUENTE_TITULO = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
 
 def _ff(*args):
@@ -43,6 +44,21 @@ def _filtro_efecto(efecto: dict | None, fps: int) -> str:
             f"drawtext=text='● REC'{ff}:fontcolor=red@0.95:fontsize=h/20:x=w*0.84:y=h*0.05:"
             "enable='lt(mod(t,1),0.6)'"
         )
+    if efecto.get("efecto") == "titulo":
+        # título de cierre: dos líneas centradas que aparecen con un fundido de 1 s desde «desde_s» (relativo a la toma)
+        fuente = FUENTE_TITULO if Path(FUENTE_TITULO).exists() else ""
+        ff = f":fontfile={fuente}" if fuente else ""
+        a = float(efecto.get("desde_s", 0.0))
+        alfa = f"if(lt(t\\,{a})\\,0\\,if(lt(t\\,{a + 1.0})\\,t-{a}\\,1))"
+        partes = []
+        lineas = efecto.get("lineas", ["DÚO CERO"])
+        for i, linea in enumerate(lineas):
+            txt = linea.replace("\\", "").replace(":", r"\:").replace("'", "")
+            tam = "h/9" if i == 0 else "h/26"
+            y = "h*0.38" if i == 0 else f"h*{0.38 + 0.16 + 0.05 * (i - 1):.2f}"
+            partes.append(f"drawtext=text='{txt}'{ff}:fontcolor=white:fontsize={tam}:x=(w-text_w)/2:y={y}:"
+                          f"alpha='{alfa}':shadowcolor=black@0.6:shadowx=3:shadowy=3")
+        return ",".join(partes)
     return "null"
 
 

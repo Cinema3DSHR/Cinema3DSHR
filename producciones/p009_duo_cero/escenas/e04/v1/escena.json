@@ -1,0 +1,1256 @@
+{
+ "tipo": "escena",
+ "id": "p009_duo_cero-e04",
+ "produccion": "p009_duo_cero",
+ "numero": 4,
+ "version": 1,
+ "titulo": "El momento del salto",
+ "guion": "Dos minutos. Esperá mi señal. Por supuesto. Lo digo en serio. Yo también. Treinta segundos. Diez... nueve... ocho... ¡Nico, esperá! ¡Vamos! Saltan del tren.",
+ "duracion_s": 25.6333,
+ "mapa_tiempo": [
+  [
+   0.0,
+   0.0
+  ],
+  [
+   20.0,
+   20.0
+  ],
+  [
+   22.6,
+   21.1
+  ],
+  [
+   25.6333,
+   24.1333
+  ]
+ ],
+ "escenario": {
+  "id": "duo_cero_noche",
+  "generador": "duo_cero",
+  "parametros": {
+   "escena": 4,
+   "T0": 107.6333,
+   "duracion_escena_s": 24.1333,
+   "T_salto": 127.183,
+   "fusil_hasta_s": 5.75,
+   "subfusil_hasta_s": 9.17,
+   "mochilas_hasta_s": 9.17
+  }
+ },
+ "eventos": [],
+ "vehiculos": [],
+ "personajes": [
+  {
+   "id": "nico",
+   "modelo": "stickman:masculino",
+   "alto_m": 1.78,
+   "vestuario": {
+    "estilo": "tactico",
+    "pelo": "puntas",
+    "color_pelo": [
+     0.2,
+     0.09,
+     0.03
+    ]
+   },
+   "sobre": "tren_06_cerrado",
+   "acciones": [
+    {
+     "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_2.fbx",
+     "inicio_s": 0.0,
+     "mirando_deg": 0,
+     "pos": [
+      -1.02,
+      -0.48,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/sentado_manejar/Sit_To_Stand.fbx",
+     "inicio_s": 3.2,
+     "mirando_deg": 0,
+     "mezcla_s": 0.3,
+     "pos": [
+      -1.02,
+      -0.48,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/armas_shooter/Grab_Rifle_From_The_Side.fbx",
+     "inicio_s": 5.0,
+     "mirando_deg": 0,
+     "encadenar": true,
+     "mezcla_s": 0.35
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 7.2,
+     "mirando_deg": 0,
+     "encadenar": true,
+     "mezcla_s": 0.4
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 9.17,
+     "mirando_deg": 0,
+     "pos": [
+      1.3,
+      -0.32,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle_crouching.fbx",
+     "inicio_s": 12.3,
+     "mirando_deg": 0,
+     "mezcla_s": 0.5,
+     "pos": [
+      1.3,
+      -0.32,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 17.3,
+     "mirando_deg": 0,
+     "mezcla_s": 0.4,
+     "pos": [
+      1.3,
+      -0.32,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/jump_up.fbx",
+     "inicio_s": 19.43,
+     "mirando_deg": 0,
+     "mezcla_s": 0.12,
+     "pos": [
+      1.3,
+      -0.32,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Action_Adventure_Pack/falling_idle.fbx",
+     "inicio_s": 19.77,
+     "mirando_deg": 0,
+     "mezcla_s": 0.15,
+     "pos": [
+      1.3,
+      -0.32,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Action_Adventure_Pack/falling_to_roll.fbx",
+     "inicio_s": 20.217,
+     "mirando_deg": 0,
+     "mezcla_s": 0.1,
+     "pos": [
+      1.3,
+      -0.32,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/armas_shooter/Rifle_Kneel_Idle.fbx",
+     "inicio_s": 21.767,
+     "mirando_deg": 0,
+     "mezcla_s": 0.4,
+     "pos": [
+      1.3,
+      -0.32,
+      1.6
+     ]
+    }
+   ],
+   "cara": {
+    "expresiones": [
+     {
+      "t": 0.0,
+      "expr": "neutral"
+     },
+     {
+      "t": 2.581,
+      "expr": "decidido"
+     },
+     {
+      "t": 4.87,
+      "expr": "picara"
+     },
+     {
+      "t": 5.468,
+      "expr": "picara"
+     },
+     {
+      "t": 7.287,
+      "expr": "confiado"
+     },
+     {
+      "t": 8.385,
+      "expr": "confiado"
+     },
+     {
+      "t": 11.3,
+      "expr": "decidido"
+     },
+     {
+      "t": 13.719,
+      "expr": "picara"
+     },
+     {
+      "t": 17.877,
+      "expr": "picara"
+     },
+     {
+      "t": 18.637,
+      "expr": "grito"
+     },
+     {
+      "t": 19.5,
+      "expr": "grito"
+     },
+     {
+      "t": 20.516666666666666,
+      "expr": "risa"
+     },
+     {
+      "t": 21.916666666666668,
+      "expr": "confiado"
+     }
+    ],
+    "habla": [
+     {
+      "inicio_s": 5.618,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_fdc3b566c8957eaa.mp3",
+      "recorte_s": [
+       0.020000000000000004,
+       1.28
+      ],
+      "texto": "[innocent] Por supuesto."
+     },
+     {
+      "inicio_s": 8.535,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_2d9503ead1bddfc8.mp3",
+      "recorte_s": [
+       0.0,
+       0.64
+      ],
+      "texto": "Yo también."
+     },
+     {
+      "inicio_s": 18.787,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_10eec24ad311c644.mp3",
+      "recorte_s": [
+       0.0,
+       1.36
+      ],
+      "texto": "[shouting, excited] ¡Vamos!"
+     }
+    ],
+    "miradas": [
+     {
+      "t": 2.381,
+      "hasta": 3.501,
+      "u": 0.55
+     },
+     {
+      "t": 4.67,
+      "hasta": 5.81,
+      "u": 0.55
+     },
+     {
+      "t": 5.618,
+      "hasta": 6.878,
+      "u": 0.44000000000000006
+     },
+     {
+      "t": 7.087,
+      "hasta": 8.727,
+      "u": 0.55
+     },
+     {
+      "t": 8.535,
+      "hasta": 9.175,
+      "u": 0.44000000000000006
+     },
+     {
+      "t": 11.1,
+      "hasta": 12.35,
+      "u": 0.55
+     },
+     {
+      "t": 13.519,
+      "hasta": 17.839,
+      "u": 0.55
+     },
+     {
+      "t": 17.677,
+      "hasta": 19.207,
+      "u": 0.55
+     },
+     {
+      "t": 18.787,
+      "hasta": 20.062,
+      "u": 0.44000000000000006
+     }
+    ]
+   },
+   "arma_stickman": {
+    "tipo": "fusil",
+    "visible": [
+     [
+      5.75,
+      25.6333
+     ]
+    ]
+   },
+   "mochila": {
+    "desde_s": 9.17
+   }
+  },
+  {
+   "id": "luna",
+   "modelo": "stickman:femenino",
+   "alto_m": 1.68,
+   "vestuario": {
+    "estilo": "tactico",
+    "pelo": "luna",
+    "color_pelo": [
+     0.06,
+     0.025,
+     0.012
+    ]
+   },
+   "sobre": "tren_06_cerrado",
+   "acciones": [
+    {
+     "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_3.fbx",
+     "inicio_s": 0.0,
+     "mirando_deg": 0,
+     "pos": [
+      -1.02,
+      0.48,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/sentado_manejar/Sitting_Talking_2.fbx",
+     "inicio_s": 2.1,
+     "mirando_deg": 0,
+     "mezcla_s": 0.35,
+     "desde_clip_s": 6.0,
+     "pos": [
+      -1.02,
+      0.48,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/sentado_manejar/Sit_To_Stand.fbx",
+     "inicio_s": 6.75,
+     "mirando_deg": 0,
+     "mezcla_s": 0.3,
+     "pos": [
+      -1.02,
+      0.48,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/armas_shooter/Grab_Rifle_From_The_Side.fbx",
+     "inicio_s": 8.4,
+     "mirando_deg": 0,
+     "encadenar": true,
+     "mezcla_s": 0.3
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle.fbx",
+     "inicio_s": 9.17,
+     "mirando_deg": 0,
+     "pos": [
+      1.3,
+      0.42,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx",
+     "inicio_s": 13.3,
+     "mirando_deg": 0,
+     "mezcla_s": 0.5,
+     "pos": [
+      1.3,
+      0.42,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/hablar_conversacion/Yelling_Out.fbx",
+     "inicio_s": 17.5,
+     "mirando_deg": 0,
+     "mezcla_s": 0.3,
+     "pos": [
+      1.3,
+      0.42,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Pro_Rifle_Pack/jump_up.fbx",
+     "inicio_s": 19.9,
+     "mirando_deg": 0,
+     "mezcla_s": 0.12,
+     "pos": [
+      1.3,
+      0.42,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Action_Adventure_Pack/falling_idle.fbx",
+     "inicio_s": 20.24,
+     "mirando_deg": 0,
+     "mezcla_s": 0.15,
+     "pos": [
+      1.3,
+      0.42,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:packs/Action_Adventure_Pack/falling_to_roll.fbx",
+     "inicio_s": 20.62,
+     "mirando_deg": 0,
+     "mezcla_s": 0.1,
+     "pos": [
+      1.3,
+      0.42,
+      1.6
+     ]
+    },
+    {
+     "clip": "mixamo:animaciones/armas_shooter/Rifle_Kneel_Idle.fbx",
+     "inicio_s": 22.17,
+     "mirando_deg": 0,
+     "mezcla_s": 0.4,
+     "pos": [
+      1.3,
+      0.42,
+      1.6
+     ]
+    }
+   ],
+   "cara": {
+    "expresiones": [
+     {
+      "t": 0.0,
+      "expr": "neutral"
+     },
+     {
+      "t": 2.131,
+      "expr": "concentrada"
+     },
+     {
+      "t": 4.42,
+      "expr": "seria"
+     },
+     {
+      "t": 5.918,
+      "expr": "incredula"
+     },
+     {
+      "t": 6.837,
+      "expr": "enojo"
+     },
+     {
+      "t": 8.835,
+      "expr": "preocupada"
+     },
+     {
+      "t": 10.85,
+      "expr": "concentrada"
+     },
+     {
+      "t": 13.269,
+      "expr": "concentrada"
+     },
+     {
+      "t": 17.427,
+      "expr": "sorpresa"
+     },
+     {
+      "t": 19.087,
+      "expr": "sorpresa"
+     },
+     {
+      "t": 19.72,
+      "expr": "sorpresa"
+     },
+     {
+      "t": 20.97,
+      "expr": "dolor"
+     },
+     {
+      "t": 21.919999999999998,
+      "expr": "enojo"
+     }
+    ],
+    "habla": [
+     {
+      "inicio_s": 2.281,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_12528f4270650cf3.mp3",
+      "recorte_s": [
+       0.15000000000000002,
+       1.07
+      ],
+      "texto": "[focused] Dos minutos."
+     },
+     {
+      "inicio_s": 4.57,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_92dc4cecfa7873a2.mp3",
+      "recorte_s": [
+       0.020000000000000004,
+       0.96
+      ],
+      "texto": "Esperá mi señal."
+     },
+     {
+      "inicio_s": 6.987,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_8c158b29674d6fe8.mp3",
+      "recorte_s": [
+       0.06999999999999999,
+       1.51
+      ],
+      "texto": "[stern] Lo digo en serio."
+     },
+     {
+      "inicio_s": 11.0,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_b2da452aac6e5945.mp3",
+      "recorte_s": [
+       0.06999999999999999,
+       1.12
+      ],
+      "texto": "[tense] Treinta segundos."
+     },
+     {
+      "inicio_s": 13.419,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_eda0763581a5d8e3.mp3",
+      "recorte_s": [
+       0.020000000000000004,
+       4.14
+      ],
+      "texto": "[counting, tense] Diez... nueve... ocho..."
+     },
+     {
+      "inicio_s": 17.577,
+      "audio": "/home/user/Cinema3DSHR/audio/biblioteca/voz_64563c7cc056ee94.mp3",
+      "recorte_s": [
+       0.14,
+       1.47
+      ],
+      "texto": "[alarmed] ¡Nico, esperá!"
+     }
+    ],
+    "miradas": [
+     {
+      "t": 2.281,
+      "hasta": 3.201,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 4.57,
+      "hasta": 5.51,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 5.718,
+      "hasta": 7.178,
+      "u": -0.55
+     },
+     {
+      "t": 6.987,
+      "hasta": 8.427,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 8.635,
+      "hasta": 9.475,
+      "u": -0.55
+     },
+     {
+      "t": 11.0,
+      "hasta": 12.05,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 13.419,
+      "hasta": 17.539,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 17.577,
+      "hasta": 18.907,
+      "u": -0.44000000000000006
+     },
+     {
+      "t": 18.887,
+      "hasta": 20.189,
+      "u": -0.55
+     }
+    ]
+   },
+   "arma_stickman": {
+    "tipo": "subfusil",
+    "visible": [
+     [
+      9.17,
+      25.6333
+     ]
+    ]
+   },
+   "mochila": {
+    "desde_s": 9.17
+   }
+  }
+ ],
+ "tomas": [
+  {
+   "id": "t01_base",
+   "tipo": "estatica",
+   "plano": "desde adentro, por la puerta abierta: la base iluminada a lo lejos",
+   "inicio_s": 0.0,
+   "duracion_s": 2.2667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    -0.5,
+    -0.9,
+    0.1
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     3.0,
+     0.4,
+     -0.2
+    ]
+   },
+   "lente_mm": 24,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t02_cu_luna",
+   "tipo": "estatica",
+   "plano": "Luna: «Dos minutos»",
+   "inicio_s": 2.2667,
+   "duracion_s": 0.9333,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    0.25,
+    -0.3,
+    -0.1
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     -0.95,
+     0.48,
+     -0.09
+    ]
+   },
+   "lente_mm": 50,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t03_dos",
+   "tipo": "estatica",
+   "plano": "Nico se pone de pie",
+   "inicio_s": 3.2,
+   "duracion_s": 1.3667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    1.25,
+    0.0,
+    -0.2
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     -0.95,
+     0.0,
+     -0.22
+    ]
+   },
+   "lente_mm": 22,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t04_cu_luna2",
+   "tipo": "estatica",
+   "plano": "Luna: «Esperá mi señal»",
+   "inicio_s": 4.5667,
+   "duracion_s": 1.0667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    0.25,
+    -0.3,
+    -0.1
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     -0.95,
+     0.48,
+     -0.09
+    ]
+   },
+   "lente_mm": 50,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t05_nico_pie",
+   "tipo": "estatica",
+   "plano": "Nico, ya con el fusil: «Por supuesto»",
+   "inicio_s": 5.6334,
+   "duracion_s": 1.3667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    0.35,
+    0.15,
+    0.35
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     -0.85,
+     -0.48,
+     0.3
+    ]
+   },
+   "lente_mm": 40,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t06_dos_pie",
+   "tipo": "estatica",
+   "plano": "Luna se levanta: «Lo digo en serio»",
+   "inicio_s": 7.0001,
+   "duracion_s": 1.5333,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    1.3,
+    0.05,
+    0.25
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     -0.8,
+     0.0,
+     0.1
+    ]
+   },
+   "lente_mm": 24,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t07_nico_pie2",
+   "tipo": "estatica",
+   "plano": "Nico: «Yo también»",
+   "inicio_s": 8.5334,
+   "duracion_s": 0.6333,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    0.35,
+    0.15,
+    0.35
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     -0.85,
+     -0.48,
+     0.3
+    ]
+   },
+   "lente_mm": 40,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t08_zona",
+   "tipo": "estatica",
+   "plano": "desde la zona de carga: el tren llega, la puerta encendida",
+   "inicio_s": 9.1667,
+   "duracion_s": 1.8333,
+   "desde": [
+    12.0,
+    14.0,
+    1.3
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     0,
+     0,
+     0
+    ]
+   },
+   "lente_mm": 38
+  },
+  {
+   "id": "t09_luna_puerta",
+   "tipo": "estatica",
+   "plano": "Luna en la puerta: «Treinta segundos»",
+   "inicio_s": 11.0,
+   "duracion_s": 1.0667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    3.0,
+    1.2,
+    0.25
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     1.3,
+     0.42,
+     0.24
+    ]
+   },
+   "lente_mm": 45,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t10_siluetas",
+   "tipo": "estatica",
+   "plano": "los dos en la puerta, a contraluz de la zona de carga",
+   "inicio_s": 12.0667,
+   "duracion_s": 1.3667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    -1.0,
+    0.05,
+    0.25
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     3.0,
+     0.05,
+     -0.05
+    ]
+   },
+   "lente_mm": 24,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t11_ecu_luna",
+   "tipo": "estatica",
+   "plano": "Luna cuenta: «Diez… nueve…»",
+   "inicio_s": 13.4334,
+   "duracion_s": 1.8667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    2.7,
+    0.75,
+    0.24
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     1.3,
+     0.42,
+     0.26
+    ]
+   },
+   "lente_mm": 85,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t12_nico_sonrie",
+   "tipo": "estatica",
+   "plano": "Nico sonríe",
+   "inicio_s": 15.3001,
+   "duracion_s": 1.2,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    3.0,
+    -1.1,
+    0.35
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     1.3,
+     -0.32,
+     0.32
+    ]
+   },
+   "lente_mm": 45,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t13_puerta_ext",
+   "tipo": "estatica",
+   "plano": "los dos listos en la puerta",
+   "inicio_s": 16.5001,
+   "duracion_s": 1.0667,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    4.2,
+    -1.6,
+    -0.2
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     1.3,
+     0.05,
+     0.05
+    ]
+   },
+   "lente_mm": 28,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t14_luna_grita",
+   "tipo": "estatica",
+   "plano": "Luna: «¡Nico, esperá!»",
+   "inicio_s": 17.5668,
+   "duracion_s": 1.2333,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    3.0,
+    1.2,
+    0.25
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     1.3,
+     0.42,
+     0.24
+    ]
+   },
+   "lente_mm": 45,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t15_vamos",
+   "tipo": "estatica",
+   "plano": "Nico: «¡Vamos!» y salta",
+   "inicio_s": 18.8001,
+   "duracion_s": 1.2,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    6.0,
+    -4.5,
+    -0.8
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     1.2,
+     0.0,
+     -0.2
+    ]
+   },
+   "lente_mm": 22,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t16_vuelo",
+   "tipo": "seguimiento",
+   "plano": "CÁMARA LENTA: Nico en el aire, el tren detrás; Luna salta",
+   "inicio_s": 20.0001,
+   "duracion_s": 2.6,
+   "movil": "nico",
+   "punto_base": "",
+   "desp_local": [
+    5.2,
+    1.2,
+    0.6
+   ],
+   "objetivo": {
+    "movil": "nico",
+    "punto": "",
+    "desp_local": [
+     0,
+     0,
+     0.3
+    ]
+   },
+   "lente_mm": 30,
+   "retardo": 0.35
+  },
+  {
+   "id": "t17_aterrizaje",
+   "tipo": "estatica",
+   "plano": "aterrizan en la arena y ruedan; el tren sigue de largo",
+   "inicio_s": 22.6001,
+   "duracion_s": 3.0331999999999972,
+   "desde": [
+    12.2,
+    25.0,
+    0.55
+   ],
+   "objetivo": [
+    6.3,
+    15.0,
+    0.9
+   ],
+   "lente_mm": 26
+  }
+ ],
+ "saltos": [
+  {
+   "pj": "nico",
+   "t": 19.55,
+   "local": [
+    1.3,
+    -0.32,
+    1.6
+   ],
+   "freno": 45.0,
+   "avance_desde_s": 21.767,
+   "avance_m": 2.9
+  },
+  {
+   "pj": "luna",
+   "t": 20.02,
+   "local": [
+    1.3,
+    0.42,
+    1.6
+   ],
+   "freno": 45.0,
+   "avance_desde_s": 22.17,
+   "avance_m": 2.9
+  }
+ ],
+ "moviles_escenario": [
+  "vagon",
+  "loco",
+  "cola"
+ ],
+ "sonido": {
+  "generador": "procedural",
+  "ambiente": null,
+  "eventos": [
+   {
+    "tipo": "tren",
+    "tipos": [
+     "loco",
+     "cerrado",
+     "cerrado",
+     "plano",
+     "cerrado",
+     "plano",
+     "cerrado",
+     "cerrado",
+     "plano",
+     "cerrado",
+     "cerrado",
+     "plano",
+     "cerrado",
+     "cerrado",
+     "plano",
+     "cerrado",
+     "cerrado"
+    ],
+    "s_inicial": 4540.59,
+    "volumen": 0.7
+   },
+   {
+    "tipo": "musica",
+    "prompt": "Rising cinematic action cue, 26 seconds, no vocals: tense ticking pulse and low strings building under a countdown, heavy drums and brass swell, a huge hit and a brief slow-motion suspended swell at second 20, then driving percussion as the heroes land. Modern action series",
+    "duracion_s": 25.63,
+    "inicio_s": 0.0,
+    "volumen": 0.32
+   },
+   {
+    "tipo": "viento_conduccion",
+    "movil": "vagon",
+    "volumen": 0.35
+   },
+   {
+    "tipo": "caida",
+    "t": [
+     20.75,
+     21.7
+    ]
+   },
+   {
+    "tipo": "pasos",
+    "t": [
+     19.45,
+     19.92
+    ]
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[focused] Dos minutos.",
+    "inicio_s": 2.131,
+    "recorte_s": [
+     0.15,
+     1.07
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "Esperá mi señal.",
+    "inicio_s": 4.55,
+    "recorte_s": [
+     0.02,
+     0.96
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "nico",
+    "texto": "[innocent] Por supuesto.",
+    "inicio_s": 5.598,
+    "recorte_s": [
+     0.02,
+     1.28
+    ],
+    "volumen": 1.0,
+    "movil": "nico"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[stern] Lo digo en serio.",
+    "inicio_s": 6.917,
+    "recorte_s": [
+     0.07,
+     1.51
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "nico",
+    "texto": "Yo también.",
+    "inicio_s": 8.535,
+    "recorte_s": [
+     0.0,
+     0.64
+    ],
+    "volumen": 1.0,
+    "movil": "nico"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[tense] Treinta segundos.",
+    "inicio_s": 10.93,
+    "recorte_s": [
+     0.07,
+     1.12
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[counting, tense] Diez... nueve... ocho...",
+    "inicio_s": 13.399,
+    "recorte_s": [
+     0.02,
+     4.14
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "luna",
+    "texto": "[alarmed] ¡Nico, esperá!",
+    "inicio_s": 17.437,
+    "recorte_s": [
+     0.14,
+     1.47
+    ],
+    "volumen": 1.0,
+    "movil": "luna"
+   },
+   {
+    "tipo": "voz",
+    "rol": "nico",
+    "texto": "[shouting, excited] ¡Vamos!",
+    "inicio_s": 18.787,
+    "recorte_s": [
+     0.0,
+     1.36
+    ],
+    "volumen": 1.0,
+    "movil": "nico"
+   }
+  ]
+ },
+ "render": {
+  "calidad": "revision",
+  "fps": 30,
+  "exposicion": 0.6,
+  "muestras": 6
+ },
+ "estado": "borrador",
+ "bloqueada": false,
+ "huella_v": 2
+}

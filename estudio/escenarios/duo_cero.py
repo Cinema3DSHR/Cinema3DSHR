@@ -16,7 +16,7 @@ import math
 import random
 
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 from mathutils.kdtree import KDTree
 
 from estudio.blender import kit as K, tren as TR, via_ferrea as VF, armas_stickman as AS
@@ -391,7 +391,8 @@ def _zona_carga(col, M, rnd):
     # pilas de cajas y contenedores (coberturas del tiroteo)
     cajas = VF.Lote()
     cajas_v = VF.Lote()
-    pilas = [(16, 4, 3, 2), (19, 30, 2, 3), (29, 12, 3, 3), (13, 40, 2, 2), (31, 36, 2, 2), (24, 22, 1, 2)]
+    # P1 (12, 26,5): cobertura de Luna · P2 (17, 19): la de Nico · el resto, decorado lejos del camino de los guardias
+    pilas = [(11.4, 26.5, 2, 2), (16.6, 19.0, 2, 2), (30, 8, 3, 3), (36, 28, 2, 2), (18, 46, 2, 2), (40, 16, 1, 2)]
     for (px, py, nx, nz) in pilas:
         for i in range(nx):
             for j in range(nz - (i % 2)):
@@ -412,7 +413,7 @@ def _zona_carga(col, M, rnd):
     _poste_luz(pl, lp, luces, Vector((40, 8, 0)), 10.0, Vector((-2.0, 0, 0)), col, M, (1.0, 0.62, 0.3), 1800, "zona_luz_b")
     pl.objeto("zona_postes", M["metal"], col)
     lp.objeto("zona_lamparas", M["lampara_blanca"], col)
-    return {"arena": (7.5, 14.0, 1.0), "zona": (22.0, 18.0, 1.0), "coberturas": [(16, 4), (29, 12), (19, 30)]}
+    return {"arena": (7.5, 14.0, 1.0), "zona": (22.0, 18.0, 1.0), "coberturas": [(12.0, 26.5), (17.2, 19.0)]}
 
 
 # ------------------------------------------------------------------------------------------------ el vagón de los héroes
@@ -475,8 +476,17 @@ def _vagon_heroe(carro: dict, col, M, rnd) -> dict:
     caja("radio_led", (-0.55, 1.68, z0 + 0.68), (0.03, 0.01, 0.03), M["led_verde"])
     ant = K.cilindro("heroe_radio_antena", (-0.47, 1.75, z0 + 0.73), 0.008, 0.45, M["negro"], col, lados=6)
     ant.parent = raiz
+    mochilas = []
     for i, (x, y) in enumerate(((-0.5, -1.55), (-0.45, 1.35))):
-        m = caja(f"mochila_{i}", (x, y, z0 + 0.3), (0.42, 0.32, 0.6), M["mochila"], 0.08)
+        mochilas.append(caja(f"mochila_{i}", (x, y, z0 + 0.3), (0.42, 0.32, 0.6), M["mochila"], 0.08))
+    # las dos armas apoyadas contra la pared, junto a cada uno (cañón arriba, un poco inclinadas hacia la pared)
+    armas = {}
+    for nombre, y, zg in (("fusil", -1.45, 0.27), ("subfusil", 1.45, 0.08)):
+        a_ = AS.crear(nombre, f"heroe_{nombre}_apoyado", col)
+        a_.parent = raiz
+        a_.location = (-W / 2 + 0.16, y, z0 + zg)
+        a_.rotation_euler = (math.radians(-90), math.radians(-14), 0.0)
+        armas[nombre] = a_
     # farol del pack colgado de un gancho + su luz cálida (con un parpadeo leve)
     farol = AS.crear("farol", "heroe_farol", col)
     farol.parent = raiz
@@ -498,7 +508,7 @@ def _vagon_heroe(carro: dict, col, M, rnd) -> dict:
         "radio": (-0.55, 1.75, z0 + 0.62), "farol": (-1.0, -1.9, z0 + 1.15),
         "afuera": (W / 2 + 6.0, 0.0, z0 + 0.5), "techo": (0.0, 0.0, z0 + H + 0.3),
     }
-    return {"anclas": anclas, "luz_farol": luz, "radio": radio}
+    return {"anclas": anclas, "luz_farol": luz, "radio": radio, "armas": armas, "mochilas": mochilas}
 
 
 def _flicker(luz, frames, base):
@@ -556,7 +566,32 @@ def construir(parametros: dict | None = None) -> dict:
                         c_tren, bisel=0.02)
             ob.parent = c["raiz"]
     heroe = _vagon_heroe(tren["carros"][HEROE], c_tren, M, rnd)
+    # faro y luces de zanja de la locomotora (se ven de lejos en la noche)
+    loco = tren["carros"][0]
+    largo_l = TR.TIPOS["loco"][1]
+    faro = K.luz("loco_faro", "SPOT", (0, largo_l / 2 + 0.3, 3.9), 40000, (1.0, 0.93, 0.8), c_tren,
+                 angulo_spot=math.radians(28), radio=0.2)
+    faro.parent = loco["raiz"]
+    faro.rotation_euler = (math.radians(88), 0, 0)          # el spot mira a −Z: girado +88° en X apunta adelante
+    for k, x in enumerate((-0.0, -0.9, 0.9)):
+        z = 3.9 if k == 0 else 1.55
+        m = K.esfera(f"loco_lampara_{k}", (x, largo_l / 2 + 0.25, z), 0.12 if k == 0 else 0.08, M["lampara_blanca"], c_tren)
+        m.parent = loco["raiz"]
+    for k, x in enumerate((-0.9, 0.9)):
+        zl = K.luz(f"loco_zanja_{k}", "SPOT", (x, largo_l / 2 + 0.3, 1.55), 6000, (1.0, 0.95, 0.85), c_tren,
+                   angulo_spot=math.radians(40), radio=0.1)
+        zl.parent = loco["raiz"]
+        zl.rotation_euler = (math.radians(80), 0, 0)
     trays = TR.animar(tren, v, frames, s_heads)
+    # lo que los personajes se llevan del vagón (escena 4): desde ese momento lo tienen encima
+    if p.get("radio_en_mano"):                     # escena 3: Nico tiene la radio en la mano (la de la caja no está)
+        r0, r1 = p["radio_en_mano"]
+        AS.visible(heroe["radio"], [(0, int(round(r0 * fps))), (int(round(r1 * fps)) + 1, nf + 1)])
+    for clave, objs in (("fusil_hasta_s", [heroe["armas"]["fusil"]]), ("subfusil_hasta_s", [heroe["armas"]["subfusil"]]),
+                        ("mochilas_hasta_s", heroe["mochilas"])):
+        if p.get(clave) is not None:
+            for ob in objs:
+                AS.visible(ob, [(0, int(round(p[clave] * fps)))])
     _flicker(heroe["luz_farol"], frames, 45)
 
     carro_h = tren["carros"][HEROE]
@@ -565,6 +600,8 @@ def construir(parametros: dict | None = None) -> dict:
                         "anclas": {"": (0, 0, 3.0), "frente": (0, 9.0, 3.0), "techo": (0, 0, 5.0)}},
                "cola": {"tray": trays[tren["carros"][-1]["raiz"].name], "objeto": tren["carros"][-1]["raiz"],
                         "anclas": {"": (0, 0, 2.5)}}}
+    for c in tren["carros"]:                       # cada vagón (los golpes de las ruedas en las juntas del sonido)
+        moviles[f"carro_{c['indice']:02d}"] = {"tray": trays[c["raiz"].name], "anclas": {"": (0, 0, 1.5)}}
     pv = v.en(sh)[0]
     anclas = {"salto": (pv.x, pv.y, 1.5), "arena": zona["arena"], "zona": zona["zona"], "base": base["centro"],
               "porton_base": base["porton"], "torre_sur": base["torre_sur"],
@@ -577,3 +614,136 @@ def construir(parametros: dict | None = None) -> dict:
             "velocidad_salto": velocidad(_CACHE["T_salto"]),
             "vagon_raiz": carro_h["raiz"].name, "puerta_local": heroe["anclas"]["puerta"]}
     return {"anclas": anclas, "moviles": moviles, "animables": {"tren": tren, "via": v}, "parametros": p, "info": info}
+
+
+# ------------------------------------------------------------------------------------------------ el salto
+def pose_vagon(T: float, v=None):
+    """(centro, rumbo) del vagón del héroe en el instante T (misma cuenta que tren.animar)."""
+    v = v or _via_cache()
+    by = TR.TIPOS["cerrado"][3]
+    sc = s_heroe(T, v)
+    pd, pt = v.en(sc + by)[0], v.en(sc - by)[0]
+    d = (pd - pt).normalized()
+    return (pd + pt) / 2, math.atan2(-d.x, d.y)
+
+
+def _via_cache():
+    if "via" not in _CACHE:
+        _CACHE["via"] = via()
+    return _CACHE["via"]
+
+
+def altura_suelo(x: float, y: float) -> float:
+    """Piso de la zona de carga: el montículo de arena (cúpula 3,6 × 8,5 × 1,15 m) o la losa."""
+    dx, dy = (x - 7.5) / 3.6, (y - 14.0) / 8.5
+    q = 1 - dx * dx - dy * dy
+    return max(0.0, 1.15 * math.sqrt(q) - 0.05) if q > 0 else 0.0
+
+
+def salto(local: tuple, T_j: float, lateral: float = 4.8, arriba: float = 2.3, freno: float = 14.0, fps: int = 30,
+          hasta_s: float = 12.0, giro_inicial: float = 0.0):
+    """Trayectoria de quien salta por la puerta en T_j desde `local` (marco del vagón). Devuelve una lista por cuadro
+    desde T_j: (t desde el salto, posición de los pies, rumbo en grados [0 = +X], en_el_aire)."""
+    c, r = pose_vagon(T_j)
+    ca, sa = math.cos(r), math.sin(r)
+    p = c + Vector((local[0] * ca - local[1] * sa, local[0] * sa + local[1] * ca, local[2]))
+    adelante = Vector((-sa, ca, 0.0))
+    derecha = Vector((ca, sa, 0.0))
+    vt = velocidad(T_j)
+    vel = adelante * vt + derecha * lateral + Vector((0, 0, arriba))
+    out = []
+    dt = 1.0 / fps / 8
+    t, aire, ang = 0.0, True, math.degrees(r) + giro_inicial      # mirando la puerta: +X local
+    k = 0
+    while t <= hasta_s + 1e-9:
+        if k % 8 == 0:
+            rumbo_v = math.degrees(math.atan2(vel.y, vel.x)) if Vector((vel.x, vel.y)).length > 0.2 else ang
+            out.append((t, p.copy(), rumbo_v if aire or Vector((vel.x, vel.y)).length > 0.2 else ang, aire))
+            if not aire and Vector((vel.x, vel.y)).length > 0.2:
+                ang = rumbo_v
+        if aire:
+            vel.z -= 9.81 * dt
+            p += vel * dt
+            if vel.z < 0 and p.z <= altura_suelo(p.x, p.y):
+                p.z = altura_suelo(p.x, p.y)
+                vel.z = 0.0
+                aire = False
+                ang = math.degrees(math.atan2(vel.y, vel.x))
+        else:
+            h = Vector((vel.x, vel.y, 0.0))
+            vh = h.length
+            if vh > 0:
+                nv = max(0.0, vh - freno * dt)
+                h = h * (nv / vh)
+                vel.x, vel.y = h.x, h.y
+            p += Vector((vel.x, vel.y, 0.0)) * dt
+            p.z = altura_suelo(p.x, p.y)
+        t += dt
+        k += 1
+    return out
+
+
+def despues_personajes(info, pjs, ctx, manifiesto, fps):
+    """Saltos del tren: hasta el salto el personaje viaja con el vagón (Child Of); desde ahí, trayectoria en el mundo."""
+    if manifiesto.get("tiros"):
+        from estudio.blender import tiroteo as TI
+        TI.preparar(manifiesto["tiros"], pjs, fps)
+    saltos = manifiesto.get("saltos") or []
+    if not saltos:
+        return
+    vag = bpy.data.objects[info["vagon_raiz"]]
+    for sj in saltos:
+        pj = pjs[sj["pj"]]
+        raiz = pj["raiz"]
+        f_j = int(round(sj["t"] * fps)) + 1
+        T_j = info["T0"] + sj["t_contenido"] if "t_contenido" in sj else info["T0"] + sj["t"]
+        tray = salto(tuple(sj["local"]), T_j, sj.get("lateral", 4.8), sj.get("arriba", 2.3), sj.get("freno", 14.0), fps,
+                     giro_inicial=sj.get("giro_inicial", 0.0))
+        raiz.parent = None
+        con = raiz.constraints.new("CHILD_OF")
+        con.target = vag
+        con.inverse_matrix = Matrix.Identity(4)
+        con.influence = 1.0
+        con.keyframe_insert("influence", frame=1)
+        con.influence = 1.0
+        con.keyframe_insert("influence", frame=f_j - 1)
+        con.influence = 0.0
+        con.keyframe_insert("influence", frame=f_j)
+        ad = raiz.animation_data
+        for fc in K._fcurves(ad.action):
+            if fc.data_path in ("location", "rotation_euler"):
+                for kp in [kp for kp in fc.keyframe_points if kp.co.x >= f_j - 0.5]:
+                    fc.keyframe_points.remove(kp, fast=True)
+                fc.update()
+        frente = pj["info"].get("frente", math.pi / 2)
+        nf = int(round(manifiesto["duracion_s"] * fps))
+        # la rodada del clip avanza sola (no es «en el lugar»): cuando arranca el clip siguiente, la raíz se adelanta
+        # lo mismo en la dirección de la rodada, así el cuerpo no vuelve para atrás
+        f_avance = int(round(sj["avance_desde_s"] * fps)) + 1 if sj.get("avance_desde_s") else None
+        for j, (t, pos, rumbo, aire) in enumerate(tray):
+            f = f_j + j
+            if f > nf + 1:
+                break
+            if f_avance is not None and f >= f_avance:
+                pos = pos + Vector((math.cos(math.radians(rumbo)), math.sin(math.radians(rumbo)), 0.0)) * sj.get("avance_m", 2.9)
+                pos.z = altura_suelo(pos.x, pos.y)
+            raiz.location = pos
+            raiz.rotation_euler = (0, 0, math.radians(rumbo) + frente)
+            raiz.keyframe_insert("location", frame=f)
+            raiz.keyframe_insert("rotation_euler", frame=f)
+        for fc in K._fcurves(raiz.animation_data.action):
+            for kp in fc.keyframe_points:
+                if kp.co.x >= f_j - 0.5:
+                    kp.interpolation = "LINEAR"
+        for fc in K._fcurves(raiz.constraints[-1].id_data.animation_data.action):
+            if "constraints" in fc.data_path:
+                for kp in fc.keyframe_points:
+                    kp.interpolation = "CONSTANT"
+
+
+def fin_del_salto(local: tuple, T_j: float, freno: float, avance_m: float = 2.9) -> tuple:
+    """Dónde queda (pies) y hacia dónde mira quien saltó, después de la rodada: el comienzo de la escena 5."""
+    tray = salto(local, T_j, freno=freno)
+    t, pos, rumbo, _ = tray[-1]
+    p = pos + Vector((math.cos(math.radians(rumbo)), math.sin(math.radians(rumbo)), 0.0)) * avance_m
+    return (round(p.x, 3), round(p.y, 3), round(altura_suelo(p.x, p.y), 3)), round(rumbo, 1)
