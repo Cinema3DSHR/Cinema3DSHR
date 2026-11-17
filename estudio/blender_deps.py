@@ -26,3 +26,7 @@ MODELOS_DEPS["rally:piloto"] = ["rally:godot/game/models/pilot.glb", "rally:godo
 # «Al vacío» (p007): modelos Tripo3D del dueño; usan los clips del juego (futbol:<clip>): necesitan también al futbolista
 for _id in ("messi", "cristiano"):
     MODELOS_DEPS[f"pelicula:{_id}"] = [f"mixamo:personajes_pelicula/{_id}"] + MODELOS_DEPS["futbol:jugador"]
+# «Dúo Cero» (p009): Stickman definitivos del dueño + el pack de armas (arma en mano) y la pose de referencia del arma
+for _id in ("masculino", "femenino"):
+    MODELOS_DEPS[f"stickman:{_id}"] = [f"mixamo:personajes_pelicula/stickman_{_id}", "mixamo:personajes_pelicula/armas_stickman",
+                                       "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx"]

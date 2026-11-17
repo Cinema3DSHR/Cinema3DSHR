@@ -24,7 +24,7 @@ from estudio.blender import kit as K, tren as TR, via_ferrea as VF, armas_stickm
 DEPENDENCIAS = [
     "mixamo:modelos_pelicula/locomotora_diesel.glb", "mixamo:modelos_pelicula/vagon_plano.glb",
     "mixamo:modelos_pelicula/vagon_cerrado.glb",
-    "subidas:stickman/armas_stickman/",
+    "mixamo:personajes_pelicula/armas_stickman/",
 ]
 
 PARAMETROS = {"escena": 1, "semilla": 5}

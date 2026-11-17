@@ -29,8 +29,8 @@ from estudio.blender import kit as K
 
 # Modelos definitivos del dueño (17/11/2026): proporcionados a las animaciones de Mixamo (0,98 m al importar)
 REFS = {
-    "stickman:masculino": "subidas:stickman/stickman_masculino_v2/tripo_convert_e14b4acf-be93-476b-93c0-684fed3e5838.fbx",
-    "stickman:femenino": "subidas:stickman/stickman_femenino_v2/tripo_convert_029c826d-6f9c-4653-95dc-4cabaf1c19c3.fbx",
+    "stickman:masculino": "mixamo:personajes_pelicula/stickman_masculino/tripo_convert_e14b4acf-be93-476b-93c0-684fed3e5838.fbx",
+    "stickman:femenino": "mixamo:personajes_pelicula/stickman_femenino/tripo_convert_029c826d-6f9c-4653-95dc-4cabaf1c19c3.fbx",
 }
 ALTO_MODELO = {"stickman:masculino": 0.979, "stickman:femenino": 0.979}
 

@@ -13,7 +13,7 @@ from mathutils import Matrix, Quaternion, Vector
 
 from estudio.blender import importar as I
 
-REF = "subidas:stickman/armas_stickman/tripo_convert_e66afd6d-d480-4c93-9ba8-05af98663f39.fbx"
+REF = "mixamo:personajes_pelicula/armas_stickman/tripo_convert_e66afd6d-d480-4c93-9ba8-05af98663f39.fbx"
 
 ARMAS = {
     # nombre: pieza, largo real (m), empuñadura, mano izquierda, boca (en el FBX del pack)
