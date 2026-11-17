@@ -38,6 +38,7 @@ def main():
     ap.add_argument("jobs")
     ap.add_argument("--salida")
     ap.add_argument("--produccion", default="p009_duo_cero")
+    ap.add_argument("--escenas", default="")
     a = ap.parse_args()
     car = Path(a.carpeta)
     informes = [json.loads(p.read_text()) for p in sorted(car.glob("informe_*.json"))]
@@ -125,7 +126,7 @@ def main():
       f"repetidos: {len(globales) - len(set(globales))}")
 
     # ---- proyección: 5 400 fotogramas, cada trabajo con su bloque completo
-    pl = plan(a.produccion, len(js) or 19, 0)
+    pl = plan(a.produccion, len(js) or 19, 0, a.escenas.split() or None)
     proy = []
     for f, b in zip(filas, pl["matriz"]):
         nesc = len(json.loads(b["tramos"]))
@@ -134,7 +135,7 @@ def main():
         t = (f["preparacion_s"] or st.mean(prep.values())) + nesc * arm_esc + b["cantidad"] * spf + 60  # +60 s: empaquetar y subir
         proy.append(t)
     P("")
-    P(f"## Proyección del episodio completo ({pl['total']} fotogramas en {len(js)} trabajos): "
+    P(f"## Proyección completa de lo elegido ({pl['total']} fotogramas en {len(js)} trabajos): "
       f"el trabajo más lento tardaría ~{max(proy) / 60:.0f} min, el promedio ~{st.mean(proy) / 60:.0f} min → "
       f"render completo en ~{max(proy) / 60:.0f} min de reloj (+ ~1–2 min de planificación y espera de máquinas)")
     print("\n".join(lineas))

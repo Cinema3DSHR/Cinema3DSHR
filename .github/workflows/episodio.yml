@@ -12,7 +12,8 @@ on:
   workflow_dispatch:
     inputs:
       produccion: {description: "Producción (carpeta en producciones/)", required: false, default: "p009_duo_cero"}
-      trabajos: {description: "Trabajos en paralelo (19: el plan admite 20 simultáneos)", required: false, default: "19"}
+      trabajos: {description: "Trabajos en paralelo (hasta 60; GitHub encola los que excedan el límite de la cuenta)", required: false, default: "19"}
+      escenas: {description: "Sólo estas escenas, consecutivas y separadas por espacio (p. ej. «e01»); vacío = todo el episodio", required: false, default: ""}
       prueba: {description: "ENSAYO: fotogramas por trabajo (0 = render completo)", required: false, default: "6"}
       aprobacion: {description: "Render completo: frase exacta de aprobación del dueño", required: false, default: ""}
 
@@ -40,7 +41,7 @@ jobs:
         run: echo "inicio=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
       - name: Render completo sólo con la aprobación del dueño
-        if: ${{ inputs.prueba == '0' }}
+        if: ${{ inputs.prueba == '0' && inputs.escenas == '' }}
         env:
           FRASE: ${{ inputs.aprobacion }}
         run: |
@@ -64,13 +65,15 @@ jobs:
           PROD: ${{ inputs.produccion }}
           TRABAJOS: ${{ inputs.trabajos }}
           PRUEBA: ${{ inputs.prueba }}
+          ESCENAS: ${{ inputs.escenas }}
         run: |
           python3 - <<'PY'
           import json, os, sys
           sys.path.insert(0, ".")
           from pruebas.episodio.plan import plan
           from estudio import manifiesto as MF
-          r = plan(os.environ["PROD"], max(1, min(19, int(os.environ["TRABAJOS"]))), int(os.environ["PRUEBA"]))
+          r = plan(os.environ["PROD"], max(1, min(60, int(os.environ["TRABAJOS"]))), int(os.environ["PRUEBA"]),
+                   os.environ.get("ESCENAS", "").split() or None)
           deps = set()
           for e in r["escenas"]:
               m = MF.leer(e["ruta"]); err = MF.validar(m)
@@ -92,7 +95,7 @@ jobs:
     timeout-minutes: 300
     strategy:
       fail-fast: false
-      max-parallel: 19
+      max-parallel: 60
       matrix:
         bloque: ${{ fromJSON(needs.planificar.outputs.matriz) }}
     name: render ${{ matrix.bloque.n }} (${{ matrix.bloque.desde }}–${{ matrix.bloque.hasta }})
@@ -162,7 +165,7 @@ jobs:
           MATRIZ: ${{ needs.planificar.outputs.matriz }}
         run: |
           mkdir -p fot && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d fot; done
-          python3 pruebas/episodio/informe.py fot jobs.json --salida informe_episodio.json | tee informe.txt
+          python3 pruebas/episodio/informe.py fot jobs.json --escenas "${{ inputs.escenas }}" --salida informe_episodio.json | tee informe.txt
           cat informe.txt >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with: {name: informe, path: "informe_episodio.json", retention-days: 14}

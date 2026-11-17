@@ -5,7 +5,11 @@ equilibrados (difieren en 1 fotograma como mucho) y dice qué tramo de qué esce
 no haya huecos ni repetidos. Con --prueba K cada trabajo renderiza sólo K fotogramas repartidos parejo dentro de SU
 bloque (ensayo representativo: los 19 trabajan a la vez y se pasa por todas las escenas y tomas).
 
-    python3 pruebas/episodio/plan.py p009_duo_cero --trabajos 19 [--prueba 6] [--json salida.json]
+    python3 pruebas/episodio/plan.py p009_duo_cero --trabajos 19 [--prueba 6] [--escenas e01] [--json salida.json]
+
+Con --escenas se reparten sólo los fotogramas de esas escenas (la numeración sigue siendo la del episodio). El costo
+por fotograma medido en GitHub depende más de la máquina que toca (hasta 1,8× en la misma toma) que del contenido
+(~10 % entre tomas de una escena), así que dentro de una escena el reparto parejo en fotogramas es el equilibrado.
 """
 import argparse
 import json
@@ -44,12 +48,18 @@ def repartir(total: int, trabajos: int) -> list[tuple[int, int]]:
     return bloques
 
 
-def plan(produccion: str, trabajos: int, prueba: int = 0) -> dict:
+def plan(produccion: str, trabajos: int, prueba: int = 0, solo: list[str] | None = None) -> dict:
     esc = escenas(produccion)
-    total = esc[-1]["hasta"]
-    bloques = repartir(total, trabajos)
-    # comprobaciones: cubren 1..total exactamente, sin huecos ni solapes
-    assert bloques[0][0] == 1 and bloques[-1][1] == total
+    elegidas = [e for e in esc if not solo or e["escena"] in solo]
+    assert elegidas, f"ninguna escena coincide con {solo}"
+    # las escenas elegidas tienen que ser seguidas (un bloque no puede saltar escenas)
+    assert all(a["hasta"] + 1 == b["desde"] for a, b in zip(elegidas, elegidas[1:])), "las escenas deben ser consecutivas"
+    primero, ultimo = elegidas[0]["desde"], elegidas[-1]["hasta"]
+    total = ultimo - primero + 1
+    trabajos = min(trabajos, total)
+    bloques = [(d + primero - 1, h + primero - 1) for d, h in repartir(total, trabajos)]
+    # comprobaciones: cubren primero..ultimo exactamente, sin huecos ni solapes
+    assert bloques[0][0] == primero and bloques[-1][1] == ultimo
     assert all(a[1] + 1 == b[0] for a, b in zip(bloques, bloques[1:]))
     assert sum(h - d + 1 for d, h in bloques) == total
     matriz = []
@@ -68,7 +78,7 @@ def plan(produccion: str, trabajos: int, prueba: int = 0) -> dict:
                                "locales": loc})
         matriz.append({"n": f"{i:02d}", "desde": d, "hasta": h, "cantidad": len(fot),
                        "escenas": " ".join(t["escena"] for t in tramos), "tramos": json.dumps(tramos)})
-    return {"total": total, "escenas": esc, "matriz": matriz,
+    return {"total": total, "primero": primero, "ultimo": ultimo, "escenas": elegidas, "matriz": matriz,
             "a_renderizar": sum(x["cantidad"] for x in matriz)}
 
 
@@ -77,9 +87,10 @@ if __name__ == "__main__":
     ap.add_argument("produccion")
     ap.add_argument("--trabajos", type=int, default=19)
     ap.add_argument("--prueba", type=int, default=0)
+    ap.add_argument("--escenas", default="")
     ap.add_argument("--json")
     a = ap.parse_args()
-    r = plan(a.produccion, a.trabajos, a.prueba)
+    r = plan(a.produccion, a.trabajos, a.prueba, a.escenas.split() or None)
     if a.json:
         Path(a.json).write_text(json.dumps(r))
     for x in r["matriz"]:
