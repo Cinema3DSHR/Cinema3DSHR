@@ -1,0 +1,60 @@
+name: Sonda de concurrencia (sin render)
+
+# Mide cuántos trabajos Linux estándar asigna GitHub A LA VEZ a esta organización, sin Blender ni recursos: cada
+# trabajo sólo espera unos segundos. Al final, un trabajo lee por API el inicio y fin real de cada uno y calcula el
+# máximo simultáneo. Sirve para confirmar la capacidad de la cuenta antes de gastar una prueba de render.
+on:
+  workflow_dispatch:
+    inputs:
+      trabajos: {description: "Cantidad de trabajos (máx. 60)", required: false, default: "25"}
+      espera_s: {description: "Segundos que espera cada trabajo", required: false, default: "90"}
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  armar:
+    runs-on: ubuntu-latest
+    outputs:
+      lista: ${{ steps.l.outputs.lista }}
+    steps:
+      - id: l
+        run: |
+          N=$(( ${{ inputs.trabajos }} > 60 ? 60 : ${{ inputs.trabajos }} ))
+          echo "lista=$(python3 -c "import json; print(json.dumps(list(range($N))))")" >> "$GITHUB_OUTPUT"
+
+  sonda:
+    needs: armar
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      max-parallel: 60
+      matrix:
+        n: ${{ fromJSON(needs.armar.outputs.lista) }}
+    steps:
+      - run: echo "trabajo ${{ matrix.n }} en $(hostname) $(date -u +%H:%M:%S)"; sleep ${{ inputs.espera_s }}
+
+  medir:
+    needs: sonda
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Máximo de trabajos simultáneos (API de GitHub)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs?per_page=100" > jobs.json
+          python3 - <<'PY' | tee -a "$GITHUB_STEP_SUMMARY"
+          import json, datetime as dt
+          p = lambda s: dt.datetime.fromisoformat(s.replace("Z", "+00:00"))
+          js = [j for j in json.load(open("jobs.json"))["jobs"] if j["name"].startswith("sonda")]
+          ev = sorted([(p(j["started_at"]), 1) for j in js] + [(p(j["completed_at"]), -1) for j in js if j["completed_at"]])
+          cur = pico = 0
+          for _, d in ev:
+              cur += d; pico = max(pico, cur)
+          ini = min(p(j["started_at"]) for j in js)
+          ultimo = max(p(j["started_at"]) for j in js)
+          print(f"trabajos: {len(js)} · máximo simultáneo: {pico} · el último arrancó {(ultimo - ini).total_seconds():.0f} s después del primero")
+          PY
