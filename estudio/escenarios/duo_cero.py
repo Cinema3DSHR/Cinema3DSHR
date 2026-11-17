@@ -713,8 +713,9 @@ def despues_personajes(info, pjs, ctx, manifiesto, fps):
         ad = raiz.animation_data
         for fc in K._fcurves(ad.action):
             if fc.data_path in ("location", "rotation_euler"):
-                for kp in [kp for kp in fc.keyframe_points if kp.co.x >= f_j - 0.5]:
-                    fc.keyframe_points.remove(kp, fast=True)
+                for i in reversed(range(len(fc.keyframe_points))):     # por índice: las referencias se invalidan
+                    if fc.keyframe_points[i].co.x >= f_j - 0.5:
+                        fc.keyframe_points.remove(fc.keyframe_points[i], fast=True)
                 fc.update()
         frente = pj["info"].get("frente", math.pi / 2)
         nf = int(round(manifiesto["duracion_s"] * fps))
