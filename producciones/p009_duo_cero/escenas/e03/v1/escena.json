@@ -995,9 +995,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1005,10 +1005,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -1073,9 +1073,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    0.3,
-    -0.07
+    0.35,
+    0.32,
+    -0.1
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1083,10 +1083,10 @@
     "desp_local": [
      -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -1099,9 +1099,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1109,10 +1109,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -1153,7 +1153,7 @@
    "desp_local": [
     0.45,
     0.42,
-    -0.08
+    -0.11
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1161,10 +1161,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.08
+     -0.12
     ]
    },
-   "lente_mm": 95,
+   "lente_mm": 80,
    "luz_relleno": 0
   },
   {
@@ -1177,9 +1177,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1187,10 +1187,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -1229,9 +1229,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1239,10 +1239,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -1257,7 +1257,7 @@
    "desp_local": [
     0.45,
     0.42,
-    -0.08
+    -0.11
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1265,10 +1265,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.08
+     -0.12
     ]
    },
-   "lente_mm": 95,
+   "lente_mm": 80,
    "luz_relleno": 0
   },
   {
@@ -1281,9 +1281,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    0.3,
-    -0.07
+    0.35,
+    0.32,
+    -0.1
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1291,10 +1291,10 @@
     "desp_local": [
      -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -1309,7 +1309,7 @@
    "desp_local": [
     0.45,
     0.42,
-    -0.08
+    -0.11
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1317,10 +1317,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.08
+     -0.12
     ]
    },
-   "lente_mm": 95,
+   "lente_mm": 80,
    "luz_relleno": 0
   }
  ],

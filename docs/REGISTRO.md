@@ -242,4 +242,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   duración real y clava 180 s exactos con cámara lenta en el salto), `escenas.py` (e01–e06), `animatica.py`.
 - Los push con escenas de Dúo Cero llevan `[skip ci]`: `render.yml` se dispara con cualquier escena.json nueva y
   renderizaría borradores (una corrida, la 23, se canceló a los 15 s sin renderizar).
+- Peinados modernos a pedido: Nico con corte Kingsman (al costado, degradé y línea rapada), guardias con cresta y
+  mohicano. Los Stickman del pack de armas no se usan (sólo las armas y la linterna).
+- **Modelos definitivos (dueño, mismo día):** Stickman masculino y femenino proporcionados a Mixamo (0,98 m al
+  importar), en `modelos_subidos/stickman/stickman_{masculino,femenino}_v2/`. El vestuario se lleva a las
+  proporciones de los primeros por hitos de los huesos (`stickman.normalizar`); cara y pelo se apoyan en la cabeza real.
+- Arreglos: fundido entre clips en pistas NLA (las de arriba sólo sostienen hacia adelante: antes Nico y Luna
+  quedaban «sentados en el aire»); el retarget dejaba una posición sin clave en los huesos que no son la cadera y se
+  acumulaba (el cuerpo de Nico terminaba a kilómetros del esqueleto y no salía en cámara); cámaras de la escena 4
+  medidas sobre las cabezas reales.
 - **Sin render final**: espera «APROBADO. INICIÁ EL RENDER FINAL DE DÚO CERO — EPISODIO 01».

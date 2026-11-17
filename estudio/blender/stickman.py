@@ -27,11 +27,22 @@ from mathutils import Matrix, Vector
 from estudio import config
 from estudio.blender import kit as K
 
+# Modelos definitivos del dueño (17/11/2026): proporcionados a las animaciones de Mixamo (0,98 m al importar)
 REFS = {
-    "stickman:masculino": "subidas:stickman/stickman_masculino/tripo_convert_44d66800-0c0e-40d5-8840-e5fd0e1a582c.fbx",
-    "stickman:femenino": "subidas:stickman/stickman_femenino/tripo_convert_f9ec75ac-ad91-4328-95bf-d652d4673518.fbx",
+    "stickman:masculino": "subidas:stickman/stickman_masculino_v2/tripo_convert_e14b4acf-be93-476b-93c0-684fed3e5838.fbx",
+    "stickman:femenino": "subidas:stickman/stickman_femenino_v2/tripo_convert_029c826d-6f9c-4653-95dc-4cabaf1c19c3.fbx",
 }
-ALTO_MODELO = {"stickman:masculino": 0.900, "stickman:femenino": 0.894}
+ALTO_MODELO = {"stickman:masculino": 0.979, "stickman:femenino": 0.979}
+
+# El vestuario se dibujó midiendo los primeros Stickman (0,90 m). Para que sirva con cualquier modelo, la posición
+# de reposo se lleva a esas proporciones por hitos de los huesos (alturas, brazos, piernas, ancho del torso).
+HITOS_Z = ["ToeBase", "Foot", "Leg", "UpLeg", "Hips", "Spine1", "Spine2", "Shoulder", "Neck", "Head", "HeadTop_End"]
+REFERENCIA = {
+    False: {"z": [0.018, 0.069, 0.253, 0.424, 0.448, 0.530, 0.585, 0.635, 0.651, 0.698, 0.810],
+            "brazo": [0.064, 0.213, 0.370], "pierna": 0.041, "torso": 0.0575},
+    True: {"z": [0.012, 0.078, 0.261, 0.418, 0.441, 0.522, 0.579, 0.629, 0.644, 0.683, 0.774],
+           "brazo": [0.059, 0.216, 0.353], "pierna": 0.040, "torso": 0.0589},
+}
 
 # ------------------------------------------------------------------------------------------------- vestuario
 BLANCO = (0.86, 0.86, 0.86)
@@ -86,7 +97,49 @@ def datos_reposo(malla, raiz) -> dict:
         if v.groups:
             g = max(v.groups, key=lambda g: g.weight)
             reg[v.index] = _region(gname[g.group])
-    return {"pos": pos, "nor": nor, "reg": reg}
+    hitos = {}
+    arm = next((md.object for md in malla.modifiers if md.type == "ARMATURE" and md.object), None)
+    if arm is not None:
+        ma = raiz.matrix_world.inverted() @ arm.matrix_world
+        for b in arm.data.bones:
+            hitos[b.name.replace("mixamorig:", "")] = ma @ b.head_local
+    return {"pos": pos, "nor": nor, "reg": reg, "hitos": hitos}
+
+
+def normalizar(datos: dict, femenino: bool):
+    """Posición de reposo llevada a las proporciones de los Stickman de referencia (sólo para pintar el vestuario)."""
+    h = datos.get("hitos") or {}
+    pos = datos["pos"].copy()
+    if "Hips" not in h:
+        return pos
+    ref = REFERENCIA[femenino]
+    lado = lambda n: (h["Left" + n].x - h["Right" + n].x) / 2 if ("Left" + n in h and "Right" + n in h) else None
+    zs = []
+    for n in HITOS_Z:
+        if n in h:
+            zs.append(h[n].z)
+        else:
+            zs.append((h["Left" + n].z + h["Right" + n].z) / 2)
+    pos[:, 2] = np.interp(pos[:, 2], [0.0] + zs + [zs[-1] + 1.0], [0.0] + ref["z"] + [ref["z"][-1] + 1.0])
+    x = datos["pos"][:, 0]
+    ax = np.abs(x)
+    reg = datos["reg"]
+    brazo = (reg == REGIONES.index("brazo")) | (reg == REGIONES.index("antebrazo")) | (reg == REGIONES.index("mano"))
+    pierna = (reg == REGIONES.index("pierna")) | (reg == REGIONES.index("pie"))
+    nb = [lado("Arm"), lado("ForeArm"), lado("Hand")]
+    nax = ax.copy()
+    if None not in nb:
+        nax[brazo] = np.interp(ax[brazo], [0.0] + nb + [nb[-1] + 1.0], [0.0] + ref["brazo"] + [ref["brazo"][-1] + 1.0])
+    lp = lado("Leg")
+    if lp is not None:
+        nax[pierna] = np.maximum(0.0, ax[pierna] - (lp - ref["pierna"]))
+    torso = ~brazo & ~pierna
+    zt = (datos["pos"][:, 2] > h["Spine1"].z) & (datos["pos"][:, 2] < h["Spine2"].z) & (reg == REGIONES.index("torso"))
+    if zt.sum() > 10:
+        k = ref["torso"] / float(np.percentile(ax[zt], 95))
+        nax[torso] = ax[torso] * k
+    pos[:, 0] = np.sign(x) * nax
+    return pos
 
 
 def _rasterizar(malla, datos: dict, T: int):
@@ -294,6 +347,7 @@ def textura_vestuario(malla, raiz, modelo: str, estilo: str, colores: dict | Non
     ruta = carpeta / f"{modelo.split(':')[1]}_{estilo}_{clave}.png"
     if not ruta.exists():
         datos = datos_reposo(malla, raiz)
+        datos = {**datos, "pos": normalizar(datos, modelo.endswith("femenino"))}
         pix, pos, nor, reg = _rasterizar(malla, datos, T)
         col = _colorear(estilo, pos, nor, reg, colores, modelo.endswith("femenino"))
         img = np.zeros((T * T, 3))
@@ -342,7 +396,8 @@ def vestir(pj: dict, modelo: str, vest: dict):
 # ------------------------------------------------------------------------------------------------- esfera de la cabeza
 def esfera_cabeza(datos: dict) -> tuple[Vector, float]:
     """Centro y radio de la cabeza (ajuste de esfera por mínimos cuadrados a los vértices de la parte alta)."""
-    p = datos["pos"][(datos["reg"] == 0) & (datos["pos"][:, 2] > 0.70)]
+    z_cab = datos["hitos"]["Head"].z if "Head" in datos.get("hitos", {}) else 0.70
+    p = datos["pos"][(datos["reg"] == 0) & (datos["pos"][:, 2] > z_cab)]
     A = np.c_[2 * p, np.ones(len(p))]
     f = (p ** 2).sum(1)
     sol, *_ = np.linalg.lstsq(A, f, rcond=None)

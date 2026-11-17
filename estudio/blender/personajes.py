@@ -82,17 +82,18 @@ MODELOS["rally:piloto"] = {
     # con «frente» = π/2 los moteros iban sentados al revés en la moto
     "frente": -math.pi / 2, "adelante_deg": 90,
 }
-# «Dúo Cero» (p009): Stickman blancos del dueño (0,9 m al importar, miran a −Y). Vestuario, pelo y cara 2D los pone
+from estudio.blender.stickman import REFS as SM_REFS  # noqa: E402  (los modelos definitivos, una sola lista)
+# «Dúo Cero» (p009): Stickman blancos del dueño (0,98 m al importar, miran a −Y; los definitivos del 17/11/2026). Vestuario, pelo y cara 2D los pone
 # estudio/blender/stickman.py; «alto_m» del personaje fija su estatura.
-for _id, _alto in (("masculino", 0.900), ("femenino", 0.894)):
+for _id, _alto in (("masculino", 0.979), ("femenino", 0.979)):
     MODELOS[f"stickman:{_id}"] = {
         "tipo": "mixamo65", "stickman": True, "alto_modelo": _alto, "escala": 1.75 / _alto, "ocultar": [],
         "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase",
         "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90,
         "clip_arma": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx", "frame_arma": 20, "sin_metal": True,
     }
-MODELOS["stickman:masculino"]["ref"] = "subidas:stickman/stickman_masculino/tripo_convert_44d66800-0c0e-40d5-8840-e5fd0e1a582c.fbx"
-MODELOS["stickman:femenino"]["ref"] = "subidas:stickman/stickman_femenino/tripo_convert_f9ec75ac-ad91-4328-95bf-d652d4673518.fbx"
+MODELOS["stickman:masculino"]["ref"] = SM_REFS["stickman:masculino"]
+MODELOS["stickman:femenino"]["ref"] = SM_REFS["stickman:femenino"]
 UNIFORME_DEFECTO = {"camiseta": (0.72, 0.04, 0.05), "short": (0.05, 0.12, 0.62), "medias": (0.9, 0.9, 0.9),
                     "botines": (0.03, 0.03, 0.035), "piel": (0.62, 0.40, 0.29), "pelo": (0.12, 0.07, 0.04)}
 
@@ -320,9 +321,7 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
         st.scale = 1.0 / vel
         st.repeat = rep
         st.blend_in = st.blend_out = 0
-        st.extrapolation = "HOLD" if not tramos else "HOLD_FORWARD"
-        if mez > 0:
-            st.blend_in = min(mez, (st.frame_end - st.frame_start) / 2 - 1)
+        st.extrapolation = "HOLD"
         if ac.get("desde_clip_s"):
             st.action_frame_start = st.action_frame_start + ac["desde_clip_s"] * fps
         tramos.append({"accion": accion, "f0": f0, "fin": st.frame_end, "pos": pos.copy(), "rumbo": rumbo,
@@ -643,6 +642,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         arma_obj.name = f"ARMA_{pid}"
     pista = arm.animation_data.nla_tracks.new()
     pista.name = "acciones"
+    pista_base = pista
     pos = Vector((0, 0, 0))
     rumbo = 0.0
     tramos = []
@@ -669,9 +669,10 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
             if tramos[-1]["strip"].frame_end > f0 + 1:
                 tramos[-1]["strip"].frame_end = f0 + 1
                 tramos[-1]["fin"] = f0 + 1
-            pista_i = arm.animation_data.nla_tracks.new()
-            pista_i.name = f"acciones_{i:02d}"
-            st = pista_i.strips.new(f"{i:02d}_{accion.name}", max(1, f0 - mez), accion)
+            # los clips siguientes van en esta pista (la de arriba reemplaza a las de abajo desde que empieza)
+            pista = arm.animation_data.nla_tracks.new(prev=pista)
+            pista.name = f"acciones_{i:02d}"
+            st = pista.strips.new(f"{i:02d}_{accion.name}", max(1, f0 - mez), accion)
         else:
             if tramos and tramos[-1]["strip"].frame_end > f0 - 0.01:
                 tramos[-1]["strip"].frame_end = f0 - 0.01
@@ -684,7 +685,10 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         st.scale = 1.0 / ac.get("velocidad", 1.0)
         st.repeat = ac.get("repetir", 1)
         st.blend_in = st.blend_out = 0
-        st.extrapolation = "HOLD"
+        # la pista de abajo sostiene antes y después; las de arriba sólo desde su primer clip en adelante
+        st.extrapolation = "HOLD" if pista == pista_base else "HOLD_FORWARD"
+        if mez > 0:
+            st.blend_in = max(0.0, min(float(mez), (st.frame_end - st.frame_start) / 2 - 1))
         d = Vector(accion.get("desplazamiento_cadera_m", (0, 0, 0)))
         d.z = 0
         vueltas = max(1, int(st.repeat))

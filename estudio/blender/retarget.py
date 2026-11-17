@@ -109,12 +109,19 @@ def _retarget(origen, accion_origen, destino, nombre, hueso_cadera, escala_pos, 
             # la escala MUNDO del hueso es la del objeto (p. ej. ×1,7): si se pusiera 1, el hueso quedaría a 1/1,7
             m_mundo = Matrix.LocRotScale(pos, q_obj, escala_obj)
             pb.matrix = mw_d_inv @ m_mundo
+            if n != hueso_cadera:
+                # sólo la cadera se traslada: si no, el resto de los huesos guarda una posición sin clave que se
+                # acumula cuadro a cuadro (el Stickman definitivo terminaba a kilómetros de su esqueleto)
+                pb.location = (0.0, 0.0, 0.0)
             bpy.context.view_layer.update()
             pb.keyframe_insert("rotation_quaternion", frame=f)
             if n == hueso_cadera:
                 pb.keyframe_insert("location", frame=f)
     ad_o.action = previa_o
     ad_o.use_nla = nla_o
+    for pb in destino.pose.bones:
+        if pb.name != hueso_cadera:
+            pb.location = (0.0, 0.0, 0.0)
     if cad0 is not None:
         # cuánto avanzó la cadera en todo el clip (m, mundo, con el personaje sin girar): sirve para encadenar clips
         nueva["desplazamiento_cadera_m"] = [cad1.x - cad0.x, cad1.y - cad0.y, cad1.z - cad0.z]

@@ -656,9 +656,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -666,10 +666,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -701,27 +701,27 @@
   {
    "id": "t04_cu_luna2",
    "tipo": "estatica",
-   "plano": "Luna: «Esperá mi señal»",
+   "plano": "Luna: «Esperá mi señal»; Nico ya de pie",
    "inicio_s": 4.5667,
    "duracion_s": 1.0667,
    "rigido": true,
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    1.25,
+    0.0,
+    -0.2
    ],
    "objetivo": {
     "movil": "vagon",
     "punto": "",
     "desp_local": [
      -0.95,
-     0.48,
-     -0.09
+     0.0,
+     -0.22
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 22,
    "luz_relleno": 0
   },
   {
@@ -734,20 +734,20 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.35,
-    0.15,
+    0.85,
+    0.2,
     0.35
    ],
    "objetivo": {
     "movil": "vagon",
     "punto": "",
     "desp_local": [
-     -0.85,
-     -0.48,
-     0.3
+     -0.45,
+     -0.47,
+     0.27
     ]
    },
-   "lente_mm": 40,
+   "lente_mm": 38,
    "luz_relleno": 0
   },
   {
@@ -786,20 +786,20 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.35,
-    0.15,
+    0.85,
+    0.2,
     0.35
    ],
    "objetivo": {
     "movil": "vagon",
     "punto": "",
     "desp_local": [
-     -0.85,
-     -0.48,
-     0.3
+     -0.45,
+     -0.47,
+     0.27
     ]
    },
-   "lente_mm": 40,
+   "lente_mm": 38,
    "luz_relleno": 0
   },
   {
@@ -888,18 +888,18 @@
    "desp_local": [
     2.7,
     0.75,
-    0.24
+    0.2
    ],
    "objetivo": {
     "movil": "vagon",
     "punto": "",
     "desp_local": [
      1.3,
-     0.42,
-     0.26
+     0.38,
+     0.16
     ]
    },
-   "lente_mm": 85,
+   "lente_mm": 50,
    "luz_relleno": 0
   },
   {
@@ -912,20 +912,20 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    3.0,
-    -1.1,
-    0.35
+    2.9,
+    -1.2,
+    -0.05
    ],
    "objetivo": {
     "movil": "vagon",
     "punto": "",
     "desp_local": [
-     1.3,
-     -0.32,
-     0.32
+     1.4,
+     -0.38,
+     -0.2
     ]
    },
-   "lente_mm": 45,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
