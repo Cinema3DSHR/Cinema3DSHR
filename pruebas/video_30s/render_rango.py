@@ -26,6 +26,8 @@ s.render.image_settings.file_format = "PNG"; s.render.image_settings.color_mode 
 assert (s.render.resolution_x, s.render.resolution_y, s.render.resolution_percentage, s.render.fps) == (1280, 720, 100, 30), "resolución/FPS distintos de 1280x720@30"
 assert s.render.engine == "CYCLES"
 assert a.hasta <= res.get("frames_pelicula", s.frame_end), f"la escena tiene {res.get('frames_pelicula', s.frame_end)} fotogramas"
+from estudio import autorizacion as AUT              # REGLA: sin autorización del dueño no se renderiza
+AUT.exigir(m, AUT.config_de("1280x720", 30, a.muestras))
 def toma_de(f):
     for t in res["tomas"]:
         if t["frame_inicio"] <= f <= t["frame_fin"]: return t

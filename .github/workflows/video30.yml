@@ -13,7 +13,6 @@ on:
       etiqueta: {description: "Tag de la release", required: false, default: "p003_futbol_30s-cycles6"}
       nombre: {description: "Nombre del MP4 de salida (sin extensión)", required: false, default: "futbol_30s_cycles6"}
       produccion: {description: "Id de la producción (genera los entregables de catálogo: audio.aac, informe.json, portada, info)", required: false, default: ""}
-      requiere_aprobacion: {description: "Exigir que esta versión esté APROBADA desde la app con la misma huella (render final)", required: false, default: "true"}
       fotogramas_en_release: {description: "Subir también los fotogramas y el WAV a la release (false = quedan sólo como artefactos temporales)", required: false, default: "true"}
 
 permissions:
@@ -67,36 +66,15 @@ jobs:
             remoto "$R" HEAD | grep -q HEAD || echo "::warning::ASSETS_TOKEN no puede leer ${R} (hace falta sólo si la escena usa soldados o armas)"
           done
           echo "Acceso OK"
-      - name: Render final bloqueado hasta la aprobación de ESTA versión
-        if: ${{ inputs.requiere_aprobacion == 'true' && inputs.limite == '0' }}
+      - name: Render bloqueado sin aprobación y AUTORIZACIÓN del dueño (siempre, también los ensayos)
         env:
           GH_TOKEN: ${{ github.token }}
           ESCENA: ${{ inputs.escena }}
-          DUENO: ${{ github.repository_owner }}
         run: |
+          # REGLA PERMANENTE (docs/REVISION_Y_AUTORIZACION.md): ningún render —tampoco un ensayo con «limite»— sin que
+          # el dueño haya revisado ESTA versión en la app, la haya aprobado y haya tocado AUTORIZAR RENDER FINAL.
           gh api "repos/${{ github.repository }}/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > issues.json
-          python3 - <<'PY'
-          import json, os, re, sys
-          sys.path.insert(0, ".")
-          from estudio import manifiesto as MF
-          m = MF.leer(os.environ["ESCENA"]); pid, eid, v = m["produccion"], m["id"].split("-")[-1], m["version"]
-          h = MF.huella(m)
-          pref = f"[REVISIÓN] {pid} · {eid} v{v} · APROBAR"
-          ok = []
-          for i in json.load(open("issues.json")):
-              if not str(i.get("title", "")).startswith(pref) or i.get("user", {}).get("login") != os.environ["DUENO"]:
-                  continue
-              mm = re.search(r"```json\s*(\{.*\})\s*```", i.get("body") or "", re.S)
-              d = json.loads(mm.group(1)) if mm else {}
-              ok.append((i["number"], d.get("huella")))
-          if any(hh == h for _, hh in ok):
-              print(f"Aprobada: {pid} {eid} v{v} (huella {h}, pedido #{[n for n, hh in ok if hh == h][0]})"); sys.exit(0)
-          if ok:
-              print(f"::error::{pid} {eid} v{v} fue aprobada con otra huella ({[hh for _, hh in ok]}); la receta o el código cambiaron desde la aprobación (huella actual {h}). Hay que revisar y APROBAR de nuevo desde el EDITOR 3D.")
-          else:
-              print(f"::error::{pid} {eid} v{v} no está aprobada. El render final se habilita cuando el dueño la aprueba desde el EDITOR 3D de la app.")
-          sys.exit(1)
-          PY
+          python3 -m estudio autorizacion verificar "$ESCENA" --issues issues.json --resolucion 1280x720 --fps 30 --muestras ${{ inputs.muestras }}
       - name: Repartir los fotogramas
         id: plan
         env:
@@ -182,6 +160,12 @@ jobs:
           path: recursos/rally
           sparse-checkout: ${{ needs.planificar.outputs.rally }}
           sparse-checkout-cone-mode: false
+      - name: Registros de autorización (el render los vuelve a verificar)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > "$RUNNER_TEMP/issues.json"
+          echo "CINE_ISSUES=$RUNNER_TEMP/issues.json" >> "$GITHUB_ENV"
       - name: Renderizar fotogramas ${{ matrix.trozo.desde }}–${{ matrix.trozo.hasta }}
         run: |
           python -I pruebas/video_30s/render_rango.py "${{ inputs.escena }}" --desde ${{ matrix.trozo.desde }} --hasta ${{ matrix.trozo.hasta }} \

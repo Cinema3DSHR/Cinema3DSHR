@@ -17,6 +17,12 @@ Comandos principales
   voces <escena.json> [--gastar]                voces y efectos de ElevenLabs que faltan (sin --gastar: sólo estima)
   audio-estado                                  plan y créditos de ElevenLabs (consulta gratuita)
   voces-lista                                   voces de la cuenta (consulta gratuita)
+  autorizacion verificar <escena.json…> --issues I.json (--calidad C | --resolucion WxH --fps N --muestras N)
+                                                ¿hay revisión aprobada y AUTORIZACIÓN del dueño para renderizar?
+  autorizacion estado <produccion> --issues I.json   estado de revisión de cada escena (8 estados)
+
+REGLA PERMANENTE: ningún render sin revisión 3D en la app y autorización explícita del dueño
+(docs/REVISION_Y_AUTORIZACION.md). `render`, `fijas` y los scripts de render la exigen.
 """
 from __future__ import annotations
 import argparse
@@ -51,14 +57,24 @@ def cmd_matriz(a):
     print(json.dumps([t["id"] for t in m["tomas"]]))
 
 
+def _exigir_autorizacion(m, calidad):
+    """REGLA: antes de cargar Blender, ¿hay autorización del dueño para esta versión con esta calidad?"""
+    from estudio import autorizacion as AUT
+    q = {**config.CALIDADES[calidad], **{k: v for k, v in m.get("render", {}).items() if k == "muestras"}}
+    AUT.exigir(m, AUT.config_de(f"{q['ancho']}x{q['alto']}", m.get("render", {}).get("fps", q["fps"]), q["muestras"]))
+
+
 def cmd_fijas(a):
+    m = _cargar(a.escena)
+    _exigir_autorizacion(m, a.calidad)
     from estudio.blender import director as D
     import bpy
-    m = _cargar(a.escena)
     res = D.construir(m, a.calidad)
     out = Path(a.salida)
     out.mkdir(parents=True, exist_ok=True)
     s = res["escena"]
+    from estudio import autorizacion as AUT           # las fijas también son render: exigen autorización
+    AUT.exigir(m, AUT.config_de(f"{s.render.resolution_x}x{s.render.resolution_y}", s.render.fps, s.cycles.samples))
     for t in res["tomas"]:
         s.camera = t["camara"]
         D.ir_a(res, (t["frame_inicio"] + t["frame_fin"]) // 2)
@@ -68,9 +84,10 @@ def cmd_fijas(a):
 
 
 def cmd_render(a):
+    m = _cargar(a.escena)
+    _exigir_autorizacion(m, a.calidad)
     from estudio.blender import director as D
     from estudio import montaje
-    m = _cargar(a.escena)
     ok, motivo = MF.puede_renderizar(m, a.forzar)
     if not ok:
         sys.exit(motivo)
@@ -235,6 +252,32 @@ def cmd_animaciones(a):
     animaciones.construir(limite=a.limite, analizar=a.analizar)
 
 
+def cmd_autorizacion(a):
+    from estudio import autorizacion as AUT
+    issues = json.loads(Path(a.issues).read_text()) if a.issues else []
+    if a.accion == "verificar":
+        fallas = 0
+        for ruta in a.objetivos:
+            m = MF.leer(ruta)
+            if a.calidad:
+                q = {**config.CALIDADES[a.calidad], **{k: v for k, v in m.get("render", {}).items() if k == "muestras"}}
+                pedida = AUT.config_de(f"{q['ancho']}x{q['alto']}", m.get("render", {}).get("fps", q["fps"]), q["muestras"])
+            else:
+                pedida = AUT.config_de(a.resolucion, a.fps, a.muestras)
+            ok, motivo, _ = AUT.verificar(m, issues, pedida)
+            print(("AUTORIZADA  " if ok else "BLOQUEADA   ") + motivo)
+            fallas += not ok
+        return 1 if fallas else 0
+    # estado
+    evs = AUT.eventos(issues)
+    prod = MF.leer(config.PRODUCCIONES / a.objetivos[0] / "produccion.json")
+    for eid in prod.get("escenas", []):
+        for v in MF.versiones(prod["id"], eid):
+            m = MF.leer(MF.ruta_escena(prod["id"], eid, v))
+            print(f"{eid} v{v}: {AUT.estado(prod['id'], eid, v, MF.huella(m), evs, previa=a.con_previa)}")
+    return 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="estudio", description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -268,6 +311,11 @@ def main(argv=None):
     p = sub.add_parser("voces-lista"); p.set_defaults(f=cmd_voces_lista)
     p = sub.add_parser("animaciones"); p.add_argument("--limite", type=int, default=0)
     p.add_argument("--analizar", action="store_true"); p.set_defaults(f=cmd_animaciones)
+    p = sub.add_parser("autorizacion"); p.add_argument("accion", choices=["verificar", "estado"])
+    p.add_argument("objetivos", nargs="+", help="escena.json (verificar) o id de producción (estado)")
+    p.add_argument("--issues"); p.add_argument("--calidad"); p.add_argument("--resolucion")
+    p.add_argument("--fps", type=int, default=30); p.add_argument("--muestras", type=int)
+    p.add_argument("--con-previa", action="store_true"); p.set_defaults(f=cmd_autorizacion)
     a = ap.parse_args(argv)
     return a.f(a) or 0
 

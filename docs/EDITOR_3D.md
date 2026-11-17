@@ -20,8 +20,9 @@ animaciones, coloca sus propias cámaras, marca momentos, escribe correcciones y
    (`python -m estudio aplicar-direccion <produccion> <escena> --camaras camera_001,camera_002` para las cámaras;
    el resto de las correcciones a mano en la receta), publica la previsualización nueva y cierra el pedido.
 9. El dueño revisa otra vez. Cuando está bien: **✔ APROBAR ESCENA** (queda atada a la versión y a su huella).
-10. El dueño escribe «LA ESCENA ESTÁ BIEN. EMPEZÁ CON EL VIDEO». Claude lanza `video30.yml` con esa versión.
-    El flujo **se niega** a renderizar si la versión no está aprobada por el dueño con la MISMA huella.
+10. Con la versión aprobada, el dueño toca **🎬 AUTORIZAR RENDER FINAL** (DIRECCIÓN). Recién entonces se puede lanzar el
+    render; todos los flujos y comandos de render **se niegan** sin esa autorización para la MISMA huella y la misma
+    configuración. Regla completa y los 8 estados de revisión: `docs/REVISION_Y_AUTORIZACION.md`.
 
 ## 2. La previsualización es la escena de producción
 

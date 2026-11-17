@@ -65,7 +65,9 @@ def leer_revisiones(issues: list[dict], dueno: str) -> list[dict]:
         if "pull_request" in it:
             continue
         autor = (it.get("user") or {}).get("login", "")
-        if it.get("author_association") != "OWNER" and autor.lower() != dueno.lower():
+        from estudio.autorizacion import usuarios_autorizados
+        if it.get("author_association") != "OWNER" and autor.lower() != dueno.lower() \
+                and autor.lower() not in usuarios_autorizados():
             continue
         if not it.get("title", "").startswith("[REVISIÓN]"):
             continue
@@ -92,6 +94,8 @@ def construir_catalogo(releases: list[dict], issues: list[dict], infos: dict[str
     dueno = dueno or config.REPO.split("/")[0]
     assets = _indexar_assets(releases)
     revs = leer_revisiones(issues, dueno)
+    from estudio import autorizacion as AUT
+    evs_aut = AUT.eventos(issues)                    # revisión 3D + autorización de render (8 estados)
     estado_rev: dict[tuple, dict] = {}
     notas: dict[tuple, list] = {}
     for e in revs:
@@ -131,8 +135,19 @@ def construir_catalogo(releases: list[dict], issues: list[dict], infos: dict[str
                         estado = "en_revision"
                 if m.get("bloqueada"):
                     estado = "aprobada"
+                huella_actual = MF.huella(m)
+                aut = AUT.autorizacion_vigente(evs_aut, pid, eid, v, huella_actual)
+                render = None
+                video = archivos.get("mp4_final") or archivos.get("mp4")
+                if aut and video and info.get("huella") == huella_actual and video.get("fecha", "") >= aut["fecha"]:
+                    render = "finalizado"
+                elif aut and estado == "renderizando":
+                    render = "ejecutando"
+                est_rev = AUT.estado(pid, eid, v, huella_actual, evs_aut, previa="previa" in archivos, render=render)
                 vers.append({
-                    "version": v, "estado": estado, "huella": info.get("huella", ""),
+                    "version": v, "estado": estado, "estado_revision": est_rev, "huella_actual": huella_actual,
+                    "autorizacion": ({k: aut.get(k) for k in ("issue", "fecha", "autor", "config")} if aut else None),
+                    "huella": info.get("huella", ""),
                     "calidad": info.get("calidad", m.get("render", {}).get("calidad", "revision")),
                     "resolucion": info.get("resolucion", ""), "fps": info.get("fps", 30),
                     "duracion_s": info.get("duracion_s", m.get("duracion_s")),
@@ -165,6 +180,7 @@ def construir_catalogo(releases: list[dict], issues: list[dict], infos: dict[str
         producciones.append({
             "id": pid, "titulo": prod["titulo"], "genero": prod.get("genero", ""), "sinopsis": prod.get("sinopsis", ""),
             "clase": prod.get("clase", "pelicula"), "creada": prod.get("creada", ""), "estado": est_prod,
+            "render": prod.get("render", {}),
             "duracion_s": round(dur_total, 1), "portada": portada, "escenas": escenas,
             "final": pa.get("pelicula_final.mp4"), "final_ogv": pa.get("pelicula_final.ogv"),
         })

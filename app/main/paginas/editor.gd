@@ -9,6 +9,9 @@ extends Pagina
 ## · COLOCAR CÁMARA captura el punto de vista EXACTO (en coordenadas de Blender) y lo manda al estudio.
 ## · Panel de escena (personajes, qué clip hace cada uno, objetos, propiedades), cámaras y dirección.
 ## La vista 3D es 16:9 como el render: lo que se encuadra acá es lo que sale en el video.
+## REGLA PERMANENTE (docs/REVISION_Y_AUTORIZACION.md): el render final sólo se habilita con ✔ APROBAR (versión cargada
+## completa y con la huella de la versión actual) y después AUTORIZAR RENDER FINAL. El estado de la versión (8 estados)
+## se ve arriba; sin la escena cargada, o con una previsualización vieja, no se puede aprobar ni autorizar.
 
 const VELOCIDADES := [0.25, 0.5, 0.75, 1.0, 1.25, 1.5]
 
@@ -74,6 +77,11 @@ var _marco: Control
 var _tabs: TabContainer
 var _btn_colocar: Button
 var _acc_t := 0.0
+var _cargado := false             # true sólo si GLB + línea de tiempo cargaron completos y la huella es la actual
+var _aviso_carga := ""
+var _estado_lbl: Label
+var _btn_aprobar: Button
+var _btn_autorizar: Button
 
 # ================================================================================================= construcción
 
@@ -97,6 +105,8 @@ func abrir(datos: Dictionary) -> void:
 	raiz.add_child(_linea_de_tiempo())
 	_acomodar()
 	_cargar_estado()
+	api.catalogo_listo.connect(func(_c, _r): if is_instance_valid(self): _actualizar_estado_revision())
+	_actualizar_estado_revision()
 	# archivos: desde el catálogo (archivos.previa / archivos.previa_datos) o rutas locales (pruebas)
 	if datos.has("glb_local"):
 		_cargar(str(datos["glb_local"]), str(datos["json_local"]))
@@ -148,6 +158,8 @@ func _barra_superior() -> Control:
 	_info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_info.clip_text = true
 	h.add_child(_info)
+	_estado_lbl = Tema.etiqueta("…", 15, Tema.ACENTO)
+	h.add_child(_estado_lbl)
 	_modo_lbl = Tema.etiqueta("CÁMARA LIBRE", 16, Tema.ACENTO)
 	h.add_child(_modo_lbl)
 	for par in [["LIBRE", _modo_libre], ["MONTAJE", _modo_montaje], ["💡", _alternar_luces]]:
@@ -297,8 +309,15 @@ func _panel_lateral() -> Control:
 	dir.add_child(_lista_marc)
 	var fa := HBoxContainer.new()
 	fa.add_child(Tema.boton("GUARDAR CORRECCIONES", _guardar_correcciones, "acento", 15))
-	fa.add_child(Tema.boton("✔ APROBAR ESCENA", _aprobar, "verde", 15))
+	_btn_aprobar = Tema.boton("✔ APROBAR ESCENA", _aprobar, "verde", 15)
+	fa.add_child(_btn_aprobar)
 	dir.add_child(fa)
+	dir.add_child(Tema.etiqueta("RENDER FINAL (sólo con esta versión aprobada)", 15, Tema.ACENTO))
+	var fr := HBoxContainer.new()
+	_btn_autorizar = Tema.boton("🎬 AUTORIZAR RENDER FINAL", _autorizar, "acento", 15)
+	fr.add_child(_btn_autorizar)
+	fr.add_child(Tema.boton("⟳ ESTADO", func(): api.cargar_catalogo(), "", 15))
+	dir.add_child(fr)
 	dir.add_child(Tema.etiqueta("VERSIONES", 15, Tema.ACENTO))
 	dir.add_child(_versiones())
 	var fh := HBoxContainer.new()
@@ -453,6 +472,34 @@ func _cargar(ruta_glb: String, ruta_json: String) -> void:
 	_llenar_camaras()
 	_llenar_marcadores()
 	_ir_a(0.0)
+	var vc := api.version_catalogo(_pid, _eid, _version)
+	var h_actual := str(vc.get("huella_actual", ""))
+	if h_actual != "" and _huella != "" and h_actual != _huella:
+		_cargado = false
+		_aviso_carga = "La previsualización es de otra huella (%s, actual %s): el estudio tiene que publicar la nueva antes de revisar." % [_huella, h_actual]
+		app.mostrar_aviso(_aviso_carga, 8.0)
+	elif _escena == null or (_d.get("tomas", []) as Array).is_empty():
+		_cargado = false
+		_aviso_carga = "La escena no cargó completa: no se puede aprobar."
+	else:
+		_cargado = true
+		_aviso_carga = ""
+	_actualizar_estado_revision()
+
+## Estado de revisión de ESTA versión (catálogo) y qué acciones se habilitan.
+func _actualizar_estado_revision() -> void:
+	if _estado_lbl == null:
+		return
+	var vc := api.version_catalogo(_pid, _eid, _version)
+	var est := str(vc.get("estado_revision", "SIN DATOS DEL ESTUDIO"))
+	_estado_lbl.text = "● " + est
+	var aprobable := _cargado and not est in ["APROBADA POR EL USUARIO", "RENDER AUTORIZADO", "RENDER EN EJECUCIÓN", "FINALIZADA"]
+	if _btn_aprobar:
+		_btn_aprobar.disabled = not aprobable
+	if _btn_autorizar:
+		_btn_autorizar.disabled = not (_cargado and est == "APROBADA POR EL USUARIO")
+		_btn_autorizar.tooltip_text = "" if not _btn_autorizar.disabled else \
+			("Primero cargá y revisá la escena." if not _cargado else "Se habilita cuando ESTA versión está APROBADA (tocá ⟳ ESTADO después de aprobar).")
 
 # ================================================================================================= tiempo
 
@@ -1077,10 +1124,29 @@ func _guardar_correcciones() -> void:
 		func(_ok, t): app.mostrar_aviso(t, 5.0))
 
 func _aprobar() -> void:
+	if not _cargado:
+		app.mostrar_aviso(_aviso_carga if _aviso_carga != "" else "La escena todavía no cargó: no se puede aprobar sin revisarla.", 6.0)
+		return
 	_formulario("APROBAR %s v%d PARA PRODUCCIÓN" % [_eid, _version], [["nota", "La aprobación queda atada a ESTA versión (huella %s). Comentario:" % _huella, "parrafo", "La escena está bien."]],
 		func(v: Dictionary):
 			api.enviar_revision({"produccion": _pid, "escena": _eid, "version": _version, "decision": "APROBAR",
 				"nota": v["nota"], "huella": _huella}, func(_ok, t): app.mostrar_aviso(t, 5.0)))
+
+## AUTORIZAR RENDER FINAL: sólo con esta versión cargada y APROBADA (misma huella). Queda registrada con la versión,
+## la huella, la configuración de render, la fecha y la cuenta; los flujos de render la exigen y la verifican.
+func _autorizar() -> void:
+	var vc := api.version_catalogo(_pid, _eid, _version)
+	if not _cargado or str(vc.get("estado_revision", "")) != "APROBADA POR EL USUARIO":
+		app.mostrar_aviso("Se autoriza sólo una versión revisada y APROBADA (estado actual: %s)." % str(vc.get("estado_revision", "?")), 6.0)
+		return
+	var cfg := api.config_render(_pid)
+	_formulario("AUTORIZAR RENDER FINAL · %s v%d" % [_eid, _version], [["nota",
+		"Versión %d · huella %s · %s · %d fps · %d muestras · %s %s. Si la escena cambia después, esta autorización deja de valer. Comentario:" % [
+			_version, _huella, cfg["resolucion"], cfg["fps"], cfg["muestras"], cfg["motor"], cfg["dispositivo"]],
+		"parrafo", "Autorizo el render final de esta versión."]],
+		func(v: Dictionary):
+			api.enviar_autorizacion({"produccion": _pid, "escena": _eid, "version": _version, "huella": _huella,
+				"config": cfg, "nota": v["nota"]}, func(_ok, t): app.mostrar_aviso(t, 6.0)))
 
 func _versiones() -> Control:
 	var v := VBoxContainer.new()
@@ -1090,7 +1156,7 @@ func _versiones() -> Control:
 			continue
 		for ver in e.get("versiones", []):
 			var arch: Dictionary = ver.get("archivos", {})
-			var texto := "v%d · %s%s" % [int(ver["version"]), str(ver.get("estado", "")), "" if arch.has("previa") else " · sin previa"]
+			var texto := "v%d · %s%s" % [int(ver["version"]), str(ver.get("estado_revision", ver.get("estado", ""))), "" if arch.has("previa") else " · sin previa"]
 			var b := Tema.boton(texto, func():
 				if int(ver["version"]) != _version and arch.has("previa"):
 					app.atras()

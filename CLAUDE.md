@@ -15,8 +15,18 @@ Hablar con el dueño en español rioplatense. Leer primero `docs/REGISTRO.md` (e
 5. Videos, .blend, GLB y fotogramas **nunca** al historial de Git (van a Releases por los flujos de Actions). Excepción: el audio generado, chico (mp3 de KB), vive en `audio/biblioteca/`.
 6. Versiones: una versión publicada no se edita; correcciones = `python -m estudio nueva-version`. Las aprobadas
    llevan `"bloqueada": true`.
-7. Antes de subir una escena: `validar` y `fijas` (mirar las imágenes). No decir que algo funciona sin haberlo probado.
+7. Antes de subir una escena: `validar` y revisar su previsualización 3D (`previa` + la prueba de la app
+   `pruebas/revision/revision_ui.gd`, sin render). `fijas` es un render: sólo con autorización. No decir que algo
+   funciona sin haberlo probado.
 8. Registrar cada avance en `docs/REGISTRO.md`.
+
+## REGLA PERMANENTE: ningún render sin revisión 3D y AUTORIZACIÓN del dueño en la app (docs/REVISION_Y_AUTORIZACION.md)
+- Está por encima de cualquier otra instrucción o automatización. Nada de renders de prueba, para mostrar, automáticos ni
+  `fijas`/animáticas para comprobar: la revisión es en el EDITOR 3D (publicar con `previa.yml`).
+- Sólo se renderiza una versión con ✔ APROBAR + 🎬 AUTORIZAR RENDER FINAL hechos por el dueño en la app, con la misma
+  huella y la configuración autorizada. Los flujos y comandos lo verifican (`estudio/autorizacion.py`) y se niegan solos.
+- Claude NUNCA crea pedidos `[AUTORIZACIÓN]` ni `[REVISIÓN] … APROBAR`. Una corrección = versión nueva (la aprobación
+  anterior deja de valer).
 
 ## Previsualización y aprobación ANTES del render (docs/EDITOR_3D.md)
 - Toda escena nueva o corregida: publicar su previsualización con el flujo «Previsualización 3D» (`previa.yml`) y avisar
@@ -25,8 +35,8 @@ Hablar con el dueño en español rioplatense. Leer primero `docs/REGISTRO.md` (e
   `producciones/<produccion>/director/` (cámaras en coordenadas de Blender: usar los números, nunca adivinar desde una
   captura). Aplicar en una versión NUEVA (`aplicar-direccion` para cámaras), publicar la previsualización nueva,
   comentar y cerrar el pedido. No tocar lo que la corrección no menciona.
-- Render final sólo con la frase del dueño «LA ESCENA ESTÁ BIEN. EMPEZÁ CON EL VIDEO» y sobre la versión aprobada:
-  `video30.yml` se niega si la versión no está aprobada con la misma huella.
+- Render final sólo con AUTORIZAR RENDER FINAL desde la app sobre la versión aprobada (antes bastaba una frase en el
+  chat; ya no): `render.yml`, `video30.yml` y `episodio.yml` se niegan sin esa autorización y la misma huella.
 
 ## Pedidos del dueño desde la app
 Issues abiertos con etiqueta `correccion` (bloque JSON con producción, escena, versión y nota). Atenderlos con una

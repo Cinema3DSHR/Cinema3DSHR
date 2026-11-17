@@ -217,7 +217,10 @@ func enviar_revision(datos: Dictionary, listo: Callable) -> void:
 		listo.call(false, "Para aprobar o pedir cambios hay que vincular la cuenta en AJUSTES.")
 		return
 	_post_issue(datos, func(ok, texto):
-		if not ok and texto.begins_with("Sin conexión"):
+		# una APROBACIÓN nunca queda en espera: sin conexión no hay revisión confirmada (regla de revisión 3D)
+		if not ok and texto.begins_with("Sin conexión") and str(datos.get("decision", "")) == "APROBAR":
+			listo.call(false, "Sin conexión: la aprobación NO se registró. Volvé a aprobar cuando haya conexión.")
+		elif not ok and texto.begins_with("Sin conexión"):
 			var p := _leer(ARCH_PEND)
 			var lista: Array = p.get("lista", [])
 			lista.append(datos)
@@ -242,6 +245,52 @@ func _post_issue(d: Dictionary, listo: Callable) -> void:
 			listo.call(true, "Enviado al estudio (pedido #%s)." % str(r.get("number", "?")) if r is Dictionary else "Enviado.")
 		else:
 			listo.call(false, "El estudio rechazó el pedido (código %d). Revisá el token en AJUSTES." % cod))
+	h.request(API % REPO + "/issues", _cabeceras(), HTTPClient.METHOD_POST, JSON.stringify({"title": titulo, "body": cuerpo}))
+
+# ------------------------------------------------------------------------------------------- autorización de render
+
+## Versión del catálogo (estado_revision, huella_actual, autorizacion…) o {} si no está.
+func version_catalogo(pid: String, eid: String, v: int) -> Dictionary:
+	for e in produccion(pid).get("escenas", []):
+		if str(e.get("id", "")) == eid:
+			for ver in e.get("versiones", []):
+				if int(ver.get("version", 0)) == v:
+					return ver
+	return {}
+
+## Configuración de render de la producción (la que se autoriza); por defecto la de producción del estudio.
+func config_render(pid: String) -> Dictionary:
+	var r: Dictionary = produccion(pid).get("render", {})
+	return {"resolucion": str(r.get("resolucion", "1280x720")), "fps": int(r.get("fps", 30)),
+		"muestras": int(r.get("muestras", 6)), "motor": str(r.get("motor", "CYCLES")),
+		"dispositivo": str(r.get("dispositivo", "CPU"))}
+
+## AUTORIZAR RENDER FINAL: Issue "[AUTORIZACIÓN] <prod> · <escena> v<k> · RENDER FINAL" con la versión, la huella y la
+## configuración aprobadas. Nunca queda en espera sin conexión. Los flujos de render la verifican antes de arrancar.
+func enviar_autorizacion(datos: Dictionary, listo: Callable) -> void:
+	if not tiene_token():
+		listo.call(false, "Para autorizar el render hay que vincular la cuenta en AJUSTES.")
+		return
+	datos["clase"] = "autorizacion"
+	datos["app"] = str(ProjectSettings.get_setting("estudio/version", {}).get("app", 0))
+	datos["fecha"] = Time.get_datetime_string_from_system(true) + "Z"
+	var titulo := "[AUTORIZACIÓN] %s · %s v%d · RENDER FINAL" % [datos.get("produccion", ""), datos.get("escena", ""), int(datos.get("version", 0))]
+	var c: Dictionary = datos.get("config", {})
+	var cuerpo := "**AUTORIZAR RENDER FINAL** — %s %s v%d (huella %s)\n\nConfiguración: %s · %s fps · %s muestras · %s %s\n\n%s\n\n```json\n%s\n```\n\n_Enviado desde el EDITOR 3D de 3D Film Studio (Android)._" % [
+		datos.get("produccion", ""), datos.get("escena", ""), int(datos.get("version", 0)), datos.get("huella", ""),
+		c.get("resolucion", ""), c.get("fps", ""), c.get("muestras", ""), c.get("motor", ""), c.get("dispositivo", ""),
+		str(datos.get("nota", "")), JSON.stringify(datos, "  ")]
+	var h := HTTPRequest.new()
+	add_child(h)
+	h.request_completed.connect(func(res, cod, _hd, resp):
+		h.queue_free()
+		if res != HTTPRequest.RESULT_SUCCESS:
+			listo.call(false, "Sin conexión: la autorización NO se registró.")
+		elif cod == 201:
+			var r = JSON.parse_string(resp.get_string_from_utf8())
+			listo.call(true, "Autorización enviada (#%s). El estudio la verifica contra tu aprobación." % str(r.get("number", "?")) if r is Dictionary else "Autorización enviada.")
+		else:
+			listo.call(false, "El estudio rechazó el envío (código %d). Revisá el token en AJUSTES." % cod))
 	h.request(API % REPO + "/issues", _cabeceras(), HTTPClient.METHOD_POST, JSON.stringify({"title": titulo, "body": cuerpo}))
 
 # ------------------------------------------------------------------------------------------- dirección (EDITOR 3D)

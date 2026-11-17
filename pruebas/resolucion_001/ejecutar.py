@@ -11,6 +11,7 @@ Cada proceso hace un render de calentamiento (carga de escena y BVH; se descarta
 mide los 5 momentos. Se corre un proceso por resolución para que el pico de memoria sea de esa resolución.
 """
 from __future__ import annotations
+raise SystemExit("Deshabilitado por la regla de revisión 3D y autorización (docs/REVISION_Y_AUTORIZACION.md): los renders de prueba sólo corren en los flujos de GitHub con la autorización del dueño.")
 import argparse
 import json
 import os

@@ -8,8 +8,26 @@
  "clase": "pelicula",
  "creada": "2026-11-17",
  "duracion_objetivo_s": 180,
- "render": {"motor": "CYCLES", "dispositivo": "CPU", "resolucion": "1280x720", "fps": 30, "muestras": 6,
-            "fotogramas": 5400},
- "escenas": ["e01", "e02", "e03", "e04", "e05", "e06"],
+ "render": {
+  "motor": "CYCLES",
+  "dispositivo": "CPU",
+  "resolucion": "960x540",
+  "fps": 30,
+  "muestras": 6,
+  "muestreo_adaptativo": 0.05,
+  "denoiser": "OPENIMAGEDENOISE",
+  "rebotes": 6,
+  "arbol_de_luces": true,
+  "semilla": 0,
+  "fotogramas": 5400
+ },
+ "escenas": [
+  "e01",
+  "e02",
+  "e03",
+  "e04",
+  "e05",
+  "e06"
+ ],
  "estado": "en_produccion"
 }

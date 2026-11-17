@@ -77,6 +77,8 @@ esperado = {"motor": "CYCLES", "dispositivo": "CPU", "resolucion": "960x540", "p
             "rebotes_max": 6, "arbol_de_luces": True, "semilla": 0, "semilla_animada": False}
 mal = {k: (cfg[k], v) for k, v in esperado.items() if cfg[k] != v}
 assert not mal, f"configuración distinta de la pedida: {mal}"
+from estudio import autorizacion as AUT  # noqa: E402  REGLA: sin autorización del dueño no se renderiza
+AUT.exigir(m, AUT.config_de(cfg["resolucion"], cfg["fps"], cfg["muestras"]))
 nf = res.get("frames_pelicula", s.frame_end)
 assert max(locales) <= nf, f"la escena tiene {nf} fotogramas"
 

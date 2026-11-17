@@ -4,6 +4,7 @@ Misma escena (p000 v1, armada con director.construir como en producción), misma
 Sólo cambia el motor/ajustes de la variante, EN MEMORIA: no se modifica el estudio, la receta ni config.py.
 Un proceso por variante (el pico de memoria es de esa variante). Un render de calentamiento se descarta y se informa.
 """
+raise SystemExit("Deshabilitado por la regla de revisión 3D y autorización (docs/REVISION_Y_AUTORIZACION.md): los renders de prueba sólo corren en los flujos de GitHub con la autorización del dueño.")
 import argparse, json, os, platform, sys, threading, time
 from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]; sys.path.insert(0, str(RAIZ))

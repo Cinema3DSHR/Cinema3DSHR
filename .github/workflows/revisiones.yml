@@ -1,11 +1,16 @@
 name: Revisiones desde la app
 
 # La app Android crea un Issue "[REVISIÓN] …" con un bloque JSON (decisión sobre una escena y versión).
-# SÓLO se atienden los del dueño del repositorio (cualquiera puede abrir issues en un repo público).
+# SÓLO se atienden los de las cuentas autorizadas (config/autorizados.json; variable AUTORIZADOS): desde la
+# transferencia a la organización Cinema3DSHR el dueño del repo es la organización, no la cuenta del director.
 #   APROBAR / RECHAZAR → se registra y se cierra (el catálogo pasa la escena a aprobada/rechazada)
 #   CORREGIR           → queda ABIERTO con la etiqueta "correccion" para que Claude lo trabaje
-#   RENDERIZAR         → vuelve a renderizar esa versión (salvo que esté aprobada)
-#   EXPORTAR           → monta la película completa con las escenas aprobadas
+#   RENDERIZAR         → YA NO renderiza (regla de revisión 3D): la revisión es en el EDITOR 3D; el render final
+#                        sólo con AUTORIZAR RENDER FINAL (docs/REVISION_Y_AUTORIZACION.md)
+#   EXPORTAR           → monta la película completa con las escenas aprobadas (montaje, no render)
+# Además "[AUTORIZACIÓN] … RENDER FINAL": se verifica contra la aprobación vigente (misma versión y huella) y se
+# responde si quedó registrada. NO lanza el render: lo lanza el dueño o Claude con su pedido, y el flujo de render
+# vuelve a verificar la autorización.
 on:
   issues:
     types: [opened]
@@ -17,7 +22,7 @@ permissions:
 
 jobs:
   atender:
-    if: startsWith(github.event.issue.title, '[REVISIÓN]') && github.event.issue.user.login == github.repository_owner
+    if: startsWith(github.event.issue.title, '[REVISIÓN]') && contains(fromJSON(vars.AUTORIZADOS || '["webmaletin-art"]'), github.event.issue.user.login)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -65,15 +70,8 @@ jobs:
               gh issue edit "$N" --repo "$R" --add-label correccion
               gh issue comment "$N" --repo "$R" --body "✎ **Correcciones registradas** para $P · $E v$V. Quedan pendientes para Claude (que creará la v$((V+1)) sin tocar las demás escenas).$PIE" ;;
             RENDERIZAR)
-              if [ ! -f "$RUTA" ]; then
-                gh issue comment "$N" --repo "$R" --body "No existe $RUTA.$PIE"
-              elif grep -q '"bloqueada": true' "$RUTA"; then
-                gh issue comment "$N" --repo "$R" --body "La versión está APROBADA y bloqueada: no se vuelve a renderizar.$PIE"
-              else
-                gh workflow run render.yml --repo "$R" --ref "${{ github.event.repository.default_branch }}" -f escena="$RUTA" -f forzar=true -f calidad=revision
-                gh issue comment "$N" --repo "$R" --body "⟳ **Render en cola** para $P · $E v$V. La app la mostrará cuando termine.$PIE"
-              fi
-              gh issue close "$N" --repo "$R" --reason completed ;;
+              gh issue comment "$N" --repo "$R" --body "Ya no se renderiza para revisar: la revisión se hace en el EDITOR 3D de la app (previsualización interactiva, sin video). El render final se pide con **AUTORIZAR RENDER FINAL** después de aprobar la versión.$PIE"
+              gh issue close "$N" --repo "$R" --reason not_planned ;;
             EXPORTAR)
               gh workflow run pelicula.yml --repo "$R" --ref "${{ github.event.repository.default_branch }}" -f produccion="$P" \
                 -f resolucion="$RES" -f fps="$FPS" -f issue="$N"
@@ -82,6 +80,44 @@ jobs:
               gh issue comment "$N" --repo "$R" --body "Decisión no reconocida.$PIE" ;;
           esac
 
+  autorizacion:
+    if: startsWith(github.event.issue.title, '[AUTORIZACIÓN]') && contains(fromJSON(vars.AUTORIZADOS || '["webmaletin-art"]'), github.event.issue.user.login)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar y registrar la autorización (no lanza ningún render)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          N: ${{ github.event.issue.number }}
+          CUERPO: ${{ github.event.issue.body }}
+        run: |
+          R=${{ github.repository }}
+          gh label create autorizacion --repo "$R" --force --color "2ea043" >/dev/null 2>&1 || true
+          gh issue edit "$N" --repo "$R" --add-label autorizacion
+          gh api "repos/$R/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > issues.json
+          PIE=$'\n\n---\n_Respuesta automática del estudio (flujo «Revisiones desde la app»)._'
+          RC=0
+          python3 - > resultado.txt <<'PY' || RC=$?
+          import json, os, re, subprocess, sys
+          d = json.loads(re.search(r"```json\s*(\{.*?\})\s*```", os.environ["CUERPO"], re.S).group(1))
+          ruta = f"producciones/{d['produccion']}/escenas/{d['escena']}/v{int(d['version'])}/escena.json"
+          if not os.path.exists(ruta):
+              print(f"No existe {ruta}."); sys.exit(1)
+          c = d.get("config") or {}
+          r = subprocess.run([sys.executable, "-m", "estudio", "autorizacion", "verificar", ruta, "--issues", "issues.json",
+                              "--resolucion", str(c.get("resolucion")), "--fps", str(c.get("fps", 30)), "--muestras", str(c.get("muestras"))],
+                             capture_output=True, text=True)
+          print(r.stdout.strip() or r.stderr.strip()); sys.exit(r.returncode)
+          PY
+          if [ "$RC" = "0" ]; then
+            gh issue comment "$N" --repo "$R" --body "✔ **Autorización registrada.** $(cat resultado.txt)"$'\n\n'"El render final de esta versión queda habilitado con esa configuración. Si la escena cambia, la autorización deja de valer.$PIE"
+            gh issue close "$N" --repo "$R" --reason completed
+          else
+            gh issue comment "$N" --repo "$R" --body "✖ **Autorización rechazada:** $(cat resultado.txt)$PIE"
+            gh issue close "$N" --repo "$R" --reason not_planned
+          fi
+
   catalogo:
-    needs: atender
+    needs: [atender, autorizacion]
+    if: ${{ always() && (needs.atender.result == 'success' || needs.autorizacion.result == 'success') }}
     uses: ./.github/workflows/catalogo.yml

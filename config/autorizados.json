@@ -1,0 +1,4 @@
+{
+ "descripcion": "Cuentas de GitHub cuyas aprobaciones, correcciones y AUTORIZACIONES DE RENDER cuentan (docs/REVISION_Y_AUTORIZACION.md). Desde la transferencia a la organización Cinema3DSHR el dueño del repositorio es la organización, así que no alcanza con comparar contra github.repository_owner.",
+ "usuarios": ["webmaletin-art"]
+}

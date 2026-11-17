@@ -1,17 +1,15 @@
 name: Render de escenas
 
 # Renderiza en paralelo (una máquina por TOMA), monta la escena y publica los entregables en la release
-# de la producción. Se dispara solo cuando se sube una versión nueva de una escena (escena.json) o un escenario,
-# a mano desde Actions, o desde la app (VOLVER A RENDERIZAR → flujo "Revisiones").
-# Nunca vuelve a renderizar una versión ya publicada salvo "forzar", ni una versión APROBADA.
+# de la producción. REGLA PERMANENTE (docs/REVISION_Y_AUTORIZACION.md): sólo a mano y sólo si el dueño revisó la
+# versión en el EDITOR 3D de la app, la APROBÓ y tocó AUTORIZAR RENDER FINAL para esa versión exacta (misma huella)
+# y esa configuración. Ya NO se dispara al subir un escena.json (antes renderizaba cada versión nueva sola).
 on:
-  push:
-    paths: ["producciones/**/escena.json", "escenarios/**/escenario.json"]
   workflow_dispatch:
     inputs:
       escena:
-        description: "Ruta del escena.json (vacío = sólo lo que cambió en el último push)"
-        required: false
+        description: "Ruta del escena.json AUTORIZADO desde la app (o de un escenario.json)"
+        required: true
         default: ""
       calidad:
         description: "previa | revision | final | final4k"
@@ -46,15 +44,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - name: Registros de revisión y autorización (Issues de la app)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > "$RUNNER_TEMP/issues.json"
+          echo "CINE_ISSUES=$RUNNER_TEMP/issues.json" >> "$GITHUB_ENV"
       - name: Qué hay que renderizar
         id: plan
         env:
           GH_TOKEN: ${{ github.token }}
+          CALIDAD: ${{ inputs.calidad || 'revision' }}
           ENTRADA: ${{ inputs.escena }}
           FORZAR: ${{ inputs.forzar }}
           ANTES: ${{ github.event.before }}
         run: |
           R=${{ github.repository }}
+          [ -n "$ENTRADA" ] || { echo "::error::Indicá la ruta del escena.json autorizado (ya no se renderiza «lo que cambió»)."; exit 1; }
           if [ -n "$ENTRADA" ]; then
             echo "$ENTRADA" > cambiados.txt
           elif [ -n "$ANTES" ] && [ "$ANTES" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$ANTES" 2>/dev/null; then
@@ -87,6 +93,15 @@ jobs:
                       print(f"::notice::{clave} está APROBADA: no se vuelve a renderizar"); continue
                   if f"{eid}_v{m['version']}_info.json" in rel.get(m["produccion"], set()) and not forzar:
                       print(f"::notice::{clave} ya está publicada (usar 'forzar' para repetir)"); continue
+                  # REGLA: sin aprobación + AUTORIZACIÓN del dueño para esta versión y configuración, no se renderiza
+                  from estudio import autorizacion as AUT
+                  from estudio import config as CFG
+                  q = {**CFG.CALIDADES[os.environ["CALIDAD"]], **{k: v for k, v in m.get("render", {}).items() if k == "muestras"}}
+                  pedida = AUT.config_de(f"{q['ancho']}x{q['alto']}", m.get("render", {}).get("fps", q["fps"]), q["muestras"])
+                  ok, motivo, _ = AUT.verificar(m, json.load(open(os.environ["CINE_ISSUES"])), pedida)
+                  if not ok:
+                      print(f"::error::RENDER BLOQUEADO — {motivo}"); sys.exit(1)
+                  print(f"::notice::{motivo}")
                   deps = MF.dependencias(m)
                   mixamo = "\n".join(d.split(":", 1)[1] for d in deps if d.startswith("mixamo:"))
                   escenas.append({"escena": ruta, "clave": clave, "produccion": m["produccion"], "mixamo": mixamo})
@@ -145,6 +160,12 @@ jobs:
           path: recursos/mixamo-respaldo
           sparse-checkout: ${{ matrix.item.mixamo }}
           sparse-checkout-cone-mode: false
+      - name: Registros de autorización (el render los vuelve a verificar)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > "$RUNNER_TEMP/issues.json"
+          echo "CINE_ISSUES=$RUNNER_TEMP/issues.json" >> "$GITHUB_ENV"
       - name: Renderizar toma ${{ matrix.item.toma }}
         run: python -m estudio render "${{ matrix.item.escena }}" --toma "${{ matrix.item.toma }}" --calidad "${{ needs.planificar.outputs.calidad }}" --salida out/tomas ${{ inputs.forzar && '--forzar' || '' }} 2>&1 | grep -vE "EGL|CUEW|^$|Saved:|Fra:" | tail -n 30
       - uses: actions/upload-artifact@v4

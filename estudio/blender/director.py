@@ -97,7 +97,8 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     s.camera = tomas[0]["camara"]
     _cabinas_por_toma(tomas, ctx)
     ajustes_render(s, calidad, manifiesto.get("render", {}))
-    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs, "frames_pelicula": duracion_f}
+    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs, "frames_pelicula": duracion_f,
+            "manifiesto": manifiesto}
 
 
 def _cabinas_por_toma(tomas: list, ctx):
@@ -291,6 +292,9 @@ def render_tomas(res: dict, carpeta: Path, solo: list[str] | None = None, cada: 
     cada > 1 renderiza sólo 1 de cada N fotogramas (previsualización rápida tipo "animática").
     """
     s = res["escena"]
+    from estudio import autorizacion as AUT           # REGLA: sin autorización del dueño no se renderiza
+    AUT.exigir(res["manifiesto"], AUT.config_de(f"{s.render.resolution_x}x{s.render.resolution_y}", s.render.fps,
+                                                s.cycles.samples))
     informe = {}
     for t in res["tomas"]:
         tid = t["spec"]["id"]

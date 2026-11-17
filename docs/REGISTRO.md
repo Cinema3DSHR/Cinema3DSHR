@@ -257,3 +257,22 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   del episodio ~82 min de render (70–98). Informe: `docs/informes/duo_cero_ep01_tiempos.md`. La animática local quedó
   cancelada (sin GPU no es viable).
 - **Sin render final**: espera «APROBADO. INICIÁ EL RENDER FINAL DE DÚO CERO — EPISODIO 01».
+
+## 17/11/2026 — REGLA PERMANENTE: revisión 3D en la app y AUTORIZACIÓN antes de cualquier render
+
+- Pedido del dueño: nunca un render sin revisar la versión en 3D en la app, aprobarla y autorizarla. Procedimiento y
+  estados en `docs/REVISION_Y_AUTORIZACION.md`; regla agregada a `CLAUDE.md`.
+- Ya existía: EDITOR 3D (previsualización real, cámara libre, montaje, tomas, cuadro a cuadro, marcadores, notas, cámaras
+  del director, ✔ APROBAR atada a la huella) y el candado de `video30.yml`.
+- Nuevo: `estudio/autorizacion.py` (8 estados, verificación única), comando `autorizacion`, botón 🎬 AUTORIZAR RENDER
+  FINAL y estado de la versión en el editor, aprobación/autorización sólo con la escena cargada completa, con la huella
+  actual y con conexión; catálogo con `estado_revision`, `autorizacion` y la configuración de render de la producción.
+- Cerrado: `render.yml` ya no renderiza solo al subir un escena.json; `video30.yml` sin interruptor para saltear la
+  aprobación ni ensayos sin autorización; `episodio.yml` la exige también para una escena y los ensayos; RENDERIZAR desde
+  la app ya no renderiza; `render`/`fijas`/animática/render_rango/render_bloque se niegan sin registros; scripts viejos
+  de medición deshabilitados.
+- Arreglado por la transferencia: «Revisiones» y «Dirección» sólo aceptaban Issues del dueño del repo (ahora la
+  organización), así que ignoraban los de la cuenta del director → lista `config/autorizados.json` / variable AUTORIZADOS.
+- `p009` `produccion.json`: configuración de render = la acordada por el dueño (960×540, 30 fps, 6 muestras, …).
+- Pruebas (sin render): `pruebas/autorizacion/test_autorizacion.py` 35/35; app con la previsualización real de e01
+  (`pruebas/revision/revision_ui.gd`) 18/18.

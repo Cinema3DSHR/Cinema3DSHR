@@ -1,4 +1,5 @@
 """AUDITORÍA de sólo lectura de la escena de la mansión y del costo de un fotograma (no modifica nada del estudio)."""
+raise SystemExit("Deshabilitado por la regla de revisión 3D y autorización (docs/REVISION_Y_AUTORIZACION.md): los renders de prueba sólo corren en los flujos de GitHub con la autorización del dueño.")
 import json, sys, time, collections
 from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]; sys.path.insert(0, str(RAIZ))

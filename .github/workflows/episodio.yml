@@ -7,7 +7,9 @@ name: Episodio · render distribuido (19 trabajos)
 # 30 fps, 6 muestras, adaptativo 0,05, OpenImageDenoise, 6 rebotes, árbol de luces, semilla fija.
 #
 # prueba > 0 = ENSAYO de rendimiento: cada trabajo renderiza sólo esa cantidad de fotogramas repartidos en su bloque.
-# prueba = 0 = render COMPLETO: exige la frase exacta de aprobación del dueño en «aprobacion».
+# REGLA PERMANENTE (docs/REVISION_Y_AUTORIZACION.md): TODA corrida —completa, de una escena o de ensayo— exige que
+# cada escena del tramo esté revisada en la app, APROBADA y con AUTORIZAR RENDER FINAL para esa versión exacta y esta
+# configuración (960×540, 30 fps, 6 muestras). Sin eso el flujo se corta antes de pedir máquinas.
 on:
   workflow_dispatch:
     inputs:
@@ -15,11 +17,11 @@ on:
       trabajos: {description: "Trabajos en paralelo (hasta 60; GitHub encola los que excedan el límite de la cuenta)", required: false, default: "19"}
       escenas: {description: "Sólo estas escenas, consecutivas y separadas por espacio (p. ej. «e01»); vacío = todo el episodio", required: false, default: ""}
       prueba: {description: "ENSAYO: fotogramas por trabajo (0 = render completo)", required: false, default: "6"}
-      aprobacion: {description: "Render completo: frase exacta de aprobación del dueño", required: false, default: ""}
 
 permissions:
   contents: read
   actions: read
+  issues: read
 
 concurrency:
   group: episodio-${{ inputs.produccion }}
@@ -40,16 +42,6 @@ jobs:
       - id: t0
         run: echo "inicio=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
-      - name: Render completo sólo con la aprobación del dueño
-        if: ${{ inputs.prueba == '0' && inputs.escenas == '' }}
-        env:
-          FRASE: ${{ inputs.aprobacion }}
-        run: |
-          case "${{ inputs.produccion }}" in
-            p009_duo_cero) ESPERADA="APROBADO. INICIÁ EL RENDER FINAL DE DÚO CERO — EPISODIO 01" ;;
-            *) echo "::error::No hay frase de aprobación definida para ${{ inputs.produccion }}"; exit 1 ;;
-          esac
-          [ "$FRASE" = "$ESPERADA" ] || { echo "::error::El render completo necesita la frase exacta de aprobación del dueño."; exit 1; }
       - name: Acceso a mixamo-respaldo
         env:
           TOKEN: ${{ secrets.ASSETS_TOKEN }}
@@ -59,6 +51,12 @@ jobs:
           cd "$RUNNER_TEMP"
           git -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote https://github.com/webmaletin-art/mixamo-respaldo.git \
             "refs/heads/${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}" | grep -q refs || { echo "::error::ASSETS_TOKEN no puede leer mixamo-respaldo"; exit 1; }
+      - name: Registros de revisión y autorización (Issues de la app)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > "$RUNNER_TEMP/issues.json"
+          echo "CINE_ISSUES=$RUNNER_TEMP/issues.json" >> "$GITHUB_ENV"
       - name: Repartir los fotogramas y juntar las dependencias de todas las escenas
         id: plan
         env:
@@ -82,6 +80,15 @@ jobs:
               otras = [x for x in d if not x.startswith("mixamo:")]
               if otras: print(f"::error::{e['escena']} necesita recursos fuera de mixamo-respaldo: {otras}"); sys.exit(1)
               deps.update(x.split(":", 1)[1] for x in d)
+          # REGLA: cada escena del tramo, aprobada y AUTORIZADA para esta versión y esta configuración
+          from estudio import autorizacion as AUT
+          issues = json.load(open(os.environ["CINE_ISSUES"]))
+          bloqueadas = []
+          for e in r["escenas"]:
+              ok, motivo, _ = AUT.verificar(MF.leer(e["ruta"]), issues, AUT.config_de("960x540", 30, 6))
+              print(("::notice::" if ok else "::error::RENDER BLOQUEADO — ") + motivo)
+              if not ok: bloqueadas.append(e["escena"])
+          if bloqueadas: sys.exit(1)
           for x in r["matriz"]:
               print(f"trabajo {x['n']}: {x['desde']}–{x['hasta']} · renderiza {x['cantidad']} · {x['escenas']}")
           print(f"total {r['total']} · esta corrida renderiza {r['a_renderizar']}")
@@ -125,6 +132,12 @@ jobs:
           key: stickman-${{ hashFiles('estudio/blender/stickman.py') }}
       - name: Preparación lista
         run: echo "preparacion_s=$(( $(date +%s) - T_TRABAJO ))" | tee preparacion.txt
+      - name: Registros de autorización (cada render los vuelve a verificar)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${{ github.repository }}/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > "$RUNNER_TEMP/issues.json"
+          echo "CINE_ISSUES=$RUNNER_TEMP/issues.json" >> "$GITHUB_ENV"
       - name: Renderizar el bloque ${{ matrix.bloque.desde }}–${{ matrix.bloque.hasta }}
         env:
           TRAMOS: ${{ matrix.bloque.tramos }}
