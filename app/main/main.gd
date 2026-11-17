@@ -22,7 +22,7 @@ var _aviso: Label
 var _aviso_t := 0.0
 var _logo: Label
 var vertical := false
-var orientacion := "horizontal"     # horizontal | vertical | automatica (AJUSTES)
+var orientacion := "automatica"     # la app gira sola con el teléfono (orientación «sensor» del proyecto)
 const ARCH_AJUSTES := "user://ajustes.json"
 
 func _ready() -> void:
@@ -64,25 +64,14 @@ func _ready() -> void:
 	_aviso.visible = false
 	add_child(_aviso)
 
-	var aj = JSON.parse_string(FileAccess.get_file_as_string(ARCH_AJUSTES)) if FileAccess.file_exists(ARCH_AJUSTES) else null
-	if aj is Dictionary:
-		orientacion = str(aj.get("orientacion", "horizontal"))
+	# Android rota la app solo (proyecto en orientación «sensor»). NO se fuerza el giro en tiempo de ejecución:
+	# con DisplayServer.screen_set_orientation() en un teléfono los toques quedaban fuera de lugar en vertical y
+	# ningún botón respondía. La interfaz se reacomoda cuando cambia el tamaño de la ventana.
 	get_window().size_changed.connect(_revisar_orientacion)
-	aplicar_orientacion(orientacion, false)
 	_revisar_orientacion(true)
 	ir("inicio", {}, true)
 	api.cargar_catalogo()
 
-## Orientación elegida en AJUSTES: el teléfono gira y la interfaz se reacomoda (720×1280 en vertical).
-func aplicar_orientacion(modo: String, guardar := true) -> void:
-	orientacion = modo
-	var o: int = {"vertical": DisplayServer.SCREEN_SENSOR_PORTRAIT, "automatica": DisplayServer.SCREEN_SENSOR}.get(modo, DisplayServer.SCREEN_SENSOR_LANDSCAPE)
-	DisplayServer.screen_set_orientation(o)
-	if guardar:
-		var f := FileAccess.open(ARCH_AJUSTES, FileAccess.WRITE)
-		if f:
-			f.store_string(JSON.stringify({"orientacion": modo}))
-	_revisar_orientacion.call_deferred()
 
 ## El aviso queda centrado abajo (con márgenes relativos al ancla, no con una posición absoluta).
 func _ubicar_aviso(ancho: float) -> void:
@@ -187,6 +176,8 @@ func mostrar_aviso(t: String, segundos := 3.5) -> void:
 	_aviso_t = segundos
 
 func _process(d: float) -> void:
+	# la notificación de cambio de tamaño no siempre llega a tiempo al rotar: se mira el tamaño real en cada cuadro
+	_revisar_orientacion()
 	if _aviso_t > 0:
 		_aviso_t -= d
 		if _aviso_t <= 0:

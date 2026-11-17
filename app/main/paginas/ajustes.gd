@@ -17,15 +17,7 @@ func _construir() -> void:
 	var vp := VBoxContainer.new()
 	pp.add_child(vp)
 	vp.add_child(Tema.etiqueta("PANTALLA", 17, Tema.ACENTO))
-	vp.add_child(Tema.etiqueta("Orientación de la app. «Automática» gira con el teléfono (vertical u horizontal).", 16, Tema.TEXTO2, true))
-	var fo := HFlowContainer.new()
-	for par in [["horizontal", "▭  HORIZONTAL"], ["vertical", "▯  VERTICAL"], ["automatica", "⟳  AUTOMÁTICA"]]:
-		var b := Tema.boton(par[1], func():
-			app.aplicar_orientacion(par[0])
-			app.mostrar_aviso("Orientación: " + par[1].substr(3).to_lower(), 2.0)
-			_construir.call_deferred(), "acento" if app.orientacion == par[0] else "", 17)
-		fo.add_child(b)
-	vp.add_child(fo)
+	vp.add_child(Tema.etiqueta("La app gira sola con el teléfono: ponelo vertical u horizontal y la pantalla se reacomoda (también el EDITOR 3D).", 16, Tema.TEXTO2, true))
 	_col.add_child(pp)
 	# ---- cuenta
 	var p := Tema.panel()

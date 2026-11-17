@@ -276,3 +276,15 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - `p009` `produccion.json`: configuración de render = la acordada por el dueño (960×540, 30 fps, 6 muestras, …).
 - Pruebas (sin render): `pruebas/autorizacion/test_autorizacion.py` 35/35; app con la previsualización real de e01
   (`pruebas/revision/revision_ui.gd`) 18/18.
+
+## 17/11/2026 — App: en vertical no respondía ningún botón (arreglado, APK nueva época 2)
+
+- Causa: la app arrancaba bloqueada en horizontal (orientación 4) y para pasar a vertical forzaba el giro en marcha
+  (`DisplayServer.screen_set_orientation`); además el aviso de cambio de tamaño no siempre llegaba al rotar y la app
+  seguía armada en horizontal dentro de una pantalla vertical. En la PC funcionaba; en el teléfono no.
+- Arreglo: el proyecto pasa a orientación «sensor» (6, Android rota la app solo), sin forzar el giro en marcha; la app
+  revisa el tamaño real en cada cuadro y se reacomoda; AJUSTES ya no tiene los botones HORIZONTAL/VERTICAL.
+  `apk_epoca` 2: hace falta instalar la APK nueva (la orientación está en el manifiesto de Android).
+- Pruebas con toques de pantalla táctil (sin teléfono): `pruebas/app/toques_rotacion.gd` 7/7 (horizontal → vertical →
+  horizontal), `pruebas/app/toques_vertical.gd` 6/6 (barra y EDITOR 3D en vertical), revisión 18/18. No se pudo probar
+  en un teléfono real desde acá.
