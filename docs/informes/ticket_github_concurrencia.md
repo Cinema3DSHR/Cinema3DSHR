@@ -28,8 +28,9 @@ allows 60 concurrent jobs on standard GitHub-hosted runners (5 of them macOS). I
 - The workflow file and scripts are byte-identical between the run that got 20 concurrent jobs in the personal
   account (commit d62a847) and the run limited to 5 in the organization (commit 727df1f).
 - A minimal probe with no build step at all (25 jobs that only run `sleep 90`, workflow `concurrencia.yml`, run
-  https://github.com/Cinema3DSHR/Cinema3DSHR/actions/runs/44084086176) also got only **6 jobs running at once** and
-  19 queued, so the cap does not depend on the workload.
+  https://github.com/Cinema3DSHR/Cinema3DSHR/actions/runs/44084086176, 2026-11-17 12:32–12:39 UTC) ran in four
+  waves of 6, 6, 6 and 7 jobs: **maximum 7 running at once** (measured from the jobs API), the last job started
+  289 s after the first. All 25 succeeded. The cap does not depend on the workload.
 - No self-hosted runners, no larger runners, no macOS or Windows jobs. We did not change any spending limit.
 
 Could you please check whether a lower concurrency limit is applied to our organization (for example because it is
