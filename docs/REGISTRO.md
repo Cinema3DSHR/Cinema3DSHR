@@ -294,3 +294,10 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - `concurrencia.yml` con 60 trabajos de `sleep 120` (sin render), corrida 44092060314: a los 13 s había **9 corriendo y
   51 en cola** (lejos de 60). Cancelada a las 13:23 UTC; no queda ninguna corrida activa. Agregada al ticket
   (`docs/informes/ticket_github_concurrencia.md`). Se espera la respuesta de GitHub Support antes de repetir nada.
+
+### 17/11/2026 14:41 UTC — Sonda de 60 trabajos completa: máximo 11 simultáneos
+- Pedido del dueño: «probá una vez más», y después «dejala terminar y agregá el resultado al ticket».
+- `concurrencia.yml`, 60 trabajos de `sleep 120` (sin render), corrida 44103430911, 14:28–14:40 UTC: los 60 bien, en
+  tandas de ~10; **máximo 11 a la vez** (trabajo `medir`), el último arrancó 627 s después del primero. Con 60 reales
+  habría tardado ~2 min, no 12. Agregado al ticket (`docs/informes/ticket_github_concurrencia.md`). Sigue la espera de
+  la respuesta de GitHub Support; no se lanza ningún render.
