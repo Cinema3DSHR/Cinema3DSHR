@@ -882,15 +882,15 @@
    "movil": "luna",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    1.9,
+    -0.75,
+    1.15,
     0.62
    ],
    "objetivo": {
     "movil": "luna",
     "punto": "cabeza"
    },
-   "lente_mm": 45,
+   "lente_mm": 40,
    "retardo": 0.25,
    "luz_relleno": 25
   },
@@ -903,15 +903,15 @@
    "movil": "nico",
    "punto_base": "",
    "desp_local": [
-    -0.25,
-    1.9,
+    0.75,
+    1.15,
     0.62
    ],
    "objetivo": {
     "movil": "nico",
     "punto": "cabeza"
    },
-   "lente_mm": 45,
+   "lente_mm": 40,
    "retardo": 0.25,
    "luz_relleno": 25
   },
@@ -924,9 +924,9 @@
    "movil": "nico",
    "punto_base": "",
    "desp_local": [
-    0.45,
-    -0.85,
-    0.72
+    0.6,
+    -1.4,
+    0.75
    ],
    "objetivo": {
     "movil": "luna",
@@ -945,15 +945,15 @@
    "movil": "nico",
    "punto_base": "",
    "desp_local": [
-    -0.25,
-    1.8,
+    0.75,
+    1.15,
     0.62
    ],
    "objetivo": {
     "movil": "nico",
     "punto": "cabeza"
    },
-   "lente_mm": 45,
+   "lente_mm": 40,
    "retardo": 0.25,
    "luz_relleno": 25
   },
@@ -966,15 +966,15 @@
    "movil": "luna",
    "punto_base": "",
    "desp_local": [
-    0.2,
-    1.4,
+    -0.6,
+    1.0,
     0.64
    ],
    "objetivo": {
     "movil": "luna",
     "punto": "cabeza"
    },
-   "lente_mm": 60,
+   "lente_mm": 50,
    "retardo": 0.25,
    "luz_relleno": 25
   },
@@ -1009,15 +1009,15 @@
    "movil": "luna",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    1.7,
+    -0.75,
+    1.15,
     0.62
    ],
    "objetivo": {
     "movil": "luna",
     "punto": "cabeza"
    },
-   "lente_mm": 50,
+   "lente_mm": 45,
    "retardo": 0.25,
    "luz_relleno": 25
   },
