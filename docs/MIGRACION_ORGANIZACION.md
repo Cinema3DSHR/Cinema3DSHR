@@ -6,7 +6,9 @@ en la cuenta personal, se midieron 20: corrida 44076765471, 17/11/2026). Estado:
 ## 1. Qué hay hoy (auditado el 17/11/2026)
 
 - Repositorio: `webmaletin-art/Cinema3DSHR`, **público**. Una sola rama: `ccr-6d21fe8a-76t9c3` (es la rama por defecto).
-  7 etiquetas/releases (contenido de la app, `app`, `firma` con la clave de firma CIFRADA, videos).
+  7 releases: `catalogo`, `escenarios`, `p000_prueba_mansion`, `p005_mansion_cqb_30s_720p_30fps`,
+  `p006_operacion_tren_fantasma`, `p007_al_vacio`, `p008_drift_sunset`. (No hay release `firma` ni `app`: la APK
+  firmada todavía no se armó con la clave definitiva.)
 - Flujos (11): apk, catalogo, direccion, episodio, limpieza, pelicula, previa, render, revisiones, verificar-acceso,
   video30. Disparadores: push (apk, render), issues (direccion, revisiones), schedule (catalogo, limpieza), el resto a
   mano. Todos declaran sus `permissions:` explícitos (no dependen del permiso por defecto de la organización).
@@ -41,7 +43,6 @@ Puede verse afectado (y se verifica uno por uno después):
 | app del teléfono | usa `webmaletin-art/Cinema3DSHR`: funciona por la redirección; las escrituras (issues) también, pero conviene actualizar | cambiar `REPO` en la app y armar una APK nueva **después** de verificar todo (pide el token una vez) |
 | nombre viejo | si alguien crea otro `webmaletin-art/Cinema3DSHR`, se cortan las redirecciones | no crear ni bifurcar con ese nombre |
 | acceso de Claude | esta sesión trabaja sobre `webmaletin-art/Cinema3DSHR` | instalar la app de Claude en la organización con acceso a `Cinema3DSHR`; después agrego el repositorio movido a la sesión |
-| firma Android | la clave cifrada vive en la release `firma` | viaja con las releases; la huella se compara con `app/firma_huella.txt` en el primer armado |
 | reglas de la organización | reglas/rulesets de la organización podrían bloquear pushes a la rama | revisar Settings → Repository → Rulesets de la organización |
 
 ## 3. Procedimiento
@@ -62,7 +63,7 @@ Transferencia (sólo vos podés hacerla; requiere ser administrador del reposito
 
 Verificación (yo, sin renders):
 8. Agregar `Cinema3DSHR/Cinema3DSHR` a la sesión y cambiar el remoto de la copia local.
-9. Comprobar ramas, releases (incluida `firma`) e issues.
+9. Comprobar ramas, commits, releases e issues contra la foto de la sección 5.
 10. Correr «Verificar acceso» (`verificar-acceso.yml`): comprueba que `ASSETS_TOKEN` lee mixamo-respaldo y los otros
     repositorios de recursos. No renderiza nada.
 11. Confirmar que las variables existen (o volver a cargarlas con los valores que anotaste).
@@ -78,3 +79,14 @@ Flujo «Episodio · render distribuido», entradas: `produccion=p009_duo_cero`, 
 configuración verificada (960×540, Cycles CPU, 6 muestras, adaptativo 0,05, OIDN, 6 rebotes, Light Tree, semilla 0).
 El informe dice cuántos trabajos corrieron a la vez: con Team deberían ser 60 (en la cuenta personal fueron 20).
 Tiempo esperado con 60 a la vez: ~6–8 min de reloj [E]; con 20, ~20 min (medido en curso antes de cancelar).
+
+## 5. Foto antes de transferir (17/11/2026, sin datos sensibles)
+
+- Rama `ccr-6d21fe8a-76t9c3` (única y por defecto): último commit `11da973946e1`, 66 commits.
+- Releases: 7 (las de arriba). Issues: 4, todos cerrados (#1–#4, etiqueta `revision`).
+- Flujos: 11 activos (apk, catalogo, direccion, episodio, limpieza, pelicula, previa, render, revisiones,
+  verificar-acceso, video30).
+- Secretos usados (nombres): `ASSETS_TOKEN`, `ANDROID_KEYSTORE_PASSWORD`. Los valores de los secretos no los puede leer
+  nadie (ni GitHub los muestra): no se anotan; si hiciera falta volver a cargarlos, los carga el dueño.
+- Variables usadas (nombres): `MIXAMO_REF`, `NEXUS_REF`, `EXTRACTION_REF`, `RALLY_REF`, `DIRECCION_RAMA`.
+- Corrida de prueba e01 de 60 trabajos (44076765471): cancelada; ningún flujo en curso.
