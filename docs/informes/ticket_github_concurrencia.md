@@ -31,6 +31,9 @@ allows 60 concurrent jobs on standard GitHub-hosted runners (5 of them macOS). I
   https://github.com/Cinema3DSHR/Cinema3DSHR/actions/runs/44084086176, 2026-11-17 12:32–12:39 UTC) ran in four
   waves of 6, 6, 6 and 7 jobs: **maximum 7 running at once** (measured from the jobs API), the last job started
   289 s after the first. All 25 succeeded. The cap does not depend on the workload.
+- Second probe, 60 jobs (`sleep 120`, same workflow), run
+  https://github.com/Cinema3DSHR/Cinema3DSHR/actions/runs/44092060314, 2026-11-17 13:22 UTC: 13 s after dispatch
+  only **9 of 60** jobs were running and 51 were queued. We cancelled it to wait for your answer.
 - No self-hosted runners, no larger runners, no macOS or Windows jobs. We did not change any spending limit.
 
 Could you please check whether a lower concurrency limit is applied to our organization (for example because it is

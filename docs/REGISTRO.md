@@ -288,3 +288,9 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Pruebas con toques de pantalla táctil (sin teléfono): `pruebas/app/toques_rotacion.gd` 7/7 (horizontal → vertical →
   horizontal), `pruebas/app/toques_vertical.gd` 6/6 (barra y EDITOR 3D en vertical), revisión 18/18. No se pudo probar
   en un teléfono real desde acá.
+
+### 17/11/2026 13:23 UTC — Sonda de 60 trabajos: sigue limitada, cancelada
+- Pedido del dueño: «probá los 60 trabajos; si no funciona cancelá todo y esperamos la respuesta de GitHub».
+- `concurrencia.yml` con 60 trabajos de `sleep 120` (sin render), corrida 44092060314: a los 13 s había **9 corriendo y
+  51 en cola** (lejos de 60). Cancelada a las 13:23 UTC; no queda ninguna corrida activa. Agregada al ticket
+  (`docs/informes/ticket_github_concurrencia.md`). Se espera la respuesta de GitHub Support antes de repetir nada.
