@@ -335,11 +335,25 @@ def _decodificar(ruta: Path) -> np.ndarray:
     return np.frombuffer(r.stdout, dtype="<f4").astype(np.float64)
 
 
+def recortar(x, ev):
+    """«recorte_s»: [inicio, fin] dentro del archivo (sin el silencio que trae ElevenLabs), con fundidos de 10 ms."""
+    r = ev.get("recorte_s")
+    if not r:
+        return x
+    a, b = int(max(0.0, r[0]) * SR), int(min(len(x) / SR, r[1]) * SR)
+    x = x[a:b].copy()
+    f = min(len(x) // 2, int(0.01 * SR))
+    if f > 0:
+        x[:f] *= np.linspace(0, 1, f)[:, None] if x.ndim > 1 else np.linspace(0, 1, f)
+        x[-f:] *= np.linspace(1, 0, f)[:, None] if x.ndim > 1 else np.linspace(1, 0, f)
+    return x
+
+
 def audio_de_biblioteca(pistas, ev, n, rng=None):
     """Coloca un audio ya generado (voz, efecto o música de la biblioteca) en su momento; si trae `movil`, la
     ganancia y el paneo siguen a ese personaje o vehículo respecto de la cámara activa."""
     from estudio.audio import elevenlabs as EL
-    x = _decodificar(EL.ruta_en_biblioteca(ev))
+    x = recortar(_decodificar(EL.ruta_en_biblioteca(ev)), ev)
     if ev["tipo"] in ("efecto", "musica") and np.abs(x).max() > 1e-6:
         # los efectos generados salen a niveles muy dispares (medido: pico −36 dB): se llevan a −6 dB de pico
         x = x / np.abs(x).max() * 0.5
@@ -392,7 +406,7 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
                 # igual para el costo y la biblioteca), pero pasada por el filtro de radio antes de mezclar (banda
                 # angosta, compresión, estática, cortes) y sin posición ni reverbe de sala (no es un cuarto)
                 from estudio.audio import elevenlabs as EL, radio as RD
-                x = _decodificar(EL.ruta_en_biblioteca(ev))
+                x = recortar(_decodificar(EL.ruta_en_biblioteca(ev)), ev)
                 if np.abs(x).max() > 1e-6:
                     x = x / np.abs(x).max() * 0.7
                 x = RD.filtro(x, rng)

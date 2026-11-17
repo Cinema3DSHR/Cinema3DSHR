@@ -320,7 +320,11 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
         st.scale = 1.0 / vel
         st.repeat = rep
         st.blend_in = st.blend_out = 0
-        st.extrapolation = "HOLD"
+        st.extrapolation = "HOLD" if not tramos else "HOLD_FORWARD"
+        if mez > 0:
+            st.blend_in = min(mez, (st.frame_end - st.frame_start) / 2 - 1)
+        if ac.get("desde_clip_s"):
+            st.action_frame_start = st.action_frame_start + ac["desde_clip_s"] * fps
         tramos.append({"accion": accion, "f0": f0, "fin": st.frame_end, "pos": pos.copy(), "rumbo": rumbo,
                        "strip": st, "raiz": raices.get(ac["clip"], {}), "vel": vel, "rep": rep})
     # recortes por superposición ya aplicados: ahora el desplazamiento (root_path) cuadro por cuadro
@@ -452,6 +456,23 @@ def _giro_extra(ac: dict):
 # Poses superpuestas a un clip (sólo los huesos que nombran; el resto sigue el clip). Direcciones en el marco del
 # personaje: +Z arriba, −Y adelante (los modelos Mixamo miran a −Y), +X su izquierda.
 POSES = {
+    # «Dúo Cero»: la radio en la mano (a la altura del pecho), la radio en la boca y la tableta con las dos manos
+    "radio_mano": {
+        "brazos": {"mixamorig:RightArm": (-0.35, -0.25, -0.9), "mixamorig:RightForeArm": (0.25, -0.75, 0.6),
+                   "mixamorig:RightHand": (0.3, -0.6, 0.75)},
+        "cerrar": ("Index", "Middle", "Ring", "Pinky"), "abrir": (), "cabeza": -8.0,
+    },
+    "radio_boca": {
+        "brazos": {"mixamorig:RightArm": (-0.25, -0.45, -0.85), "mixamorig:RightForeArm": (0.35, -0.45, 0.82),
+                   "mixamorig:RightHand": (0.35, -0.35, 0.87)},
+        "cerrar": ("Index", "Middle", "Ring", "Pinky"), "abrir": (), "cabeza": 0.0,
+    },
+    "tableta": {
+        "brazos": {"mixamorig:LeftArm": (0.25, -0.35, -0.9), "mixamorig:LeftForeArm": (-0.2, -0.95, 0.15),
+                   "mixamorig:LeftHand": (-0.25, -0.95, 0.15), "mixamorig:RightArm": (-0.25, -0.35, -0.9),
+                   "mixamorig:RightForeArm": (0.2, -0.95, 0.15), "mixamorig:RightHand": (0.25, -0.95, 0.15)},
+        "cerrar": (), "abrir": ("Thumb", "Index", "Middle", "Ring", "Pinky"), "cabeza": -24.0,
+    },
     "dedos_al_cielo": {     # el festejo de Messi: los dos índices al cielo, la cabeza arriba
         "brazos": {"mixamorig:LeftArm": (0.25, -0.15, 1.0), "mixamorig:LeftForeArm": (0.12, -0.12, 1.0),
                    "mixamorig:LeftHand": (0.05, -0.1, 1.0), "mixamorig:RightArm": (-0.25, -0.15, 1.0),
@@ -637,10 +658,20 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         rumbo_ant = rumbo
         if "mirando_deg" in ac:
             rumbo = math.radians(ac["mirando_deg"])
-        if tramos and tramos[-1]["strip"].frame_end > f0 - 0.01:
-            tramos[-1]["strip"].frame_end = f0 - 0.01
-            tramos[-1]["fin"] = f0 - 0.01
-        st = pista.strips.new(f"{i:02d}_{accion.name}", f0, accion)
+        mez = int(round(ac.get("mezcla_s", spec.get("mezcla_s", 0.0)) * fps)) if tramos else 0
+        if mez > 0:
+            # fundido entre clips: el nuevo va en su propia pista, arriba, y entra en `mez` cuadros sobre el anterior
+            if tramos[-1]["strip"].frame_end > f0 + 1:
+                tramos[-1]["strip"].frame_end = f0 + 1
+                tramos[-1]["fin"] = f0 + 1
+            pista_i = arm.animation_data.nla_tracks.new()
+            pista_i.name = f"acciones_{i:02d}"
+            st = pista_i.strips.new(f"{i:02d}_{accion.name}", max(1, f0 - mez), accion)
+        else:
+            if tramos and tramos[-1]["strip"].frame_end > f0 - 0.01:
+                tramos[-1]["strip"].frame_end = f0 - 0.01
+                tramos[-1]["fin"] = f0 - 0.01
+            st = pista.strips.new(f"{i:02d}_{accion.name}", f0, accion)
         try:
             st.action_slot = accion.slots[0]
         except Exception:
@@ -749,6 +780,9 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     for ac, tr in zip(spec.get("acciones", []), tramos):
         if ac.get("pose"):
             _pose_encima(arm, ac["pose"], tr["f0"], tr["f0"] + int(ac.get("pose_dur_s", 3.0) * fps), fps, pid)
+    for po in spec.get("poses", []):          # poses de brazos por tiempo, encima de lo que esté haciendo
+        f0 = int(round(po["inicio_s"] * fps)) + 1
+        _pose_encima(arm, po["pose"], f0, f0 + int(round(po["dur_s"] * fps)), fps, pid)
     if spec.get("sobre"):
         padre = bpy.data.objects.get(spec["sobre"])
         if padre is None:

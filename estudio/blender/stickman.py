@@ -865,6 +865,9 @@ def actuar(partes: dict, cara: dict, fps: int, nf: int, semilla: int = 1):
         env = None
         if h.get("audio") and Path(h["audio"]).exists():
             env = _envolvente_audio(Path(h["audio"]), fps)
+            if h.get("recorte_s"):
+                r0, r1 = h["recorte_s"]
+                env = env[int(r0 * fps): int(r1 * fps) + 1]
         if env is None or len(env) == 0:
             env = _envolvente_texto(h.get("texto", ""), fps)
         f0 = int(round(h["inicio_s"] * fps))
