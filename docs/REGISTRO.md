@@ -220,3 +220,26 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Etapa 6: probar música de ElevenLabs y los modelos v3/v4; reparto final de voces.
 - Integrar al director los vehículos del dueño (ruedas, frente) y separar los packs de decorado.
 - Calidad visual: modelo de auto más detallado, árboles con más forma, pantallas de vigilancia con imagen real.
+
+## 17/11/2026 — p009 «Dúo Cero — Episodio 01: Un minuto para saltar» (en construcción, sin render)
+
+- Modelos del dueño (stickman.part1-3.rar): Stickman masculino (2 versiones de textura), femenino y pack de 19
+  armas estilizadas. Esqueleto mixamorig de 65 huesos. Guardados en `modelos_subidos/stickman/` (fuente `subidas:`):
+  escribir en mixamo-respaldo quedó bloqueado (sólo lectura) → **falta autorización del dueño** para agregarlos
+  ahí y que Actions (previa/render) los vea.
+- `estudio/blender/stickman.py`: vestuario pintado como las láminas (urbano, deportivo, táctico, elegante) en una
+  textura nueva desde la posición de reposo de cada punto; pelo (casco + mechones; Luna con cola y pestañas); cara
+  2D animada (ojos, brillo, párpados, cejas, boca, rubor) apoyada sobre la cabeza real con shape keys: 18
+  expresiones, miradas, parpadeo y boca sincronizada con el audio de cada línea. Arma en mano, mochila, radio.
+- `estudio/blender/armas_stickman.py`: armas del pack a su largo real, empuñadura y apoyo medidos, acople a la mano.
+- `estudio/escenarios/duo_cero.py`: noche, sierra, zona industrial, tren de carga (frena junto a la zona de
+  carga), vagón de los héroes armado a mano con la puerta abierta, base con torres y reflectores, zona de carga con
+  coberturas y montículo de arena; el salto (Child Of + trayectoria balística + rodada); tiroteo
+  (`estudio/blender/tiroteo.py`: trazadoras, chispas, sangre estilizada, casquillos).
+- Voces ElevenLabs v3 con etiquetas de actuación, acento rioplatense (biblioteca compartida, agregadas a la
+  cuenta): Nico «Tomas», Luna «Malena», guardia «Uriel», Central «Carlos». 57 líneas (~2 150 créditos) + 6 músicas.
+- `producciones/p009_duo_cero/herramientas/`: `guion.py` (guion como datos; `plan()` ubica cada línea con su
+  duración real y clava 180 s exactos con cámara lenta en el salto), `escenas.py` (e01–e06), `animatica.py`.
+- Los push con escenas de Dúo Cero llevan `[skip ci]`: `render.yml` se dispara con cualquier escena.json nueva y
+  renderizaría borradores (una corrida, la 23, se canceló a los 15 s sin renderizar).
+- **Sin render final**: espera «APROBADO. INICIÁ EL RENDER FINAL DE DÚO CERO — EPISODIO 01».
