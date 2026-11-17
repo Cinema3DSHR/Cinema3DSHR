@@ -82,6 +82,17 @@ MODELOS["rally:piloto"] = {
     # con «frente» = π/2 los moteros iban sentados al revés en la moto
     "frente": -math.pi / 2, "adelante_deg": 90,
 }
+# «Dúo Cero» (p009): Stickman blancos del dueño (0,9 m al importar, miran a −Y). Vestuario, pelo y cara 2D los pone
+# estudio/blender/stickman.py; «alto_m» del personaje fija su estatura.
+for _id, _alto in (("masculino", 0.900), ("femenino", 0.894)):
+    MODELOS[f"stickman:{_id}"] = {
+        "tipo": "mixamo65", "stickman": True, "alto_modelo": _alto, "escala": 1.75 / _alto, "ocultar": [],
+        "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase",
+        "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90,
+        "clip_arma": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx", "frame_arma": 20, "sin_metal": True,
+    }
+MODELOS["stickman:masculino"]["ref"] = "subidas:stickman/stickman_masculino/tripo_convert_44d66800-0c0e-40d5-8840-e5fd0e1a582c.fbx"
+MODELOS["stickman:femenino"]["ref"] = "subidas:stickman/stickman_femenino/tripo_convert_f9ec75ac-ad91-4328-95bf-d652d4673518.fbx"
 UNIFORME_DEFECTO = {"camiseta": (0.72, 0.04, 0.05), "short": (0.05, 0.12, 0.62), "medias": (0.9, 0.9, 0.9),
                     "botines": (0.03, 0.03, 0.035), "piel": (0.62, 0.40, 0.29), "pelo": (0.12, 0.07, 0.04)}
 
@@ -238,6 +249,9 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
     """Crea un personaje (copia liviana del prototipo) y programa sus acciones. Devuelve sus datos."""
     if MODELOS[spec.get("modelo", "futbol:jugador")].get("tipo") == "mixamo65":
         pj = _crear_mixamo(spec, fps, col)
+        if pj["info"].get("stickman"):
+            from estudio.blender import stickman as SM
+            SM.preparar(pj, spec, fps, int(spec.get("_nf") or bpy.context.scene.frame_end))
         _aparecer(pj, spec, fps)
         return pj
     lib = biblioteca(spec.get("modelo", "futbol:jugador"))
@@ -578,7 +592,8 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
             o.hide_render = o.hide_viewport = True
         if o.parent is None:
             o.parent = raiz
-    raiz.scale = (info["escala"],) * 3
+    raiz.scale = ((spec["alto_m"] / info["alto_modelo"]) if spec.get("alto_m") and info.get("alto_modelo")
+                  else info["escala"],) * 3
     _arreglar_texturas(objs, info)
     arm = next(o for o in objs if o.type == "ARMATURE")
     if info.get("renombrar_huesos"):

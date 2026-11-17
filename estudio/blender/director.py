@@ -72,7 +72,7 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     try:
         # personajes de la receta + los que calcula el escenario (p. ej. Mateo bajándose donde frenó el auto)
         for spec in manifiesto.get("personajes", []) + info.get("personajes", []):
-            pjs[spec["id"]] = P.crear(spec, fps)
+            pjs[spec["id"]] = P.crear({**spec, "_nf": int(round(manifiesto["duracion_s"] * fps))}, fps)
     finally:
         for lc in excluidas:
             lc.exclude = False
