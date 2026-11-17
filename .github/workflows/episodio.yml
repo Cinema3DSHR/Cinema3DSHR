@@ -1,0 +1,168 @@
+name: Episodio · render distribuido (19 trabajos)
+
+# Renderiza un EPISODIO de varias escenas (p. ej. «Dúo Cero — Episodio 01», 6 escenas, 5 400 fotogramas) repartiendo
+# los fotogramas de la película en 19 bloques contiguos y parejos, uno por trabajo (pruebas/episodio/plan.py).
+# Cada trabajo arma SÓLO las escenas de su bloque (como mucho 2), una vez cada una, y renderiza sus fotogramas seguidos
+# con datos persistentes. Configuración fija y verificada (pruebas/episodio/render_bloque.py): Cycles CPU, 960×540,
+# 30 fps, 6 muestras, adaptativo 0,05, OpenImageDenoise, 6 rebotes, árbol de luces, semilla fija.
+#
+# prueba > 0 = ENSAYO de rendimiento: cada trabajo renderiza sólo esa cantidad de fotogramas repartidos en su bloque.
+# prueba = 0 = render COMPLETO: exige la frase exacta de aprobación del dueño en «aprobacion».
+on:
+  workflow_dispatch:
+    inputs:
+      produccion: {description: "Producción (carpeta en producciones/)", required: false, default: "p009_duo_cero"}
+      trabajos: {description: "Trabajos en paralelo (19: el plan admite 20 simultáneos)", required: false, default: "19"}
+      prueba: {description: "ENSAYO: fotogramas por trabajo (0 = render completo)", required: false, default: "6"}
+      aprobacion: {description: "Render completo: frase exacta de aprobación del dueño", required: false, default: ""}
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: episodio-${{ inputs.produccion }}
+  cancel-in-progress: false
+
+env:
+  CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
+  CINE_SALIDA: ${{ github.workspace }}/salida
+
+jobs:
+  planificar:
+    runs-on: ubuntu-latest
+    outputs:
+      matriz: ${{ steps.plan.outputs.matriz }}
+      mixamo: ${{ steps.plan.outputs.mixamo }}
+      inicio: ${{ steps.t0.outputs.inicio }}
+    steps:
+      - id: t0
+        run: echo "inicio=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+      - name: Render completo sólo con la aprobación del dueño
+        if: ${{ inputs.prueba == '0' }}
+        env:
+          FRASE: ${{ inputs.aprobacion }}
+        run: |
+          case "${{ inputs.produccion }}" in
+            p009_duo_cero) ESPERADA="APROBADO. INICIÁ EL RENDER FINAL DE DÚO CERO — EPISODIO 01" ;;
+            *) echo "::error::No hay frase de aprobación definida para ${{ inputs.produccion }}"; exit 1 ;;
+          esac
+          [ "$FRASE" = "$ESPERADA" ] || { echo "::error::El render completo necesita la frase exacta de aprobación del dueño."; exit 1; }
+      - name: Acceso a mixamo-respaldo
+        env:
+          TOKEN: ${{ secrets.ASSETS_TOKEN }}
+        run: |
+          [ -n "$TOKEN" ] || { echo "::error::Falta el secreto ASSETS_TOKEN"; exit 1; }
+          B64=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0); echo "::add-mask::$B64"
+          cd "$RUNNER_TEMP"
+          git -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote https://github.com/webmaletin-art/mixamo-respaldo.git \
+            "refs/heads/${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}" | grep -q refs || { echo "::error::ASSETS_TOKEN no puede leer mixamo-respaldo"; exit 1; }
+      - name: Repartir los fotogramas y juntar las dependencias de todas las escenas
+        id: plan
+        env:
+          PROD: ${{ inputs.produccion }}
+          TRABAJOS: ${{ inputs.trabajos }}
+          PRUEBA: ${{ inputs.prueba }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, ".")
+          from pruebas.episodio.plan import plan
+          from estudio import manifiesto as MF
+          r = plan(os.environ["PROD"], max(1, min(19, int(os.environ["TRABAJOS"]))), int(os.environ["PRUEBA"]))
+          deps = set()
+          for e in r["escenas"]:
+              m = MF.leer(e["ruta"]); err = MF.validar(m)
+              if err: print(f"::error::{e['ruta']} inválida: {err}"); sys.exit(1)
+              d = MF.dependencias(m)
+              otras = [x for x in d if not x.startswith("mixamo:")]
+              if otras: print(f"::error::{e['escena']} necesita recursos fuera de mixamo-respaldo: {otras}"); sys.exit(1)
+              deps.update(x.split(":", 1)[1] for x in d)
+          for x in r["matriz"]:
+              print(f"trabajo {x['n']}: {x['desde']}–{x['hasta']} · renderiza {x['cantidad']} · {x['escenas']}")
+          print(f"total {r['total']} · esta corrida renderiza {r['a_renderizar']}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"matriz={json.dumps(r['matriz'])}\nmixamo<<EOF\n" + "\n".join(sorted(deps)) + "\nEOF\n")
+          PY
+
+  render:
+    needs: planificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 19
+      matrix:
+        bloque: ${{ fromJSON(needs.planificar.outputs.matriz) }}
+    name: render ${{ matrix.bloque.n }} (${{ matrix.bloque.desde }}–${{ matrix.bloque.hasta }})
+    steps:
+      - name: Hora de inicio del trabajo
+        run: echo "T_TRABAJO=$(date +%s)" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13", cache: pip, cache-dependency-path: requirements-produccion.txt}
+      - name: Blender (bpy)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q -r requirements-produccion.txt
+      - name: Recursos de mixamo-respaldo (sólo los del episodio)
+        uses: actions/checkout@v4
+        with:
+          repository: webmaletin-art/mixamo-respaldo
+          ref: ${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}
+          token: ${{ secrets.ASSETS_TOKEN }}
+          path: recursos/mixamo-respaldo
+          sparse-checkout: ${{ needs.planificar.outputs.mixamo }}
+          sparse-checkout-cone-mode: false
+      - name: Texturas del vestuario ya pintadas (caché compartida entre trabajos y corridas)
+        uses: actions/cache@v4
+        with:
+          path: salida/cache_stickman
+          key: stickman-${{ hashFiles('estudio/blender/stickman.py') }}
+      - name: Preparación lista
+        run: echo "preparacion_s=$(( $(date +%s) - T_TRABAJO ))" | tee preparacion.txt
+      - name: Renderizar el bloque ${{ matrix.bloque.desde }}–${{ matrix.bloque.hasta }}
+        env:
+          TRAMOS: ${{ matrix.bloque.tramos }}
+        run: |
+          python3 -c "import json,os; [print(t['ruta'], t['offset'], ','.join(map(str, t['locales']))) for t in json.loads(os.environ['TRAMOS'])]" > tramos.txt
+          cat tramos.txt | cut -c1-120
+          while read -r RUTA OFF LOC; do
+            python -I pruebas/episodio/render_bloque.py "$RUTA" --offset "$OFF" --locales "$LOC" --salida out 2>&1 | grep -vE "INFO:|CUEW|^$|Fra:"
+            test "${PIPESTATUS[0]}" -eq 0 || exit 1
+          done < tramos.txt
+          N=$(ls out/f_*.png | wc -l); test "$N" -eq "${{ matrix.bloque.cantidad }}" || { echo "::error::se esperaban ${{ matrix.bloque.cantidad }} fotogramas y hay $N"; exit 1; }
+          cp preparacion.txt "out/preparacion_${{ matrix.bloque.n }}.txt"
+          echo "{\"n\": \"${{ matrix.bloque.n }}\", \"desde\": ${{ matrix.bloque.desde }}, \"hasta\": ${{ matrix.bloque.hasta }}, \"trabajo_s\": $(( $(date +%s) - T_TRABAJO ))}" > "out/trabajo_${{ matrix.bloque.n }}.json"
+      - name: Empaquetar (sin recomprimir los PNG)
+        run: cd out && zip -0 -q "../frames_${{ matrix.bloque.n }}.zip" f_*.png informe_*.json preparacion_*.txt trabajo_*.json && cd .. && ls -la frames_*.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frames-${{ matrix.bloque.n }}
+          path: frames_${{ matrix.bloque.n }}.zip
+          compression-level: 0
+          retention-days: 7
+
+  informe:
+    needs: [planificar, render]
+    if: ${{ always() && needs.planificar.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {path: descargas, pattern: "frames-*"}
+      - name: Tiempos reales de cada trabajo (API de GitHub)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs?per_page=100" > jobs.json
+      - name: Informe de rendimiento
+        env:
+          INICIO: ${{ needs.planificar.outputs.inicio }}
+          MATRIZ: ${{ needs.planificar.outputs.matriz }}
+        run: |
+          mkdir -p fot && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d fot; done
+          python3 pruebas/episodio/informe.py fot jobs.json --salida informe_episodio.json | tee informe.txt
+          cat informe.txt >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with: {name: informe, path: "informe_episodio.json", retention-days: 14}
