@@ -598,6 +598,8 @@ def _pelo_malla(nombre, pj, cab: Cabeza, estilo: str, col, mat):
 
     def nacimiento(az):
         a = abs(az)
+        if estilo == "kingsman":
+            return _nacimiento_kingsman(az)
         tabla = {"puntas": [(0, 0.62), (0.9, 0.50), (1.35, 0.22), (1.9, 0.02), (math.pi, -0.18)],
                  "peinado": [(0, 0.46), (0.9, 0.36), (1.35, 0.08), (1.9, -0.1), (math.pi, -0.28)],
                  "corto": [(0, 0.55), (0.9, 0.42), (1.35, 0.15), (1.9, 0.0), (math.pi, -0.18)],
@@ -627,6 +629,12 @@ def _pelo_malla(nombre, pj, cab: Cabeza, estilo: str, col, mat):
             v = b + (math.pi / 2 - b) * (s ** 0.9)
             v = min(v, math.pi / 2 - 1e-3)
             esp = 0.05 + 0.02 * (1 - s)
+            if estilo == "kingsman":
+                # volumen peinado hacia la derecha del personaje (lejos de la raya) y jopo adelante
+                vol = min(1.0, max(0.0, (0.85 - az) / 1.9))
+                vol = vol * vol * (3 - 2 * vol)
+                jopo = max(0.0, 1 - abs(az) / 0.75) * max(0.0, 1 - s / 0.45)
+                esp = 0.035 + 0.11 * vol * math.sin(math.pi * min(1.0, s * 1.15) ** 0.8) + 0.12 * jopo
             if estilo == "puntas":
                 esp += 0.03 * max(0.0, math.sin(4 * az + 1.0) * math.sin(5 * v)) ** 2 + 0.006 * rnd.random()
             if j == 0:
@@ -656,6 +664,104 @@ def _pelo_malla(nombre, pj, cab: Cabeza, estilo: str, col, mat):
     return ob
 
 
+def _nacimiento_kingsman(az: float) -> float:
+    """Línea de nacimiento del peinado al costado: la raya va del lado izquierdo del personaje (az > 0)."""
+    if az >= 0:
+        tabla = [(0.0, 0.50), (0.55, 0.58), (0.85, 0.66), (1.6, 0.68), (2.4, 0.62), (math.pi, 0.55)]
+    else:
+        tabla = [(0.0, 0.50), (0.9, 0.42), (1.6, 0.40), (2.4, 0.45), (math.pi, 0.55)]
+    a = abs(az)
+    for (a0, b0), (a1, b1) in zip(tabla, tabla[1:]):
+        if a <= a1:
+            k = (a - a0) / (a1 - a0)
+            return b0 + (b1 - b0) * (k * k * (3 - 2 * k))
+    return tabla[-1][1]
+
+
+def _degrade(nombre, pj, cab: Cabeza, col, color, estilo: str):
+    """Degradé de costados y nuca: pelo cortísimo que se aclara hacia abajo hasta la piel (vértices con «fade» 0→1 y
+    textura de pelo al ras); en el «kingsman», una línea afeitada debajo de la raya."""
+    M = _modelo_a_armadura(pj)
+    NU, NV = 144, 26
+    frente = 0.92
+
+    def bajo(u):
+        a = abs(u)
+        if a < 1.57:
+            k = (a - frente) / (1.57 - frente)
+            return 0.15 + (-0.12 - 0.15) * k
+        k = (a - 1.57) / (math.pi - 1.57)
+        return -0.12 + (-0.42 + 0.12) * k
+
+    def alto(u):
+        if estilo == "kingsman":
+            return _nacimiento_kingsman(u) + 0.05
+        return 1.25 if estilo == "mohicano" else 1.05
+    pico = {"kingsman": 1.0, "mohicano": 0.85, "cresta": 0.95}.get(estilo, 0.9)
+    verts, alfas, caras = [], [], []
+    us = [-math.pi + 2 * math.pi * i / NU for i in range(NU)]
+    for j in range(NV + 1):
+        t = j / NV
+        for u in us:
+            v0, v1 = bajo(u) if abs(u) >= frente else 0.15, alto(u)
+            v = v0 + (v1 - v0) * t
+            a = min(1.0, t * 2.3) ** 0.7 * pico
+            if estilo == "kingsman" and 0.55 < u < 2.6 and abs(v - (_nacimiento_kingsman(u) - 0.04)) < 0.03:
+                a = 0.0                                     # la línea afeitada (estilo Kingsman)
+            verts.append(M @ cab.punto(u, v, 0.006))
+            alfas.append(a)
+    for j in range(NV):
+        for i in range(NU):
+            u = us[i]
+            u2 = us[(i + 1) % NU]
+            if abs(u) < frente or abs(u2) < frente or (i == NU - 1):
+                continue
+            a_, b_ = j * NU + i, j * NU + (i + 1) % NU
+            caras.append((a_, b_, b_ + NU, a_ + NU))
+    me = bpy.data.meshes.new(nombre)
+    me.from_pydata([tuple(p) for p in verts], [], caras)
+    for p in me.polygons:
+        p.use_smooth = True
+    at = me.color_attributes.new("fade", "FLOAT_COLOR", "POINT")
+    at.data.foreach_set("color", [c for a in alfas for c in (a, a, a, 1.0)])
+    mat = bpy.data.materials.new(f"degrade_{pj['id']}")
+    mat.use_nodes = True
+    nt = mat.node_tree
+    bsdf = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+    bsdf.inputs["Base Color"].default_value = (*color, 1.0)
+    bsdf.inputs["Roughness"].default_value = 0.75
+    vc = nt.nodes.new("ShaderNodeVertexColor")
+    vc.layer_name = "fade"
+    sep = nt.nodes.new("ShaderNodeSeparateColor")
+    nt.links.new(vc.outputs["Color"], sep.inputs["Color"])
+    tc = nt.nodes.new("ShaderNodeTexCoord")
+    ruido = nt.nodes.new("ShaderNodeTexNoise")
+    ruido.inputs["Scale"].default_value = 900.0
+    ruido.inputs["Detail"].default_value = 2.0
+    nt.links.new(tc.outputs["Object"], ruido.inputs["Vector"])
+    rr = nt.nodes.new("ShaderNodeMapRange")
+    rr.inputs["From Min"].default_value = 0.35
+    rr.inputs["From Max"].default_value = 0.65
+    rr.inputs["To Min"].default_value = 0.72
+    nt.links.new(ruido.outputs["Fac"], rr.inputs["Value"])
+    mul = nt.nodes.new("ShaderNodeMath")
+    mul.operation = "MULTIPLY"
+    nt.links.new(sep.outputs[0], mul.inputs[0])
+    nt.links.new(rr.outputs["Result"], mul.inputs[1])
+    nt.links.new(mul.outputs[0], bsdf.inputs["Alpha"])
+    try:
+        mat.surface_render_method = "DITHERED"
+    except Exception:
+        pass
+    mat.diffuse_color = (*color, 1.0)
+    me.materials.append(mat)
+    ob = bpy.data.objects.new(nombre, me)
+    col.objects.link(ob)
+    ob.visible_shadow = False
+    _a_hueso(ob, pj)
+    return ob
+
+
 MECHONES = {
     # (az raíz, v raíz, az punta, v punta, salida de la punta, grosor) en radianes y fracciones del radio
     "puntas": ([(a, 0.95, a * 1.08, 0.30 + 0.06 * abs(a), 0.10, 0.20) for a in (-0.9, -0.6, -0.3, 0.0, 0.3, 0.6, 0.9)]
@@ -667,6 +773,18 @@ MECHONES = {
     "luna": ([(-0.9 + 0.3 * i, 1.0, -0.6 + 0.36 * i, 0.32 - 0.07 * i, 0.09, 0.22) for i in range(6)]
              + [(sg * a, 0.7, sg * (a + 0.05), -0.42, 0.12, 0.26) for sg in (1, -1) for a in (1.35, 1.75)]),
     "peinado": [],
+    # peinado al costado tipo Kingsman: mechones peinados desde la raya (izquierda) hacia el otro lado + jopo
+    "kingsman": ([(0.80, v, -1.15, 0.36 + 0.42 * (v - 0.62), 0.16, 0.10) for v in (0.64, 0.80, 0.96, 1.12, 1.28, 1.42)]
+                 + [(0.55, 0.56, -0.55, 0.70, 0.24, 0.13), (0.62, 0.60, -0.85, 0.62, 0.21, 0.11)]),
+    # mohicano: tira central de puntas altas de la frente a la nuca, sobre una base gruesa
+    "mohicano": ([(0.0, 0.55, 0.0, 1.55, 0.10, 0.30), (math.pi, 1.55, math.pi, 0.25, 0.10, 0.30)]
+                 + [(0.0, v, 0.0, v + 0.10, 0.48 + 0.25 * min(1.0, v - 0.5), 0.24) for v in (0.6, 0.8, 1.0, 1.2, 1.4)]
+                 + [(math.pi, v, math.pi, v - 0.06, 0.30 + 0.3 * (v - 0.3), 0.22) for v in (1.35, 1.1, 0.85, 0.6, 0.38)]),
+    # cresta (faux hawk): puntas que convergen al centro, más altas adelante
+    "cresta": ([(sg * 0.34, v, sg * 0.05, v + 0.22, 0.52 - 0.1 * (v - 0.6), 0.13) for v in (0.6, 0.8, 1.0, 1.2, 1.4)
+                for sg in (1, -1)]
+               + [(0.0, v, 0.0, v + 0.24, 0.62 - 0.12 * (v - 0.6), 0.15) for v in (0.6, 0.85, 1.1, 1.35)]
+               + [(0.0, 0.55, 0.0, 1.5, 0.10, 0.28), (math.pi, 1.5, math.pi, 0.9, 0.09, 0.26)]),
 }
 
 
@@ -752,7 +870,11 @@ def peinar(pj: dict, cab: Cabeza, estilo: str, color, col=None) -> list:
     b = next((n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
     if b is not None and "Coat Weight" in b.inputs:
         b.inputs["Coat Weight"].default_value = 0.25
-    obs = [_pelo_malla(f"PELO_{pj['id']}", pj, cab, estilo, col, mat)]
+    obs = []
+    if estilo not in ("mohicano", "cresta"):
+        obs.append(_pelo_malla(f"PELO_{pj['id']}", pj, cab, estilo, col, mat))
+    if estilo in ("kingsman", "mohicano", "cresta"):
+        obs.append(_degrade(f"PELO_{pj['id']}_degrade", pj, cab, col, tuple(color), estilo))
     mech = _mechones(f"PELO_{pj['id']}_mechones", pj, cab, estilo, col, mat)
     if mech is not None:
         obs.append(mech)
@@ -970,13 +1092,66 @@ def preparar(pj: dict, spec: dict, fps: int, nf: int):
         armar(pj, spec["arma_stickman"], fps, nf)
     if spec.get("mochila"):
         mochila(pj, spec["mochila"], fps, nf)
-    if spec.get("en_mano"):
-        en_mano(pj, spec["en_mano"], fps, nf)
+    for d in (spec["en_mano"] if isinstance(spec.get("en_mano"), list) else [spec["en_mano"]] if spec.get("en_mano") else []):
+        en_mano(pj, d, fps, nf)
     return pj
 
 
+def _tableta(pj: dict, d: dict, fps: int, nf: int):
+    """Tableta frente a la panza, inclinada hacia la cara (cuelga del torso; coincide con la pose «tableta»). La
+    pantalla usa el material «pantalla_tableta_<id>»: el escenario le pone la imagen (p. ej. el mapa de la misión)."""
+    import bmesh
+    M = _modelo_a_armadura(pj)
+    marco = K.material(f"tableta_marco_{pj['id']}", (0.015, 0.015, 0.018), 0.4)
+    pant = bpy.data.materials.new(f"pantalla_tableta_{pj['id']}")
+    pant.use_nodes = True
+    b_ = next(n for n in pant.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    b_.inputs["Base Color"].default_value = (0.02, 0.05, 0.08, 1)
+    b_.inputs["Emission Color"].default_value = (0.2, 0.6, 0.8, 1)
+    b_.inputs["Emission Strength"].default_value = 1.5
+    bm = bmesh.new()
+    bmesh.ops.create_cube(bm, size=1.0)
+    for v in bm.verts:
+        v.co.x *= 0.11
+        v.co.y *= 0.006
+        v.co.z *= 0.072
+    me = bpy.data.meshes.new(f"TABLETA_{pj['id']}")
+    bm.to_mesh(me)
+    bm.free()
+    # pantalla: un plano apenas delante de la cara frontal (−Y), con coordenadas UV para la imagen
+    me2 = bpy.data.meshes.new("tmp_pantalla")
+    me2.from_pydata([(-0.051, -0.0032, -0.033), (0.051, -0.0032, -0.033), (0.051, -0.0032, 0.033),
+                     (-0.051, -0.0032, 0.033)], [], [(0, 1, 2, 3)])
+    uv = me2.uv_layers.new()
+    for i, c in enumerate(((0, 0), (1, 0), (1, 1), (0, 1))):
+        uv.data[i].uv = c
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    n0 = len(bm.faces)
+    bm.from_mesh(me2)
+    bm.to_mesh(me)
+    bm.free()
+    bpy.data.meshes.remove(me2)
+    me.materials.append(marco)
+    me.materials.append(pant)
+    for i, f in enumerate(me.polygons):
+        f.material_index = 1 if i >= n0 else 0
+    rot = Matrix.Rotation(math.radians(-55), 4, "X")                # la pantalla mira arriba, hacia la cara
+    me.transform(rot)
+    me.transform(Matrix.Translation((0.0, -0.135, 0.505)))
+    me.transform(M)
+    ob = bpy.data.objects.new(f"TABLETA_{pj['id']}", me)
+    pj["raiz"].users_collection[0].objects.link(ob)
+    _a_hueso(ob, pj, "mixamorig:Spine")
+    return ob
+
+
 def en_mano(pj: dict, d: dict, fps: int, nf: int):
-    """Un objeto chico en la mano derecha (hoy: la radio portátil), visible en los tramos [[t0, t1], …]."""
+    """Un objeto chico en la mano (la radio portátil o la tableta), visible en los tramos [[t0, t1], …]."""
+    if d.get("objeto") == "tableta":
+        ob = _tableta(pj, d, fps, nf)
+        _visible_tramos(ob, d.get("visible", [[0.0, nf / fps]]), fps)
+        return ob
     M = _modelo_a_armadura(pj)
     negro = K.material(f"radio_mano_{pj['id']}", (0.02, 0.02, 0.022), 0.45)
     led = K.material("led_verde_radio", (0.1, 1.0, 0.2), 0.3, emision=(0.1, 1.0, 0.2), fuerza=8.0)
@@ -1007,7 +1182,11 @@ def en_mano(pj: dict, d: dict, fps: int, nf: int):
     ob = bpy.data.objects.new(f"RADIO_{pj['id']}", me)
     pj["raiz"].users_collection[0].objects.link(ob)
     _a_hueso(ob, pj, "mixamorig:RightHand")
-    tramos = d.get("visible", [[0.0, nf / fps]])
+    _visible_tramos(ob, d.get("visible", [[0.0, nf / fps]]), fps)
+    return ob
+
+
+def _visible_tramos(ob, tramos, fps):
     claves = [(0, True)]
     for t0, t1 in tramos:
         claves += [(int(round(t0 * fps)) + 1, False), (int(round(t1 * fps)) + 1, True)]
@@ -1018,7 +1197,6 @@ def en_mano(pj: dict, d: dict, fps: int, nf: int):
     for fc in K._fcurves(ob.animation_data.action):
         for kp in fc.keyframe_points:
             kp.interpolation = "CONSTANT"
-    return ob
 
 
 def armar(pj: dict, a: dict, fps: int, nf: int):

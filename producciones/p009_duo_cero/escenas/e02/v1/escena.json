@@ -26,7 +26,7 @@
    "alto_m": 1.78,
    "vestuario": {
     "estilo": "tactico",
-    "pelo": "puntas",
+    "pelo": "kingsman",
     "color_pelo": [
      0.2,
      0.09,
@@ -712,9 +712,46 @@
       "t": 36.40426506023933,
       "hasta": 37.773132530118225,
       "u": -0.55
+     },
+     {
+      "t": 0.2,
+      "hasta": 3.5,
+      "v": -0.7,
+      "u": 0.1
+     },
+     {
+      "t": 19.32120481927624,
+      "hasta": 22.53120481927624,
+      "v": -0.7,
+      "u": 0.1
      }
     ]
-   }
+   },
+   "en_mano": {
+    "objeto": "tableta",
+    "visible": [
+     [
+      0.0,
+      8.506289156626298
+     ],
+     [
+      19.12120481927624,
+      22.53120481927624
+     ]
+    ]
+   },
+   "poses": [
+    {
+     "pose": "tableta",
+     "inicio_s": 0.0,
+     "dur_s": 8.506289156626298
+    },
+    {
+     "pose": "tableta",
+     "inicio_s": 19.12120481927624,
+     "dur_s": 3.41
+    }
+   ]
   }
  ],
  "tomas": [
@@ -754,9 +791,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    0.3,
-    -0.07
+    0.35,
+    0.32,
+    -0.1
    ],
    "objetivo": {
     "movil": "vagon",
@@ -764,10 +801,10 @@
     "desp_local": [
      -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -801,13 +838,39 @@
    "tipo": "estatica",
    "plano": "Luna: «No es perfecto. Tenemos que saltar, llegar al perímetro, evi»",
    "inicio_s": 11.1333,
-   "duracion_s": 3.3667,
+   "duracion_s": 3.9333,
    "rigido": true,
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
+    0.35,
+    -0.32,
+    -0.13
+   ],
+   "objetivo": {
+    "movil": "vagon",
+    "punto": "",
+    "desp_local": [
+     -0.95,
+     0.48,
+     -0.15
+    ]
+   },
+   "lente_mm": 42,
+   "luz_relleno": 0
+  },
+  {
+   "id": "t05_cu_nico",
+   "tipo": "estatica",
+   "plano": "reacción de Nico",
+   "inicio_s": 15.066600000000001,
+   "duracion_s": 4.5333,
+   "rigido": true,
+   "movil": "vagon",
+   "punto_base": "",
+   "desp_local": [
+    0.35,
+    0.32,
     -0.1
    ],
    "objetivo": {
@@ -815,78 +878,26 @@
     "punto": "",
     "desp_local": [
      -0.95,
-     0.48,
-     -0.09
-    ]
-   },
-   "lente_mm": 50,
-   "luz_relleno": 0
-  },
-  {
-   "id": "t05_tableta",
-   "tipo": "estatica",
-   "plano": "el mapa: sector norte y patrullas",
-   "inicio_s": 14.5,
-   "duracion_s": 3.5,
-   "rigido": true,
-   "movil": "vagon",
-   "punto_base": "",
-   "desp_local": [
-    -0.38,
-    0.3,
-    -0.15
-   ],
-   "objetivo": {
-    "movil": "vagon",
-    "punto": "",
-    "desp_local": [
-     -0.7,
-     0.48,
-     -0.58
-    ]
-   },
-   "lente_mm": 45,
-   "luz_relleno": 0
-  },
-  {
-   "id": "t06_cu_nico",
-   "tipo": "estatica",
-   "plano": "Nico: «¿Y si entramos por el sur?»",
-   "inicio_s": 18.0,
-   "duracion_s": 1.6,
-   "rigido": true,
-   "movil": "vagon",
-   "punto_base": "",
-   "desp_local": [
-    0.25,
-    0.3,
-    -0.07
-   ],
-   "objetivo": {
-    "movil": "vagon",
-    "punto": "",
-    "desp_local": [
-     -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
-   "id": "t07_cu_luna",
+   "id": "t06_cu_luna",
    "tipo": "estatica",
    "plano": "Luna: «El sur tiene tres puestos de vigilancia.»",
-   "inicio_s": 19.6,
+   "inicio_s": 19.5999,
    "duracion_s": 2.4333,
    "rigido": true,
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -894,25 +905,25 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
-   "id": "t08_cu_nico",
+   "id": "t07_cu_nico",
    "tipo": "estatica",
    "plano": "Nico: «Entonces van a estar muy entretenidos.»",
-   "inicio_s": 22.0333,
+   "inicio_s": 22.0332,
    "duracion_s": 2.8667,
    "rigido": true,
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    0.3,
-    -0.07
+    0.35,
+    0.32,
+    -0.1
    ],
    "objetivo": {
     "movil": "vagon",
@@ -920,17 +931,17 @@
     "desp_local": [
      -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
-   "id": "t09_ecu_luna",
+   "id": "t08_ecu_luna",
    "tipo": "estatica",
    "plano": "Luna lo mira fijamente",
-   "inicio_s": 24.9,
+   "inicio_s": 24.899900000000002,
    "duracion_s": 4.4333,
    "rigido": true,
    "movil": "vagon",
@@ -938,7 +949,7 @@
    "desp_local": [
     0.45,
     0.42,
-    -0.08
+    -0.11
    ],
    "objetivo": {
     "movil": "vagon",
@@ -946,17 +957,17 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.08
+     -0.12
     ]
    },
-   "lente_mm": 95,
+   "lente_mm": 80,
    "luz_relleno": 0
   },
   {
-   "id": "t10_os_nico",
+   "id": "t09_os_nico",
    "tipo": "estatica",
    "plano": "Nico: «Siempre sigo el plan.»",
-   "inicio_s": 29.333299999999998,
+   "inicio_s": 29.3332,
    "duracion_s": 1.7,
    "rigido": true,
    "movil": "vagon",
@@ -979,18 +990,18 @@
    "luz_relleno": 0
   },
   {
-   "id": "t11_cu_luna",
+   "id": "t10_cu_luna",
    "tipo": "estatica",
    "plano": "Luna: «Tu concepto de seguir un plan es bastante particular.»",
-   "inicio_s": 31.033299999999997,
+   "inicio_s": 31.0332,
    "duracion_s": 3.5333,
    "rigido": true,
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -998,25 +1009,25 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
-   "id": "t12_cu_nico",
+   "id": "t11_cu_nico",
    "tipo": "estatica",
    "plano": "Nico: «Pero funciona.»",
-   "inicio_s": 34.566599999999994,
+   "inicio_s": 34.5665,
    "duracion_s": 1.9,
    "rigido": true,
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    0.3,
-    -0.07
+    0.35,
+    0.32,
+    -0.1
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1024,25 +1035,25 @@
     "desp_local": [
      -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
-   "id": "t13_cu_luna",
+   "id": "t12_cu_luna",
    "tipo": "estatica",
    "plano": "Luna intenta seguir seria y termina sonriendo",
-   "inicio_s": 36.46659999999999,
-   "duracion_s": 1.3001000000000076,
+   "inicio_s": 36.466499999999996,
+   "duracion_s": 1.3002000000000038,
    "rigido": true,
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -1050,10 +1061,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   }
  ],

@@ -26,7 +26,7 @@
    "alto_m": 1.78,
    "vestuario": {
     "estilo": "tactico",
-    "pelo": "puntas",
+    "pelo": "kingsman",
     "color_pelo": [
      0.2,
      0.09,
@@ -631,7 +631,7 @@
    "alto_m": 1.82,
    "vestuario": {
     "estilo": "urbano",
-    "pelo": "corto",
+    "pelo": "cresta",
     "color_pelo": [
      0.015,
      0.015,
@@ -752,7 +752,7 @@
    "alto_m": 1.76,
    "vestuario": {
     "estilo": "urbano",
-    "pelo": "puntas",
+    "pelo": "mohicano",
     "color_pelo": [
      0.02,
      0.018,

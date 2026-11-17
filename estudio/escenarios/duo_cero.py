@@ -683,8 +683,107 @@ def salto(local: tuple, T_j: float, lateral: float = 4.8, arriba: float = 2.3, f
     return out
 
 
+_FUENTE = {   # 5×7 para los rótulos del mapa
+    "N": ["10001", "11001", "10101", "10011", "10001", "10001", "10001"],
+    "O": ["01110", "10001", "10001", "10001", "10001", "10001", "01110"],
+    "R": ["11110", "10001", "10001", "11110", "10100", "10010", "10001"],
+    "T": ["11111", "00100", "00100", "00100", "00100", "00100", "00100"],
+    "E": ["11111", "10000", "10000", "11110", "10000", "10000", "11111"],
+    "S": ["01111", "10000", "10000", "01110", "00001", "00001", "11110"],
+    "U": ["10001", "10001", "10001", "10001", "10001", "10001", "01110"],
+    "A": ["01110", "10001", "10001", "11111", "10001", "10001", "10001"],
+    "Z": ["11111", "00001", "00010", "00100", "01000", "10000", "11111"],
+    " ": ["00000"] * 7,
+}
+
+
+def mapa_tableta(ancho: int = 640, alto: int = 400):
+    """El mapa de la misión que Luna muestra en la tableta, dibujado desde las coordenadas reales del escenario: la
+    vía, la zona de carga y el montículo, el cerco de la base, las torres, el edificio central, el sector norte
+    (entrada) y los tres puestos del sur, las patrullas y la ruta."""
+    import numpy as np
+    img = np.zeros((alto, ancho, 3))
+    img[:] = (0.015, 0.04, 0.06)
+    x0, x1, y0, y1 = -25.0, 345.0, -90.0, 205.0
+
+    def px(x, y):
+        return int((x - x0) / (x1 - x0) * (ancho - 1)), int((y - y0) / (y1 - y0) * (alto - 1))
+
+    def rect(xa, ya, xb, yb, c, borde=0):
+        (i0, j0), (i1, j1) = px(xa, ya), px(xb, yb)
+        i0, i1 = sorted((i0, i1))
+        j0, j1 = sorted((j0, j1))
+        if borde:
+            for a, b, cc, dd in ((i0, i1, j0, j0 + borde), (i0, i1, j1 - borde, j1), (i0, i0 + borde, j0, j1), (i1 - borde, i1, j0, j1)):
+                img[max(0, cc):dd + 1, max(0, a):b + 1] = c
+        else:
+            img[max(0, j0):j1 + 1, max(0, i0):i1 + 1] = c
+
+    def disco(x, y, r, c):
+        i, j = px(x, y)
+        yy, xx = np.ogrid[:alto, :ancho]
+        img[(xx - i) ** 2 + (yy - j) ** 2 <= r * r] = c
+
+    def texto(x, y, cad, c, k=3):
+        i, j = px(x, y)
+        for n, ch in enumerate(cad):
+            for fy, fila in enumerate(_FUENTE.get(ch, _FUENTE[" "])):
+                for fx, b in enumerate(fila):
+                    if b == "1":
+                        img[j + (6 - fy) * k: j + (7 - fy) * k, i + (n * 6 + fx) * k: i + (n * 6 + fx + 1) * k] = c
+
+    for g in range(-20, 360, 20):                       # grilla
+        i, _ = px(g, 0)
+        img[:, max(0, min(ancho - 1, i))] = (0.03, 0.09, 0.12)
+    for g in range(-80, 220, 20):
+        _, j = px(0, g)
+        img[max(0, min(alto - 1, j)), :] = (0.03, 0.09, 0.12)
+    rect(-1.2, y0, 1.2, y1, (0.95, 0.55, 0.15))        # la vía
+    rect(6, -30, 42, 60, (0.35, 0.4, 0.42), 2)         # zona de carga
+    disco(7.5, 14, 6, (0.85, 0.7, 0.3))                # montículo de arena
+    rect(150, -60, 330, 170, (0.2, 0.85, 0.95), 2)     # cerco
+    rect(222, 53, 278, 87, (0.12, 0.45, 0.55))         # edificio central
+    rect(191, 110, 219, 130, (0.08, 0.3, 0.38))
+    rect(278, -15, 302, 15, (0.08, 0.3, 0.38))
+    for tx, ty in ((154, -56), (326, -56), (326, 166), (154, 166)):
+        disco(tx, ty, 5, (1.0, 0.2, 0.15))             # torres
+    rect(185, 150, 300, 170, (0.1, 0.75, 0.3))         # sector norte (la entrada)
+    for k, sx in enumerate((190, 240, 290)):           # los tres puestos del sur
+        disco(sx, -70, 6, (1.0, 0.15, 0.1))
+    for k in range(18):                                # la ruta: de la zona de carga al sector norte
+        t = k / 17
+        disco(24 + (240 - 24) * t, 30 + (170 - 30) * t ** 0.7, 2, (0.2, 1.0, 0.4))
+    for gx, gy in ((170, 100), (310, 60), (230, -40)):
+        disco(gx, gy, 3, (1.0, 0.85, 0.2))             # patrullas
+    texto(200, 178, "NORTE", (0.3, 1.0, 0.5))
+    texto(225, -86, "SUR", (1.0, 0.35, 0.3))
+    texto(10, 66, "ZONA", (0.75, 0.8, 0.85), 2)
+    im = bpy.data.images.new("mapa_tableta", ancho, alto, alpha=False)
+    rgba = np.concatenate([img[::-1][::-1], np.ones((alto, ancho, 1))], 2).astype(np.float32)
+    im.pixels.foreach_set(rgba.ravel())
+    im.pack()
+    return im
+
+
+def _pantallas(manifiesto):
+    """Las tabletas (material «pantalla_tableta_<id>») muestran el mapa de la misión."""
+    mats = [m for m in bpy.data.materials if m.name.startswith("pantalla_tableta_")]
+    if not mats:
+        return
+    im = mapa_tableta()
+    for m in mats:
+        nt = m.node_tree
+        b = next(n for n in nt.nodes if n.type == "BSDF_PRINCIPLED")
+        tx = nt.nodes.new("ShaderNodeTexImage")
+        tx.image = im
+        nt.links.new(tx.outputs["Color"], b.inputs["Emission Color"])
+        nt.links.new(tx.outputs["Color"], b.inputs["Base Color"])
+        b.inputs["Emission Strength"].default_value = 2.2
+
+
 def despues_personajes(info, pjs, ctx, manifiesto, fps):
     """Saltos del tren: hasta el salto el personaje viaja con el vagón (Child Of); desde ahí, trayectoria en el mundo."""
+    _pantallas(manifiesto)
     if manifiesto.get("tiros"):
         from estudio.blender import tiroteo as TI
         TI.preparar(manifiesto["tiros"], pjs, fps)

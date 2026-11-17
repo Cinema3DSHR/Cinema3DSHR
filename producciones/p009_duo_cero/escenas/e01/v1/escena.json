@@ -26,7 +26,7 @@
    "alto_m": 1.78,
    "vestuario": {
     "estilo": "tactico",
-    "pelo": "puntas",
+    "pelo": "kingsman",
     "color_pelo": [
      0.2,
      0.09,
@@ -485,9 +485,31 @@
       "t": 31.41744578313006,
       "hasta": 32.634216867466854,
       "u": -0.55
+     },
+     {
+      "t": 0.2,
+      "hasta": 3.5,
+      "v": -0.7,
+      "u": 0.1
      }
     ]
-   }
+   },
+   "en_mano": {
+    "objeto": "tableta",
+    "visible": [
+     [
+      0.0,
+      7.2
+     ]
+    ]
+   },
+   "poses": [
+    {
+     "pose": "tableta",
+     "inicio_s": 0.0,
+     "dur_s": 7.2
+    }
+   ]
   }
  ],
  "tomas": [
@@ -588,9 +610,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -598,10 +620,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -692,9 +714,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -702,10 +724,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -720,7 +742,7 @@
    "desp_local": [
     0.45,
     0.42,
-    -0.08
+    -0.11
    ],
    "objetivo": {
     "movil": "vagon",
@@ -728,10 +750,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.08
+     -0.12
     ]
    },
-   "lente_mm": 95,
+   "lente_mm": 80,
    "luz_relleno": 0
   },
   {
@@ -744,9 +766,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    0.3,
-    -0.07
+    0.35,
+    0.32,
+    -0.1
    ],
    "objetivo": {
     "movil": "vagon",
@@ -754,10 +776,10 @@
     "desp_local": [
      -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -770,9 +792,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    -0.3,
-    -0.1
+    0.35,
+    -0.32,
+    -0.13
    ],
    "objetivo": {
     "movil": "vagon",
@@ -780,10 +802,10 @@
     "desp_local": [
      -0.95,
      0.48,
-     -0.09
+     -0.15
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   },
   {
@@ -796,9 +818,9 @@
    "movil": "vagon",
    "punto_base": "",
    "desp_local": [
-    0.25,
-    0.3,
-    -0.07
+    0.35,
+    0.32,
+    -0.1
    ],
    "objetivo": {
     "movil": "vagon",
@@ -806,10 +828,10 @@
     "desp_local": [
      -0.95,
      -0.48,
-     -0.05
+     -0.11
     ]
    },
-   "lente_mm": 50,
+   "lente_mm": 42,
    "luz_relleno": 0
   }
  ],

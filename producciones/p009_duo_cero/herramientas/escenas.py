@@ -25,7 +25,7 @@ SENT = "mixamo:animaciones/sentado_manejar/"
 
 PERSONAJES = {
     "nico": {"modelo": "stickman:masculino", "alto_m": 1.78,
-             "vestuario": {"estilo": "tactico", "pelo": "puntas", "color_pelo": [0.20, 0.09, 0.03]},
+             "vestuario": {"estilo": "tactico", "pelo": "kingsman", "color_pelo": [0.20, 0.09, 0.03]},
              "sentado": (-1.02, -0.48), "otro": "luna", "mirar_al_otro": 0.55},
     "luna": {"modelo": "stickman:femenino", "alto_m": 1.68,
              "vestuario": {"estilo": "tactico", "pelo": "luna", "color_pelo": [0.06, 0.025, 0.012]},
@@ -140,17 +140,17 @@ def _loc(p):
 TIROS = {
     # sentados: la cabeza queda a ~1,15 m del piso del vagón (medido en las fijas)
     "dos": ((1.25, 0.0, PISO + 1.0), (-0.95, 0.0, PISO + 0.98), 22),
-    "cu_nico": ((0.25, 0.30, PISO + 1.13), (-0.95, -0.48, PISO + 1.15), 50),
-    "cu_luna": ((0.25, -0.30, PISO + 1.10), (-0.95, 0.48, PISO + 1.11), 50),
+    "cu_nico": ((0.35, 0.32, PISO + 1.10), (-0.95, -0.48, PISO + 1.09), 42),
+    "cu_luna": ((0.35, -0.32, PISO + 1.07), (-0.95, 0.48, PISO + 1.05), 42),
     "os_nico": ((-0.30, 1.35, PISO + 1.22), (-0.95, -0.48, PISO + 1.12), 32),
     "os_luna": ((-0.30, -1.35, PISO + 1.24), (-0.95, 0.48, PISO + 1.09), 32),
-    "ecu_nico": ((0.45, -0.42, PISO + 1.15), (-0.95, -0.48, PISO + 1.16), 95),
-    "ecu_luna": ((0.45, 0.42, PISO + 1.12), (-0.95, 0.48, PISO + 1.12), 95),
+    "ecu_nico": ((0.45, -0.42, PISO + 1.13), (-0.95, -0.48, PISO + 1.12), 80),
+    "ecu_luna": ((0.45, 0.42, PISO + 1.09), (-0.95, 0.48, PISO + 1.08), 80),
     "exterior": ((6.5, -3.4, PISO + 0.55), (-0.9, 0.0, PISO + 1.0), 30),
     "exterior_cerca": ((3.4, 1.6, PISO + 0.95), (-0.9, -0.1, PISO + 0.95), 24),
     "farol": ((0.25, -1.05, PISO + 1.45), (-1.0, -1.9, PISO + 1.15), 42),
     "radio": ((0.05, 1.05, PISO + 0.95), (-0.55, 1.75, PISO + 0.62), 55),
-    "tableta": ((-0.38, 0.30, PISO + 1.05), (-0.70, 0.48, PISO + 0.62), 45),
+    "tableta": ((-0.55, 0.40, PISO + 1.25), (-0.72, 0.48, PISO + 0.82), 32),
     "techo": ((0.55, 0.05, PISO + 2.55), (-0.95, 0.0, PISO + 0.9), 16),
     "puerta_afuera": ((-0.5, -0.9, PISO + 1.3), (3.0, 0.4, PISO + 1.0), 24),
     # de pie (escena 4)
@@ -288,6 +288,17 @@ def escena_dialogo(n):
         pjs.append({"id": q, "modelo": d["modelo"], "alto_m": d["alto_m"], "vestuario": d["vestuario"], "sobre": VAGON,
                     "acciones": acciones_sentado(n, q, dur), "cara": cara(n, q)})
     params_extra = {}
+    if n in (1, 2):
+        # Luna con la tableta: el mapa de la instalación (sólo mientras la sostiene con las dos manos)
+        if n == 1:
+            ventanas = [(0.0, 7.2)]
+        else:
+            sur = next(p for p in e["pasos"] if p.get("voz") == "luna" and "sur tiene" in p["texto"])
+            ventanas = [(0.0, e["pasos"][0]["t_fin"] + 0.6), (sur["t_ini"] - 0.6, sur["t_fin"] + 0.5)]
+        luna = pjs[1]
+        luna["en_mano"] = {"objeto": "tableta", "visible": [[a, b] for a, b in ventanas]}
+        luna["poses"] = [{"pose": "tableta", "inicio_s": a, "dur_s": b - a} for a, b in ventanas]
+        luna["cara"]["miradas"] += [{"t": a + 0.2, "hasta": min(b, a + 3.5), "v": -0.7, "u": 0.1} for a, b in ventanas]
     if n == 3:
         # Nico con la radio: en la mano, a la boca para «¿Luna? ¿Me recibís?», y la deja después de «impecable»
         boca = next(p for p in e["pasos"] if p.get("radio") == "boca")
@@ -312,7 +323,9 @@ def escena_dialogo(n):
                                 "el vagón con la puerta abierta: adentro, la luz del farol"))
         extras = [(17.0, "exterior_cerca", "exterior: el paisaje pasa por la puerta")]
     elif n == 2:
-        extras = [(0.0, "tableta", "la tableta: el mapa de la instalación"), (14.5, "tableta", "el mapa: sector norte y patrullas")]
+        sur = next(p for p in PLAN[2]["pasos"] if p.get("voz") == "luna" and "sur tiene" in p["texto"])
+        extras = [(0.0, "tableta", "la tableta: el mapa de la instalación"),
+                  (sur["t_ini"] - 0.1, "tableta", "el mapa: los tres puestos de vigilancia del sur")]
     elif n == 3:
         extras = [(0.0, "radio", "Nico toma la radio"), (26.0, "exterior", "exterior: el tren en la noche, la puerta encendida")]
     cortes = cobertura(n, dur, extras=extras)
@@ -499,9 +512,9 @@ def escena_4():
 # ------------------------------------------------------------------------------------------------ escena 5: primer contacto
 GUARDIAS = {
     "guardia_a": {"modelo": "stickman:masculino", "alto_m": 1.82,
-                  "vestuario": {"estilo": "urbano", "pelo": "corto", "color_pelo": [0.015, 0.015, 0.016]}},
+                  "vestuario": {"estilo": "urbano", "pelo": "cresta", "color_pelo": [0.015, 0.015, 0.016]}},
     "guardia_b": {"modelo": "stickman:masculino", "alto_m": 1.76,
-                  "vestuario": {"estilo": "urbano", "pelo": "puntas", "color_pelo": [0.02, 0.018, 0.016]}},
+                  "vestuario": {"estilo": "urbano", "pelo": "mohicano", "color_pelo": [0.02, 0.018, 0.016]}},
 }
 P1_LUNA = (10.55, 24.85)            # detrás de la pila de cajas P1 (12, 26,5), del lado opuesto a los guardias
 P2_NICO = (15.35, 17.55)            # detrás de la pila P2 (17,2, 19)
