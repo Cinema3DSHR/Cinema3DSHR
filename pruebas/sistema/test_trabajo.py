@@ -158,10 +158,23 @@ prueba("caderas iguales a la escena C armada de cero", iguales(cad_inc, cad_c), 
 prueba("cámaras iguales a la escena C armada de cero", iguales(cams_inc, cams_c))
 print(f"tiempos: completa {t_completa:.1f} s · una cámara {t_cam:.1f} s · un personaje {t_pj:.1f} s", flush=True)
 
+# 3b) versión nueva (como una corrección del visor): hereda la escena de trabajo de v1 y rehace sólo la cámara
+sha_v1 = sha(d / "escena.blend")
+V2 = copy.deepcopy(Cr)
+V2["version"] = 2
+V2["tomas"][2]["lente_mm"] = 50
+prueba("v2 sin escena propia: hereda la de v1 y el plan es sólo camara:t03", T.plan(V2)["afectados"] == ["camara:t03"],
+       T.plan(V2))
+r2 = T.actualizar(V2)
+prueba("v2 actualizada rehaciendo sólo camara:t03", r2["rehecho"] == ["camara:t03"], r2.get("rehecho"))
+prueba("la escena de trabajo de v1 no cambió", sha(d / "escena.blend") == sha_v1)
+Cr = V2
+d = T.carpeta(V2)
+
 # 4) previsualización desde la escena de trabajo: el .blend no cambia
 antes = sha(d / "escena.blend")
 tam = T.exportar_previa(Cr, TMP / "previa")
-prueba("previsualización exportada", (TMP / "previa" / "e01_v1_previa.glb").exists(), tam)
+prueba("previsualización exportada", (TMP / "previa" / f"e01_v{Cr['version']}_previa.glb").exists(), tam)
 prueba("la escena de trabajo no cambió al exportar", sha(d / "escena.blend") == antes)
 print(f"\n{ok}/{ok + fallas} comprobaciones OK   (carpeta temporal {TMP})")
 sys.exit(1 if fallas else 0)

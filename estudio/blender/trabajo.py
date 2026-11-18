@@ -211,8 +211,27 @@ def abrir(m: dict) -> dict:
 
 
 # ------------------------------------------------------------------------------------------------ actualizar
+def heredar(m: dict) -> Path | None:
+    """Versión nueva sin escena de trabajo: copia la de la versión anterior más cercana que tenga una (la v1 no se
+    toca: es una copia). Así una corrección de cámara en v2 rehace sólo esa cámara."""
+    import shutil
+    d = carpeta(m)
+    if (d / "estado.json").exists():
+        return None
+    for k in range(int(m["version"]) - 1, 0, -1):
+        prev = d.parent / f"v{k}"
+        if (prev / "estado.json").exists() and (prev / "escena.blend").exists():
+            d.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(prev / "escena.blend", d / "escena.blend")
+            shutil.copy2(prev / "estado.json", d / "estado.json")
+            (d / "heredada_de.txt").write_text(f"v{k}\n")
+            return prev
+    return None
+
+
 def plan(m: dict) -> dict:
     """Qué habría que rehacer (sin abrir Blender): compara la receta con el estado de la escena de trabajo."""
+    heredar(m)
     estado = _leer_estado(carpeta(m))
     if not estado:
         return {"sin_trabajo": True, "completa": True, "afectados": ["(no hay escena de trabajo)"]}
