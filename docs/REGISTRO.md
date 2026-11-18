@@ -313,3 +313,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - `docs/GUIA_PARA_OTRO_CHAT.md`: dueño y trato, repositorios y permisos, reglas (sobre todo la de render), mapa del
   estudio y de los flujos, recetas, estado actual (Dúo Cero, concurrencia, app), cómo atender pedidos típicos y
   pruebas. `CLAUDE.md` la nombra como punto de partida.
+
+### 18/11/2026 — Respaldo completo de lo enviado por el chat + inventario de recursos en la guía
+- Pedido del dueño: «subí todo y actualizá el documento así tiene esos recursos nuevos (helicópteros, los nuevos
+  personajes)».
+- Revisado todo lo que mandó por el chat: helicóptero y los otros 12 GLB, auto rampa, protagonistas, Messi, Cristiano,
+  Stickman definitivos y armas Stickman YA estaban en mixamo-respaldo; Sweet Home está en Nexus. Faltaban y se
+  agregaron (mixamo-respaldo `2e62ee5`, sólo agregados): `personajes_pelicula/versiones_anteriores/stickman_*_v1`
+  (primera tanda, no usar) y `futbol_free_kick_swipe/01_animaciones/json_originales/` (2 023 clips JSON de Fútbol 5).
+- `docs/GUIA_PARA_OTRO_CHAT.md` § 4 bis: inventario de recursos (personajes, vehículos con el helicóptero y cómo se le
+  ponen los rotores, decorados, otros repos y recursos del estudio).

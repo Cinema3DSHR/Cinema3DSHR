@@ -118,6 +118,60 @@ Para lanzar un flujo usá `mcp__github__actions_run_trigger` (`run_workflow`, `r
 `actions_list` / `actions_get` y los registros con `get_job_logs`. La API sin autenticar de este repo está bloqueada
 desde la sesión: usá las herramientas MCP.
 
+## 4 bis. Inventario de recursos (qué hay y dónde, sin auditar)
+
+En las recetas y en el código los recursos se nombran `<fuente>:<ruta>` (`estudio/config.py` → `FUENTES`).
+`mixamo:` es `webmaletin-art/mixamo-respaldo`, `nexus:` es `Operaci-n-Nexus-1/fuente`, `extraction:` es
+`Extraction-tactical/public`, `rally:` es `Rally-Sim-movile`, `sh3d:` son los muebles de Sweet Home de Nexus y
+`estudio:` es este repo. Cada carpeta de mixamo-respaldo tiene su índice JSON con medidas, polígonos y sha256.
+**Lo que el dueño manda por el chat se pierde con el contenedor**: guardalo en mixamo-respaldo (sólo agregar, con su
+permiso) y anotalo en el índice que corresponda y acá.
+
+**Personajes** (`mixamo:personajes_pelicula/`, índice `indice_personajes.json`). Todos son FBX de Tripo3D con
+esqueleto `mixamorig` de 65 huesos, así que usan los clips Mixamo con `retarget.py`.
+
+| id | qué es | uso |
+|---|---|---|
+| `stickman_masculino`, `stickman_femenino` | **Stickman definitivos**, proporcionados a Mixamo (0,979 m al importar) | **todos** los personajes de Dúo Cero (Nico, Luna, guardias); vestuario pintado y rostro 2D con `estudio/blender/stickman.py` |
+| `armas_stickman` | pack de armas y linterna estilo Stickman | Dúo Cero (`estudio/blender/armas_stickman.py`) |
+| `protagonista_masculino`, `protagonista_femenina` | protagonistas realistas | Operación Tren Fantasma (p006) |
+| `messi`, `cristiano` | jugadores (Cristiano con la textura del nombre corregida) | Al vacío (p007) |
+| `versiones_anteriores/stickman_*_v1` | primera tanda de Stickman | **no usar**: sólo respaldo |
+
+Además: `mixamo:personajes/ybot_tpose.fbx` (Y Bot, el esqueleto de las 3 099 animaciones de `animaciones/` y
+`packs/`, buscables en `indice.json` y en `catalogo/animaciones.json`), `packs_extra_glb/` (personas y perro) y
+`modelos_pelicula/jefa_o_novia.glb` (mujer de traje negro, GLB con rig Mixamo).
+
+**Vehículos y decorados** (`mixamo:modelos_pelicula/*.glb`, índice `indice_modelos.json`, vistas previas en
+`previews/`). Vienen normalizados a 1 m en su lado más largo, así que hay que escalarlos a su tamaño real:
+
+| id | qué es | tamaño real aprox. |
+|---|---|---|
+| `helicoptero_militar` | **helicóptero militar** negro de transporte. Es sólo el fuselaje, **sin rotores**: el rotor principal y el de cola se agregan como discos semitransparentes que giran (ver `estudio/escenarios/drift_sunset.py`, función del helicóptero) | 15 m |
+| `vehiculo_blindado_policial` | blindado «POLICIA» | — |
+| `pickup_arena` | pickup 4×4 blanca | — |
+| `auto_clasico_falcon` | auto clásico azul | — |
+| `locomotora_diesel`, `vagon_cerrado`, `vagon_plano` | tren | — |
+| `trailer_plano_camion` | semirremolque plano | — |
+| `moto_enduro_decoracion_taller`, `decoracion_taller_segmentada` | taller mecánico (69 piezas) | — |
+| `cocina_sin_segmentos`, `muebles_casa_sin_segmentar` | interiores | — |
+
+Las medidas exactas de cada uno están en el índice. También hay `mixamo:vehiculos_pelicula/auto_rampa/` (auto negro
+con jaula y rampa adelante, FBX; mira a +Y y no trae ruedas: se le ponen las de Dream Rally) y
+`mixamo:futbol_free_kick_swipe/` (jugador con 3 223 animaciones de fútbol, estadio y los 2 023 clips JSON originales
+en `01_animaciones/json_originales/`).
+
+**De los otros repos**:
+- Dream Rally (`rally:`): los 28 autos con física real (`estudio/fisica_dr`), pilotos, motos, vegetación y rutas.
+- Nexus (`nexus:`): armas, operador, vehículo y audio.
+- Extraction (`extraction:`): armas con puntos de agarre.
+- Sweet Home (`sh3d:`): 724 muebles y árboles a escala real.
+
+**Del estudio** (este repo): `escenarios/` (mansión moderna de noche, estadio de fútbol 11 de noche, más los
+generadores de `estudio/escenarios/`: tren, ruta del atardecer, etc.), `catalogo/*.json` (animaciones, armas,
+vehículos, audio, personajes, modelos) y `audio/biblioteca/` (voces y efectos ya generados: reutilizalos antes de
+gastar créditos).
+
 ## 5. Recetas de escena (`escena.json`)
 
 Claves: `tipo, id, produccion, numero, version, titulo, guion, duracion_s, escenario, eventos, vehiculos, personajes,
