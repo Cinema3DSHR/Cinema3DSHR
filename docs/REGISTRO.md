@@ -615,3 +615,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   escena de trabajo guarda el sha de cada archivo de código y `trabajo.reestampar` recalcula huellas sólo si el código
   de esos componentes no cambió (usado una vez, con constancia en el estado).
 - Entregado: `e02_v2_previa.glb` + `.json` (huellas en `escenas/e02/v2/entregado.json`). E02 v1 intacta (verificada).
+
+## 18/11/2026 — «A la deriva» E02 v3: la tablet de Kate arriba de la mesa (reconstrucción completa)
+
+- El dueño: el mensaje no se veía porque la tablet estaba metida en la mesa (borde 3–4 cm bajo la tapa). Ahora está
+  sobre un soporte (pata trasera y tope), el borde de abajo 2,8 cm sobre la mesa; ancla `pantalla_kate` subida.
+- Se evaluó y se ABANDONÓ, por pedido del dueño, la migración del escenario a «piezas» independientes (no quedó nada de
+  ese intento en el repo). Lo anterior del sistema incremental sigue como estaba.
+- v3 (copia de v2 con `nueva-version`) reconstruida entera: 439 s de escena + exportación (526 s en total). Capturas:
+  la tablet se ve y el mensaje «Gracias por la flor» se lee (tomas 28–31). Revisión de la app 18/18. Entregado:
+  `e02_v3_previa.glb` + `.json` (`escenas/e02/v3/entregado.json`). v2 intacta (verificada). Sin render ni Actions.

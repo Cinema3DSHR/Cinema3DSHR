@@ -1,0 +1,27 @@
+{
+ "fecha": "2026-11-18T17:29:06Z",
+ "nota": "previsualización v3 (tablet de Kate sobre soporte) enviada por el chat el 18/11/2026",
+ "produccion": "p011_a_la_deriva",
+ "escena": "e02",
+ "version": 3,
+ "huella": "169f7fc8c21f6b71",
+ "receta": {
+  "ruta": "producciones/p011_a_la_deriva/escenas/e02/v3/escena.json",
+  "sha256": "c3746d68d60b3608f038e266bdf6c37397390a0e1a3504f6e27e95a81281d4fc"
+ },
+ "derivados": [
+  {
+   "nombre": "e02_v3_previa.glb",
+   "bytes": 29516948,
+   "sha256": "c3f42674ee8a1f2dd6cb90934b46b88cba75dcc868b93488816a455b861c73bb",
+   "ruta_al_entregar": "tmp/a_la_deriva/e02_v3_previa.glb"
+  },
+  {
+   "nombre": "e02_v3_previa.json",
+   "bytes": 40363,
+   "sha256": "d75030cd87b46f0bd592b8b4f03a433915ce6c161014f66bdcc8bd8ff73672c1",
+   "ruta_al_entregar": "tmp/a_la_deriva/e02_v3_previa.json"
+  }
+ ],
+ "regla": "No se sobrescribe la receta ni estos archivos. Correcciones = versión nueva o copia de trabajo."
+}
