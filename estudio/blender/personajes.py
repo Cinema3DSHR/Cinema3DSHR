@@ -618,6 +618,39 @@ def _arreglar_texturas(objs, info: dict):
                     b.inputs["Roughness"].default_value = 0.62
 
 
+UMBRAL_AVANCE_M = 0.05     # clips que avanzan más que esto se usan «en el lugar» y la raíz avanza de forma continua
+
+
+def _en_el_lugar(accion, cadera: str):
+    """Copia del clip con el avance de la cadera quitado (lineal entre el primer y el último cuadro): la raíz del
+    personaje es la que avanza, de forma continua. Así los fundidos entre clips mezclan poses y no posiciones de cadera
+    de raíces distintas (eso hacía saltar ~1,7 m la cadera en las transiciones de las caminatas)."""
+    nombre = accion.name + "__lugar"
+    ya = bpy.data.actions.get(nombre)
+    if ya is not None:
+        return ya
+    copia = accion.copy()
+    copia.name = nombre
+    a0, a1 = copia.frame_range
+    ruta = f'pose.bones["{cadera}"].location'
+    for fc in K._fcurves(copia):
+        if fc.data_path != ruta:
+            continue
+        v0, v1 = fc.evaluate(a0), fc.evaluate(a1)
+        if fc.array_index == 1 or abs(v1 - v0) < 1e-6:     # el alto (y local de la cadera) no se toca
+            continue
+        def corr(x):
+            return (v1 - v0) * (x - a0) / max(1e-6, a1 - a0)
+        for kp in fc.keyframe_points:
+            c = corr(kp.co[0])
+            kp.co[1] -= c
+            kp.handle_left[1] -= corr(kp.handle_left[0])
+            kp.handle_right[1] -= corr(kp.handle_right[0])
+        fc.update()
+    copia["en_el_lugar"] = True
+    return copia
+
+
 def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     """Personaje con esqueleto mixamorig de 65 huesos (p. ej. la Jefa). Sus clips son FBX de Mixamo
     ("clip": "mixamo:packs/…/walking.fbx") que se RETARGETEAN al esqueleto del personaje (estudio/blender/retarget.py)."""
@@ -665,6 +698,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     rumbo = 0.0
     tramos = []
     llaves = []
+    continuas = set()          # claves de raíz que avanzan de forma continua (sin «sostener hasta el salto»)
     for i, ac in enumerate(spec.get("acciones", [])):
         ref = ac["clip"]
         accion = _rt(modelo, ref, arm, raiz, info, f"{pid}", ac.get("clip_hasta_s"))
@@ -682,6 +716,10 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
         if "mirando_deg" in ac:
             rumbo = math.radians(ac["mirando_deg"])
         mez = int(round(ac.get("mezcla_s", spec.get("mezcla_s", 0.0)) * fps)) if tramos else 0
+        _dh = Vector(accion.get("desplazamiento_cadera_m", (0, 0, 0)))
+        _dh.z = 0
+        continua = _dh.length > UMBRAL_AVANCE_M and not accion.get("futbol_clip")
+        accion_st = _en_el_lugar(accion, info["cadera"]) if continua else accion
         if mez > 0:
             # fundido entre clips: el nuevo va en su propia pista, arriba, y entra en `mez` cuadros sobre el anterior
             if tramos[-1]["strip"].frame_end > f0 + 1:
@@ -690,14 +728,14 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
             # los clips siguientes van en esta pista (la de arriba reemplaza a las de abajo desde que empieza)
             pista = arm.animation_data.nla_tracks.new(prev=pista)
             pista.name = f"acciones_{i:02d}"
-            st = pista.strips.new(f"{i:02d}_{accion.name}", max(1, f0 - mez), accion)
+            st = pista.strips.new(f"{i:02d}_{accion.name}", max(1, f0 - mez), accion_st)
         else:
             if tramos and tramos[-1]["strip"].frame_end > f0 - 0.01:
                 tramos[-1]["strip"].frame_end = f0 - 0.01
                 tramos[-1]["fin"] = f0 - 0.01
-            st = pista.strips.new(f"{i:02d}_{accion.name}", f0, accion)
+            st = pista.strips.new(f"{i:02d}_{accion.name}", f0, accion_st)
         try:
-            st.action_slot = accion.slots[0]
+            st.action_slot = accion_st.slots[0]
         except Exception:
             pass
         st.scale = 1.0 / ac.get("velocidad", 1.0)
@@ -774,8 +812,23 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
                 for j in range(nf):
                     u = j / nf
                     u = u * u * (3 - 2 * u)
-                    llaves.append((f0 + j, pos, rumbo_ant + info["frente"] + dr * u))
-            llaves.append((f0 + k * por_ciclo + (nf if k == 0 and nf > 1 else 0), pos + giro @ (d * k), r))
+                    pj_ = pos + giro @ (d * (j / por_ciclo)) if continua else pos
+                    llaves.append((f0 + j, pj_, rumbo_ant + info["frente"] + dr * u))
+            if continua:
+                # clip «en el lugar»: la raíz avanza de forma continua, un ciclo por vuelta (desde donde empieza la tira)
+                f_k = f0 + nf if (k == 0 and nf > 1) else (f0 if k == 0 else st.frame_start + k * por_ciclo)
+                v_k = pos + giro @ (d * ((nf / por_ciclo) if (k == 0 and nf > 1) else k))
+                llaves.append((f_k, v_k, r))
+                continuas.add(round(f_k, 3))
+                if k == vueltas - 1:
+                    f_fin = st.frame_start + vueltas * por_ciclo
+                    llaves.append((f_fin, pos + giro @ (d * vueltas), r))
+                    continuas.add(round(f_fin, 3))
+                continue
+            # los ciclos empiezan donde empieza la tira (con fundido, `mez` cuadros antes de f0): la raíz salta justo
+            # cuando la cadera vuelve al comienzo del clip; contados desde f0 quedaban corridos y la cadera saltaba
+            f_k = f0 + (nf if nf > 1 else 0) if k == 0 else st.frame_start + k * por_ciclo
+            llaves.append((f_k, pos + giro @ (d * k), r))
     raiz.animation_data_create()
     # un tramo nuevo puede empezar antes de que terminen las claves cuadro a cuadro del anterior: manda el nuevo
     inicios = sorted(tr["f0"] for tr in tramos)
@@ -789,7 +842,7 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     lineal = []
     prev = None
     for f0, (pz, rz) in claves:
-        if prev is not None and f0 - prev[0] > 1.001:
+        if prev is not None and f0 - prev[0] > 1.001 and round(f0, 3) not in continuas:
             # sostener hasta el salto (no se arrastra). Con 0,05 de margen: a 0,01 Blender funde las dos claves cuando el
             # ciclo dura cuadros fraccionarios (velocidad ≠ 1) y la raíz avanzaba sola → la cadera saltaba 1,7 m
             lineal.append((f0 - 0.05, prev[1], prev[2]))
