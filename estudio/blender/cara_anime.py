@@ -328,6 +328,10 @@ EXPRESIONES["cansado"] = {"ojos:entrecerrado": 0.5, "cejas:preocupado": 0.25, "b
 EXPRESIONES["triste_sutil"] = {"cejas:triste": 0.55, "ojos:triste": 0.45, "boca:triste": 0.5}
 EXPRESIONES["preocupada"] = EXPRESIONES["preocupado"]
 EXPRESIONES["enojo"] = EXPRESIONES["enojado"]
+# «A la deriva» E02: Kate a solas con la flor (rubor que crece y una sonrisa que intenta disimular)
+EXPRESIONES["conmovida"] = {"rubor": 0.35, "cejas:triste": 0.25, "ojos:triste": 0.15, "boca:sonrisa": 0.12}
+EXPRESIONES["ruborizada"] = {"rubor": 0.85, "boca:sonrisa": 0.3, "ojos:feliz": 0.12, "cejas:arriba": 0.12}
+EXPRESIONES["sonrisa_contenida"] = {"rubor": 1.0, "boca:sonrisa": 0.5, "ojos:feliz": 0.2, "cejas:arriba": 0.1}
 
 
 def actuar(partes: dict, cara: dict, fps: int, nf: int, semilla: int = 1):

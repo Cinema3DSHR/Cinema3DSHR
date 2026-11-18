@@ -18,6 +18,7 @@ def main():
     caras = {expr: [{"t": 0, "expr": especiales.get(expr, expr)}]}
     quienes = [x for x in a[1:] if x in ("chico", "chica")] or ["chico", "chica"]
     pelo = a[a.index("--pelo") + 1] if "--pelo" in a else None
+    clip = a[a.index("--clip") + 1] if "--clip" in a else None      # p. ej. mixamo:animaciones/…/Sitting_Talking.fbx
     for q in quienes:
         bpy.ops.wm.read_factory_settings(use_empty=True)
         PJ.reiniciar()
@@ -27,7 +28,8 @@ def main():
         cara = {"expresiones": caras[expr], "parpadeo": False}
         if expr == "habla":
             cara["habla"] = [{"inicio_s": 0, "texto": texto, "intensidad": 1.0, **({"audio": audio} if audio else {})}]
-        spec = {"id": q, "modelo": f"humano:{q}", "alto_m": alto, "acciones": [], "cara": cara}
+        spec = {"id": q, "modelo": f"humano:{q}", "alto_m": alto, "acciones": ([{"clip": clip, "inicio_s": 0, "pos": [0, 0, 0], "mirando_deg": -90}] if clip else []),
+                "cara": cara}
         if pelo:
             spec["perfil"] = {"pelo_modelo": pelo}
         pj = PJ.crear(spec, 30)

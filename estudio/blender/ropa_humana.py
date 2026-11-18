@@ -923,6 +923,16 @@ def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.
     ob, P, usados = cascara(cb, f"TRAJE_{pj['id']}", tapa, gro, [tela_b, tela_p], suavizado=6, minimo=0.0018 * u,
                             mat_cara=mat_cara, solidificar=0.0015 * u)
     partes = [ob]
+    # la piel que queda debajo del traje se borra (con dos anillos de margen en los bordes: muñecas y cuello): al mover
+    # los brazos asomaba por el pecho y los brazos (visto en el render de «A la deriva» E01)
+    adentro = tapa.copy()
+    for _ in range(2):
+        borde = np.zeros(len(cb.pos), bool)
+        for f in cb.caras:
+            if not adentro[f].all():
+                borde[f] = True
+        adentro &= ~borde
+    pj.setdefault("_piel_tapada", set()).update(int(i) for i in np.nonzero(adentro)[0])
     # cuello alto: banda alrededor del cuello (cuerpo abajo, cuello de la cabeza arriba), tapa la unión
     cen = cb.h["Neck"][0].copy()
     bvh_cab = None
