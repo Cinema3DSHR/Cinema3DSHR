@@ -468,3 +468,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Comparado archivo por archivo: los 723 GLB y `models.json` del pack que mandó el dueño están idénticos en Nexus
   (`game/assets/sh3d`), pero faltaban las 723 miniaturas y el README. Se guardó el zip original completo, sin
   modificar, en `mixamo-respaldo/sweethome3d/` (`9739149`, con LEEME y sha256). La guía lo explica (§ 4 bis).
+
+## 18/11/2026 — Por qué no aparecía AUTORIZAR RENDER FINAL
+
+- El APROBAR de la pantalla de inicio de la app manda la aprobación SIN huella (#7, #8), y el verificador sólo cuenta
+  las que llevan la huella de la versión. La del EDITOR 3D sí la lleva (sale de la previsualización). Además, cada
+  pedido desde la app rearma el catálogo desde la rama por defecto, donde p011 no estaba. El «RENDERIZAR» (#9) es el
+  botón viejo y ya no renderiza.
+- Con autorización del dueño: la rama de trabajo se fusionó en `ccr-6d21fe8a-76t9c3` (fusión normal; antes se trajeron
+  sus 3 commits de guías) y en mixamo-respaldo `ccr-6d21fe8a-76t9c3` se avanzó con la carpeta `a_la_deriva` (sólo
+  agrega archivos), que es la que leen los flujos de render. Catálogo rearmado: e01 v2 «EN REVISIÓN».
