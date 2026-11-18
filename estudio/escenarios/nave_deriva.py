@@ -700,7 +700,8 @@ def interior(col, rng):
     raiz_silla = [o for o in silla_objs if o.parent is None]
     for o in raiz_silla:
         o.location = SILLA
-        o.rotation_euler = (0, 0, 0)                           # respaldo atrás (−Y), asiento mirando a la consola
+        o.rotation_mode = "XYZ"                                # el GLB trae cuaterniones: sin esto no gira
+        o.rotation_euler = (0, 0, math.radians(180))           # respaldo atrás (−Y), asiento mirando a la consola
     tapizado = K.material("silla_tapizado", (0.09, 0.10, 0.12), 0.7, ruido=0.1)
     for o in silla_objs:                                       # tapizado gris oscuro (el original es tela azul)
         if o.type == "MESH":
