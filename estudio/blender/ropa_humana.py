@@ -903,7 +903,7 @@ def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.
     cen_c = cb.h["Neck"][0]
     radial_cuello = np.hypot(cb.pos[:, 0] - cen_c[0], cb.pos[:, 1] - cen_c[1])
     # todo el cuerpo menos las manos; arriba sólo queda libre el cuello (los hombros sí van cubiertos)
-    tapa = ~Z["mano"] & ~((z > z_corte - 0.012 * u) & (radial_cuello < 0.07 * u))
+    tapa = ~Z["mano"] & ~((z > z_corte - 0.012 * u) & ((radial_cuello < 0.07 * u) | Z["cabeza"]))
     gro = np.full(len(cb.pos), 0.0025 * u)
     tela_b = tela(f"{nombre}_{pj['id']}", color, 0.55, "tecnico")
     tela_p = tela(f"{nombre}_paneles_{pj['id']}", paneles, 0.6, "acanalado")
@@ -957,8 +957,9 @@ def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.
     techo = list(np.convolve(np.r_[techo[-2:], techo, techo[:2]], np.ones(5) / 5, mode="valid"))
     # la piel del cuerpo que queda adentro del cuello alto se borra (asomaba entre la tela)
     rad = np.hypot(cb.pos[:, 0] - cen[0], cb.pos[:, 1] - cen[1])
-    pj.setdefault("_piel_tapada", set()).update(
-        int(i) for i in np.nonzero((cb.pos[:, 2] > z_corte - 0.035 * u) & (rad < 0.09 * u))[0])
+    if not info.get("propia"):                           # con cabeza injertada: el cuello del maniquí sobra
+        pj.setdefault("_piel_tapada", set()).update(
+            int(i) for i in np.nonzero((cb.pos[:, 2] > z_corte - 0.035 * u) & (rad < 0.09 * u))[0])
     filas = []
     for k, f in enumerate(np.linspace(0, 1, 7)):
         fila = []
@@ -1018,7 +1019,7 @@ def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.
     # cierre corto adelante (del cuello al esternón) con tirador, y parche redondo en el pecho
     metal = tela(f"cierre_{pj['id']}", (0.72, 0.74, 0.78), 0.25, "metal")
     ruta = []
-    for zz in np.linspace(z_corte + 0.02 * u, cb.h["Spine2"][0][2] - 0.02 * u, 12):
+    for zz in np.linspace(z_corte - 0.02 * u, cb.h["Spine2"][0][2] - 0.02 * u, 12):
         hit = cb.bvh.ray_cast(Vector((M["x0"], M["y0"] - 0.4 * u, zz)), Vector((0, 1, 0)), 0.5 * u)
         if hit[0] is not None:
             ruta.append(np.array(hit[0]) - np.array([0, 0.0035 * u, 0]))

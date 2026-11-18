@@ -369,3 +369,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   Hallazgo: las capturas desde un solo lado engañaban (parecía que faltaba medio pelo).
 - Sin render. Falta: autorización para copiar modelos y pelos a mixamo-respaldo (Actions), los trajes espaciales, la
   nave, el robot/IA y el guion del primer episodio.
+
+## 18/11/2026 (noche) — Vuelta a la cabeza original del maniquí con caras Stickman realistas
+
+- Decisión del dueño: cabeza ORIGINAL del maniquí + cara dibujada estilo Stickman realista (`cara_anime.py`,
+  recuperado del historial) + los pelos modelados que ya quedaban bien (hair02 él, SummerGirl ella) + traje de
+  primera piel. La cabeza MakeHuman con expresiones 3D queda guardada como alternativa (`cabeza_mh.py`,
+  `expresiones_3d.py`), igual que el pelo de hebras (`pelo_realista.py`). Las cabezas «free_head» y «BustBaseMesh»
+  que mandó el dueño no traen expresiones (sólo forma); no se usaron.
+- `humanos._cabeza_propia`: malla auxiliar de la cabeza del maniquí para encajar el pelo y medir la mandíbula.
+- Traje: no sube a la cabeza; cuello alto más bajo adelante y cierre que arranca en el cuello (antes en el mentón).

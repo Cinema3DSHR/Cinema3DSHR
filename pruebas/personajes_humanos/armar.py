@@ -14,7 +14,7 @@ def main():
     caras = {"neutral": [{"t": 0, "expr": "neutral"}], "sonrisa": [{"t": 0, "expr": "sonrisa"}],
              "triste": [{"t": 0, "expr": "preocupada"}], "sorpresa": [{"t": 0, "expr": "sorpresa"}],
              "habla": [{"t": 0, "expr": "neutral"}], "carinosa": [{"t": 0, "expr": "carinosa"}],
-             "miedo": [{"t": 0, "expr": "miedo"}], "parpadeo": [{"t": 0, "expr": "neutral"}],
+             "miedo": [{"t": 0, "expr": "sorpresa"}], "parpadeo": [{"t": 0, "expr": "neutral"}],
              "triste_fuerte": [{"t": 0, "expr": "triste"}]}
     quienes = [x for x in a[1:] if x in ("chico", "chica")] or ["chico", "chica"]
     pelo = a[a.index("--pelo") + 1] if "--pelo" in a else None
@@ -34,13 +34,16 @@ def main():
         bpy.context.scene.frame_set(5 if expr == "habla" else 1)
         if expr == "parpadeo":
             for o in bpy.data.objects:
-                if o.type == "MESH" and o.data.shape_keys and "BlinkLeft" in o.data.shape_keys.key_blocks:
-                    o.data.shape_keys.animation_data_clear()
-                    for k in ("BlinkLeft", "BlinkRight"):
-                        o.data.shape_keys.key_blocks[k].value = 1.0
+                if o.type == "MESH" and o.data.shape_keys:
+                    kb = o.data.shape_keys.key_blocks
+                    if "BlinkLeft" in kb or "cerrado" in kb:
+                        o.data.shape_keys.animation_data_clear()
+                        for k in ("BlinkLeft", "BlinkRight", "cerrado"):
+                            if k in kb:
+                                kb[k].value = 1.0
         # la expresión de ese cuadro se hornea en la malla (el visor de prueba no aplica pesos por defecto del GLB)
         for o in list(bpy.data.objects):
-            if o.type == "MESH" and o.data.shape_keys and o.name.startswith(("CABEZA_", "CEJAS_")):
+            if o.type == "MESH" and o.data.shape_keys and o.name.startswith(("CABEZA_", "CEJAS_", "CARA_")):
                 mezcla = o.shape_key_add(name="mezcla", from_mix=True)
                 co = [0.0] * (len(o.data.vertices) * 3)
                 mezcla.data.foreach_get("co", co)

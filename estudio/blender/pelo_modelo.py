@@ -127,7 +127,7 @@ def poner(pj: dict, nombre: str, color_srgb, holgura: float = 1.12) -> bpy.types
     u = pj["u"]
     V, F, UV = _importar(info["archivo"])
     # ---- cabeza (espacio de la armadura)
-    cab = pj["cabeza_humana"]["obj"]
+    cab = pj["cabeza_humana"]["obj"]                       # la cabeza (original del maniquí o injertada)
     H = np.array([v.co[:] for v in cab.data.vertices])
     h_top = H[:, 2].max()
     hx0, hx1, hy0, hy1 = _franja(H, h_top - 0.09 * u, h_top - 0.03 * u)

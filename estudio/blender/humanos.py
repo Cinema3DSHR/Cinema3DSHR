@@ -2,13 +2,12 @@
 
 Los FBX de Tripo3D (esqueleto mixamorig de 65 huesos, ~0,95 m al importar, miran a −Y) aportan el cuerpo y el
 esqueleto (las animaciones de Mixamo andan igual). El estudio les pone:
-  · CABEZA de MakeHuman TAL CUAL (hombre o mujer por defecto, sin retoques), del tamaño que corresponde a la
-    altura del cuerpo, fundida en el cuello (estudio/blender/cabeza_mh.py), con ojos, dientes, lengua, pestañas,
-    cejas de pelitos y piel con dispersión subsuperficial.
-  · ROSTRO 3D: las 59 unidades de expresión de MakeHuman + parpadeo completo; expresiones, microexpresiones,
-    mirada con sacádicos y labios con la voz (estudio/blender/expresiones_3d.py).
-  · PELO realista: hebras guía + hijas para Cycles y tarjetas con transparencia para el teléfono
-    (estudio/blender/pelo_realista.py). Él: degradé militar peinado hacia atrás. Ella: largo, suelto y peinado.
+  · CABEZA ORIGINAL del maniquí (decisión del dueño, 18/11/2026) con piel de dispersión subsuperficial.
+  · ROSTRO dibujado con el sistema de los Stickman, estilo anime realista (estudio/blender/cara_anime.py): ojos con
+    iris y brillos, párpados, cejas, nariz, labios y rubor; 18 expresiones, boca con la voz, miradas y parpadeo.
+  · PELO modelado que subió el dueño (estudio/blender/pelo_modelo.py): él «hair02», ella «SummerGirl».
+    (Alternativas guardadas: cabeza MakeHuman con expresiones 3D en cabeza_mh.py/expresiones_3d.py y pelo de hebras
+    en pelo_realista.py.)
   · TRAJE DE PRIMERA PIEL (va debajo del traje espacial, que viene después) (estudio/blender/ropa_humana.py).
 
 Manifiesto: {"id": "el", "modelo": "humano:chico", "alto_m": 1.80,
@@ -31,14 +30,14 @@ TRAJE = {"prenda": "traje_primera_piel", "color": [0.13, 0.14, 0.16], "acento": 
 
 PERFILES = {
     "humano:chico": {
-        "genero": 1.0, "piel": (0.80, 0.62, 0.50), "labios": (0.70, 0.47, 0.44), "barba": 0.22,
+        "genero": 1.0, "cara": "el", "piel": (0.80, 0.62, 0.50), "labios": (0.70, 0.47, 0.44), "barba": 0.22,
         "iris": (0.30, 0.20, 0.12), "cejas": (0.07, 0.05, 0.035),
         "pelo_modelo": "hair02", "peinado": "degrade_militar", "pelo": (0.07, 0.05, 0.035), "melanina": 0.86,
         "rojizo": 0.3,
         "vestuario": [TRAJE],
     },
     "humano:chica": {
-        "genero": 0.0, "piel": (0.86, 0.68, 0.57), "labios": (0.78, 0.46, 0.47), "barba": 0.0,
+        "genero": 0.0, "cara": "ella", "piel": (0.86, 0.68, 0.57), "labios": (0.78, 0.46, 0.47), "barba": 0.0,
         "iris": (0.34, 0.21, 0.11), "cejas": (0.15, 0.09, 0.06),
         "pelo_modelo": "summer_girl", "peinado": "largo_suelto", "pelo": (0.16, 0.09, 0.05), "melanina": 0.72,
         "rojizo": 0.45,
@@ -47,21 +46,52 @@ PERFILES = {
 }
 
 
+def _cabeza_propia(pj: dict) -> dict:
+    """La cabeza original del maniquí como referencia para el pelo y el cuello del traje (no se modifica):
+    una malla auxiliar (fuera de la escena) con las caras que mueve el hueso de la cabeza."""
+    import bpy
+    from estudio.blender import cabeza_mh as CM
+    rep = CM.reposo(pj)
+    me0 = pj["malla"].data
+    cab = {i for i, p in enumerate(rep["pesos"]) if sum(w for g, w in p.items() if g.startswith("Head")) > 0.5}
+    caras = [list(p.vertices) for p in me0.polygons if all(v in cab for v in p.vertices)]
+    usados = sorted({v for c in caras for v in c})
+    loc = {g: i for i, g in enumerate(usados)}
+    me = bpy.data.meshes.new(f"ref_cabeza_{pj['id']}")
+    me.from_pydata([tuple(rep["pos"][g]) for g in usados], [], [[loc[v] for v in c] for c in caras])
+    me.update()
+    ob = bpy.data.objects.new(f"REF_CABEZA_{pj['id']}", me)          # no se enlaza: sólo para medir
+    hn, hh = rep["huesos"]["Neck"][0], rep["huesos"]["Head"][0]
+    return {"obj": ob, "z_corte": hn.z + (hh.z - hn.z) * 0.3, "rep": rep, "propia": True}
+
+
 def preparar(pj: dict, spec: dict, fps: int, nf: int, otros: dict | None = None):
-    """Cabeza, rostro, pelo y traje de un humano recién creado por personajes._crear_mixamo."""
-    from estudio.blender import cabeza_mh as CM, expresiones_3d as E3, pelo_realista as PR, ropa_humana as RH
+    """Cara dibujada (sistema Stickman, estilo anime realista), pelo modelado y traje de un humano recién creado
+    por personajes._crear_mixamo. La cabeza es la ORIGINAL del maniquí."""
+    from estudio.blender import cara_anime as CA, pelo_modelo as PM, ropa_humana as RH, stickman as SM
+    from estudio.blender.cabeza_mh import material_piel
     perfil = {**PERFILES[spec["modelo"]], **spec.get("perfil", {})}
     pj["coleccion"] = pj["malla"].users_collection[0]
     pj["u"] = 1.0 / pj["raiz"].scale.x                      # 1 metro real en unidades del modelo
-    pj["escala_cabeza"] = perfil.get("escala_cabeza", 1.0)
     pj["perfil"] = perfil
-    CM.armar(pj, perfil)
-    E3.actuar(pj, spec.get("cara", {}), fps, nf, otros)
-    if perfil.get("pelo_modelo"):                          # pelo ya modelado (los que sube el dueño)
-        from estudio.blender import pelo_modelo as PM
+    piel = material_piel(f"piel_{pj['id']}", perfil["piel"], 0.5)
+    pj["malla"].data.materials.clear()
+    pj["malla"].data.materials.append(piel)
+    pj["cabeza_humana"] = _cabeza_propia(pj)
+    partes = CA.armar(pj, perfil.get("cara", "el" if perfil["genero"] > 0.5 else "ella"), perfil, pj["coleccion"])
+    pj["cara"] = partes
+    cara = dict(spec.get("cara", {}))
+    cara["habla"] = [{**h, "audio": ruta_audio(h["audio"])} if h.get("audio") else h for h in cara.get("habla", [])]
+    SM.actuar(partes, cara, fps, nf, semilla=sum(map(ord, pj["id"])))
+    if perfil.get("pelo_modelo"):
         PM.poner(pj, perfil["pelo_modelo"], perfil["pelo"], perfil.get("pelo_holgura", 1.12))
-    elif perfil.get("peinado"):
-        PR.construir(pj, perfil["peinado"], perfil["pelo"], perfil["melanina"], perfil["rojizo"],
-                     sum(map(ord, pj["id"])))
     RH.vestir(pj, perfil.get("vestuario", []))
     return pj
+
+
+def ruta_audio(ruta: str) -> str:
+    """Las voces se guardan con la ruta relativa al repositorio; acá se resuelve donde esté el repo."""
+    from pathlib import Path
+    from estudio import config
+    p = Path(ruta)
+    return str(p if p.is_absolute() else config.RAIZ / p)
