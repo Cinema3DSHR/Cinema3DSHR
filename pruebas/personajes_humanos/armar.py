@@ -17,6 +17,7 @@ def main():
              "miedo": [{"t": 0, "expr": "miedo"}], "parpadeo": [{"t": 0, "expr": "neutral"}],
              "triste_fuerte": [{"t": 0, "expr": "triste"}]}
     quienes = [x for x in a[1:] if x in ("chico", "chica")] or ["chico", "chica"]
+    pelo = a[a.index("--pelo") + 1] if "--pelo" in a else None
     for q in quienes:
         bpy.ops.wm.read_factory_settings(use_empty=True)
         PJ.reiniciar()
@@ -26,7 +27,10 @@ def main():
         cara = {"expresiones": caras[expr], "parpadeo": False}
         if expr == "habla":
             cara["habla"] = [{"inicio_s": 0, "texto": "Hola... ¿me escuchás?", "intensidad": 1.0}]
-        pj = PJ.crear({"id": q, "modelo": f"humano:{q}", "alto_m": alto, "acciones": [], "cara": cara}, 30)
+        spec = {"id": q, "modelo": f"humano:{q}", "alto_m": alto, "acciones": [], "cara": cara}
+        if pelo:
+            spec["perfil"] = {"pelo_modelo": pelo}
+        pj = PJ.crear(spec, 30)
         bpy.context.scene.frame_set(5 if expr == "habla" else 1)
         if expr == "parpadeo":
             for o in bpy.data.objects:
@@ -44,7 +48,7 @@ def main():
                 o.data.vertices.foreach_set("co", co)
         from estudio.blender import previa as PV
         PV._aplanar_materiales()                    # como la previsualización real (colores planos)
-        bpy.ops.export_scene.gltf(filepath=str(salida / f"{q}_{expr}.glb"), export_format="GLB",
+        bpy.ops.export_scene.gltf(filepath=str(salida / f"{q}_{expr}{'_' + pelo if pelo else ''}.glb"), export_format="GLB",
                                   export_apply=False, export_animations=False, export_image_format="WEBP")
         print("OK", q, expr)
 

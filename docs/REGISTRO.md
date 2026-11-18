@@ -343,3 +343,29 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   estudio no puede abrir; hace falta exportarlos (OpenIV/CodeWalker → FBX/OBJ) o conseguirlos en GLB/FBX.
 - Guion como datos: `producciones/p010_un_sueno_de_a_dos/herramientas/guion.py`. Falta: escenario de la
   concesionaria, escenas, voces elegidas y previsualización 3D. **Sin render.**
+
+## 18/11/2026 (tarde) — Cambio de historia: serie espacial; personajes humanos con cabeza MakeHuman
+
+- El dueño cambió la historia: serie espacial (un hombre a la deriva en el espacio, una IA que le habla desde las
+  computadoras de la nave; él y ella quieren volver a la Tierra y se van enamorando). Voces: Aiden (él) y Kate (ella)
+  (`config/voces.json`, roles `aiden_es_ar` y `kate_es_ar`). La concesionaria de «Un sueño de a dos» queda sin hacer.
+- Descartado a pedido del dueño: la cara dibujada estilo anime y el pelo esculpido (quedan en el historial de Git).
+- `estudio/makehuman.py` + `estudio/blender/cabeza_mh.py`: cabeza de MakeHuman (CC0) TAL CUAL (hombre o mujer por
+  defecto, sin retoques), escalada entera para un cuerpo de la altura del maniquí y apoyada en la base de su cuello;
+  el cuello se funde con el del cuerpo; el corte del maniquí respeta los trapecios. Ojos (córnea transparente, iris
+  del color del personaje), dientes, lengua, boca por dentro, pestañas y cejas de pelitos, piel pintada por zonas.
+- `estudio/blender/expresiones_3d.py`: 59 unidades de expresión de MakeHuman + parpadeo completo; expresiones con
+  los nombres de los Stickman, microexpresiones, mirada con sacádicos, labios con la voz (ruta relativa al repo).
+  Error de Blender 5 encontrado: una forma clave nueva arranca con peso 1 (la cara salía con todo aplicado) → 0.
+- Pelo: `estudio/blender/pelo_modelo.py` pone los pelos que subió el dueño (escala, ubicación, nada adentro de la
+  cabeza ni del cuerpo, textura teñida con transparencia, pesos cabeza → espalda). Él: «hair02» (el único corto).
+  Ella: «SummerGirl» (largo, suelto, con flequillo; el más femenino: el Bob deja ver el cuero cabelludo y el Daisy
+  es de nodos de pelo, no se ve en el teléfono). Los archivos están en `../modelos_subidos/un_sueno_de_a_dos/pelos/`.
+  `estudio/blender/pelo_realista.py` (hebras guía + hijas, guía del dueño) queda como alternativa.
+- Traje de primera piel (`ropa_humana.traje_primera_piel`): una pieza pegada al cuerpo con pie tipo media, vivos de
+  color, cierre corto, rodilleras y coderas, parche en el pecho y cuello alto que tapa la unión con la cabeza y queda
+  siempre por debajo de la mandíbula.
+- Visor de prueba: `pruebas/personajes_humanos/vista.gd` (vistas de cara, 3/4 de los dos lados, nuca y cuello).
+  Hallazgo: las capturas desde un solo lado engañaban (parecía que faltaba medio pelo).
+- Sin render. Falta: autorización para copiar modelos y pelos a mixamo-respaldo (Actions), los trajes espaciales, la
+  nave, el robot/IA y el guion del primer episodio.

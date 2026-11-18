@@ -903,7 +903,7 @@ def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.
     cen_c = cb.h["Neck"][0]
     radial_cuello = np.hypot(cb.pos[:, 0] - cen_c[0], cb.pos[:, 1] - cen_c[1])
     # todo el cuerpo menos las manos; arriba sólo queda libre el cuello (los hombros sí van cubiertos)
-    tapa = ~Z["mano"] & ~((z > z_corte - 0.012 * u) & (radial_cuello < 0.085 * u))
+    tapa = ~Z["mano"] & ~((z > z_corte - 0.012 * u) & (radial_cuello < 0.07 * u))
     gro = np.full(len(cb.pos), 0.0025 * u)
     tela_b = tela(f"{nombre}_{pj['id']}", color, 0.55, "tecnico")
     tela_p = tela(f"{nombre}_paneles_{pj['id']}", paneles, 0.6, "acanalado")
@@ -931,10 +931,39 @@ def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.
         bmc.from_mesh(info["obj"].data)
         bvh_cab = BVHTree.FromBMesh(bmc)
         bmc.free()
+    # alto del cuello en cada dirección: hasta 3 cm sobre la unión, pero siempre 8 mm por debajo de la mandíbula
+    H = np.array([v.co[:] for v in info["obj"].data.vertices]) if info.get("obj") is not None else np.zeros((0, 3))
+    angs = np.linspace(0, 2 * math.pi, 33)[:-1]
+    techo = []
+    for a in angs:
+        tope = z_corte + 0.03 * u
+        if len(H) and bvh_cab is not None:
+            # radio del cuello en esta dirección; la mandíbula es lo que sobresale de él
+            d = np.array([math.cos(a), math.sin(a), 0.0])
+            c0 = np.array([cen[0], cen[1], z_corte + 0.015 * u])
+            hit = bvh_cab.ray_cast(Vector(c0 + d * 0.3 * u), Vector(-d), 0.3 * u)
+            r_cu = float(np.linalg.norm(np.array(hit[0]) - c0)) if hit[0] is not None else 0.06 * u
+            rel = H[:, :2] - cen[:2]
+            ang = np.arctan2(rel[:, 1], rel[:, 0])
+            dif = np.abs((ang - a + math.pi) % (2 * math.pi) - math.pi)
+            sel = (dif < 0.25) & (np.hypot(rel[:, 0], rel[:, 1]) > r_cu + 0.012 * u) & (H[:, 2] > z_corte)
+            if sel.any():
+                tope = min(tope, float(H[sel, 2].min()) - 0.008 * u)
+        techo.append(max(tope, z_corte + 0.004 * u))
+    # borde de arriba parejo (sin picos): promedio circular y nunca más alto que el valor original
+    t = np.array(techo)
+    lis = np.convolve(np.r_[t[-3:], t, t[:3]], np.ones(7) / 7, mode="valid")
+    techo = list(np.minimum(t, lis + 0.002 * u))
+    techo = list(np.convolve(np.r_[techo[-2:], techo, techo[:2]], np.ones(5) / 5, mode="valid"))
+    # la piel del cuerpo que queda adentro del cuello alto se borra (asomaba entre la tela)
+    rad = np.hypot(cb.pos[:, 0] - cen[0], cb.pos[:, 1] - cen[1])
+    pj.setdefault("_piel_tapada", set()).update(
+        int(i) for i in np.nonzero((cb.pos[:, 2] > z_corte - 0.035 * u) & (rad < 0.09 * u))[0])
     filas = []
-    for k, zz in enumerate(np.linspace(z_corte - 0.03 * u, z_corte + 0.03 * u, 7)):
+    for k, f in enumerate(np.linspace(0, 1, 7)):
         fila = []
-        for a in np.linspace(0, 2 * math.pi, 33)[:-1]:
+        for ia, a in enumerate(angs):
+            zz = (z_corte - 0.045 * u) + (techo[ia] - (z_corte - 0.045 * u)) * f
             d = np.array([math.cos(a), math.sin(a), 0.0])
             c0 = np.array([cen[0], cen[1], zz])
             r = 0.0
@@ -944,7 +973,7 @@ def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.
                 hit = arbol.ray_cast(Vector(c0 + d * 0.3 * u), Vector(-d), 0.3 * u)
                 if hit[0] is not None:
                     r = max(r, float(np.linalg.norm(np.array(hit[0]) - c0)))
-            r = (r or 0.055 * u) + 0.005 * u
+            r = (r or 0.055 * u) + 0.006 * u + 0.008 * u * (1 - f) ** 2
             fila.append(c0 + d * r)
         filas.append(fila)
     V = [p for f in filas for p in f]

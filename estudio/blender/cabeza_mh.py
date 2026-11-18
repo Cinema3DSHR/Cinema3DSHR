@@ -121,7 +121,13 @@ def injertar(pj: dict, genero: float) -> dict:
     bm = bmesh.new()
     bm.from_mesh(me0)
     bm.verts.ensure_lookup_table()
-    borrar = [f for f in bm.faces if all(rep["pos"][x.index][2] > z_corte + 0.004 * u for x in f.verts)]
+    # sólo el cuello y la cabeza del maniquí: los trapecios (que en algunos cuerpos suben más que el corte) quedan
+    def _dentro_cuello(i):
+        q = rep["pos"][i]
+        if q[2] <= z_corte + 0.004 * u:
+            return False
+        return math.hypot(q[0] - hn.x, q[1] - eje_y) < 0.08 * u or q[2] > z_corte + 0.035 * u
+    borrar = [f for f in bm.faces if all(_dentro_cuello(x.index) for x in f.verts)]
     bmesh.ops.delete(bm, geom=borrar, context="FACES")
     bm.to_mesh(me0)
     bm.free()

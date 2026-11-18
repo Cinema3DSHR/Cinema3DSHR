@@ -33,13 +33,15 @@ PERFILES = {
     "humano:chico": {
         "genero": 1.0, "piel": (0.80, 0.62, 0.50), "labios": (0.70, 0.47, 0.44), "barba": 0.22,
         "iris": (0.30, 0.20, 0.12), "cejas": (0.07, 0.05, 0.035),
-        "peinado": "degrade_militar", "pelo": (0.07, 0.05, 0.035), "melanina": 0.86, "rojizo": 0.3,
+        "pelo_modelo": "hair02", "peinado": "degrade_militar", "pelo": (0.07, 0.05, 0.035), "melanina": 0.86,
+        "rojizo": 0.3,
         "vestuario": [TRAJE],
     },
     "humano:chica": {
         "genero": 0.0, "piel": (0.86, 0.68, 0.57), "labios": (0.78, 0.46, 0.47), "barba": 0.0,
         "iris": (0.34, 0.21, 0.11), "cejas": (0.15, 0.09, 0.06),
-        "peinado": "largo_suelto", "pelo": (0.16, 0.09, 0.05), "melanina": 0.72, "rojizo": 0.45,
+        "pelo_modelo": "summer_girl", "peinado": "largo_suelto", "pelo": (0.16, 0.09, 0.05), "melanina": 0.72,
+        "rojizo": 0.45,
         "vestuario": [TRAJE],
     },
 }
@@ -55,7 +57,11 @@ def preparar(pj: dict, spec: dict, fps: int, nf: int, otros: dict | None = None)
     pj["perfil"] = perfil
     CM.armar(pj, perfil)
     E3.actuar(pj, spec.get("cara", {}), fps, nf, otros)
-    PR.construir(pj, perfil["peinado"], perfil["pelo"], perfil["melanina"], perfil["rojizo"],
-                 sum(map(ord, pj["id"])))
+    if perfil.get("pelo_modelo"):                          # pelo ya modelado (los que sube el dueño)
+        from estudio.blender import pelo_modelo as PM
+        PM.poner(pj, perfil["pelo_modelo"], perfil["pelo"], perfil.get("pelo_holgura", 1.12))
+    elif perfil.get("peinado"):
+        PR.construir(pj, perfil["peinado"], perfil["pelo"], perfil["melanina"], perfil["rojizo"],
+                     sum(map(ord, pj["id"])))
     RH.vestir(pj, perfil.get("vestuario", []))
     return pj
