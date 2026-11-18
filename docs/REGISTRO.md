@@ -422,3 +422,7 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   hashes en `indice_personajes.json`). `humanos.py` y `pelo_modelo.py` los leen de ahí (`mixamo:`), `blender_deps`
   los declara para Actions, `nave_deriva.DEPENDENCIAS` declara la silla de Sweet Home y `previa.yml` acepta la
   entrada `mixamo_ref` (rama del respaldo). Huella nueva de e01/v1: `f7e399b32f6f0463`.
+- **Previsualización publicada** con «Previsualización 3D» (corrida n.º 17, `mixamo_ref=claude/inspiring-sagan-1ogr0n`,
+  en verde: exportó, publicó en la release de la producción y rearmó el catálogo). Antes se armó igual en el
+  contenedor sin la carpeta de subidas (todo desde mixamo-respaldo) y pasó `revision_ui.gd` 18/18. Espera la revisión
+  del dueño en EDITOR 3D. Sin render.
