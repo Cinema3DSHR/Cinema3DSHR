@@ -305,7 +305,7 @@ def armar(version: int = 1) -> dict:
              "dos lados; Aiden entra", desde=[0.25, -19.3, 1.75], hasta=[0.25, -18.4, 1.68],
              objetivo={"ancla": "botanico_entrada", "desp": [0, 0, -0.2]}, lente_mm=24),
         toma("dolly", "t10_flores", *T["detalle"], plano="detalle: flores vivas tras el vidrio con gotas",
-             desde=[-0.95, -11.0, 1.4], hasta=[-0.98, -11.75, 1.36], objetivo=[-1.5, -11.45, 1.32], lente_mm=50,
+             desde=[-0.92, -10.95, 1.66], hasta=[-0.95, -11.7, 1.62], objetivo=[-1.5, -11.45, 1.55], lente_mm=40,
              apertura=2.0),
         toma("estatica", "t11_aiden_flores", *T["aiden_flores"], plano="Aiden entre las flores, de frente",
              desde=[0.2, -17.6, 1.55], objetivo=cab, lente_mm=38, apertura=3.2),

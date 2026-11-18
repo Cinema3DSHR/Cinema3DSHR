@@ -65,6 +65,7 @@ def _materiales():
     M["piso_bot"] = K.material("piso_botanico", (0.30, 0.31, 0.30), 0.55, 0.2, ladrillo=((0.26, 0.27, 0.26), 3.0),
                                relieve=0.1)
     M["gabinete"] = K.material("gabinete_blanco", (0.82, 0.84, 0.86), 0.35, 0.2)
+    M["fondo_inc"] = K.material("fondo_incubadora", (0.05, 0.09, 0.08), 0.6, 0.0, ruido=0.1)   # oscuro: resaltan las flores
     M["sustrato"] = K.material("sustrato", (0.09, 0.06, 0.04), 0.9, 0.0, ruido=0.4, escala_ruido=40, relieve=0.4)
     M["raiz"] = K.material("raiz", (0.86, 0.80, 0.66), 0.6, 0.0, ruido=0.2)
     M["agua"] = K.material("agua_tanque", (0.70, 0.88, 0.92), 0.05, 0.0, alfa=0.35, transmision=1.0, ior=1.33,
@@ -194,7 +195,7 @@ def incubadora(nombre, centro: Vector, lado: int, largo: float, M, col, rng, pla
     zb, zt, zs = 0.70, 2.02, 0.98            # base, techo de la caja, superficie del sustrato
     K.caja(f"{nombre}_gabinete", (centro.x, centro.y, zb / 2), (0.56, largo, zb), M["gabinete"], col, 0.01)
     K.caja(f"{nombre}_zocalo", (x_in - lado * 0.01, centro.y, 0.05), (0.04, largo, 0.1), M["oscuro"], col)
-    K.caja(f"{nombre}_fondo", (centro.x + lado * 0.27, centro.y, (zb + zt) / 2), (0.02, largo, zt - zb), M["gabinete"], col)
+    K.caja(f"{nombre}_fondo", (centro.x + lado * 0.27, centro.y, (zb + zt) / 2), (0.02, largo, zt - zb), M["fondo_inc"], col)
     K.caja(f"{nombre}_techo", (centro.x, centro.y, zt + 0.04), (0.58, largo + 0.02, 0.08), M["gabinete"], col, 0.01)
     # vidrio: frente y extremos
     K.caja(f"{nombre}_vidrio_frente", (x_in, centro.y, (zb + zt) / 2), (0.012, largo, zt - zb), M["vidrio"], col)
@@ -548,7 +549,7 @@ def despues_personajes(info, pjs, ctx, manifiesto, fps):
                 lado = 1 if t.get("mano", "R") == "R" else -1
                 if u["objeto"] == "flor":
                     off = Matrix.Translation((0.0, 0.075, 0.025)) @ Matrix.Rotation(math.radians(-80 * lado), 4, "Z") \
-                        @ Matrix.Rotation(math.radians(90), 4, "Y")
+                        @ Matrix.Rotation(math.radians(-90), 4, "Y")          # la flor hacia arriba
                 else:
                     off = Matrix.Translation((0.0, 0.07, 0.035)) @ Matrix.Rotation(math.radians(90), 4, "X")
                 raiz.parent = arm
