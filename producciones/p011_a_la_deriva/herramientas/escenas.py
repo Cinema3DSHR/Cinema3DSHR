@@ -54,7 +54,7 @@ def armar(version: int = 1) -> dict:
                              "mirando_deg": 90, "mezcla_s": 0.6})
             acciones.append({"clip": SENTADO + "Sitting_Idle.fbx", "inicio_s": ln["inicio_s"] + ln["dur"],
                              "pos": [0.0, 0.5, 0.0], "mirando_deg": 90, "mezcla_s": 0.8})
-    acciones.append({"clip": SENTADO + "Sitting_Dazed.fbx", "inicio_s": t_kate - 0.4, "pos": [0.0, 0.5, 0.0],
+    acciones.append({"clip": SENTADO + "Sitting_Idle_2.fbx", "inicio_s": t_kate - 0.4, "pos": [0.0, 0.5, 0.0],
                      "mirando_deg": 90, "mezcla_s": 1.0})
     expresiones = [{"t": 0.0, "expr": "cansado"}]
     for ln in L:
@@ -100,11 +100,11 @@ def armar(version: int = 1) -> dict:
              lente_mm=35),
         toma(8, "dolly", "keit", cortes[7], cortes[8], plano="Aiden pide que EVA hable con Kate (de perfil, lejos)",
              desde=[1.5, 0.3, 1.4], hasta=[1.35, 0.4, 1.4], objetivo={"ancla": "puesto"}, lente_mm=40),
-        toma(9, "paneo", "sin_respuesta", cortes[8], cortes[9], plano="la pantalla del módulo de Kate: COMUNICACIÓN "
-             "SIN RESPUESTA; Aiden baja la cabeza", desde=[-1.3, 0.2, 1.6], hasta=[-1.2, 0.3, 1.6],
-             objetivo={"ancla": "kate_pantalla"}, objetivo_final={"ancla": "puesto"}, lente_mm=30),
+        toma(9, "dolly", "sin_respuesta", cortes[8], cortes[9], plano="la pantalla del módulo de Kate: COMUNICACIÓN "
+             "SIN RESPUESTA", desde=[-1.7, 0.6, 1.62], hasta=[-2.0, 0.75, 1.62],
+             objetivo={"ancla": "kate_pantalla"}, lente_mm=32),
         toma(10, "estatica", "canal", cortes[9], cortes[10], plano="EVA ofrece abrir el canal; Aiden: «No. Déjala»",
-             desde=[0.45, -0.5, 1.5], objetivo={"ancla": "puesto", "desp": [0, 0.3, 0]}, lente_mm=32),
+             desde=[0.95, -0.35, 1.95], objetivo={"ancla": "puesto", "desp": [0, 0.35, -0.05]}, lente_mm=32),
         toma(11, "dolly", "final", cortes[10], cortes[11], plano="final: Aiden inmóvil; la Tierra pequeña en el "
              "ventanal. Corte a negro", desde=[0.4, -1.6, 1.68], hasta=[0.5, -2.75, 1.78],
              objetivo={"ancla": "ventanal", "desp": [-0.2, 0, -0.2]}, lente_mm=22,

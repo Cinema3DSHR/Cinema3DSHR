@@ -701,6 +701,12 @@ def interior(col, rng):
     for o in raiz_silla:
         o.location = SILLA
         o.rotation_euler = (0, 0, math.radians(180))
+    tapizado = K.material("silla_tapizado", (0.09, 0.10, 0.12), 0.7, ruido=0.1)
+    for o in silla_objs:                                       # tapizado gris oscuro (el original es tela azul)
+        if o.type == "MESH":
+            for i, m in enumerate(o.data.materials):
+                if m and (sum(m.diffuse_color[:3]) > 0.6 or any(n.type == "TEX_IMAGE" for n in m.node_tree.nodes)):
+                    o.data.materials[i] = tapizado
     # cables por el piso hasta la consola, lucecitas en las paredes, gabinetes
     for k in range(5):
         pts = [Vector((-2.4 + k * 0.08, -2.6, 0.02)), Vector((-1.5 + k * 0.1, -0.5, 0.02)),

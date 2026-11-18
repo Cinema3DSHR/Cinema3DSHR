@@ -393,3 +393,26 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   láminas + las de los Stickman) usada por `cara_anime.actuar`.
 - Prueba: las capturas tomaban el cuadro 1, con la expresión a mitad de su transición (se veía floja); ahora el 20.
 - Pendiente visto en las capturas: en la sonrisa abierta de ella los dientes se ven cortados de un lado.
+
+## 18/11/2026 — «A la deriva» E01 (p011): set de la nave, voces y escena (previsualización local, sin render)
+
+- Documento del dueño: `producciones/p011_a_la_deriva/E01_documento_produccion_v1_1.txt`. p010 queda «descartada».
+- Set único y reutilizable `estudio/escenarios/nave_deriva.py`: cielo panorámico generado (estrellas, Vía Láctea,
+  nebulosas), Tierra con nubes y atmósfera, planeta gigante con anillos, luna, Sol; la nave por fuera (módulo de
+  mando con ventanal, cuerpo, módulo de Kate, alas solares, motores, antena, luces de navegación que titilan); el
+  centro de operaciones (ventanal con vidrio y nervios, consola curva con teclados, monitores de trayectoria,
+  telemetría y comunicaciones, energía/combustible, núcleo de EVA que late con su voz, pantalla del módulo de Kate
+  que pasa a «COMUNICACIÓN SIN RESPUESTA», silla de oficina de Sweet Home retapizada, caños, cables, gabinetes, luces
+  ámbar/rojas, puerta y pasillo). Pantallas dibujadas con Pillow (agregado a requirements). Todo dentro de 700 m.
+  Error propio corregido: las esferas sin capa UV exportaban la textura con texCoord −1 (cielo negro en el visor).
+- Voces: EVA = «Alma» (elegida por el dueño), Aiden = «Aiden»; 14 líneas con marcas de tiempo por letra
+  (`/with-timestamps`, `elevenlabs.ruta_alineacion`) → `cara_anime._labios_por_letra`. Narradora guardada para otros
+  capítulos: «Veronica» (`narradora_deriva`). Gasto: ~1.208 (voces) + ~880 (EVA con Alma) + ~357 (muestras de EVA)
+  + música (85 s) y un efecto; saldo informado 22.558 (ElevenLabs descuenta con atraso).
+- Escena `escenas/e01/v1` (`herramientas/escenas.py`): 11 tomas 9:16, Aiden sentado de espaldas (Mixamo sentado),
+  eventos `eva_habla`, `estado_kate`, `luces_navegacion`, ambiente `nave_interior` (`estudio/audio/nave.py`),
+  efecto de montaje `fundido_negro`. Validada. **Dura 88,5 s**: los diálogos del documento, a ritmo natural, ocupan
+  ~67 s (el documento pide 60 s): decisión del dueño.
+- Previsualización hecha en el contenedor y probada con `pruebas/revision/revision_ui.gd` (18/18; la prueba pedía 2
+  personajes y este episodio tiene 1) y capturas por toma (`pruebas/nave/tomas.gd`). **No publicada**: `previa.yml`
+  necesita los modelos y pelos en mixamo-respaldo (autorización del dueño pendiente). Sin render.

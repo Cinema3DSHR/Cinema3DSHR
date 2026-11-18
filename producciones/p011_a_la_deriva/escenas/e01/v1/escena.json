@@ -106,7 +106,7 @@
      "mezcla_s": 0.8
     },
     {
-     "clip": "mixamo:animaciones/sentado_manejar/Sitting_Dazed.fbx",
+     "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle_2.fbx",
      "inicio_s": 71.83399999999999,
      "pos": [
       0.0,
@@ -473,27 +473,24 @@
   },
   {
    "id": "t09_sin_respuesta",
-   "tipo": "paneo",
-   "plano": "la pantalla del módulo de Kate: COMUNICACIÓN SIN RESPUESTA; Aiden baja la cabeza",
+   "tipo": "dolly",
+   "plano": "la pantalla del módulo de Kate: COMUNICACIÓN SIN RESPUESTA",
    "inicio_s": 71.934,
    "duracion_s": 2.946,
    "desde": [
-    -1.3,
-    0.2,
-    1.6
+    -1.7,
+    0.6,
+    1.62
    ],
    "hasta": [
-    -1.2,
-    0.3,
-    1.6
+    -2.0,
+    0.75,
+    1.62
    ],
    "objetivo": {
     "ancla": "kate_pantalla"
    },
-   "objetivo_final": {
-    "ancla": "puesto"
-   },
-   "lente_mm": 30
+   "lente_mm": 32
   },
   {
    "id": "t10_canal",
@@ -502,16 +499,16 @@
    "inicio_s": 74.88,
    "duracion_s": 4.05,
    "desde": [
-    0.45,
-    -0.5,
-    1.5
+    0.95,
+    -0.35,
+    1.95
    ],
    "objetivo": {
     "ancla": "puesto",
     "desp": [
      0,
-     0.3,
-     0
+     0.35,
+     -0.05
     ]
    },
    "lente_mm": 32

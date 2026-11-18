@@ -47,7 +47,7 @@ func _process(_d: float) -> bool:
 	elif _paso == 20:
 		# 2. la APK carga y muestra la escena en 3D
 		_chequear("2  la escena 3D cargó completa", _ed._cargado and _ed._escena != null, _ed._info.text.strip_edges())
-		_chequear("2  tiene personajes animados", _ed._actores.size() >= 2 and _ed._ap != null, "%d personajes" % _ed._actores.size())
+		_chequear("2  tiene personajes animados", _ed._actores.size() >= 1 and _ed._ap != null, "%d personajes" % _ed._actores.size())
 		var tomas: Array = _ed._d.get("tomas", [])
 		_chequear("3  tomas y cámaras de rodaje disponibles", tomas.size() > 0 and _ed._camaras_rodaje.size() >= tomas.size(),
 			"%d tomas, %d cámaras" % [tomas.size(), _ed._camaras_rodaje.size()])
