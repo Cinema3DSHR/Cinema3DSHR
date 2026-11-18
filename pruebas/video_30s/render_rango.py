@@ -35,6 +35,10 @@ AUT.exigir(m, AUT.config_de(f'{_q["ancho"]}x{_q["alto"]}', 30, a.muestras))
 def toma_de(f):
     for t in res["tomas"]:
         if t["frame_inicio"] <= f <= t["frame_fin"]: return t
+    # un cuadro entre dos tomas (redondeo de segundos a cuadros): como Blender, sigue la cámara de la toma anterior
+    previas = [t for t in res["tomas"] if t["frame_inicio"] <= f]
+    if previas:
+        return max(previas, key=lambda t: t["frame_inicio"])
     raise SystemExit(f"fotograma {f} sin toma")
 c = s.cycles
 c.seed = 0; c.use_animated_seed = False          # semilla fija: el ruido es idéntico entre ejecuciones
