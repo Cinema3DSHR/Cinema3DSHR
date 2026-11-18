@@ -27,6 +27,8 @@ def leer(ruta: Path) -> dict:
 
 
 def escribir(ruta: Path, datos: dict):
+    from estudio import proteccion as PR
+    PR.exigir_escritura(ruta)               # lo entregado / aprobado no se sobrescribe
     Path(ruta).parent.mkdir(parents=True, exist_ok=True)
     Path(ruta).write_text(json.dumps(datos, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 

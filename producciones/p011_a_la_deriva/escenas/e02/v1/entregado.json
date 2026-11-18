@@ -1,0 +1,27 @@
+{
+ "fecha": "2026-11-18T15:10:40Z",
+ "nota": "previsualización v1 (GLB + JSON del visor) enviada por el chat el 18/11/2026; caminata Walking_2 rechazada por el dueño",
+ "produccion": "p011_a_la_deriva",
+ "escena": "e02",
+ "version": 1,
+ "huella": "1aa72a80dedfc1e2",
+ "receta": {
+  "ruta": "producciones/p011_a_la_deriva/escenas/e02/v1/escena.json",
+  "sha256": "fdd714c44314233a3e0c4508c3f7f973caaaf07a978c6c70d9a7049f0fba227f"
+ },
+ "derivados": [
+  {
+   "nombre": "e02_v1_previa.glb",
+   "bytes": 29453476,
+   "sha256": "e8919c72f847017296028f8f259ad4d70ecc9c8ffdbe6cbb1b1447d759b67ebf",
+   "ruta_al_entregar": "tmp/a_la_deriva/e02_v1_previa.glb"
+  },
+  {
+   "nombre": "e02_v1_previa.json",
+   "bytes": 40082,
+   "sha256": "3e22580801e1b3431228225a5f500a9e679033d627ee2c3b7b9530c587539d09",
+   "ruta_al_entregar": "tmp/a_la_deriva/e02_v1_previa.json"
+  }
+ ],
+ "regla": "No se sobrescribe la receta ni estos archivos. Correcciones = versión nueva o copia de trabajo."
+}

@@ -152,6 +152,8 @@ if __name__ == "__main__":
     v = int(sys.argv[1]) if len(sys.argv) > 1 else 1
     e = armar(v)
     out = RAIZ / "producciones/p011_a_la_deriva/escenas/e01" / f"v{v}" / "escena.json"
+    from estudio import proteccion as PR
+    PR.exigir_escritura(out)                       # una versión entregada no se sobrescribe: usar otra versión
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(e, ensure_ascii=False, indent=1) + "\n")
     print(out, "duración", e["duracion_s"], "s", "tomas", len(e["tomas"]))
