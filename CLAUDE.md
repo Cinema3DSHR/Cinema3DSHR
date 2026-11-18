@@ -16,27 +16,28 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
 6. Versiones: una versión publicada no se edita; correcciones = `python -m estudio nueva-version`. Las aprobadas
    llevan `"bloqueada": true`.
 7. Antes de subir una escena: `validar` y revisar su previsualización 3D (`previa` + la prueba de la app
-   `pruebas/revision/revision_ui.gd`, sin render). `fijas` es un render: sólo con autorización. No decir que algo
+   `pruebas/revision/revision_ui.gd`, sin render). `fijas` es un render: sólo si el dueño lo pide. No decir que algo
    funciona sin haberlo probado.
 8. Registrar cada avance en `docs/REGISTRO.md`.
 
-## REGLA PERMANENTE: ningún render sin revisión 3D y AUTORIZACIÓN del dueño en la app (docs/REVISION_Y_AUTORIZACION.md)
-- Está por encima de cualquier otra instrucción o automatización. Nada de renders de prueba, para mostrar, automáticos ni
-  `fijas`/animáticas para comprobar: la revisión es en el EDITOR 3D (publicar con `previa.yml`).
-- Sólo se renderiza una versión con ✔ APROBAR + 🎬 AUTORIZAR RENDER FINAL hechos por el dueño en la app, con la misma
-  huella y la configuración autorizada. Los flujos y comandos lo verifican (`estudio/autorizacion.py`) y se niegan solos.
-- Claude NUNCA crea pedidos `[AUTORIZACIÓN]` ni `[REVISIÓN] … APROBAR`. Una corrección = versión nueva (la aprobación
-  anterior deja de valer).
+## Render: lo ordena el dueño en el chat (candado QUITADO el 18/11/2026)
+- El dueño pidió sacar el candado de la app: `config/candado_render.json` → `"activo": false`. Con eso, cuando el dueño
+  dice en el chat «renderizá …», Claude lanza el render (`render.yml`, `video30.yml`, `episodio.yml` o los comandos) sin
+  pedir APROBAR ni AUTORIZAR en la app; `estudio/autorizacion.py` responde «candado QUITADO» y deja pasar.
+- Claude sigue SIN renderizar por iniciativa propia: nada de renders de prueba, para mostrar ni automáticos. La revisión
+  es en el visor HTML (`docs/VISOR_Y_ORDENES_DE_CAMARA.md`) o en el EDITOR 3D de la app, sin render.
+- Para volver a poner el candado (render sólo con APROBAR + AUTORIZAR en la app, misma huella y configuración):
+  `"activo": true` (detalle en docs/REVISION_Y_AUTORIZACION.md). Claude nunca crea pedidos `[AUTORIZACIÓN]` ni
+  `[REVISIÓN] … APROBAR`.
 
 ## Previsualización y aprobación ANTES del render (docs/EDITOR_3D.md)
-- Toda escena nueva o corregida: publicar su previsualización con el flujo «Previsualización 3D» (`previa.yml`) y avisar
-  al dueño para que la revise en EDITOR 3D. **Nada de render final durante la revisión.**
+- Toda escena nueva o corregida: pasarle el GLB del visor por el chat (`python -m estudio previa`, ver
+  docs/VISOR_Y_ORDENES_DE_CAMARA.md) o publicarlo con `previa.yml` para la app. **Nada de render final durante la revisión.**
 - Pedidos `[DIRECCIÓN]` (etiqueta `direccion`): leer `python -m estudio direccion <produccion>` y los archivos de
   `producciones/<produccion>/director/` (cámaras en coordenadas de Blender: usar los números, nunca adivinar desde una
   captura). Aplicar en una versión NUEVA (`aplicar-direccion` para cámaras), publicar la previsualización nueva,
   comentar y cerrar el pedido. No tocar lo que la corrección no menciona.
-- Render final sólo con AUTORIZAR RENDER FINAL desde la app sobre la versión aprobada (antes bastaba una frase en el
-  chat; ya no): `render.yml`, `video30.yml` y `episodio.yml` se niegan sin esa autorización y la misma huella.
+- Render final: lo pide el dueño por el chat mientras el candado esté quitado (ver arriba).
 
 ## Revisión rápida en el navegador (visor HTML)
 El dueño revisa con `visor/visor_escena.html` y manda por el chat un texto `VISOR DE ESCENA …` con un JSON

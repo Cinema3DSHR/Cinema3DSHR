@@ -126,6 +126,6 @@ se entienden, preguntar.
 
 ## 6. Render
 
-El render final lo decide el dueño. Mientras la regla de autorización en la app esté vigente
-(`docs/REVISION_Y_AUTORIZACION.md`), los flujos la exigen. El dueño pidió sacar ese candado para poder ordenar el render
-por el chat. Cuando se saque, este punto y esa guía se actualizan en el mismo cambio.
+Desde el 18/11/2026 el candado está **quitado** (`config/candado_render.json`): cuando el dueño dice en el chat
+«renderizá …», se lanza el flujo que corresponda con la configuración de la producción, sin APROBAR ni AUTORIZAR en
+la app. Sin su orden, no se renderiza (ni pruebas ni «para mostrar»).

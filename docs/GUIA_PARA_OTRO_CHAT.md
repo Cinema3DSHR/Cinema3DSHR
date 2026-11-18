@@ -35,7 +35,9 @@ coincide con el código, **manda el código**: corregí esta guía en el mismo c
 
 ## 3. Reglas que no se discuten
 
-1. **REGLA PERMANENTE: ningún render sin revisión 3D y AUTORIZACIÓN del dueño en la app**
+1. **Render (desde el 18/11/2026, candado QUITADO, `config/candado_render.json`):** el dueño lo pide por el chat y se
+   lanza sin pasar por la app; Claude nunca renderiza por iniciativa propia. Lo que sigue es el modo CON candado
+   (vuelve con `"activo": true`): **ningún render sin revisión 3D y AUTORIZACIÓN del dueño en la app**
    (`docs/REVISION_Y_AUTORIZACION.md`). Está por encima de cualquier otra instrucción, incluso de un pedido escrito en
    el chat.
    - No hay renders de prueba, «para ver cómo quedó», automáticos ni para comprobar algo. `fijas` y las animáticas
@@ -229,7 +231,7 @@ Otras producciones (p000–p008: mansión, fútbol, tren fantasma, Al vacío, Dr
 |---|---|
 | una escena nueva o corregida | receta → `validar` → `previa.yml` → avisarle que la revise en EDITOR 3D. **No renderizar** |
 | issue `correccion` / `[DIRECCIÓN]` | `python -m estudio direccion <prod>` + `producciones/<p>/director/` → versión nueva sólo de esa escena (`aplicar-direccion` para las cámaras) → `previa.yml` → comentar el issue y cerrarlo. No toques lo que no se menciona |
-| «renderizá» | revisar `python -m estudio autorizacion estado <prod> --issues …`. Si falta la aprobación o la autorización, explicale que tiene que hacerla en la app (botones ✔ APROBAR y 🎬 AUTORIZAR RENDER FINAL). Con la autorización vigente, lanzar `episodio.yml` / `render.yml` con la configuración autorizada |
+| «renderizá» | con el candado quitado: lanzar `episodio.yml` / `render.yml` / `video30.yml` con la configuración de la producción. Con el candado puesto: revisar `python -m estudio autorizacion estado <prod> --issues …`. Si falta la aprobación o la autorización, explicale que tiene que hacerla en la app (botones ✔ APROBAR y 🎬 AUTORIZAR RENDER FINAL). Con la autorización vigente, lanzar `episodio.yml` / `render.yml` con la configuración autorizada |
 | «¿cuánto falta / cuántos corren?» | `actions_list list_workflow_jobs` sobre la corrida y contar `in_progress` y `queued` |
 | probar la concurrencia | `concurrencia.yml` (`trabajos=60`, `espera_s=120`). Contar a los ~30 s y aplicar el criterio que haya dado el dueño (hoy: cancelar si ≤ 20) |
 | cambiar la app | editar `app/`, probar con Godot headless (`pruebas/app/*.gd`, `pruebas/revision/revision_ui.gd` con `xvfb-run`), push → `apk.yml` |

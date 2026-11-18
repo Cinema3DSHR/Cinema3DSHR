@@ -18,6 +18,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(RAIZ))
 os.chdir(RAIZ)
+os.environ["CINE_CANDADO"] = "1"        # las pruebas de la regla corren con el candado PUESTO (el modo sin candado, al final)
 from estudio import autorizacion as AUT  # noqa: E402
 from estudio import manifiesto as MF  # noqa: E402
 
@@ -136,6 +137,25 @@ for wf in sorted((RAIZ / ".github" / "workflows").glob("*.yml")):
             caso(f"10g {wf.name}: el trabajo que renderiza baja los registros (CINE_ISSUES) y vuelve a verificar",
                  "CINE_ISSUES" in bloque)
     caso(f"10h {wf.name}: lee los Issues (permiso issues: read)", re.search(r"issues:\s*(read|write)", txt) is not None)
+
+# ---- 11. candado quitado por el dueño (config/candado_render.json): render por orden en el chat
+os.environ["CINE_CANDADO"] = "0"
+ok, motivo, _ = AUT.verificar(M, [], CFG)
+caso("11a sin candado: se puede renderizar sin aprobación ni autorización de la app", ok and "QUITADO" in motivo, motivo)
+try:
+    os.environ.pop("CINE_ISSUES", None)
+    AUT.exigir(M, CFG)
+    caso("11b sin candado: los comandos no piden registros (CINE_ISSUES)", True)
+except SystemExit as e:
+    caso("11b sin candado: los comandos no piden registros (CINE_ISSUES)", False, str(e))
+r = subprocess.run([sys.executable, "-m", "estudio", "autorizacion", "verificar", ESCENA, "--issues", f.name,
+                    "--resolucion", "960x540", "--muestras", "6"], capture_output=True, text=True, timeout=60,
+                   env={**os.environ, "CINE_CANDADO": "0"})
+caso("11c sin candado: la verificación de los flujos da OK", r.returncode == 0, r.stdout.strip()[:140])
+del os.environ["CINE_CANDADO"]
+caso("11d config/candado_render.json: el dueño lo dejó QUITADO", AUT.candado_activo() is False)
+os.environ["CINE_CANDADO"] = "1"
+caso("11e con el candado puesto vuelve a exigir la autorización", not AUT.verificar(M, [], CFG)[0])
 
 malos = [n for n, ok in resultados if not ok]
 print(f"\n{len(resultados) - len(malos)}/{len(resultados)} comprobaciones OK" + (f" — FALLAN: {malos}" if malos else ""))

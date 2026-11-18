@@ -524,3 +524,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   objetivo; modificar = aplicar el cambio). Enlazado desde `CLAUDE.md` y `docs/GUIA_PARA_OTRO_CHAT.md`.
 - Candado del render: el dueño pidió sacarlo; queda para cuando termine el `video30` de A la deriva (en curso,
   corrida 44285010355), para no tocar nada mientras corre.
+
+### 18/11/2026 12:3x UTC — Candado del render QUITADO (pedido del dueño)
+- Terminado el video30 de A la deriva (corrida 44285010355, 12:19, éxito) y sin renders en curso.
+- `config/candado_render.json` `"activo": false` + `estudio/autorizacion.candado_activo()`: `verificar` y `exigir` dejan
+  pasar con «candado del render QUITADO por el dueño»; los flujos (`render.yml`, `video30.yml`, `episodio.yml`) y los
+  comandos ya no piden APROBAR/AUTORIZAR en la app. La lógica queda: con `"activo": true` vuelve todo.
+- Pruebas sin render: `pruebas/autorizacion/test_autorizacion.py` 40/40 (las de la regla corren con CINE_CANDADO=1 y
+  hay 5 nuevas del modo sin candado).
+- CLAUDE.md, REVISION_Y_AUTORIZACION.md, GUIA_PARA_OTRO_CHAT.md y VISOR_Y_ORDENES_DE_CAMARA.md actualizados. Claude
+  sigue sin renderizar por iniciativa propia.

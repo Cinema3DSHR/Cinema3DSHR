@@ -1,3 +1,8 @@
+> **18/11/2026: CANDADO QUITADO por pedido del dueño.** `config/candado_render.json` → `"activo": false`: el render
+> lo ordena el dueño por el chat, sin APROBAR ni AUTORIZAR en la app; `estudio/autorizacion.py` (`candado_activo()`)
+> deja pasar a todos los flujos y comandos con el motivo «candado del render QUITADO». Todo lo de abajo describe el
+> modo CON candado, que vuelve con `"activo": true`. Claude sigue sin renderizar por iniciativa propia.
+
 # REGLA PERMANENTE — Revisión 3D en la app antes de cualquier render
 
 **Nunca se renderiza nada sin que el dueño haya revisado esa versión de la escena en 3D dentro de la app Android, la

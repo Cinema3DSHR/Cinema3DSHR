@@ -1,0 +1,4 @@
+{
+ "descripcion": "Candado del render (docs/REVISION_Y_AUTORIZACION.md). true = sólo se renderiza una versión con APROBAR + AUTORIZAR RENDER FINAL del dueño en la app (misma huella y configuración). false = el dueño ordena el render por el chat y los flujos y comandos no exigen la autorización de la app. El dueño lo quitó el 18/11/2026; para volver a ponerlo, \"activo\": true.",
+ "activo": false
+}

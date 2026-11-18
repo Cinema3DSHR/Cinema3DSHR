@@ -28,6 +28,17 @@ _JSON = re.compile(r"```json\s*(\{.*?\})\s*```", re.S)
 PREFIJOS = {"[REVISIÓN]": "revision", "[DIRECCIÓN]": "direccion", "[AUTORIZACIÓN]": "autorizacion"}
 
 
+def candado_activo() -> bool:
+    """¿Está puesto el candado del render? Lo decide el dueño en config/candado_render.json ("activo": true | false).
+    Con el candado quitado (pedido del dueño, 18/11/2026) se renderiza por orden del dueño en el chat, sin APROBAR ni
+    AUTORIZAR en la app. CINE_CANDADO=1|0 lo fuerza (pruebas)."""
+    env = os.environ.get("CINE_CANDADO", "")
+    if env in ("0", "1"):
+        return env == "1"
+    p = config.RAIZ / "config" / "candado_render.json"
+    return bool(json.loads(p.read_text()).get("activo", True)) if p.exists() else True
+
+
 def usuarios_autorizados() -> set[str]:
     p = config.RAIZ / "config" / "autorizados.json"
     us = json.loads(p.read_text()).get("usuarios", []) if p.exists() else []
@@ -120,6 +131,9 @@ def verificar(m: dict, issues: list[dict], pedida: dict, huella: str | None = No
     from estudio import manifiesto as MF
     pid, eid, v = m["produccion"], m["id"].split("-")[-1], int(m["version"])
     h = huella or MF.huella(m)
+    if not candado_activo():
+        return True, (f"{pid} {eid} v{v} (huella {h}): candado del render QUITADO por el dueño — se renderiza por su orden "
+                      f"en el chat (config/candado_render.json)"), None
     evs = eventos(issues)
     if not aprobacion_vigente(evs, pid, eid, v, h):
         otras = [e.get("huella") for e in _de(evs, pid, eid, v) if e.get("decision") == "APROBAR"]
@@ -144,6 +158,10 @@ def verificar(m: dict, issues: list[dict], pedida: dict, huella: str | None = No
 def exigir(m: dict, pedida: dict) -> dict:
     """Corta el proceso si no hay autorización válida. Los registros los baja el flujo de GitHub a un archivo
     (variable CINE_ISSUES); sin ese archivo no se renderiza (p. ej. en una máquina local)."""
+    if not candado_activo():
+        ok, motivo, _ = verificar(m, [], pedida)
+        print(f"[autorización] {motivo}", flush=True)
+        return None
     ruta = os.environ.get("CINE_ISSUES", "")
     if not ruta or not Path(ruta).exists():
         raise SystemExit("RENDER BLOQUEADO: no hay registros de autorización (CINE_ISSUES). Los renders sólo corren "
