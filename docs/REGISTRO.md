@@ -301,3 +301,9 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   tandas de ~10; **máximo 11 a la vez** (trabajo `medir`), el último arrancó 627 s después del primero. Con 60 reales
   habría tardado ~2 min, no 12. Agregado al ticket (`docs/informes/ticket_github_concurrencia.md`). Sigue la espera de
   la respuesta de GitHub Support; no se lanza ningún render.
+
+### 18/11/2026 01:05 UTC — Respuesta de GitHub Support y nueva sonda: 13 simultáneos, cancelada
+- Support: período de arranque de 7 días para cuentas nuevas; el límite de concurrencia sube solo a medida que terminan
+  trabajos (como mucho cada 10 min). Era 11 al responder.
+- Sonda de 60 trabajos (corrida 44212957289): 13 corriendo a la vez y 47 en cola → cancelada (el dueño pidió cancelar si
+  no superaba 20). No se renderizó nada.

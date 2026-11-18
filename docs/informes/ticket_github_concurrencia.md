@@ -49,3 +49,10 @@ Thank you.
 
 Qué esperar: Support confirma o levanta la restricción; después se repite la prueba de e01 (979 fotogramas, misma
 configuración) y sólo vale si se ven 60 trabajos corriendo a la vez.
+
+## Respuesta de GitHub Support (Tosin) y prueba siguiente
+
+- Support: las cuentas nuevas tienen un **período de arranque de 7 días**; el límite sube de a poco a medida que terminan
+  trabajos, como mucho una vez cada 10 minutos. Al responder, el límite era 11 (antes 7).
+- 18/11/2026 01:04 UTC, sonda de 60 trabajos (corrida 44212957289): **13 a la vez**, 47 en cola. Cancelada por no
+  superar 20 (criterio del dueño). El límite sube, pero despacio.
