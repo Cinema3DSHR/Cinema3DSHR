@@ -478,3 +478,12 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Con autorización del dueño: la rama de trabajo se fusionó en `ccr-6d21fe8a-76t9c3` (fusión normal; antes se trajeron
   sus 3 commits de guías) y en mixamo-respaldo `ccr-6d21fe8a-76t9c3` se avanzó con la carpeta `a_la_deriva` (sólo
   agrega archivos), que es la que leen los flujos de render. Catálogo rearmado: e01 v2 «EN REVISIÓN».
+
+## 18/11/2026 — A la deriva E01 v2: render final autorizado (60 trabajos)
+
+- El dueño aprobó (#12) y tocó AUTORIZAR RENDER FINAL (#13) en el EDITOR 3D: v2, huella `61228e9425de750c`,
+  1280x720 (vertical → 720x1280), 30 fps, 6 muestras, Cycles CPU. `autorizacion.estado` = RENDER AUTORIZADO.
+- `episodio.yml` no sirve (fijo en 960x540 y sin recursos de Nexus: la silla). Se usa `video30.yml`, ajustado:
+  hasta 60 trabajos (la organización), `render_rango.py` acepta el 720p vertical, `montar.py --escena` aplica el
+  fundido a negro de la última toma (antes se perdía) y los entregables salen con la versión real (`e01_v2_*`, antes
+  fijo `e01_v1_*`). Configuración de Cycles sin tocar.

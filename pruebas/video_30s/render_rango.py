@@ -23,7 +23,8 @@ t0 = time.perf_counter(); res = D.construir(m, "revision"); t_build = time.perf_
 s = res["escena"]
 s.cycles.samples = a.muestras                       # ÚNICO ajuste de la prueba
 s.render.image_settings.file_format = "PNG"; s.render.image_settings.color_mode = "RGB"; s.render.image_settings.color_depth = "8"
-assert (s.render.resolution_x, s.render.resolution_y, s.render.resolution_percentage, s.render.fps) == (1280, 720, 100, 30), "resolución/FPS distintos de 1280x720@30"
+ESPERADA = (720, 1280) if m.get("render", {}).get("vertical") else (1280, 720)   # 9:16: el mismo 720p, parado
+assert (s.render.resolution_x, s.render.resolution_y, s.render.resolution_percentage, s.render.fps) == (*ESPERADA, 100, 30), "resolución/FPS distintos de 720p@30"
 assert s.render.engine == "CYCLES"
 assert a.hasta <= res.get("frames_pelicula", s.frame_end), f"la escena tiene {res.get('frames_pelicula', s.frame_end)} fotogramas"
 from estudio import autorizacion as AUT              # REGLA: sin autorización del dueño no se renderiza

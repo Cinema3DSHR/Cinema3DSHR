@@ -5,6 +5,7 @@ from pathlib import Path
 ap = argparse.ArgumentParser(); ap.add_argument("frames"); ap.add_argument("audio"); ap.add_argument("salida")
 ap.add_argument("--total", type=int, required=True); ap.add_argument("--run-iniciado", default=""); ap.add_argument("--crf", type=int, default=22); ap.add_argument("--nombre", default="futbol_30s_cycles6")
 ap.add_argument("--produccion", default=""); ap.add_argument("--escena-id", default="e01"); ap.add_argument("--version", type=int, default=1); ap.add_argument("--huella", default="")
+ap.add_argument("--escena", default="", help="escena.json: aplica el fundido a negro de la última toma, como el montaje del estudio")
 a = ap.parse_args(); F = Path(a.frames); S = Path(a.salida); S.mkdir(parents=True, exist_ok=True)
 def sh(*c): return subprocess.run([str(x) for x in c], capture_output=True, text=True)
 # 1) integridad: ni faltantes ni sobrantes ni números repetidos
@@ -33,6 +34,10 @@ med, mn = (statistics.median(dentro), min(dentro)) if dentro else (None, None)  
 mp4 = S / f"{a.nombre}.mp4"
 cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-framerate", "30", "-start_number", "1", "-i", str(F / "f_%04d.png")]
 if Path(a.audio).exists(): cmd += ["-i", a.audio, "-map", "0:v", "-map", "1:a", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
+if a.escena:                                     # «corte a negro» de la última toma (efecto de montaje fundido_negro)
+    _m = json.loads(Path(a.escena).read_text()); _ult = max(_m["tomas"], key=lambda t: t["inicio_s"]); _ef = _ult.get("montaje") or {}
+    if _ef.get("efecto") == "fundido_negro":
+        cmd += ["-vf", f"fade=t=out:st={_ult['inicio_s'] + float(_ef.get('desde_s', 0)):.3f}:d={float(_ef.get('duracion_s', 1.2)):.3f}"]
 cmd += ["-c:v", "libx264", "-preset", "slow", "-crf", str(a.crf), "-pix_fmt", "yuv420p", "-r", "30", "-fps_mode", "cfr", "-movflags", "+faststart", str(mp4)]
 subprocess.run(cmd, check=True)
 pr = json.loads(sh("ffprobe", "-v", "error", "-count_frames", "-select_streams", "v:0", "-show_entries", "stream=width,height,r_frame_rate,avg_frame_rate,nb_read_frames,codec_name,pix_fmt:format=duration,size", "-of", "json", mp4).stdout)

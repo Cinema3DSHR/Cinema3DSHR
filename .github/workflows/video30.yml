@@ -8,7 +8,7 @@ on:
     inputs:
       escena: {description: "Ruta del escena.json", required: false, default: "producciones/p003_futbol_30s/escenas/e01/v1/escena.json"}
       muestras: {description: "Muestras de Cycles", required: false, default: "6"}
-      trabajos: {description: "Trabajos de render en paralelo (máx. 19: el plan gratis admite 20 simultáneos y uno es el audio)", required: false, default: "19"}
+      trabajos: {description: "Trabajos de render en paralelo (máx. 60: la organización Team admite 60 simultáneos; GitHub encola los que sobren)", required: false, default: "19"}
       limite: {description: "ENSAYO: renderizar sólo los primeros N fotogramas (0 = todos)", required: false, default: "0"}
       etiqueta: {description: "Tag de la release", required: false, default: "p003_futbol_30s-cycles6"}
       nombre: {description: "Nombre del MP4 de salida (sin extensión)", required: false, default: "futbol_30s_cycles6"}
@@ -90,7 +90,7 @@ jobs:
           if err: print("::error::escena inválida:", err); sys.exit(1)
           total = round(m["duracion_s"] * m["render"].get("fps", 30)); lim = int(os.environ["LIMITE"])
           if lim > 0: total = min(total, lim)
-          n = max(1, min(19, int(os.environ["TRABAJOS"])))
+          n = max(1, min(60, int(os.environ["TRABAJOS"])))
           tam = math.ceil(total / n)                      # trozos contiguos y casi iguales
           trozos = [{"n": f"{i:02d}", "desde": d, "hasta": min(total, d + tam - 1)} for i, d in enumerate(range(1, total + 1, tam))]
           assert sum(t["hasta"] - t["desde"] + 1 for t in trozos) == total          # ni faltantes ni repetidos
@@ -111,7 +111,7 @@ jobs:
     timeout-minutes: 90
     strategy:
       fail-fast: false
-      max-parallel: 19
+      max-parallel: 60
       matrix:
         trozo: ${{ fromJSON(needs.planificar.outputs.trozos) }}
     steps:
@@ -256,7 +256,7 @@ jobs:
           mkdir -p frames && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d frames; done
           ls frames | grep -c '^f_.*png$'
       - name: Verificar, codificar el MP4 y armar el informe
-        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --nombre "${{ inputs.nombre }}" --run-iniciado "${{ needs.planificar.outputs.inicio }}" --produccion "${{ inputs.produccion }}"
+        run: python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ needs.planificar.outputs.total }} --nombre "${{ inputs.nombre }}" --run-iniciado "${{ needs.planificar.outputs.inicio }}" --produccion "${{ inputs.produccion }}" --escena "${{ inputs.escena }}" --escena-id "$(basename "$(dirname "$(dirname "${{ inputs.escena }}")")")" --version "$(basename "$(dirname "${{ inputs.escena }}")" | tr -dc 0-9)"
       - name: Publicar en la release (sólo si no es ensayo)
         if: ${{ inputs.limite == '0' }}
         env:
@@ -266,7 +266,7 @@ jobs:
           gh release view "$T" --repo "$R" >/dev/null 2>&1 || gh release create "$T" --repo "$R" --latest=false \
             --title "Prueba 30 s — Cycles ${{ inputs.muestras }} muestras, 720p" --notes "Video de 30 s renderizado en paralelo en GitHub Actions. Informe en informe_rendimiento.json. Secuencia de fotogramas en frames_NN.zip."
           if [ -n "${{ inputs.produccion }}" ]; then
-            gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/audio.aac salida/informe.json salida/e01_v1_* --repo "$R" --clobber
+            gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/audio.aac salida/informe.json salida/$(basename "$(dirname "$(dirname "${{ inputs.escena }}")")")_v$(basename "$(dirname "${{ inputs.escena }}")" | tr -dc 0-9)_* --repo "$R" --clobber
           else
             gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/informe_rendimiento.json --repo "$R" --clobber
           fi
