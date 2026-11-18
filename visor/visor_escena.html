@@ -86,6 +86,9 @@ summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
   background: #15171b; border-radius: 4px; padding: 6px; max-height: 160px; overflow-y: auto; }
 #salida { width: 100%; min-height: 120px; font: 12px var(--f-num); background: #15171b; border: 1px solid var(--linea); border-radius: 4px; padding: 6px; }
 #aviso { color: var(--acento); font-size: 13px; }
+#editando { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; background: rgba(224,100,90,.16);
+  border: 1px solid var(--rec); color: var(--fg); font-size: 14px; }
+#editando span { flex: 1 1 auto; min-width: 0; }
 #aviso:empty { display: none; }
 label.lente { display: flex; gap: 8px; align-items: center; font: 13px var(--f-num); }
 input[type=range].fino { width: 150px; accent-color: var(--acento); }
@@ -105,7 +108,8 @@ input[type=range].fino { width: 150px; accent-color: var(--acento); }
         <ol>
           <li>Tocá <b>ABRIR ESCENA</b> y elegí el .glb (si vino un .json, elegí los dos juntos).</li>
           <li>▶ para ver el montaje. Pasá a <b>LIBRE</b> para recorrer la escena: arrastrá para mirar, la cruceta para moverte.</li>
-          <li>Encontrá el cuadro que querés y tocá <b>🎥 COLOCAR CÁMARA</b>: el visor arma la orden con el momento, la posición y el lente. La copiás y se la pegás a Claude.</li>
+          <li><b>➕ CÁMARA NUEVA</b> agrega una cámara donde estás mirando; <b>✏️ EDITAR</b> cambia una cámara de la película (más alta, otro lente…). Todo lo que movés queda anotado solo.</li>
+          <li>Al final, <b>📋 COPIAR PARA CLAUDE</b> y lo pegás en el chat.</li>
         </ol>
         <div class="fila"><button class="btn activo" id="abrir2" type="button">ABRIR ESCENA</button></div>
       </div>
@@ -151,17 +155,21 @@ input[type=range].fino { width: 150px; accent-color: var(--acento); }
       <label class="lente" for="lente">Lente <input id="lente" class="fino" type="range" min="12" max="135" step="1" value="35"> <span id="lente_v">35 mm</span></label>
       <label class="lente" for="seguir">Pegada a <select id="seguir" class="btn" aria-label="Objeto al que va pegada la cámara"></select></label>
     </div>
+    <div id="editando" hidden><span id="editando_txt"></span><button class="btn" id="listo" type="button">✔ LISTO</button></div>
     <div class="fila">
-      <button class="btn rec ancho" id="colocar" type="button">🎥 COLOCAR CÁMARA</button>
+      <button class="btn rec" id="nueva" type="button">➕ CÁMARA NUEVA</button>
+      <button class="btn" id="editar_toma" type="button">✏️ EDITAR CÁMARA DE LA TOMA</button>
+    </div>
+    <div class="fila">
+      <button class="btn activo ancho" id="copiar" type="button">📋 COPIAR PARA CLAUDE</button>
     </div>
     <div class="fila">
       <button class="btn" id="marcar" type="button">📍 NOTA</button>
-      <button class="btn" id="copiar" type="button">COPIAR TODO PARA CLAUDE</button>
       <button class="btn" id="plano" type="button">COLOR PLANO</button>
     </div>
     <div id="aviso" role="status"></div>
     <textarea id="salida" hidden readonly aria-label="Texto para Claude"></textarea>
-    <details open><summary>Órdenes y notas <span id="n_notas" class="etq"></span></summary><div id="notas" class="lista"></div></details>
+    <details open><summary>Cámaras y notas para Claude <span id="n_notas" class="etq"></span></summary><div id="notas" class="lista"></div></details>
     <details><summary>Tomas</summary><div id="tomas" class="lista"></div></details>
     <details><summary>Personajes ahora</summary><div id="actores" class="lista"></div></details>
   </div>
@@ -182,7 +190,7 @@ const E = {
   modo: "montaje", tomaFija: null, escena: null, mixer: null, clipDur: 0,
   camaras: {}, tomas: [], vis: [], actores: [], aspecto: 16 / 9, plano: false, mats: new Map(),
   notas: [], clave: "visor-notas", nombre: "",
-  seguir: null, local: new THREE.Matrix4(),            // cámara libre pegada a un objeto que se mueve
+  seguir: null, local: new THREE.Matrix4(), editando: null, conos: [],            // cámara libre pegada a un objeto que se mueve
   mov: { f: 0, r: 0, u: 0 }, entrada: { yaw: 0, pitch: 0, f: 0, r: 0, u: 0 }, rapidez: 2,
 };
 
@@ -266,7 +274,7 @@ function rotulo() {
   const r = $("rotulo"), tm = tomaEn(E.t);
   r.hidden = !E.escena;
   r.innerHTML = E.modo === "libre"
-    ? `<b>LIBRE</b> · ${coma(lenteDe(libre, E.aspecto), 0)} mm${E.seguir ? " · pegada a " + E.seguir.name : " · quieta"}`
+    ? `<b>${E.editando ? "EDITANDO CÁMARA " + numCam(E.notas.find((x) => x.id === E.editando) || {}) : "LIBRE"}</b> · ${coma(lenteDe(libre, E.aspecto), 0)} mm${E.seguir ? " · pegada a " + E.seguir.name : " · quieta"}`
     : `<b>${E.modo === "toma" ? "TOMA" : "MONTAJE"}</b> · ${(E.modo === "toma" ? E.tomaFija : tm && tm.camara) || ""}`;
 }
 
@@ -361,8 +369,9 @@ function cuadroBucle(ahora) {
   }
   if (E.modo === "libre") {
     seguirAplicar();
-    if (aplicarEntrada(dt)) { seguirGuardar(); rotulo(); }
+    if (aplicarEntrada(dt)) { seguirGuardar(); rotulo(); if (E.editando) actualizarEditada(); }
   }
+  ubicarConos();
   const w = lienzo.clientWidth, h = lienzo.clientHeight;
   rend.setScissorTest(true);
   rend.setViewport(0, 0, w, h); rend.setScissor(0, 0, w, h);
@@ -461,6 +470,7 @@ function montar(g, datos, nombre) {
   $("titulo").textContent = titulo;
   $("vacio").hidden = true;
   E.clave = "visor-notas:" + (d.escena_id || nombre) + ":" + (d.huella || "");
+  E.editando = null; $("editando").hidden = true;
   E.notas = leerNotas();
   llenarSelector(); llenarTomas(); pintarNotas();
   E.tomaFija = E.tomas.length ? E.tomas[0].camara : Object.keys(E.camaras)[0] || null;
@@ -485,6 +495,7 @@ $("seguir").onchange = () => {
   const o = $("seguir").value ? E.escena.getObjectByName($("seguir").value) : null;
   ponerSeguir(o);
   aviso(o ? `La cámara ahora viaja con «${o.name}».` : "La cámara queda quieta en el lugar.");
+  if (E.editando) actualizarEditada();
 };
 
 function ponerLibreDesde(c) {
@@ -516,6 +527,7 @@ function fovDeLente(mm, aspecto) {
 $("lente").oninput = () => {
   libre.fov = fovDeLente(+$("lente").value, E.aspecto); libre.updateProjectionMatrix();
   $("lente_v").textContent = $("lente").value + " mm"; rotulo();
+  if (E.editando) actualizarEditada();
 };
 
 // ---------------------------------------------------------------- modos
@@ -525,7 +537,7 @@ function ponerModo(m) {
   for (const k of ["montaje", "toma", "libre"]) $("m_" + k).classList.toggle("activo", k === m);
   $("fila_libre").hidden = $("cruceta").hidden = $("ayuda_libre").hidden = m !== "libre";
   $("sel_toma").hidden = m !== "toma";
-  $("colocar").textContent = m === "libre" ? "🎥 COLOCAR CÁMARA AQUÍ" : "🎥 COLOCAR CÁMARA";
+  if (m !== "libre") dejarDeEditar();
   irA(E.t);
 }
 $("m_montaje").onclick = () => ponerModo(E.tomas.length ? "montaje" : "toma");
@@ -579,11 +591,11 @@ function dibujarCortes() {
     if (b - a > 34) { x.fillStyle = "#9aa0a8"; x.font = "11px IBM Plex Mono, monospace"; x.fillText(tm.id, a + 4, H / 2 + 4, b - a - 8); }
   });
   for (const n of E.notas) {
-    if (n.tipo === "camara") {
+    if (esCam(n)) {
       const a = (n.desde / E.dur) * W, b = (n.hasta / E.dur) * W;
       x.fillStyle = "rgba(224,100,90,.45)"; x.fillRect(a, H - 6, Math.max(2, b - a), 6);
     }
-    const p = (n.t / E.dur) * W; x.fillStyle = n.tipo === "camara" ? "#e0645a" : "#e8b04a"; x.fillRect(p - 1, 0, 3, H);
+    const p = (n.t / E.dur) * W; x.fillStyle = esCam(n) ? "#e0645a" : "#e8b04a"; x.fillRect(p - 1, 0, 3, H);
   }
   const p = (E.t / E.dur) * W;
   x.fillStyle = "#e7e3da"; x.fillRect(p - 1, 0, 2, H);
@@ -635,25 +647,52 @@ function poseDe(mg) {
   return { position: { x: r4(p.x), y: r4(p.y), z: r4(p.z) }, rotation: { x: gr(eu.x), y: gr(eu.y), z: gr(eu.z) },
     quaternion: [r4(q.w), r4(q.x), r4(q.y), r4(q.z)], forward: { x: r4(fw.x), y: r4(fw.y), z: r4(fw.z) } };
 }
-function capturaLibre() {
-  libre.updateMatrixWorld(true);
-  const mundo = poseDe(libre.matrixWorld);
-  let rel = null;
-  if (E.seguir) {
-    E.seguir.updateWorldMatrix(true, false);
-    rel = poseDe(new THREE.Matrix4().copy(E.seguir.matrixWorld).invert().multiply(libre.matrixWorld));
+// captura de una cámara (la libre o una de rodaje) y de lo que la lleva
+function captura(cam, obj) {
+  cam.updateMatrixWorld(true);
+  const mw = cam.matrixWorld.clone();
+  let rel = null, loc = null;
+  if (obj) {
+    obj.updateWorldMatrix(true, false);
+    loc = new THREE.Matrix4().copy(obj.matrixWorld).invert().multiply(mw);
+    rel = poseDe(loc);
   }
   return {
-    mundo, relativa: rel, pegada_a: E.seguir ? E.seguir.name : null,
-    lens_mm: Math.round(lenteDe(libre, E.aspecto) * 10) / 10, fov_v_deg: Math.round(libre.fov * 100) / 100,
+    mundo: poseDe(mw), relativa: rel, pegada_a: obj ? obj.name : null,
+    lens_mm: Math.round(lenteDe(cam, E.aspecto) * 10) / 10, fov_v_deg: Math.round(cam.fov * 100) / 100,
     aspect: r4(E.aspecto), resolucion: E.res, sensor_mm: 36, sensor_fit: "AUTO",
-    gltf: { m: libre.matrixWorld.toArray().map(r4), local: E.seguir ? E.local.toArray().map((v) => Math.round(v * 1e6) / 1e6) : null, fov: libre.fov },
+    gltf: { m: mw.toArray().map((v) => Math.round(v * 1e6) / 1e6), local: loc ? loc.toArray().map((v) => Math.round(v * 1e6) / 1e6) : null, fov: cam.fov },
   };
 }
+const capturaLibre = () => captura(libre, E.seguir);
 
-// ---------------------------------------------------------------- órdenes y notas
+// cuánto cambió una cámara respecto de la original, en palabras (ejes de la cámara original y altura del marco)
+function diferencia(o, n) {
+  const usarLocal = o.gltf.local && n.gltf.local && o.pegada_a === n.pegada_a;
+  const mo = new THREE.Matrix4().fromArray(usarLocal ? o.gltf.local : o.gltf.m), mn = new THREE.Matrix4().fromArray(usarLocal ? n.gltf.local : n.gltf.m);
+  const po = new THREE.Vector3(), qo = new THREE.Quaternion(), pn = new THREE.Vector3(), qn = new THREE.Quaternion(), sx = new THREE.Vector3();
+  mo.decompose(po, qo, sx); mn.decompose(pn, qn, sx);
+  const dp = pn.clone().sub(po);
+  const enCam = dp.clone().applyQuaternion(qo.clone().invert());
+  const eo = new THREE.Euler().setFromQuaternion(qo, "YXZ"), en = new THREE.Euler().setFromQuaternion(qn, "YXZ");
+  let dyaw = THREE.MathUtils.radToDeg(en.y - eo.y); dyaw = ((dyaw + 540) % 360) - 180;
+  const dpitch = THREE.MathUtils.radToDeg(en.x - eo.x);
+  const partes = [];
+  const m = (v, mas, menos) => { if (Math.abs(v) >= 0.005) partes.push(`${coma(Math.abs(v), 2)} m ${v > 0 ? mas : menos}`); };
+  m(dp.y, "más alta", "más baja");
+  m(enCam.x, "a la derecha", "a la izquierda");
+  m(-enCam.z, "hacia adelante", "hacia atrás");
+  if (Math.abs(dyaw) >= 0.2) partes.push(`gira ${coma(Math.abs(dyaw), 1)}° a la ${dyaw > 0 ? "izquierda" : "derecha"}`);
+  if (Math.abs(dpitch) >= 0.2) partes.push(`mira ${coma(Math.abs(dpitch), 1)}° más ${dpitch > 0 ? "arriba" : "abajo"}`);
+  if (Math.abs(n.lens_mm - o.lens_mm) >= 0.5) partes.push(`lente ${coma(o.lens_mm, 0)} → ${coma(n.lens_mm, 0)} mm`);
+  return partes.length ? partes.join(" · ") : "sin cambios todavía";
+}
+
+// ---------------------------------------------------------------- cámaras y notas para Claude
 function leerNotas() { try { return JSON.parse(localStorage.getItem(E.clave) || "[]"); } catch (e) { return []; } }
 function guardarNotas() { try { localStorage.setItem(E.clave, JSON.stringify(E.notas)); } catch (e) { /* sin almacenamiento */ } }
+const esCam = (n) => n.tipo === "nueva" || n.tipo === "modificar" || n.tipo === "camara";
+const numCam = (n) => E.notas.filter(esCam).indexOf(n) + 1;
 
 async function copiarTexto(txt, okMsg) {
   const sal = $("salida");
@@ -668,24 +707,96 @@ async function copiarTexto(txt, okMsg) {
   }
 }
 
-$("colocar").onclick = () => {
+// conos rojos: dónde quedó cada cámara agregada o modificada (sólo en LIBRE)
+const matCono = new THREE.MeshBasicMaterial({ color: 0xe0645a, wireframe: true });
+const geoCono = new THREE.ConeGeometry(0.16, 0.32, 4, 1, true);
+geoCono.rotateX(Math.PI / 2); geoCono.rotateZ(Math.PI / 4); geoCono.translate(0, 0, -0.16);
+function ubicarConos() {
+  const camaras = E.modo === "libre" && E.escena ? E.notas.filter(esCam) : [];
+  while (E.conos.length < camaras.length) { const c = new THREE.Mesh(geoCono, matCono); esc.add(c); E.conos.push(c); }
+  E.conos.forEach((c, i) => {
+    const n = camaras[i];
+    c.visible = !!n && n.id !== E.editando;
+    if (!c.visible) return;
+    const obj = n.cam.pegada_a && E.escena.getObjectByName(n.cam.pegada_a);
+    const m = obj && n.cam.gltf.local ? new THREE.Matrix4().multiplyMatrices(obj.matrixWorld, new THREE.Matrix4().fromArray(n.cam.gltf.local))
+      : new THREE.Matrix4().fromArray(n.cam.gltf.m);
+    m.decompose(c.position, c.quaternion, tmpV);
+  });
+}
+
+function editar(n, mensaje) {
+  E.editando = n.id;
+  $("editando").hidden = false;
+  $("editando_txt").textContent = `EDITANDO CÁMARA ${numCam(n)}${n.tipo === "modificar" ? " (toma " + n.reemplaza + ")" : ""}: lo que muevas queda en la orden.`;
+  pintarNotas(); rotulo();
+  if (mensaje) aviso(mensaje);
+}
+function dejarDeEditar() {
+  if (!E.editando) return;
+  E.editando = null;
+  $("editando").hidden = true;
+  pintarNotas();
+}
+$("listo").onclick = () => { dejarDeEditar(); aviso("Listo. Podés seguir moviéndote sin cambiar las cámaras; al final, 📋 COPIAR PARA CLAUDE."); };
+
+let pintarPendiente = 0;
+function actualizarEditada() {
+  const n = E.notas.find((x) => x.id === E.editando);
+  if (!n) return;
+  n.cam = capturaLibre();
+  n.t = r4(E.t); n.cuadro = cuadro();
+  const pre = document.querySelector(`[data-id="${n.id}"] [data-orden]`);
+  if (pre) pre.textContent = ordenCamara(n);
+  clearTimeout(pintarPendiente);
+  pintarPendiente = setTimeout(() => { guardarNotas(); dibujarCortes(); }, 250);
+}
+
+function irAlLibreDesdeEntrada(n) {
+  irA(n.t);
+  if (E.modo !== "libre") { E.modo = "libre"; ponerModo("libre"); }
+  const obj = n.cam.pegada_a ? E.escena.getObjectByName(n.cam.pegada_a) : null;
+  if (obj && n.cam.gltf.local) {
+    obj.updateWorldMatrix(true, false);
+    new THREE.Matrix4().multiplyMatrices(obj.matrixWorld, new THREE.Matrix4().fromArray(n.cam.gltf.local)).decompose(libre.position, libre.quaternion, tmpV);
+  } else new THREE.Matrix4().fromArray(n.cam.gltf.m).decompose(libre.position, libre.quaternion, tmpV);
+  libre.fov = n.cam.gltf.fov; libre.updateProjectionMatrix();
+  $("lente").value = Math.round(n.cam.lens_mm); $("lente_v").textContent = $("lente").value + " mm";
+  ponerSeguir(obj);
+}
+
+$("nueva").onclick = () => {
   if (!E.escena) { aviso("Primero abrí una escena."); return; }
   E.jugando = false; $("play").textContent = "▶";
-  if (E.modo !== "libre") {
-    ponerModo("libre");
-    aviso("Mové la cámara hasta el cuadro que querés (arrastrá para mirar, cruceta para moverte) y tocá 🎥 COLOCAR CÁMARA AQUÍ.");
-    return;
-  }
+  dejarDeEditar();
+  if (E.modo !== "libre") ponerModo("libre");
   const tm = tomaEn(E.t);
-  const n = {
-    id: Date.now(), tipo: "camara", t: r4(E.t), cuadro: cuadro(),
-    toma: tm ? tm.id : null, camara_toma: tm ? tm.camara : null,
-    reemplaza: tm ? tm.id : "nueva", desde: r4(E.t), hasta: r4(tm ? Math.min(tm.fin_s, E.dur) : E.dur),
-    movimiento: "fija", texto: "", cam: capturaLibre(),
-  };
-  E.notas.push(n); guardarNotas(); pintarNotas(); dibujarCortes();
-  copiarTexto(ordenCamara(n, E.notas.filter((x) => x.tipo === "camara").length),
-    "Cámara colocada. La orden ya está copiada: pegala en el chat de Claude (abajo podés ajustar desde/hasta y escribir algo más).");
+  const n = { id: Date.now(), tipo: "nueva", t: r4(E.t), cuadro: cuadro(), toma: tm ? tm.id : null, camara_toma: tm ? tm.camara : null,
+    tipo_toma: tm ? tm.tipo : null, reemplaza: tm ? tm.id : "nueva", desde: r4(E.t), hasta: r4(tm ? Math.min(tm.fin_s, E.dur) : E.dur),
+    movimiento: "fija", texto: "", cam: capturaLibre() };
+  E.notas.push(n); guardarNotas(); dibujarCortes();
+  editar(n, `Cámara ${numCam(n)} agregada donde estás mirando. Movela si querés (queda anotado); después ✔ LISTO.`);
+};
+
+$("editar_toma").onclick = () => {
+  if (!E.escena) { aviso("Primero abrí una escena."); return; }
+  E.jugando = false; $("play").textContent = "▶";
+  const tm = E.modo === "toma" ? E.tomas.find((x) => x.camara === E.tomaFija) || tomaEn(E.t) : tomaEn(E.t);
+  if (!tm || !E.camaras[tm.camara]) { aviso("No hay una cámara de toma en este momento."); return; }
+  dejarDeEditar();
+  const ya = E.notas.find((x) => x.tipo === "modificar" && x.reemplaza === tm.id);
+  if (ya) { irAlLibreDesdeEntrada(ya); editar(ya, `Seguís editando la cámara de ${tm.id}.`); return; }
+  if (E.t < tm.inicio_s || E.t >= tm.fin_s) irA(tm.inicio_s + 0.001);
+  const cr = E.camaras[tm.camara];
+  const padre = cr.parent && cr.parent !== E.escena && cr.parent.type !== "Scene" ? cr.parent : null;
+  const orig = captura(cr, padre);
+  ponerLibreDesde(cr);                     // la libre arranca exactamente en la cámara de la toma
+  if (E.modo !== "libre") { E.modo = "libre"; ponerModo("libre"); }
+  const n = { id: Date.now(), tipo: "modificar", t: r4(E.t), cuadro: cuadro(), toma: tm.id, camara_toma: tm.camara, tipo_toma: tm.tipo,
+    reemplaza: tm.id, desde: r4(tm.inicio_s), hasta: r4(Math.min(tm.fin_s, E.dur)), movimiento: "como estaba", texto: "",
+    orig, cam: capturaLibre() };
+  E.notas.push(n); guardarNotas(); dibujarCortes();
+  editar(n, `Editando la cámara de ${tm.id}: subila, movela, girala o cambiale el lente. Cada cambio queda anotado.`);
 };
 
 $("marcar").onclick = () => {
@@ -705,101 +816,112 @@ function cabecera() {
   const d = E.d || {};
   return `${d.produccion || ""} · ${d.escena_id || E.nombre} v${d.version || 1}${d.huella ? " (huella " + d.huella + ")" : ""}`;
 }
-function ordenCamara(n, k) {
-  const c = n.cam, fd = cuadroDe(n.desde), fh = cuadroDe(n.hasta);
-  const toma = n.reemplaza === "nueva" ? "Es una TOMA NUEVA (no reemplaza ninguna; se corta a ella en ese tramo)."
-    : `Reemplaza la cámara de la toma ${n.reemplaza}${n.reemplaza === n.toma && n.camara_toma ? " (" + n.camara_toma + ")" : ""} en ese tramo.`;
-  const l = [
-    `🎥 ORDEN DE CÁMARA ${k} · ${cabecera()}`,
-    `• Momento: desde ${minSeg(n.desde)} (cuadro ${fd}) hasta ${minSeg(n.hasta)} (cuadro ${fh}). La coloqué viendo el ${minSeg(n.t)} (cuadro ${n.cuadro}).`,
-    `• ${toma}`,
-    `• Cámara ${n.movimiento === "fija" ? "fija" : n.movimiento}${c.pegada_a ? `, pegada a «${c.pegada_a}» (viaja con él)` : ", quieta en el mundo"}.`,
-  ];
+function ordenCamara(n) {
+  const c = n.cam, fd = cuadroDe(n.desde), fh = cuadroDe(n.hasta), k = numCam(n);
+  const l = [];
+  if (n.tipo === "modificar") {
+    l.push(`✏️ CÁMARA ${k} · MODIFICAR la cámara de la toma ${n.reemplaza} (${n.camara_toma}${n.tipo_toma ? ", tipo " + n.tipo_toma : ""})`);
+    l.push(`• Tramo: desde ${minSeg(n.desde)} (cuadro ${fd}) hasta ${minSeg(n.hasta)} (cuadro ${fh}).`);
+    l.push(`• Cambio respecto de la cámara actual: ${diferencia(n.orig, c)}.`);
+    if (n.tipo_toma && !/estatic|fija/i.test(n.tipo_toma)) l.push(`• La toma es de tipo «${n.tipo_toma}» (se mueve): aplicá el mismo cambio a todo su movimiento; la medí en ${minSeg(n.t)} (cuadro ${n.cuadro}).`);
+    if (n.movimiento && n.movimiento !== "como estaba") l.push(`• Movimiento nuevo: ${n.movimiento}.`);
+  } else {
+    l.push(`➕ CÁMARA ${k} · NUEVA`);
+    l.push(`• Tramo: desde ${minSeg(n.desde)} (cuadro ${fd}) hasta ${minSeg(n.hasta)} (cuadro ${fh}). La ubiqué viendo el ${minSeg(n.t)} (cuadro ${n.cuadro}).`);
+    l.push(n.reemplaza === "nueva" ? "• Es una toma nueva: se corta a ella en ese tramo."
+      : `• En ese tramo reemplaza a la cámara de la toma ${n.reemplaza}.`);
+    l.push(`• Movimiento: ${n.movimiento}.`);
+  }
+  l.push(`• ${c.pegada_a ? `Va pegada a «${c.pegada_a}» (viaja con él)` : "Va quieta en el mundo"}.`);
   if (c.relativa) {
-    l.push(`• Posición respecto de «${c.pegada_a}» (Blender, metros, en su marco: objeto.matrix_world⁻¹ · cámara.matrix_world): ${xyz(c.relativa.position)}`);
+    l.push(`• Posición respecto de «${c.pegada_a}» (Blender, metros; objeto.matrix_world⁻¹ · cámara.matrix_world): ${xyz(c.relativa.position)}`);
     l.push(`• Rotación respecto de «${c.pegada_a}» (Euler XYZ de Blender): ${rxyz(c.relativa.rotation)}`);
   }
-  l.push(`• Posición en el mundo en el cuadro ${n.cuadro} (Blender, metros): ${xyz(c.mundo.position)}`);
-  l.push(`• Rotación en el mundo (Euler XYZ de Blender): ${rxyz(c.mundo.rotation)} · mira hacia ${xyz(c.mundo.forward)}`);
+  l.push(`• En el mundo, en el cuadro ${n.cuadro} (Blender): posición ${xyz(c.mundo.position)} · rotación ${rxyz(c.mundo.rotation)} · mira hacia ${xyz(c.mundo.forward)}`);
   l.push(`• Lente ${coma(c.lens_mm, 1)} mm (sensor 36 mm, ajuste AUTO)${c.resolucion ? ", cuadro " + c.resolucion[0] + "×" + c.resolucion[1] : ""}.`);
   if (n.texto) l.push(`• Además: ${n.texto}`);
   return l.join("\n");
 }
 function jsonOrdenes() {
   const d = E.d || {};
-  return { formato: "estudio.visor_ordenes/1", produccion: d.produccion || null, escena: d.escena_id || E.nombre,
+  return { formato: "estudio.visor_ordenes/2", produccion: d.produccion || null, escena: d.escena_id || E.nombre,
     version: d.version || null, huella: d.huella || null, fps: E.fps,
-    camaras: E.notas.filter((n) => n.tipo === "camara").map((n) => ({ desde_s: n.desde, hasta_s: n.hasta,
-      cuadro_desde: cuadroDe(n.desde), cuadro_hasta: cuadroDe(n.hasta), colocada_en_cuadro: n.cuadro, reemplaza: n.reemplaza,
-      movimiento: n.movimiento, nota: n.texto, pegada_a: n.cam.pegada_a, relativa: n.cam.relativa, mundo: n.cam.mundo,
-      lens_mm: n.cam.lens_mm, fov_v_deg: n.cam.fov_v_deg, sensor_mm: 36, sensor_fit: "AUTO", aspecto: n.cam.aspect, resolucion: n.cam.resolucion })),
-    notas: E.notas.filter((n) => n.tipo !== "camara").map((n) => ({ cuadro: n.cuadro, t: n.t, toma: n.toma, nota: n.texto })) };
+    camaras: E.notas.filter(esCam).map((n) => ({ n: numCam(n), accion: n.tipo === "modificar" ? "modificar" : "nueva",
+      toma: n.reemplaza, camara_toma: n.camara_toma, desde_s: n.desde, hasta_s: n.hasta, cuadro_desde: cuadroDe(n.desde),
+      cuadro_hasta: cuadroDe(n.hasta), medida_en_cuadro: n.cuadro, movimiento: n.movimiento, nota: n.texto,
+      cambio: n.tipo === "modificar" ? diferencia(n.orig, n.cam) : null,
+      original: n.orig ? { pegada_a: n.orig.pegada_a, relativa: n.orig.relativa, mundo: n.orig.mundo, lens_mm: n.orig.lens_mm } : null,
+      pegada_a: n.cam.pegada_a, relativa: n.cam.relativa, mundo: n.cam.mundo, lens_mm: n.cam.lens_mm, fov_v_deg: n.cam.fov_v_deg,
+      sensor_mm: 36, sensor_fit: "AUTO", aspecto: n.cam.aspect, resolucion: n.cam.resolucion })),
+    notas: E.notas.filter((n) => !esCam(n)).map((n) => ({ cuadro: n.cuadro, t: n.t, toma: n.toma, nota: n.texto })) };
 }
 function textoParaClaude() {
-  let k = 0;
-  const partes = E.notas.map((n) => n.tipo === "camara" ? ordenCamara(n, ++k)
+  const partes = E.notas.map((n) => esCam(n) ? ordenCamara(n)
     : `📍 NOTA · ${minSeg(n.t)} (cuadro ${n.cuadro})${n.toma ? " · toma " + n.toma : ""}: ${n.texto || "(sin texto)"}`);
-  return `VISOR DE ESCENA · ${cabecera()}\n\n${partes.join("\n\n")}\n\n\`\`\`json\n${JSON.stringify(jsonOrdenes())}\n\`\`\``;
+  return `VISOR DE ESCENA · ${cabecera()}\nClaude: aplicá estas cámaras y notas en una versión nueva de la escena (coordenadas de Blender, metros y grados).\n\n${partes.join("\n\n")}\n\n\`\`\`json\n${JSON.stringify(jsonOrdenes())}\n\`\`\``;
 }
 
 function pintarNotas() {
   const box = $("notas"); box.innerHTML = "";
   $("n_notas").textContent = E.notas.length ? `(${E.notas.length})` : "";
-  if (!E.notas.length) { box.innerHTML = '<div class="etq">Todavía no colocaste cámaras ni notas.</div>'; return; }
-  let k = 0;
+  if (!E.notas.length) { box.innerHTML = '<div class="etq">Todavía no agregaste ni editaste cámaras.</div>'; return; }
   E.notas.forEach((n, i) => {
+    if (n.tipo === "camara") n.tipo = "nueva";                       // notas de la versión anterior del visor
     const el = document.createElement("div");
-    const esCam = n.tipo === "camara";
-    const num = esCam ? ++k : null;
-    el.className = "nota" + (esCam ? " cam" : "");
-    const opcionesToma = esCam ? ['<option value="nueva">toma nueva</option>'].concat(E.tomas.map((tm) =>
+    const cam = esCam(n), num = cam ? numCam(n) : null, ed = n.id === E.editando;
+    el.className = "nota" + (cam ? " cam" : "");
+    el.dataset.id = n.id;
+    if (ed) el.style.outline = "2px solid var(--rec)";
+    const opcionesToma = cam && n.tipo === "nueva" ? ['<option value="nueva">toma nueva</option>'].concat(E.tomas.map((tm) =>
       `<option value="${enc(tm.id)}"${tm.id === n.reemplaza ? " selected" : ""}>reemplaza ${enc(tm.id)}</option>`)).join("") : "";
+    const movs = n.tipo === "modificar"
+      ? ["como estaba", "fija", "con paneo suave siguiendo al personaje", "acercándose despacio (dolly in)", "alejándose despacio (dolly out)", "cámara en mano"]
+      : ["fija", "con paneo suave siguiendo al personaje", "acercándose despacio (dolly in)", "alejándose despacio (dolly out)", "cámara en mano"];
+    const titulo = !cam ? "📍 NOTA" : n.tipo === "modificar" ? `✏️ CÁMARA ${num} · toma ${enc(n.reemplaza)}` : `➕ CÁMARA ${num} · nueva`;
     el.innerHTML = `
-      <div class="cab"><span>${esCam ? "🎥 CÁMARA " + num : "📍 NOTA"} · ${minSeg(n.t)} · f ${n.cuadro}${n.toma ? " · " + enc(n.toma) : ""}${esCam ? " · " + coma(n.cam.lens_mm, 0) + " mm" : ""}</span>
-        <span class="der"><button class="btn" type="button" data-ir>VER</button>${esCam ? '<button class="btn" type="button" data-copiar>COPIAR</button>' : ""}<button class="btn" type="button" data-borrar aria-label="Borrar">✕</button></span></div>
-      ${esCam ? `<div class="campos">
-        <select id="reemp_${n.id}" aria-label="Qué toma reemplaza">${opcionesToma}</select>
+      <div class="cab"><span>${titulo} · ${minSeg(n.t)} · f ${n.cuadro}${cam ? " · " + coma(n.cam.lens_mm, 0) + " mm" : ""}</span>
+        <span class="der">${cam ? `<button class="btn${ed ? " rec" : ""}" type="button" data-editar>${ed ? "EDITANDO" : "EDITAR"}</button>` : '<button class="btn" type="button" data-ir>IR</button>'}<button class="btn" type="button" data-borrar aria-label="Borrar">✕</button></span></div>
+      ${cam ? `<div class="campos">
+        ${n.tipo === "nueva" ? `<select id="reemp_${n.id}" aria-label="Qué toma reemplaza">${opcionesToma}</select>` : ""}
         <label for="desde_${n.id}">desde</label><input id="desde_${n.id}" type="number" step="0.01" min="0" value="${(+n.desde).toFixed(2)}">
         <label for="hasta_${n.id}">hasta</label><input id="hasta_${n.id}" type="number" step="0.01" min="0" value="${(+n.hasta).toFixed(2)}"> s
-        <select id="mov_${n.id}" aria-label="Movimiento"><option value="fija">fija</option><option value="con paneo suave siguiendo al personaje">paneo suave</option><option value="acercándose despacio (dolly in)">dolly in</option><option value="alejándose despacio (dolly out)">dolly out</option><option value="cámara en mano">en mano</option></select>
+        <select id="mov_${n.id}" aria-label="Movimiento">${movs.map((m) => `<option value="${enc(m)}">${enc(m.replace(/ \(.*\)/, ""))}</option>`).join("")}</select>
       </div>` : ""}
-      <textarea id="nota_${n.id}" placeholder="${esCam ? "Algo más (opcional): que encuadre a Luna, más cerca…" : "¿Qué cambio? Ej.: que Luna mire a Nico, cortar antes…"}"></textarea>
-      ${esCam ? `<pre data-orden></pre>` : ""}`;
+      <textarea id="nota_${n.id}" placeholder="${cam ? "Algo más (opcional): que encuadre a Luna, más cerca…" : "¿Qué cambio? Ej.: que Luna mire a Nico, cortar antes…"}"></textarea>
+      ${cam ? `<pre data-orden></pre>` : ""}`;
     const ta = el.querySelector("textarea");
     ta.value = n.texto;
-    const actualizar = () => { if (esCam) el.querySelector("[data-orden]").textContent = ordenCamara(n, num); guardarNotas(); dibujarCortes(); };
+    const actualizar = () => { if (cam) el.querySelector("[data-orden]").textContent = ordenCamara(n); guardarNotas(); dibujarCortes(); };
     ta.oninput = (e) => { n.texto = e.target.value; actualizar(); };
-    if (esCam) {
+    if (cam) {
+      const num2 = (v) => { const x = parseFloat(String(v).replace(",", ".")); return isNaN(x) ? null : Math.max(0, Math.min(x, E.dur)); };
       el.querySelector(`#mov_${n.id}`).value = n.movimiento;
-      el.querySelector(`#reemp_${n.id}`).onchange = (e) => { n.reemplaza = e.target.value; actualizar(); };
-      el.querySelector(`#desde_${n.id}`).oninput = (e) => { const v = parseFloat(String(e.target.value).replace(",", ".")); if (!isNaN(v)) { n.desde = Math.max(0, Math.min(v, E.dur)); actualizar(); } };
-      el.querySelector(`#hasta_${n.id}`).oninput = (e) => { const v = parseFloat(String(e.target.value).replace(",", ".")); if (!isNaN(v)) { n.hasta = Math.max(0, Math.min(v, E.dur)); actualizar(); } };
+      if (n.tipo === "nueva") el.querySelector(`#reemp_${n.id}`).onchange = (e) => { n.reemplaza = e.target.value; actualizar(); };
+      el.querySelector(`#desde_${n.id}`).oninput = (e) => { const v = num2(e.target.value); if (v !== null) { n.desde = v; actualizar(); } };
+      el.querySelector(`#hasta_${n.id}`).oninput = (e) => { const v = num2(e.target.value); if (v !== null) { n.hasta = v; actualizar(); } };
       el.querySelector(`#mov_${n.id}`).onchange = (e) => { n.movimiento = e.target.value; actualizar(); };
-      el.querySelector("[data-copiar]").onclick = () => copiarTexto(ordenCamara(n, num), `Orden de la cámara ${num} copiada. Pegala en el chat de Claude.`);
-      el.querySelector("[data-orden]").textContent = ordenCamara(n, num);
+      el.querySelector("[data-orden]").textContent = ordenCamara(n);
+      el.querySelector("[data-editar]").onclick = () => {
+        E.jugando = false; $("play").textContent = "▶";
+        if (ed) { dejarDeEditar(); return; }
+        dejarDeEditar();
+        irAlLibreDesdeEntrada(n);
+        editar(n, `Editando la cámara ${num}: lo que muevas queda anotado. ✔ LISTO cuando termines.`);
+      };
+    } else {
+      el.querySelector("[data-ir]").onclick = () => { E.jugando = false; $("play").textContent = "▶"; irA(n.t); };
     }
-    el.querySelector("[data-ir]").onclick = () => {
-      E.jugando = false; $("play").textContent = "▶";
-      irA(n.t);
-      if (esCam) {
-        if (E.modo !== "libre") ponerModo("libre");
-        const obj = n.cam.pegada_a ? E.escena.getObjectByName(n.cam.pegada_a) : null;
-        new THREE.Matrix4().fromArray(n.cam.gltf.m).decompose(libre.position, libre.quaternion, tmpV);
-        libre.fov = n.cam.gltf.fov; libre.updateProjectionMatrix();
-        $("lente").value = Math.round(n.cam.lens_mm); $("lente_v").textContent = $("lente").value + " mm";
-        ponerSeguir(obj);
-        if (obj && n.cam.gltf.local) E.local.fromArray(n.cam.gltf.local);
-        aviso(`Viendo la cámara ${num} en el momento en que la colocaste.`);
-      }
+    el.querySelector("[data-borrar]").onclick = () => {
+      if (n.id === E.editando) dejarDeEditar();
+      E.notas.splice(E.notas.indexOf(n), 1); guardarNotas(); pintarNotas(); dibujarCortes();
     };
-    el.querySelector("[data-borrar]").onclick = () => { E.notas.splice(i, 1); guardarNotas(); pintarNotas(); dibujarCortes(); };
     box.appendChild(el);
   });
 }
 
 $("copiar").onclick = () => {
-  if (!E.notas.length) { aviso("Todavía no hay nada para copiar: colocá una cámara o marcá una nota."); return; }
-  copiarTexto(textoParaClaude(), "Copiado todo. Pegalo en el chat de Claude.");
+  if (!E.notas.length) { aviso("Todavía no hay nada para copiar: agregá o editá una cámara, o marcá una nota."); return; }
+  copiarTexto(textoParaClaude(), "Copiado. Pegalo en el chat de Claude: ahí están todas las cámaras y notas.");
 };
 
 // teclado (computadora)

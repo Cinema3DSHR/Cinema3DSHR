@@ -504,3 +504,8 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   🎥 COLOCAR CÁMARA, que copia al instante la orden (desde/hasta, qué toma reemplaza, fija o movimiento, pose respecto
   del vagón y en el mundo en Blender, lente). Probado con e01: la pose relativa coincide con el `desp_local` de t05 y no
   cambia entre 13,2 s y 14,5 s; la del mundo coincide con Blender.
+- Tercera vuelta (pedido del dueño: moverse libre, un botón de cámara que la agregue al texto, poder modificar las
+  cámaras ya puestas y agregar otras, y sólo COPIAR): ➕ CÁMARA NUEVA, ✏️ EDITAR CÁMARA DE LA TOMA, EDITAR en cada
+  cámara de la lista (lo que se mueve mientras edita queda en la orden, con el cambio en palabras), conos rojos y un único
+  📋 COPIAR PARA CLAUDE (JSON `estudio.visor_ordenes/2`). Probado con e01: editar t05 (subirla, lente 32 → 45 mm),
+  moverse sin editar no la cambia, cámara nueva en t08; sin errores de la página.
