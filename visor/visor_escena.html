@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+</head>
+<body>
+<!--ARTIFACT-START-->
+<title>Visor de Escenas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Mesa de montaje: el cuadro de la cámara arriba, la línea de tiempo y los controles abajo; en horizontal, panel a la derecha */
+:root {
+  --bg: #121417;          /* sala oscura */
+  --panel: #1b1e23;
+  --linea: #2c3139;
+  --fg: #e7e3da;          /* texto */
+  --tenue: #9aa0a8;
+  --acento: #e8b04a;      /* ámbar de claqueta */
+  --toma-a: #3a4250;
+  --toma-b: #2f3642;
+  --rojo: #e0645a;
+  --f-ui: "IBM Plex Sans Condensed", "Roboto Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-num: "IBM Plex Mono", ui-monospace, "Roboto Mono", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.35 var(--f-ui); overflow: hidden; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+button, select, input, textarea { font: inherit; color: inherit; }
+#app { height: 100%; display: flex; flex-direction: column; }
+#vista { position: relative; flex: 1 1 auto; min-height: 200px; background: #0b0c0e; }
+#lienzo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#vacio { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#vacio .caja { max-width: 30rem; display: grid; gap: 12px; text-align: left; }
+#vacio h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: .01em; text-wrap: balance; }
+#vacio p { margin: 0; color: var(--tenue); }
+#vacio ol { margin: 0; padding-left: 1.2rem; color: var(--tenue); display: grid; gap: 4px; }
+#rotulo { position: absolute; left: max(10px, env(safe-area-inset-left, 0px)); top: 8px; font: 12px var(--f-num);
+  background: rgba(10, 11, 13, .72); padding: 4px 8px; border-radius: 4px; pointer-events: none; color: var(--fg); }
+#rotulo b { color: var(--acento); font-weight: 500; }
+#cargando { position: absolute; right: 10px; top: 8px; font: 12px var(--f-num); color: var(--acento); }
+#mando { flex: 0 0 auto; background: var(--panel); border-top: 1px solid var(--linea); display: grid; gap: 8px;
+  padding-block: 8px; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px));
+  max-height: 52%; overflow-y: auto; }
+.fila { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.btn { background: #262a31; border: 1px solid var(--linea); border-radius: 6px; padding: 8px 12px; min-height: 40px;
+  cursor: pointer; font-weight: 600; letter-spacing: .02em; }
+.btn:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--acento); outline-offset: 1px; }
+.btn.activo { background: var(--acento); color: #17130a; border-color: var(--acento); }
+.btn.grande { min-width: 52px; font-size: 1.1rem; }
+.btn[disabled] { opacity: .4; cursor: default; }
+#tiempo { font: 13px var(--f-num); font-variant-numeric: tabular-nums; color: var(--tenue); margin-left: auto; }
+#barra { position: relative; height: 34px; }
+#cortes { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 4px; cursor: pointer; }
+#deslizador { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.etq { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
+details { border-top: 1px solid var(--linea); padding-top: 6px; }
+summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.lista { display: grid; gap: 4px; margin-top: 6px; }
+.item { display: flex; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 4px; background: #20242a; cursor: pointer; min-width: 0; }
+.item.actual { outline: 1px solid var(--acento); }
+.item .n { font: 12px var(--f-num); color: var(--acento); flex: 0 0 auto; }
+.item .t { min-width: 0; overflow-wrap: anywhere; }
+.nota { display: grid; gap: 6px; padding: 8px; border-radius: 4px; background: #20242a; }
+.nota .cab { display: flex; gap: 8px; align-items: center; font: 12px var(--f-num); color: var(--acento); }
+.nota .cab button { margin-left: auto; }
+.nota textarea { width: 100%; min-height: 54px; resize: vertical; background: #15171b; border: 1px solid var(--linea); border-radius: 4px; padding: 6px; }
+#salida { width: 100%; min-height: 120px; font: 12px var(--f-num); background: #15171b; border: 1px solid var(--linea); border-radius: 4px; padding: 6px; }
+#aviso { color: var(--acento); font-size: 13px; min-height: 1em; }
+label.lente { display: flex; gap: 8px; align-items: center; font: 13px var(--f-num); }
+input[type=range].fino { width: 160px; accent-color: var(--acento); }
+@media (orientation: landscape) and (min-width: 700px) {
+  #app { flex-direction: row; }
+  #mando { width: 360px; max-height: none; border-top: 0; border-left: 1px solid var(--linea); align-content: start; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div id="app">
+  <div id="vista">
+    <canvas id="lienzo"></canvas>
+    <div id="vacio">
+      <div class="caja">
+        <h1>Abrí el GLB de la escena</h1>
+        <p>Claude te pasa la escena como un archivo <b>.glb</b> liviano (y a veces un <b>.json</b> con las tomas). Se ve con las animaciones y las cámaras de rodaje, sin render.</p>
+        <ol>
+          <li>Tocá <b>ABRIR ESCENA</b> y elegí el .glb (si vino un .json, elegí los dos juntos).</li>
+          <li>▶ para ver el montaje. Elegí una toma o pasá a <b>LIBRE</b> para mirar desde donde quieras.</li>
+          <li><b>📍 MARCAR</b> donde algo no te gusta, escribí qué cambiar y <b>COPIAR PARA CLAUDE</b>: lo pegás en el chat.</li>
+        </ol>
+        <div class="fila"><button class="btn activo" id="abrir2" type="button">ABRIR ESCENA</button></div>
+      </div>
+    </div>
+    <div id="rotulo" hidden></div>
+    <div id="cargando" hidden></div>
+  </div>
+
+  <div id="mando">
+    <div class="fila">
+      <button class="btn" id="abrir" type="button">ABRIR ESCENA</button>
+      <input id="archivo" type="file" multiple hidden>
+      <span id="titulo" class="etq"></span>
+    </div>
+    <div class="fila" role="group" aria-label="Modo de cámara">
+      <button class="btn activo" id="m_montaje" type="button">MONTAJE</button>
+      <button class="btn" id="m_toma" type="button">TOMA</button>
+      <button class="btn" id="m_libre" type="button">LIBRE</button>
+      <select id="sel_toma" class="btn" aria-label="Cámara de la toma"></select>
+    </div>
+    <div id="barra"><canvas id="cortes"></canvas><input id="deslizador" type="range" min="0" max="1" step="0.0001" value="0" aria-label="Línea de tiempo"></div>
+    <div class="fila">
+      <button class="btn grande" id="inicio" type="button" aria-label="Al principio">⏮</button>
+      <button class="btn grande" id="atras" type="button" aria-label="Cuadro anterior">◀︎</button>
+      <button class="btn grande" id="play" type="button" aria-label="Reproducir">▶</button>
+      <button class="btn grande" id="adelante" type="button" aria-label="Cuadro siguiente">▶︎</button>
+      <button class="btn" id="vel" type="button">×1</button>
+      <span id="tiempo">—</span>
+    </div>
+    <div class="fila" id="fila_lente" hidden>
+      <label class="lente" for="lente">Lente <input id="lente" class="fino" type="range" min="12" max="135" step="1" value="35"> <span id="lente_v">35 mm</span></label>
+    </div>
+    <div class="fila">
+      <button class="btn" id="marcar" type="button">📍 MARCAR</button>
+      <button class="btn" id="copiar" type="button">COPIAR PARA CLAUDE</button>
+      <button class="btn" id="plano" type="button">COLOR PLANO</button>
+    </div>
+    <div id="aviso" role="status"></div>
+    <details open><summary>Notas <span id="n_notas" class="etq"></span></summary><div id="notas" class="lista"></div>
+      <textarea id="salida" hidden readonly></textarea></details>
+    <details><summary>Tomas</summary><div id="tomas" class="lista"></div></details>
+    <details><summary>Personajes ahora</summary><div id="actores" class="lista"></div></details>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+(() => {
+"use strict";
+const $ = (id) => document.getElementById(id);
+const san = (n) => THREE.PropertyBinding.sanitizeNodeName(String(n));
+const C_FONDO = 0x0b0c0e, C_CIELO = 0x23262c;
+
+// ---------------------------------------------------------------- estado
+const E = {
+  d: null, fps: 30, dur: 1, frames: 30, t: 0, jugando: false, vel: 1,
+  modo: "montaje", tomaFija: null, escena: null, mixer: null, clipDur: 0,
+  camaras: {}, tomas: [], vis: [], actores: [], aspecto: 16 / 9, plano: false, mats: new Map(),
+  notas: [], clave: "visor-notas", nombre: "",
+};
+
+// ---------------------------------------------------------------- three
+const lienzo = $("lienzo");
+const rend = new THREE.WebGLRenderer({ canvas: lienzo, antialias: true });
+rend.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+rend.outputEncoding = THREE.sRGBEncoding;
+const esc = new THREE.Scene();
+esc.background = new THREE.Color(C_CIELO);
+esc.add(new THREE.HemisphereLight(0xf2efe8, 0x4a4640, 0.95));
+const sol = new THREE.DirectionalLight(0xffffff, 0.75);
+sol.position.set(4, 10, 6);
+esc.add(sol);
+const libre = new THREE.PerspectiveCamera(40, 16 / 9, 0.05, 5000);
+libre.position.set(4, 3, 6);
+const orbita = new THREE.OrbitControls(libre, lienzo);
+orbita.enableDamping = true;
+orbita.enabled = false;
+const grilla = new THREE.GridHelper(40, 40, 0x3a3f47, 0x2a2e35);
+esc.add(grilla);
+
+function tamano() {
+  const r = $("vista").getBoundingClientRect();
+  rend.setSize(Math.max(1, r.width), Math.max(1, r.height), false);
+  dibujarCortes();
+}
+window.addEventListener("resize", tamano);
+new ResizeObserver(tamano).observe($("vista"));
+
+function rectCuadro() {
+  // el cuadro del render (misma proporción), centrado con franjas
+  const w = lienzo.clientWidth, h = lienzo.clientHeight;
+  let cw = w, ch = w / E.aspecto;
+  if (ch > h) { ch = h; cw = h * E.aspecto; }
+  return { x: (w - cw) / 2, y: (h - ch) / 2, w: cw, h: ch };
+}
+
+function camaraActiva() {
+  if (E.modo === "libre" || !E.escena) return libre;
+  if (E.modo === "toma" && E.camaras[E.tomaFija]) return E.camaras[E.tomaFija];
+  const tm = tomaEn(E.t);
+  return (tm && E.camaras[tm.camara]) || Object.values(E.camaras)[0] || libre;
+}
+
+// ---------------------------------------------------------------- tiempo
+function tEscena(t) {
+  const m = E.d && E.d.mapa_tiempo;
+  if (!Array.isArray(m) || m.length < 2) return t;
+  if (t <= m[0][0]) return m[0][1] + (t - m[0][0]);
+  for (let i = 1; i < m.length; i++) {
+    if (t <= m[i][0]) {
+      const k = (t - m[i - 1][0]) / Math.max(1e-9, m[i][0] - m[i - 1][0]);
+      return m[i - 1][1] + (m[i][1] - m[i - 1][1]) * k;
+    }
+  }
+  const n = m.length - 1;
+  return m[n][1] + (t - m[n][0]);
+}
+const cuadro = () => Math.min(Math.floor(E.t * E.fps + 1e-6) + 1, E.frames);
+function tomaEn(t) {
+  if (!E.tomas.length) return null;
+  for (const tm of E.tomas) if (t >= tm.inicio_s && t < tm.fin_s) return tm;
+  return E.tomas[E.tomas.length - 1];
+}
+const coma = (x, d = 2) => x.toFixed(d).replace(".", ",");
+
+function irA(t) {
+  E.t = Math.min(Math.max(0, t), E.dur);
+  if (E.mixer) {
+    // Blender pone el cuadro f en f/fps: la película empieza en el cuadro 1
+    E.mixer.setTime(Math.min(tEscena(E.t) + 1 / E.fps, E.clipDur));
+  }
+  const f = cuadro();
+  for (const v of E.vis) v.obj.visible = v.tramos.some((r) => f >= r[0] && f < r[1]);
+  $("deslizador").value = E.dur ? E.t / E.dur : 0;
+  const tm = tomaEn(E.t);
+  $("tiempo").textContent = `f ${f} · ${coma(E.t)} s${tm ? " · " + tm.id : ""}`;
+  const cam = camaraActiva();
+  const r = $("rotulo");
+  r.hidden = !E.escena;
+  r.innerHTML = E.modo === "libre" ? `<b>LIBRE</b> · ${coma(lenteDe(libre, E.aspecto), 0)} mm`
+    : `<b>${E.modo === "toma" ? "TOMA" : "MONTAJE"}</b> · ${(E.modo === "toma" ? E.tomaFija : tm && tm.camara) || cam.name || ""}`;
+  pintarActores();
+  marcarTomaActual(tm);
+  dibujarCortes();
+}
+
+// ---------------------------------------------------------------- bucle
+let ultimo = performance.now();
+function cuadroBucle(ahora) {
+  const dt = Math.min(0.1, (ahora - ultimo) / 1000);
+  ultimo = ahora;
+  if (E.jugando && E.escena) {
+    let t = E.t + dt * E.vel;
+    if (t >= E.dur) { t = E.dur; E.jugando = false; $("play").textContent = "▶"; }
+    irA(t);
+  }
+  if (E.modo === "libre") orbita.update();
+  const w = lienzo.clientWidth, h = lienzo.clientHeight;
+  rend.setScissorTest(true);
+  rend.setViewport(0, 0, w, h); rend.setScissor(0, 0, w, h);
+  rend.setClearColor(C_FONDO, 1); rend.clear();
+  const rc = rectCuadro();
+  const cam = camaraActiva();
+  if (cam.isPerspectiveCamera && Math.abs(cam.aspect - E.aspecto) > 1e-4) { cam.aspect = E.aspecto; cam.updateProjectionMatrix(); }
+  rend.setViewport(rc.x, h - rc.y - rc.h, rc.w, rc.h);
+  rend.setScissor(rc.x, h - rc.y - rc.h, rc.w, rc.h);
+  rend.render(esc, cam);
+  requestAnimationFrame(cuadroBucle);
+}
+requestAnimationFrame(cuadroBucle);
+
+// ---------------------------------------------------------------- carga
+function aviso(txt) { $("aviso").textContent = txt || ""; }
+
+$("abrir").onclick = $("abrir2").onclick = () => $("archivo").click();
+$("archivo").onchange = (ev) => abrirArchivos([...ev.target.files]);
+$("vista").addEventListener("dragover", (e) => e.preventDefault());
+$("vista").addEventListener("drop", (e) => { e.preventDefault(); abrirArchivos([...e.dataTransfer.files]); });
+
+async function abrirArchivos(lista) {
+  const glb = lista.find((f) => /\.(glb|gltf)$/i.test(f.name)) || lista.find((f) => !/\.json$/i.test(f.name));
+  const js = lista.find((f) => /\.json$/i.test(f.name));
+  if (!glb) { aviso("Elegí el archivo .glb de la escena (y el .json si vino uno)."); return; }
+  try {
+    const datos = js ? JSON.parse(await js.text()) : null;
+    await cargar(await glb.arrayBuffer(), datos, glb.name);
+  } catch (e) {
+    console.error(e);
+    aviso("No se pudo abrir: " + (e && e.message ? e.message : e) + ". ¿Es el .glb que te pasó Claude?");
+  }
+}
+
+async function cargarURL(urlGlb, urlJson) {
+  try {
+    $("cargando").hidden = false; $("cargando").textContent = "bajando…";
+    const b = await (await fetch(urlGlb)).arrayBuffer();
+    const d = urlJson ? await (await fetch(urlJson)).json() : null;
+    await cargar(b, d, urlGlb.split("/").pop());
+  } catch (e) { aviso("No se pudo bajar la escena de esa dirección. Abrila desde el archivo."); }
+  $("cargando").hidden = true;
+}
+
+function cargar(buffer, datos, nombre) {
+  return new Promise((ok, mal) => {
+    $("cargando").hidden = false; $("cargando").textContent = "abriendo…";
+    new THREE.GLTFLoader().parse(buffer, "", (g) => { $("cargando").hidden = true; montar(g, datos, nombre); ok(); },
+      (e) => { $("cargando").hidden = true; mal(e); });
+  });
+}
+
+function montar(g, datos, nombre) {
+  if (E.escena) esc.remove(E.escena);
+  E.mats.clear(); E.plano = false; $("plano").classList.remove("activo");
+  const raiz = g.scene;
+  // la línea de tiempo puede venir dentro del GLB (extras) o aparte en el .json
+  const d = datos || (raiz.userData && raiz.userData.estudio_previa) || (g.parser.json.extras && g.parser.json.extras.estudio_previa) || {};
+  E.d = d; E.nombre = nombre;
+  E.fps = d.fps || 30;
+  // sin luces del archivo: iluminación simple y pareja, sin sombras
+  raiz.traverse((o) => {
+    if (o.isLight) o.visible = false;
+    if (o.isMesh) { o.castShadow = o.receiveShadow = false; o.frustumCulled = false; }
+  });
+  esc.add(raiz);
+  E.escena = raiz;
+  grilla.visible = false;
+  // cámaras de rodaje
+  E.camaras = {};
+  const camsGlb = g.cameras || [];
+  for (const c of camsGlb) E.camaras[c.name] = c;
+  raiz.traverse((o) => { if (o.isCamera && !E.camaras[o.name]) E.camaras[o.name] = o; });
+  // las tomas del json nombran la cámara como en Blender; three la guarda «saneada»
+  E.tomas = (d.tomas || []).map((tm) => ({ ...tm, camara: E.camaras[tm.camara] ? tm.camara : san(tm.camara) }));
+  const r = d.resolucion;
+  E.aspecto = Array.isArray(r) && r[0] && r[1] ? r[0] / r[1] : (camsGlb[0] && camsGlb[0].aspect) || 16 / 9;
+  // animación: todas las del archivo, juntas
+  E.mixer = null; E.clipDur = 0;
+  if (g.animations.length) {
+    E.mixer = new THREE.AnimationMixer(raiz);
+    for (const clip of g.animations) {
+      const a = E.mixer.clipAction(clip);
+      a.setLoop(THREE.LoopOnce, 1); a.clampWhenFinished = true; a.play();
+      E.clipDur = Math.max(E.clipDur, clip.duration);
+    }
+  }
+  E.dur = d.duracion_s || (d.frames ? d.frames / E.fps : Math.max(0.04, E.clipDur - 1 / E.fps));
+  E.frames = d.frames || Math.max(1, Math.round(E.dur * E.fps));
+  // objetos que aparecen y desaparecen (fogonazos, pelotas…)
+  E.vis = [];
+  for (const [n, tramos] of Object.entries(d.visibilidad || {})) {
+    const o = raiz.getObjectByName(n) || raiz.getObjectByName(san(n));
+    if (o) E.vis.push({ obj: o, tramos });
+  }
+  E.actores = d.actores || [];
+  // cámara libre: arranca donde está la primera toma
+  const c0 = E.tomas.length ? E.camaras[E.tomas[0].camara] : camsGlb[0];
+  E.mixer && E.mixer.setTime(1 / E.fps);
+  raiz.updateMatrixWorld(true);
+  if (c0) ponerLibreDesde(c0); else encuadrarTodo(raiz);
+  // interfaz
+  const titulo = [d.titulo, d.escena_id && `${d.escena_id} v${d.version || 1}`].filter(Boolean).join(" · ") || nombre;
+  $("titulo").textContent = titulo;
+  $("vacio").hidden = true;
+  E.clave = "visor-notas:" + (d.escena_id || nombre) + ":" + (d.huella || "");
+  E.notas = leerNotas();
+  llenarSelector(); llenarTomas(); pintarNotas();
+  E.tomaFija = E.tomas.length ? E.tomas[0].camara : Object.keys(E.camaras)[0] || null;
+  ponerModo(Object.keys(E.camaras).length ? "montaje" : "libre");
+  if (!E.tomas.length && Object.keys(E.camaras).length) ponerModo("toma");
+  irA(0);
+  const nc = Object.keys(E.camaras).length;
+  aviso(`${titulo}: ${nc} cámara${nc === 1 ? "" : "s"}, ${E.tomas.length} toma${E.tomas.length === 1 ? "" : "s"}, ${coma(E.dur, 1)} s.` +
+    (datos || d.tomas ? "" : " Sin línea de tiempo: se ven las cámaras sueltas."));
+  tamano();
+}
+
+function ponerLibreDesde(c) {
+  c.updateMatrixWorld(true);
+  const p = new THREE.Vector3(), q = new THREE.Quaternion(), s = new THREE.Vector3();
+  c.matrixWorld.decompose(p, q, s);
+  libre.position.copy(p); libre.quaternion.copy(q);
+  libre.fov = c.fov || 40; libre.updateProjectionMatrix();
+  const adelante = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
+  orbita.target.copy(p).addScaledVector(adelante, 4);
+  orbita.update();
+  $("lente").value = Math.round(lenteDe(libre, E.aspecto));
+  $("lente_v").textContent = $("lente").value + " mm";
+}
+function encuadrarTodo(o) {
+  const caja = new THREE.Box3().setFromObject(o), c = caja.getCenter(new THREE.Vector3()), r = caja.getSize(new THREE.Vector3()).length() || 5;
+  libre.position.copy(c).add(new THREE.Vector3(r * 0.6, r * 0.4, r * 0.6));
+  orbita.target.copy(c); orbita.update();
+}
+
+// ---------------------------------------------------------------- óptica (Blender: sensor de 36 mm, ajuste automático)
+function lenteDe(cam, aspecto) {
+  const fv = THREE.MathUtils.degToRad(cam.fov);
+  if (aspecto >= 1) { const fh = 2 * Math.atan(Math.tan(fv / 2) * aspecto); return 18 / Math.tan(fh / 2); }
+  return 18 / Math.tan(fv / 2);
+}
+function fovDeLente(mm, aspecto) {
+  if (aspecto >= 1) { const fh = 2 * Math.atan(18 / mm); return THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(fh / 2) / aspecto)); }
+  return THREE.MathUtils.radToDeg(2 * Math.atan(18 / mm));
+}
+$("lente").oninput = () => {
+  libre.fov = fovDeLente(+$("lente").value, E.aspecto); libre.updateProjectionMatrix();
+  $("lente_v").textContent = $("lente").value + " mm"; irA(E.t);
+};
+
+// ---------------------------------------------------------------- modos
+function ponerModo(m) {
+  if (m === "libre" && E.modo !== "libre") ponerLibreDesde(camaraActiva());
+  E.modo = m;
+  orbita.enabled = m === "libre";
+  for (const k of ["montaje", "toma", "libre"]) $("m_" + k).classList.toggle("activo", k === m);
+  $("fila_lente").hidden = m !== "libre";
+  $("sel_toma").hidden = m !== "toma";
+  irA(E.t);
+}
+$("m_montaje").onclick = () => ponerModo(E.tomas.length ? "montaje" : "toma");
+$("m_toma").onclick = () => { if (!E.tomaFija) E.tomaFija = (tomaEn(E.t) || {}).camara; ponerModo("toma"); };
+$("m_libre").onclick = () => ponerModo("libre");
+$("sel_toma").onchange = () => { E.tomaFija = $("sel_toma").value; ponerModo("toma"); };
+
+function llenarSelector() {
+  const s = $("sel_toma"); s.innerHTML = "";
+  const vistas = new Set();
+  for (const tm of E.tomas) {
+    if (vistas.has(tm.camara)) continue; vistas.add(tm.camara);
+    s.add(new Option(`${tm.id} · ${tm.camara}`, tm.camara));
+  }
+  for (const n of Object.keys(E.camaras)) if (!vistas.has(n)) s.add(new Option(n, n));
+}
+function llenarTomas() {
+  const box = $("tomas"); box.innerHTML = "";
+  if (!E.tomas.length) { box.innerHTML = '<div class="etq">Sin tomas: vino sólo el GLB.</div>'; return; }
+  E.tomas.forEach((tm, i) => {
+    const el = document.createElement("div");
+    el.className = "item"; el.dataset.i = i;
+    el.innerHTML = `<span class="n">${coma(tm.inicio_s, 1)} s</span><span class="t">${tm.id} · ${tm.tipo || ""}${tm.lente_mm ? " · " + Math.round(tm.lente_mm) + " mm" : ""}</span>`;
+    el.onclick = () => { E.tomaFija = tm.camara; $("sel_toma").value = tm.camara; ponerModo("toma"); irA(tm.inicio_s + 0.001); };
+    box.appendChild(el);
+  });
+}
+function marcarTomaActual(tm) {
+  const i = tm ? E.tomas.indexOf(tm) : -1;
+  for (const el of $("tomas").children) el.classList.toggle("actual", +el.dataset.i === i);
+}
+function pintarActores() {
+  const box = $("actores");
+  if (!E.actores.length) { box.innerHTML = '<div class="etq">Sin datos de personajes.</div>'; return; }
+  box.innerHTML = E.actores.map((a) => {
+    const ac = (a.acciones || []).find((x) => E.t >= x.inicio_s && E.t < x.fin_s);
+    return `<div class="item"><span class="n">${a.id}</span><span class="t">${ac ? ac.clip : "—"}</span></div>`;
+  }).join("");
+}
+
+// ---------------------------------------------------------------- línea de tiempo
+function dibujarCortes() {
+  const cv = $("cortes"), r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  cv.width = Math.max(1, r.width * dpr); cv.height = Math.max(1, r.height * dpr);
+  const x = cv.getContext("2d"); x.scale(dpr, dpr);
+  const W = r.width, H = r.height;
+  x.fillStyle = "#15171b"; x.fillRect(0, 0, W, H);
+  E.tomas.forEach((tm, i) => {
+    const a = (tm.inicio_s / E.dur) * W, b = (Math.min(tm.fin_s, E.dur) / E.dur) * W;
+    x.fillStyle = i % 2 ? "#2f3642" : "#3a4250"; x.fillRect(a, 4, Math.max(1, b - a - 1), H - 8);
+    if (b - a > 34) { x.fillStyle = "#9aa0a8"; x.font = "11px IBM Plex Mono, monospace"; x.fillText(tm.id, a + 4, H / 2 + 4, b - a - 8); }
+  });
+  for (const n of E.notas) { const p = (n.t / E.dur) * W; x.fillStyle = "#e0645a"; x.fillRect(p - 1, 0, 3, H); }
+  const p = (E.t / E.dur) * W;
+  x.fillStyle = "#e8b04a"; x.fillRect(p - 1, 0, 2, H);
+}
+$("deslizador").oninput = (e) => { E.jugando = false; $("play").textContent = "▶"; irA(+e.target.value * E.dur); };
+
+// ---------------------------------------------------------------- reproducción
+$("play").onclick = () => {
+  if (!E.escena) return;
+  if (E.t >= E.dur) irA(0);
+  E.jugando = !E.jugando; $("play").textContent = E.jugando ? "⏸" : "▶";
+};
+const paso = (k) => { E.jugando = false; $("play").textContent = "▶"; irA((cuadro() - 1 + k) / E.fps + 1e-6); };
+$("atras").onclick = () => paso(-1);
+$("adelante").onclick = () => paso(1);
+$("inicio").onclick = () => { E.jugando = false; $("play").textContent = "▶"; irA(0); };
+const VELS = [1, 0.5, 0.25, 2];
+$("vel").onclick = () => { E.vel = VELS[(VELS.indexOf(E.vel) + 1) % VELS.length]; $("vel").textContent = "×" + String(E.vel).replace(".", ","); };
+
+// ---------------------------------------------------------------- color plano (sin luz)
+$("plano").onclick = () => {
+  if (!E.escena) return;
+  E.plano = !E.plano; $("plano").classList.toggle("activo", E.plano);
+  E.escena.traverse((o) => {
+    if (!o.isMesh) return;
+    if (E.plano) {
+      if (!E.mats.has(o)) {
+        const viejo = o.material;
+        const conv = (m) => new THREE.MeshBasicMaterial({ map: m.map || null, color: m.color ? m.color.clone() : 0xffffff,
+          transparent: m.transparent, opacity: m.opacity, alphaTest: m.alphaTest, side: m.side });
+        E.mats.set(o, { viejo, nuevo: Array.isArray(viejo) ? viejo.map(conv) : conv(viejo) });
+      }
+      o.material = E.mats.get(o).nuevo;
+    } else if (E.mats.has(o)) o.material = E.mats.get(o).viejo;
+  });
+};
+
+// ---------------------------------------------------------------- notas para Claude
+function leerNotas() { try { return JSON.parse(localStorage.getItem(E.clave) || "[]"); } catch (e) { return []; } }
+function guardarNotas() { try { localStorage.setItem(E.clave, JSON.stringify(E.notas)); } catch (e) { /* sin almacenamiento: quedan en la página */ } }
+
+// pose de una cámara en coordenadas de Blender: (x, y, z)_b = (x, −z, y)_glTF; rotación R_b = C·R_glTF
+const CB = new THREE.Matrix4().set(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1);
+function poseBlender(cam) {
+  cam.updateMatrixWorld(true);
+  const p = new THREE.Vector3(), q = new THREE.Quaternion(), s = new THREE.Vector3();
+  cam.matrixWorld.decompose(p, q, s);
+  const rb = new THREE.Matrix4().multiplyMatrices(CB, new THREE.Matrix4().makeRotationFromQuaternion(q));
+  const eu = new THREE.Euler().setFromRotationMatrix(rb, "ZYX");          // = Euler XYZ de Blender
+  const qb = new THREE.Quaternion().setFromRotationMatrix(rb);
+  const r4 = (v) => Math.round(v * 1e4) / 1e4, g = (v) => Math.round(THREE.MathUtils.radToDeg(v) * 100) / 100;
+  return {
+    position: { x: r4(p.x), y: r4(-p.z), z: r4(p.y) },
+    rotation: { x: g(eu.x), y: g(eu.y), z: g(eu.z) },
+    quaternion: [r4(qb.w), r4(qb.x), r4(qb.y), r4(qb.z)],
+    lens_mm: Math.round(lenteDe(cam, E.aspecto) * 10) / 10, fov_v_deg: Math.round(cam.fov * 100) / 100,
+    aspect: Math.round(E.aspecto * 1e4) / 1e4, sensor_mm: 36, sensor_fit: "AUTO",
+  };
+}
+
+$("marcar").onclick = () => {
+  if (!E.escena) { aviso("Primero abrí una escena."); return; }
+  E.jugando = false; $("play").textContent = "▶";
+  const tm = tomaEn(E.t);
+  const cam = camaraActiva();
+  const n = {
+    id: Date.now(), t: Math.round(E.t * 1000) / 1000, cuadro: cuadro(), toma: tm ? tm.id : null,
+    camara_toma: tm ? tm.camara : null, modo: E.modo, viendo: E.modo === "libre" ? "cámara libre" : (cam.name || ""),
+    camara_nueva: E.modo === "libre" ? poseBlender(libre) : null, texto: "",
+  };
+  E.notas.push(n); guardarNotas(); pintarNotas(); dibujarCortes();
+  aviso(E.modo === "libre" ? "Marcado con la cámara libre: Claude recibe su posición exacta." : "Marcado. Escribí qué querés cambiar.");
+  const ta = $("notas").querySelector(`[data-id="${n.id}"] textarea`); if (ta) ta.focus();
+};
+
+function pintarNotas() {
+  const box = $("notas"); box.innerHTML = "";
+  $("n_notas").textContent = E.notas.length ? `(${E.notas.length})` : "";
+  if (!E.notas.length) { box.innerHTML = '<div class="etq">Todavía no marcaste nada.</div>'; return; }
+  E.notas.forEach((n, i) => {
+    const el = document.createElement("div");
+    el.className = "nota"; el.dataset.id = n.id;
+    el.innerHTML = `<div class="cab"><span>${i + 1} · f ${n.cuadro} · ${coma(n.t)} s${n.toma ? " · " + n.toma : ""}${n.camara_nueva ? " · 🎥 " + n.camara_nueva.lens_mm + " mm" : ""}</span>
+      <button class="btn" type="button" data-ir>IR</button><button class="btn" type="button" data-borrar aria-label="Borrar nota">✕</button></div>
+      <textarea id="nota_${n.id}" placeholder="¿Qué cambio? Ej.: esta cámara más baja, que Luna mire a Nico, cortar antes…"></textarea>`;
+    el.querySelector("textarea").value = n.texto;
+    el.querySelector("textarea").oninput = (e) => { n.texto = e.target.value; guardarNotas(); };
+    el.querySelector("[data-ir]").onclick = () => {
+      if (n.camara_nueva) aviso("Esta nota tiene una cámara libre: está en el texto para Claude.");
+      irA(n.t);
+    };
+    el.querySelector("[data-borrar]").onclick = () => { E.notas.splice(i, 1); guardarNotas(); pintarNotas(); dibujarCortes(); };
+    box.appendChild(el);
+  });
+}
+
+function textoParaClaude() {
+  const d = E.d || {};
+  const cab = `VISOR DE ESCENA · ${d.produccion || ""} ${d.escena_id || E.nombre} v${d.version || 1}${d.huella ? " · huella " + d.huella : ""}`;
+  const lineas = E.notas.map((n, i) => {
+    let s = `${i + 1}) cuadro ${n.cuadro} (${coma(n.t)} s)${n.toma ? " · toma " + n.toma + " (cámara " + n.camara_toma + ")" : ""}: ${n.texto || "(sin texto)"}`;
+    if (n.camara_nueva) {
+      const c = n.camara_nueva;
+      s += `\n   cámara nueva propuesta (coordenadas de Blender): posición (${c.position.x}, ${c.position.y}, ${c.position.z}) · rotación XYZ (${c.rotation.x}°, ${c.rotation.y}°, ${c.rotation.z}°) · lente ${c.lens_mm} mm`;
+    }
+    return s;
+  });
+  const json = { formato: "estudio.visor_notas/1", produccion: d.produccion || null, escena: d.escena_id || E.nombre,
+    version: d.version || null, huella: d.huella || null, fps: E.fps,
+    notas: E.notas.map((n) => ({ cuadro: n.cuadro, t: n.t, toma: n.toma, camara_toma: n.camara_toma, nota: n.texto, camara_nueva: n.camara_nueva })) };
+  return `${cab}\n\n${lineas.join("\n")}\n\n\`\`\`json\n${JSON.stringify(json)}\n\`\`\``;
+}
+
+$("copiar").onclick = async () => {
+  if (!E.notas.length) { aviso("No hay notas para copiar. Marcá algo primero con 📍."); return; }
+  const txt = textoParaClaude();
+  const sal = $("salida");
+  sal.value = txt;
+  try {
+    await navigator.clipboard.writeText(txt);
+    sal.hidden = true;
+    aviso("Copiado. Pegalo en el chat de Claude.");
+  } catch (e) {
+    sal.hidden = false; sal.focus(); sal.select();
+    aviso("No pude copiar solo: el texto está seleccionado abajo, copialo y pegalo en el chat.");
+  }
+};
+
+// atajos de teclado (computadora)
+window.addEventListener("keydown", (e) => {
+  if (/TEXTAREA|INPUT|SELECT/.test(document.activeElement.tagName)) return;
+  if (e.code === "Space") { e.preventDefault(); $("play").click(); }
+  if (e.key === "ArrowLeft") paso(-1);
+  if (e.key === "ArrowRight") paso(1);
+});
+
+tamano(); pintarNotas(); dibujarCortes();
+// dirección directa (?glb=…&json=…) cuando el visor se abre fuera del sitio de artefactos
+const q = new URLSearchParams(location.search);
+if (q.get("glb")) cargarURL(q.get("glb"), q.get("json"));
+})();
+</script>
+<!--ARTIFACT-END-->
+</body>
+</html>

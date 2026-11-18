@@ -487,3 +487,14 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   hasta 60 trabajos (la organización), `render_rango.py` acepta el 720p vertical, `montar.py --escena` aplica el
   fundido a negro de la última toma (antes se perdía) y los entregables salen con la versión real (`e01_v2_*`, antes
   fijo `e01_v1_*`). Configuración de Cycles sin tocar.
+
+### 18/11/2026 — Visor de escenas en HTML (revisión rápida en el navegador)
+- Pedido del dueño: revisar las escenas en el navegador del celular con un GLB liviano, sin Godot ni esperar a la app, y
+  pedir cambios de cámara por el chat.
+- `visor/visor_escena.html` (+ `visor/LEEME.md`), publicado también para el teléfono en
+  https://claude.ai/artifact/SEW8AN7eTVhb1t3vaRAvJq. Abre el GLB (+ JSON) de `previa`; MONTAJE / TOMA / LIBRE, cuadro a
+  cuadro, cortes de toma, 📍 MARCAR y COPIAR PARA CLAUDE con la cámara en coordenadas de Blender.
+- Probado con la previsualización real de e01 v1 en Chromium con pantalla de Pixel 7: carga (12 cámaras, 12 tomas,
+  32,6 s), reproduce, el montaje cambia de cámara, cuadro a cuadro, y la cámara copiada coincide con la de Blender
+  (≤ 4 mm). No probado en un teléfono real.
+- No se tocó ningún flujo ni lo que corre en Actions (video30 de A la deriva en marcha).
