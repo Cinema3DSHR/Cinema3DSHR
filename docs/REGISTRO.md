@@ -307,3 +307,39 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   trabajos (como mucho cada 10 min). Era 11 al responder.
 - Sonda de 60 trabajos (corrida 44212957289): 13 corriendo a la vez y 47 en cola → cancelada (el dueño pidió cancelar si
   no superaba 20). No se renderizó nada.
+
+## 18/11/2026 — p010 «Un sueño de a dos»: personajes humanos (en preparación, sin render)
+
+- Accesos de la sesión: GitHub (rama `claude/inspiring-sagan-1ogr0n`) y ElevenLabs (credencial cargada por el dueño
+  en el entorno; saldo 24.376 créditos de 40.000, renueva el 13/12/2026).
+- Voces: 4 voces es-AR de la biblioteca compartida agregadas a la cuenta (gratis) y una muestra de cada una con una
+  línea del guion (eleven_v3, ~418 créditos estimados): ÉL Aiden / Antonio, ELLA Kate / Hellen
+  (`config/voces.json`, roles `*_es_ar`). **Falta que el dueño elija.**
+- Personajes nuevos del dueño (Tripo, mixamorig, blancos y SIN rostro), guardados sin tocar en
+  `../modelos_subidos/un_sueno_de_a_dos/` (fuente `subidas:`). Para que Actions los use hace falta copiarlos a
+  mixamo-respaldo (**pedir autorización**: es sólo lectura).
+- `estudio/blender/humanos.py` (modelos `humano:chico` y `humano:chica`): piel con dispersión subsuperficial,
+  rostro dibujado, pelo esculpido, ropa y zapatos; se arma desde `personajes.crear` como los Stickman.
+- `estudio/blender/cara_anime.py`: el sistema de caras de los Stickman con dibujo «anime realista» (pedido del
+  dueño, en lugar de las expresiones 3D, que descartó): ojos en capas (blanco en almendra, iris con anillo y pupila
+  recortados por los párpados, dos brillos, línea del párpado con cola, pestañas en ella, línea de abajo, pliegue),
+  cejas afinadas, nariz sugerida, labios con interior y dientes, rubor. Mismas formas clave que los Stickman, así
+  sirven sus 18 expresiones, la boca con la voz, las miradas y el parpadeo (`stickman.actuar`). Proporciones medidas
+  sobre el perfil de cada maniquí (ojos a media cabeza, nariz y boca en los tercios de la cara).
+- `estudio/blender/pelo_esculpido.py`: pelo «de arcilla» (pedido del dueño): casco con surcos + mechones gruesos
+  modelados; él: jopo texturizado hacia adelante y costados cortos; ella: tirante a un rodete de tres mechones
+  enroscados y mechones que enmarcan la cara. Vaivén con formas clave (se ve también en el EDITOR 3D).
+- `estudio/blender/ropa_humana.py`: prendas como cáscaras alisadas sobre el cuerpo (no marcan músculos) que siguen
+  al esqueleto, con la piel tapada borrada: buzo con capucha caída, bolsillo canguro, cordones con punteras y puños
+  acanalados; campera de jean abierta con cuello, bolsillos con tapa, botones y costuras naranjas; remera; jeans con
+  costuras, bolsillos traseros con remaches, presillas y botón; zapatillas armadas sobre la horma del pie (suela de
+  goma, franja, cordones, lengüeta); cartera cruzada de cuero, aros y reloj.
+- Descartado en el camino (el dueño no lo quiso): cabeza injertada de MakeHuman con 59 expresiones 3D y pelo de
+  miles de hebras. Errores propios corregidos: el corte del cuello calculaba el mentón con los pies; el árbol de
+  búsqueda del cuerpo no tenía normales y la ropa quedaba pegada a la piel; normales invertidas del maniquí.
+- Prueba (sin render): `pruebas/personajes_humanos/armar.py` arma cada personaje y exporta un GLB como la
+  previsualización; `vista.gd` lo mira en el visor OpenGL de Godot (el de la app). Capturas enviadas al dueño.
+- Autos subidos por el dueño (Golf GTI, Golf R, Audi RS3): son mods de GTA V (.yft/.ytd/.rpf), formato que el
+  estudio no puede abrir; hace falta exportarlos (OpenIV/CodeWalker → FBX/OBJ) o conseguirlos en GLB/FBX.
+- Guion como datos: `producciones/p010_un_sueno_de_a_dos/herramientas/guion.py`. Falta: escenario de la
+  concesionaria, escenas, voces elegidas y previsualización 3D. **Sin render.**

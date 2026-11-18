@@ -1582,6 +1582,86 @@
    "variantes": 0,
    "volumen_db": -12,
    "prompt": "Warm, confident end-title theme, 23 seconds, no vocals: starts soft with a hopeful guitar and strings under light banter, then at second 18 the full heroic action-series theme with drums and brass rising as the camera lifts, ending on a strong final hit"
+  },
+  {
+   "id": "voz_f5f2c980d235fc3a",
+   "nombre": "[softly, a little sad] Sí... es que me encantaría tener uno así algún día. [paus",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_f5f2c980d235fc3a.mp3",
+   "duracion_s": 6.84,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p010",
+    "muestra",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[softly, a little sad] Sí... es que me encantaría tener uno así algún día. [pause] Pero todavía falta mucho.",
+   "rol": null
+  },
+  {
+   "id": "voz_43785dc6cc7925b8",
+   "nombre": "[softly, a little sad] Sí... es que me encantaría tener uno así algún día. [paus",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_43785dc6cc7925b8.mp3",
+   "duracion_s": 7.24,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p010",
+    "muestra",
+    "antonio"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "htFfPSZGJwjBv1CL0aMD",
+   "texto": "[softly, a little sad] Sí... es que me encantaría tener uno así algún día. [pause] Pero todavía falta mucho.",
+   "rol": null
+  },
+  {
+   "id": "voz_132bd4e30d09e982",
+   "nombre": "[warmly, tender] Ay, amor... si yo sé cuánto lo soñás. Por eso estamos ahorrando",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_132bd4e30d09e982.mp3",
+   "duracion_s": 6.19,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p010",
+    "muestra",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[warmly, tender] Ay, amor... si yo sé cuánto lo soñás. Por eso estamos ahorrando juntos, ¿te acordás?",
+   "rol": null
+  },
+  {
+   "id": "voz_c2f6f3c7d82ac76e",
+   "nombre": "[warmly, tender] Ay, amor... si yo sé cuánto lo soñás. Por eso estamos ahorrando",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_c2f6f3c7d82ac76e.mp3",
+   "duracion_s": 5.72,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p010",
+    "muestra",
+    "hellen"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5VEiwGrUkeImJGduR2wd",
+   "texto": "[warmly, tender] Ay, amor... si yo sé cuánto lo soñás. Por eso estamos ahorrando juntos, ¿te acordás?",
+   "rol": null
   }
  ],
  "fuentes_existentes_para_importar": [

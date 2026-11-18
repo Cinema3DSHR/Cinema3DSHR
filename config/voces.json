@@ -1,17 +1,136 @@
 {
  "descripcion": "Reparto de voces de ElevenLabs por ROL (propuesta inicial: el dueño decide). voice_id sale de la cuenta del dueño (python -m estudio voces-lista). Los ajustes son los de ElevenLabs (stability baja = más emoción).",
  "roles": {
-    "jefa": {"voice_id": "8Nz6hV5TPv151P6ZNEBV", "nombre": "BV Operadora (contrato) — mujer argentina", "ajustes": {"stability": 0.45, "similarity_boost": 0.8, "style": 0.25, "use_speaker_boost": true}},
-    "operador_peninsular": {"voice_id": "z3kTTwYbQrmL7ckdGcJi", "nombre": "BV Martin Osborne — hombre peninsular", "ajustes": {"stability": 0.5, "similarity_boost": 0.8}},
-    "mujer_joven": {"voice_id": "cgSgspJ2msm6clMCkdW9", "nombre": "Jessica — mujer joven (premade, inglés/multilingüe)", "ajustes": {"stability": 0.45, "similarity_boost": 0.75}},
-    "hombre_joven": {"voice_id": "TX3LPaxmHKxFdv7VOQHJ", "nombre": "Liam — hombre joven enérgico (premade)", "ajustes": {"stability": 0.45, "similarity_boost": 0.75}},
-    "hombre_grave": {"voice_id": "nPczCjzI2devNBz1zQrb", "nombre": "Brian — hombre grave resonante (premade)", "ajustes": {"stability": 0.5, "similarity_boost": 0.75}},
-    "narrador": {"voice_id": "JBFqnCBsd6RMkjVDRZzb", "nombre": "George — narrador cálido (premade)", "ajustes": {"stability": 0.6, "similarity_boost": 0.75, "style": 0.15}},
-    "narradora": {"voice_id": "Xb7hH8MSUJpSbSDYk0k2", "nombre": "Alice — narradora clara (premade)", "ajustes": {"stability": 0.6, "similarity_boost": 0.75}},
-    "radio": {"voice_id": "onwK4e9ZLuTAKqWW03F9", "nombre": "Daniel — locutor de radio/comunicaciones (premade)", "ajustes": {"stability": 0.7, "similarity_boost": 0.7}},
-    "nico": {"voice_id": "QK4xDwo9ESPHA4JNUpX3", "nombre": "Tomas — hombre joven rioplatense, seguro (biblioteca compartida; Nico de «Dúo Cero»)", "ajustes": {"stability": 0.5}, "modelo": "eleven_v3"},
-    "luna": {"voice_id": "p7AwDmKvTdoHTBuueGvP", "nombre": "Malena — mujer joven rioplatense, cálida y segura (biblioteca compartida; Luna de «Dúo Cero»)", "ajustes": {"stability": 0.5}, "modelo": "eleven_v3"},
-    "guardia": {"voice_id": "S9xWbRwkWxZfSdk9ZG27", "nombre": "Uriel — hombre rioplatense ronco (biblioteca compartida; guardias de «Dúo Cero»)", "ajustes": {"stability": 0.5}, "modelo": "eleven_v3"},
-    "central_ar": {"voice_id": "SkFOGqulyTgnT5QVvUQl", "nombre": "Carlos — hombre rioplatense, tono de noticiero (biblioteca compartida; la Central por radio)", "ajustes": {"stability": 0.55, "similarity_boost": 0.75}}
+  "jefa": {
+   "voice_id": "8Nz6hV5TPv151P6ZNEBV",
+   "nombre": "BV Operadora (contrato) — mujer argentina",
+   "ajustes": {
+    "stability": 0.45,
+    "similarity_boost": 0.8,
+    "style": 0.25,
+    "use_speaker_boost": true
+   }
+  },
+  "operador_peninsular": {
+   "voice_id": "z3kTTwYbQrmL7ckdGcJi",
+   "nombre": "BV Martin Osborne — hombre peninsular",
+   "ajustes": {
+    "stability": 0.5,
+    "similarity_boost": 0.8
+   }
+  },
+  "mujer_joven": {
+   "voice_id": "cgSgspJ2msm6clMCkdW9",
+   "nombre": "Jessica — mujer joven (premade, inglés/multilingüe)",
+   "ajustes": {
+    "stability": 0.45,
+    "similarity_boost": 0.75
+   }
+  },
+  "hombre_joven": {
+   "voice_id": "TX3LPaxmHKxFdv7VOQHJ",
+   "nombre": "Liam — hombre joven enérgico (premade)",
+   "ajustes": {
+    "stability": 0.45,
+    "similarity_boost": 0.75
+   }
+  },
+  "hombre_grave": {
+   "voice_id": "nPczCjzI2devNBz1zQrb",
+   "nombre": "Brian — hombre grave resonante (premade)",
+   "ajustes": {
+    "stability": 0.5,
+    "similarity_boost": 0.75
+   }
+  },
+  "narrador": {
+   "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+   "nombre": "George — narrador cálido (premade)",
+   "ajustes": {
+    "stability": 0.6,
+    "similarity_boost": 0.75,
+    "style": 0.15
+   }
+  },
+  "narradora": {
+   "voice_id": "Xb7hH8MSUJpSbSDYk0k2",
+   "nombre": "Alice — narradora clara (premade)",
+   "ajustes": {
+    "stability": 0.6,
+    "similarity_boost": 0.75
+   }
+  },
+  "radio": {
+   "voice_id": "onwK4e9ZLuTAKqWW03F9",
+   "nombre": "Daniel — locutor de radio/comunicaciones (premade)",
+   "ajustes": {
+    "stability": 0.7,
+    "similarity_boost": 0.7
+   }
+  },
+  "nico": {
+   "voice_id": "QK4xDwo9ESPHA4JNUpX3",
+   "nombre": "Tomas — hombre joven rioplatense, seguro (biblioteca compartida; Nico de «Dúo Cero»)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
+  },
+  "luna": {
+   "voice_id": "p7AwDmKvTdoHTBuueGvP",
+   "nombre": "Malena — mujer joven rioplatense, cálida y segura (biblioteca compartida; Luna de «Dúo Cero»)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
+  },
+  "guardia": {
+   "voice_id": "S9xWbRwkWxZfSdk9ZG27",
+   "nombre": "Uriel — hombre rioplatense ronco (biblioteca compartida; guardias de «Dúo Cero»)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
+  },
+  "central_ar": {
+   "voice_id": "SkFOGqulyTgnT5QVvUQl",
+   "nombre": "Carlos — hombre rioplatense, tono de noticiero (biblioteca compartida; la Central por radio)",
+   "ajustes": {
+    "stability": 0.55,
+    "similarity_boost": 0.75
+   }
+  },
+  "aiden_es_ar": {
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "nombre": "Aiden — hombre joven, grave y cálido (biblioteca compartida, es-AR; candidato para ÉL en «Un sueño de a dos»)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
+  },
+  "antonio_es_ar": {
+   "voice_id": "htFfPSZGJwjBv1CL0aMD",
+   "nombre": "Antonio — hombre joven, seguro y suave (biblioteca compartida, es-AR; candidato para ÉL)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
+  },
+  "kate_es_ar": {
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "nombre": "Kate — mujer, cálida, cercana y natural (biblioteca compartida, es-AR; candidata para ELLA)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
+  },
+  "hellen_es_ar": {
+   "voice_id": "5VEiwGrUkeImJGduR2wd",
+   "nombre": "Hellen — mujer joven, dulce y alegre (biblioteca compartida, es-AR; candidata para ELLA)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
+  }
  }
 }

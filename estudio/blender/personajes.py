@@ -93,6 +93,16 @@ for _id, _alto in (("masculino", 0.979), ("femenino", 0.979)):
         "clip_arma": "mixamo:packs/Pro_Rifle_Pack/idle_aiming.fbx", "frame_arma": 20, "sin_metal": True,
     }
 MODELOS["stickman:masculino"]["ref"] = SM_REFS["stickman:masculino"]
+# «Un sueño de a dos» (p010): maniquíes de Tripo del dueño (sin rostro) convertidos en personas por
+# estudio/blender/humanos.py (cabeza MakeHuman con expresiones, piel, pelo, ropa y zapatos).
+from estudio.blender.humanos import MODELOS as HU_MODELOS  # noqa: E402
+for _m, _d in HU_MODELOS.items():
+    MODELOS[_m] = {
+        "tipo": "mixamo65", "humano": True, "ref": _d["ref"], "alto_modelo": _d["alto_modelo"],
+        "escala": 1.75 / _d["alto_modelo"], "ocultar": [],
+        "cadera": "mixamorig:Hips", "pie_der": "mixamorig:RightToeBase", "pie_izq": "mixamorig:LeftToeBase",
+        "cabeza": "mixamorig:Head", "mano_der": "mixamorig:RightHand", "frente": math.pi / 2, "adelante_deg": -90,
+    }
 MODELOS["stickman:femenino"]["ref"] = SM_REFS["stickman:femenino"]
 UNIFORME_DEFECTO = {"camiseta": (0.72, 0.04, 0.05), "short": (0.05, 0.12, 0.62), "medias": (0.9, 0.9, 0.9),
                     "botines": (0.03, 0.03, 0.035), "piel": (0.62, 0.40, 0.29), "pelo": (0.12, 0.07, 0.04)}
@@ -253,6 +263,9 @@ def crear(spec: dict, fps: int = 30, col=None) -> dict:
         if pj["info"].get("stickman"):
             from estudio.blender import stickman as SM
             SM.preparar(pj, spec, fps, int(spec.get("_nf") or bpy.context.scene.frame_end))
+        if pj["info"].get("humano"):
+            from estudio.blender import humanos as HU
+            HU.preparar(pj, spec, fps, int(spec.get("_nf") or bpy.context.scene.frame_end))
         _aparecer(pj, spec, fps)
         return pj
     lib = biblioteca(spec.get("modelo", "futbol:jugador"))
