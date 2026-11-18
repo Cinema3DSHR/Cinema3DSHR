@@ -509,3 +509,8 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   cámara de la lista (lo que se mueve mientras edita queda en la orden, con el cambio en palabras), conos rojos y un único
   📋 COPIAR PARA CLAUDE (JSON `estudio.visor_ordenes/2`). Probado con e01: editar t05 (subirla, lente 32 → 45 mm),
   moverse sin editar no la cambia, cámara nueva en t08; sin errores de la página.
+- `docs/VISOR_Y_ORDENES_DE_CAMARA.md`: cómo funciona el visor, cómo pasarle el GLB al dueño por el chat y cómo recibir y
+  aplicar el texto `estudio.visor_ordenes/2` (quieta → toma `director`; pegada al vagón → toma rígida con ancla y
+  objetivo; modificar = aplicar el cambio). Enlazado desde `CLAUDE.md` y `docs/GUIA_PARA_OTRO_CHAT.md`.
+- Candado del render: el dueño pidió sacarlo; queda para cuando termine el `video30` de A la deriva (en curso,
+  corrida 44285010355), para no tocar nada mientras corre.

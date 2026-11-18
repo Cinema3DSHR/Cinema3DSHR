@@ -3,6 +3,11 @@
 Leé esto primero, antes de abrir otros archivos. Sirve para trabajar sin auditar los repositorios. Si algo de acá no
 coincide con el código, **manda el código**: corregí esta guía en el mismo cambio. Estado al 18/11/2026.
 
+> **18/11/2026: revisión rápida con el visor HTML.** El dueño revisa las escenas en el navegador con
+> `visor/visor_escena.html` (https://claude.ai/artifact/SEW8AN7eTVhb1t3vaRAvJq): Claude le pasa el GLB + JSON de
+> `python -m estudio previa` por el chat y el dueño devuelve un texto con cámaras nuevas o modificadas y notas.
+> **Cómo recibirlo y aplicarlo: `docs/VISOR_Y_ORDENES_DE_CAMARA.md`.**
+
 ---
 
 ## 1. Quién es el dueño y cómo hablarle

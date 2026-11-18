@@ -38,6 +38,10 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
 - Render final sólo con AUTORIZAR RENDER FINAL desde la app sobre la versión aprobada (antes bastaba una frase en el
   chat; ya no): `render.yml`, `video30.yml` y `episodio.yml` se niegan sin esa autorización y la misma huella.
 
+## Revisión rápida en el navegador (visor HTML)
+El dueño revisa con `visor/visor_escena.html` y manda por el chat un texto `VISOR DE ESCENA …` con un JSON
+`estudio.visor_ordenes/2`: aplicarlo como dice `docs/VISOR_Y_ORDENES_DE_CAMARA.md` (versión nueva, sin render).
+
 ## Pedidos del dueño desde la app
 Issues abiertos con etiqueta `correccion` (bloque JSON con producción, escena, versión y nota). Atenderlos con una
 versión nueva sólo de esa escena; comentar el resultado en el issue y cerrarlo.
