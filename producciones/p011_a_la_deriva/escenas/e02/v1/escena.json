@@ -266,7 +266,7 @@
      "mezcla_s": 0.4
     },
     {
-     "clip": "mixamo:animaciones/gestos/Looking_Around.fbx",
+     "clip": "mixamo:animaciones/idle_parado/Bored.fbx",
      "inicio_s": 36.515,
      "encadenar": true,
      "mirando_deg": -95,
@@ -1155,16 +1155,16 @@
    "duracion_s": 2.8,
    "movil": "aiden",
    "desde": [
-    -1.02,
-    -15.05,
-    1.5
+    -0.98,
+    -15.15,
+    1.55
    ],
    "objetivo": [
-    -0.9,
-    -15.75,
+    -0.469,
+    -15.835,
     1.4
    ],
-   "lente_mm": 55,
+   "lente_mm": 50,
    "apertura": 2.0
   },
   {
@@ -1469,24 +1469,24 @@
    "inicio_s": 118.68,
    "duracion_s": 5.4,
    "desde": [
-    0.3,
-    -29.85,
-    1.0
+    0.24,
+    -30.12,
+    0.93
    ],
    "hasta": [
-    0.25,
-    -29.98,
-    1.0
+    0.2,
+    -30.2,
+    0.93
    ],
    "objetivo": {
     "ancla": "kate",
     "desp": [
      0,
      0,
-     0.14
+     0.0
     ]
    },
-   "lente_mm": 65,
+   "lente_mm": 35,
    "apertura": 2.2
   },
   {

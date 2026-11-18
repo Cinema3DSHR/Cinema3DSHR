@@ -152,7 +152,7 @@ def armar(version: int = 1) -> dict:
     ac.append({"clip": CAMINAR, "inicio_s": t_C, "encadenar": True, "mirando_deg": -95, "velocidad": V_LENTO,
                "giro_s": 0.8, "mezcla_s": 0.6})
     ac.append({"clip": FRENAR, "inicio_s": t_ini_frena, "encadenar": True, "mirando_deg": -95, "mezcla_s": 0.4})
-    ac.append({"clip": MIRAR, "inicio_s": t_parado, "encadenar": True, "mirando_deg": -95, "mezcla_s": 0.6})
+    ac.append({"clip": PARADO, "inicio_s": t_parado, "encadenar": True, "mirando_deg": -95, "mezcla_s": 0.6})
     ac.append({"clip": PARADO, "inicio_s": L[13]["inicio_s"] - 0.5, "encadenar": True, "mirando_deg": 180,
                "giro_s": 1.2, "mezcla_s": 0.8})
     ac.append({"clip": TOMAR, "inicio_s": t_toma, "encadenar": True, "mirando_deg": 180, "mezcla_s": 0.4})
@@ -314,7 +314,8 @@ def armar(version: int = 1) -> dict:
         toma("estatica", "t13_toma_flor", *T["toma"], plano="la bandeja de poda: toma la flor con cuidado",
              desde=[-0.62, -14.7, 1.28], objetivo={"ancla": "bandeja"}, lente_mm=40, apertura=2.8),
         toma("estatica", "t14_flor_mano", *T["flor_mano"], plano="la flor en su mano, delicada", movil="aiden",
-             desde=[-1.02, -15.05, 1.5], objetivo=[-0.9, -15.75, 1.4], lente_mm=55, apertura=2.0),
+             desde=[-0.98, -15.15, 1.55], objetivo=[round(pP[0] - 0.17, 3), round(pP[1] + 0.06, 3), 1.4], lente_mm=50,
+             apertura=2.0),
         toma("seguimiento", "t15_sale_botanico", *T["sale_bot"], plano="se va hacia el comedor con la flor",
              movil="aiden", desp_local=[-0.3, -1.8, 0.7], objetivo=cab, lente_mm=28, retardo=0.12),
         toma("dolly", "t16_comedor_general", *T["general"], plano="plano general del comedor: mesas vacías, comida "
@@ -346,8 +347,8 @@ def armar(version: int = 1) -> dict:
         toma("estatica", "t28_lo_que_no_vio", *T["final"], plano="el comedor: Aiden ya se fue; Kate mira la flor",
              desde=[1.25, -28.4, 1.4], objetivo={"ancla": "mesa_kate", "desp": [0, -0.35, 0.3]}, lente_mm=40),
         toma("dolly", "t29_rubor", *T["rubor"], plano="primer plano: el rubor, la sonrisa que intenta disimular, "
-             "mira la puerta", desde=[0.3, -29.85, 1.0], hasta=[0.25, -29.98, 1.0],
-             objetivo={"ancla": "kate", "desp": [0, 0, 0.14]}, lente_mm=65, apertura=2.2),
+             "mira la puerta", desde=[0.24, -30.12, 0.93], hasta=[0.2, -30.2, 0.93],
+             objetivo={"ancla": "kate", "desp": [0, 0, 0.0]}, lente_mm=35, apertura=2.2),
         toma("estatica", "t30_mensaje", *T["mensaje"], plano="sobre el hombro de Kate: «Gracias por la flor»",
              desde=[-0.12, -30.95, 1.32], objetivo={"ancla": "pantalla_kate"}, lente_mm=45, apertura=2.8),
         toma("dolly", "t31_duda", *T["duda"], plano="el cursor sobre ENVIAR; Kate duda. Corte a negro",

@@ -227,12 +227,12 @@ def incubadora(nombre, centro: Vector, lado: int, largo: float, M, col, rng, pla
     K.luz(f"{nombre}_area", "AREA", (centro.x, centro.y, zt - 0.06), 14, (1.0, 0.88, 0.78), col, tam=0.4,
           sombra=True)
     # plantas: en hileras irregulares, de alturas variadas (las más altas atrás)
-    n = int(rng.integers(7, 11))
+    n = int(rng.integers(16, 23))                    # tupidas: un pequeño milagro en una nave gastada
     for k in range(n):
-        y = centro.y + (k + 0.5) / n * (largo - 0.12) - (largo - 0.12) / 2 + rng.normal(0, 0.03)
+        y = centro.y + (k + 0.5) / n * (largo - 0.12) - (largo - 0.12) / 2 + rng.normal(0, 0.04)
         fondo = rng.uniform(0, 1)
-        x = centro.x + lado * (-0.17 + 0.32 * fondo)
-        alto = min(0.95, rng.uniform(0.3, 0.55) + 0.35 * fondo)
+        x = centro.x + lado * (-0.19 + 0.36 * fondo)
+        alto = min(0.98, rng.uniform(0.22, 0.5) + 0.42 * fondo)
         pl = FL.planta(f"{nombre}_p{k}", (x, y, zs), rng, col, alto=alto)
         plantas.append(pl)
     # gotas de condensación en el vidrio del frente (adentro), más abajo que arriba
