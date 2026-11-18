@@ -498,3 +498,9 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   32,6 s), reproduce, el montaje cambia de cámara, cuadro a cuadro, y la cámara copiada coincide con la de Blender
   (≤ 4 mm). No probado en un teléfono real.
 - No se tocó ningún flujo ni lo que corre en Actions (video30 de A la deriva en marcha).
+- Segunda vuelta (pedido del dueño: «recorrer la escena y colocar cámara, y que el HTML me dé el texto con dónde, en qué
+  minuto y en qué ubicación»): LIBRE para recorrer (1 dedo mira, 2 dedos acercan/corren, cruceta, rapidez), «Pegada a»
+  (arranca pegada a lo que lleva la cámara de la toma: en e01, el vagón `tren_06_cerrado`, que se mueve) y
+  🎥 COLOCAR CÁMARA, que copia al instante la orden (desde/hasta, qué toma reemplaza, fija o movimiento, pose respecto
+  del vagón y en el mundo en Blender, lente). Probado con e01: la pose relativa coincide con el `desp_local` de t05 y no
+  cambia entre 13,2 s y 14,5 s; la del mundo coincide con Blender.

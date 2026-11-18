@@ -16,12 +16,10 @@
   --bg: #121417;          /* sala oscura */
   --panel: #1b1e23;
   --linea: #2c3139;
-  --fg: #e7e3da;          /* texto */
+  --fg: #e7e3da;
   --tenue: #9aa0a8;
   --acento: #e8b04a;      /* ámbar de claqueta */
-  --toma-a: #3a4250;
-  --toma-b: #2f3642;
-  --rojo: #e0645a;
+  --rec: #e0645a;         /* rojo de grabación: cámaras colocadas */
   --f-ui: "IBM Plex Sans Condensed", "Roboto Condensed", "Arial Narrow", system-ui, sans-serif;
   --f-num: "IBM Plex Mono", ui-monospace, "Roboto Mono", monospace;
   color-scheme: dark;
@@ -35,50 +33,66 @@ button, select, input, textarea { font: inherit; color: inherit; }
 #vista { position: relative; flex: 1 1 auto; min-height: 200px; background: #0b0c0e; }
 #lienzo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
 #vacio { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding-block: 24px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); overflow-y: auto; }
 #vacio .caja { max-width: 30rem; display: grid; gap: 12px; text-align: left; }
 #vacio h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: .01em; text-wrap: balance; }
 #vacio p { margin: 0; color: var(--tenue); }
 #vacio ol { margin: 0; padding-left: 1.2rem; color: var(--tenue); display: grid; gap: 4px; }
 #rotulo { position: absolute; left: max(10px, env(safe-area-inset-left, 0px)); top: 8px; font: 12px var(--f-num);
-  background: rgba(10, 11, 13, .72); padding: 4px 8px; border-radius: 4px; pointer-events: none; color: var(--fg); }
+  background: rgba(10, 11, 13, .72); padding: 4px 8px; border-radius: 4px; pointer-events: none; color: var(--fg); max-width: calc(100% - 20px); }
 #rotulo b { color: var(--acento); font-weight: 500; }
 #cargando { position: absolute; right: 10px; top: 8px; font: 12px var(--f-num); color: var(--acento); }
+/* cruceta para moverse en LIBRE, encima de la imagen */
+#cruceta { position: absolute; right: max(8px, env(safe-area-inset-right, 0px)); bottom: 8px; display: grid;
+  grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); gap: 3px; opacity: .78; }
+#cruceta button { background: rgba(27, 30, 35, .55); border: 1px solid var(--linea); border-radius: 8px; font-size: 18px;
+  touch-action: none; user-select: none; -webkit-user-select: none; cursor: pointer; }
+#cruceta button:active, #cruceta button.apretado { background: var(--acento); color: #17130a; }
+#ayuda_libre { position: absolute; left: max(10px, env(safe-area-inset-left, 0px)); bottom: 10px; font-size: 12px;
+  background: rgba(10, 11, 13, .72); padding: 4px 8px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 150px); }
 #mando { flex: 0 0 auto; background: var(--panel); border-top: 1px solid var(--linea); display: grid; gap: 8px;
   padding-block: 8px; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px));
-  max-height: 52%; overflow-y: auto; }
+  max-height: 55%; overflow-y: auto; }
 .fila { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .btn { background: #262a31; border: 1px solid var(--linea); border-radius: 6px; padding: 8px 12px; min-height: 40px;
   cursor: pointer; font-weight: 600; letter-spacing: .02em; }
 .btn:focus-visible, select:focus-visible, textarea:focus-visible, input:focus-visible { outline: 2px solid var(--acento); outline-offset: 1px; }
 .btn.activo { background: var(--acento); color: #17130a; border-color: var(--acento); }
+.btn.rec { background: var(--rec); color: #1a0b09; border-color: var(--rec); }
 .btn.grande { min-width: 52px; font-size: 1.1rem; }
-.btn[disabled] { opacity: .4; cursor: default; }
+.btn.ancho { flex: 1 1 100%; font-size: 1.05rem; min-height: 48px; }
 #tiempo { font: 13px var(--f-num); font-variant-numeric: tabular-nums; color: var(--tenue); margin-left: auto; }
 #barra { position: relative; height: 34px; }
-#cortes { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 4px; cursor: pointer; }
+#cortes { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 4px; }
 #deslizador { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .etq { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--tenue); }
 details { border-top: 1px solid var(--linea); padding-top: 6px; }
 summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
-.lista { display: grid; gap: 4px; margin-top: 6px; }
+.lista { display: grid; gap: 6px; margin-top: 6px; }
 .item { display: flex; gap: 8px; align-items: baseline; padding: 6px 8px; border-radius: 4px; background: #20242a; cursor: pointer; min-width: 0; }
 .item.actual { outline: 1px solid var(--acento); }
 .item .n { font: 12px var(--f-num); color: var(--acento); flex: 0 0 auto; }
 .item .t { min-width: 0; overflow-wrap: anywhere; }
-.nota { display: grid; gap: 6px; padding: 8px; border-radius: 4px; background: #20242a; }
-.nota .cab { display: flex; gap: 8px; align-items: center; font: 12px var(--f-num); color: var(--acento); }
-.nota .cab button { margin-left: auto; }
-.nota textarea { width: 100%; min-height: 54px; resize: vertical; background: #15171b; border: 1px solid var(--linea); border-radius: 4px; padding: 6px; }
+.nota { display: grid; gap: 6px; padding: 8px; border-radius: 4px; background: #20242a; min-width: 0; }
+.nota.cam { border-left: 3px solid var(--rec); }
+.nota .cab { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 12px var(--f-num); color: var(--acento); }
+.nota.cam .cab { color: var(--rec); }
+.nota .cab .der { margin-left: auto; display: flex; gap: 6px; }
+.nota textarea, .nota select, .nota input { background: #15171b; border: 1px solid var(--linea); border-radius: 4px; padding: 6px; }
+.nota textarea { width: 100%; min-height: 50px; resize: vertical; }
+.nota .campos { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; }
+.nota .campos input[type=number] { width: 84px; font-family: var(--f-num); }
+.nota pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 11.5px/1.4 var(--f-num); color: var(--tenue);
+  background: #15171b; border-radius: 4px; padding: 6px; max-height: 160px; overflow-y: auto; }
 #salida { width: 100%; min-height: 120px; font: 12px var(--f-num); background: #15171b; border: 1px solid var(--linea); border-radius: 4px; padding: 6px; }
-#aviso { color: var(--acento); font-size: 13px; min-height: 1em; }
+#aviso { color: var(--acento); font-size: 13px; }
+#aviso:empty { display: none; }
 label.lente { display: flex; gap: 8px; align-items: center; font: 13px var(--f-num); }
-input[type=range].fino { width: 160px; accent-color: var(--acento); }
+input[type=range].fino { width: 150px; accent-color: var(--acento); }
 @media (orientation: landscape) and (min-width: 700px) {
   #app { flex-direction: row; }
-  #mando { width: 360px; max-height: none; border-top: 0; border-left: 1px solid var(--linea); align-content: start; }
+  #mando { width: 380px; max-height: none; border-top: 0; border-left: 1px solid var(--linea); align-content: start; }
 }
-@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
 </style>
 
 <div id="app">
@@ -90,14 +104,26 @@ input[type=range].fino { width: 160px; accent-color: var(--acento); }
         <p>Claude te pasa la escena como un archivo <b>.glb</b> liviano (y a veces un <b>.json</b> con las tomas). Se ve con las animaciones y las cámaras de rodaje, sin render.</p>
         <ol>
           <li>Tocá <b>ABRIR ESCENA</b> y elegí el .glb (si vino un .json, elegí los dos juntos).</li>
-          <li>▶ para ver el montaje. Elegí una toma o pasá a <b>LIBRE</b> para mirar desde donde quieras.</li>
-          <li><b>📍 MARCAR</b> donde algo no te gusta, escribí qué cambiar y <b>COPIAR PARA CLAUDE</b>: lo pegás en el chat.</li>
+          <li>▶ para ver el montaje. Pasá a <b>LIBRE</b> para recorrer la escena: arrastrá para mirar, la cruceta para moverte.</li>
+          <li>Encontrá el cuadro que querés y tocá <b>🎥 COLOCAR CÁMARA</b>: el visor arma la orden con el momento, la posición y el lente. La copiás y se la pegás a Claude.</li>
         </ol>
         <div class="fila"><button class="btn activo" id="abrir2" type="button">ABRIR ESCENA</button></div>
       </div>
     </div>
     <div id="rotulo" hidden></div>
     <div id="cargando" hidden></div>
+    <div id="ayuda_libre" hidden>1 dedo: mirar · 2 dedos: acercar y correrse · cruceta: moverse</div>
+    <div id="cruceta" hidden aria-label="Moverse">
+      <button type="button" data-mov="u" aria-label="Subir">⤒</button>
+      <button type="button" data-mov="f" aria-label="Adelante">▲</button>
+      <button type="button" data-mov="d" aria-label="Bajar">⤓</button>
+      <button type="button" data-mov="l" aria-label="Izquierda">◀</button>
+      <button type="button" id="rapidez" aria-label="Rapidez">2</button>
+      <button type="button" data-mov="r" aria-label="Derecha">▶</button>
+      <span></span>
+      <button type="button" data-mov="b" aria-label="Atrás">▼</button>
+      <span></span>
+    </div>
   </div>
 
   <div id="mando">
@@ -121,17 +147,21 @@ input[type=range].fino { width: 160px; accent-color: var(--acento); }
       <button class="btn" id="vel" type="button">×1</button>
       <span id="tiempo">—</span>
     </div>
-    <div class="fila" id="fila_lente" hidden>
+    <div class="fila" id="fila_libre" hidden>
       <label class="lente" for="lente">Lente <input id="lente" class="fino" type="range" min="12" max="135" step="1" value="35"> <span id="lente_v">35 mm</span></label>
+      <label class="lente" for="seguir">Pegada a <select id="seguir" class="btn" aria-label="Objeto al que va pegada la cámara"></select></label>
     </div>
     <div class="fila">
-      <button class="btn" id="marcar" type="button">📍 MARCAR</button>
-      <button class="btn" id="copiar" type="button">COPIAR PARA CLAUDE</button>
+      <button class="btn rec ancho" id="colocar" type="button">🎥 COLOCAR CÁMARA</button>
+    </div>
+    <div class="fila">
+      <button class="btn" id="marcar" type="button">📍 NOTA</button>
+      <button class="btn" id="copiar" type="button">COPIAR TODO PARA CLAUDE</button>
       <button class="btn" id="plano" type="button">COLOR PLANO</button>
     </div>
     <div id="aviso" role="status"></div>
-    <details open><summary>Notas <span id="n_notas" class="etq"></span></summary><div id="notas" class="lista"></div>
-      <textarea id="salida" hidden readonly></textarea></details>
+    <textarea id="salida" hidden readonly aria-label="Texto para Claude"></textarea>
+    <details open><summary>Órdenes y notas <span id="n_notas" class="etq"></span></summary><div id="notas" class="lista"></div></details>
     <details><summary>Tomas</summary><div id="tomas" class="lista"></div></details>
     <details><summary>Personajes ahora</summary><div id="actores" class="lista"></div></details>
   </div>
@@ -139,7 +169,6 @@ input[type=range].fino { width: 160px; accent-color: var(--acento); }
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 (() => {
 "use strict";
@@ -153,6 +182,8 @@ const E = {
   modo: "montaje", tomaFija: null, escena: null, mixer: null, clipDur: 0,
   camaras: {}, tomas: [], vis: [], actores: [], aspecto: 16 / 9, plano: false, mats: new Map(),
   notas: [], clave: "visor-notas", nombre: "",
+  seguir: null, local: new THREE.Matrix4(),            // cámara libre pegada a un objeto que se mueve
+  mov: { f: 0, r: 0, u: 0 }, entrada: { yaw: 0, pitch: 0, f: 0, r: 0, u: 0 }, rapidez: 2,
 };
 
 // ---------------------------------------------------------------- three
@@ -166,11 +197,9 @@ esc.add(new THREE.HemisphereLight(0xf2efe8, 0x4a4640, 0.95));
 const sol = new THREE.DirectionalLight(0xffffff, 0.75);
 sol.position.set(4, 10, 6);
 esc.add(sol);
-const libre = new THREE.PerspectiveCamera(40, 16 / 9, 0.05, 5000);
+const libre = new THREE.PerspectiveCamera(40, 16 / 9, 0.03, 8000);
 libre.position.set(4, 3, 6);
-const orbita = new THREE.OrbitControls(libre, lienzo);
-orbita.enableDamping = true;
-orbita.enabled = false;
+libre.lookAt(0, 1, 0);
 const grilla = new THREE.GridHelper(40, 40, 0x3a3f47, 0x2a2e35);
 esc.add(grilla);
 
@@ -189,7 +218,6 @@ function rectCuadro() {
   if (ch > h) { ch = h; cw = h * E.aspecto; }
   return { x: (w - cw) / 2, y: (h - ch) / 2, w: cw, h: ch };
 }
-
 function camaraActiva() {
   if (E.modo === "libre" || !E.escena) return libre;
   if (E.modo === "toma" && E.camaras[E.tomaFija]) return E.camaras[E.tomaFija];
@@ -211,34 +239,115 @@ function tEscena(t) {
   const n = m.length - 1;
   return m[n][1] + (t - m[n][0]);
 }
-const cuadro = () => Math.min(Math.floor(E.t * E.fps + 1e-6) + 1, E.frames);
+const cuadroDe = (t) => Math.min(Math.floor(t * E.fps + 1e-6) + 1, E.frames);
+const cuadro = () => cuadroDe(E.t);
 function tomaEn(t) {
   if (!E.tomas.length) return null;
   for (const tm of E.tomas) if (t >= tm.inicio_s && t < tm.fin_s) return tm;
   return E.tomas[E.tomas.length - 1];
 }
-const coma = (x, d = 2) => x.toFixed(d).replace(".", ",");
+const coma = (x, d = 2) => Number(x).toFixed(d).replace(".", ",");
+function minSeg(t) { const m = Math.floor(t / 60), s = t - m * 60; return `${m}:${(s < 10 ? "0" : "") + s.toFixed(2).replace(".", ",")}`; }
 
 function irA(t) {
   E.t = Math.min(Math.max(0, t), E.dur);
-  if (E.mixer) {
-    // Blender pone el cuadro f en f/fps: la película empieza en el cuadro 1
-    E.mixer.setTime(Math.min(tEscena(E.t) + 1 / E.fps, E.clipDur));
-  }
+  if (E.mixer) E.mixer.setTime(Math.min(tEscena(E.t) + 1 / E.fps, E.clipDur));   // Blender: cuadro f en f/fps
   const f = cuadro();
   for (const v of E.vis) v.obj.visible = v.tramos.some((r) => f >= r[0] && f < r[1]);
   $("deslizador").value = E.dur ? E.t / E.dur : 0;
   const tm = tomaEn(E.t);
-  $("tiempo").textContent = `f ${f} · ${coma(E.t)} s${tm ? " · " + tm.id : ""}`;
-  const cam = camaraActiva();
-  const r = $("rotulo");
-  r.hidden = !E.escena;
-  r.innerHTML = E.modo === "libre" ? `<b>LIBRE</b> · ${coma(lenteDe(libre, E.aspecto), 0)} mm`
-    : `<b>${E.modo === "toma" ? "TOMA" : "MONTAJE"}</b> · ${(E.modo === "toma" ? E.tomaFija : tm && tm.camara) || cam.name || ""}`;
+  $("tiempo").textContent = `${minSeg(E.t)} · f ${f}${tm ? " · " + tm.id : ""}`;
+  rotulo();
   pintarActores();
   marcarTomaActual(tm);
   dibujarCortes();
 }
+function rotulo() {
+  const r = $("rotulo"), tm = tomaEn(E.t);
+  r.hidden = !E.escena;
+  r.innerHTML = E.modo === "libre"
+    ? `<b>LIBRE</b> · ${coma(lenteDe(libre, E.aspecto), 0)} mm${E.seguir ? " · pegada a " + E.seguir.name : " · quieta"}`
+    : `<b>${E.modo === "toma" ? "TOMA" : "MONTAJE"}</b> · ${(E.modo === "toma" ? E.tomaFija : tm && tm.camara) || ""}`;
+}
+
+// ---------------------------------------------------------------- recorrer la escena (cámara libre)
+const tmpQ = new THREE.Quaternion(), tmpE = new THREE.Euler(0, 0, 0, "YXZ"), tmpV = new THREE.Vector3();
+function aplicarEntrada(dt) {
+  const en = E.entrada, v = E.rapidez;
+  const f = en.f + E.mov.f * v * dt, r = en.r + E.mov.r * v * dt, u = en.u + E.mov.u * v * dt;
+  if (en.yaw || en.pitch) {
+    tmpE.setFromQuaternion(libre.quaternion, "YXZ");
+    tmpE.y += en.yaw;
+    tmpE.x = Math.max(-1.55, Math.min(1.55, tmpE.x + en.pitch));
+    libre.quaternion.setFromEuler(tmpE);
+  }
+  if (f || r) {
+    libre.translateZ(-f); libre.translateX(r);
+  }
+  if (u) libre.position.y += u;
+  const movio = en.yaw || en.pitch || f || r || u;
+  en.yaw = en.pitch = en.f = en.r = en.u = 0;
+  return movio;
+}
+function seguirAplicar() {
+  if (!E.seguir) return;
+  E.seguir.updateWorldMatrix(true, false);
+  const m = new THREE.Matrix4().multiplyMatrices(E.seguir.matrixWorld, E.local);
+  m.decompose(libre.position, libre.quaternion, tmpV);
+}
+function seguirGuardar() {
+  if (!E.seguir) return;
+  E.seguir.updateWorldMatrix(true, false);
+  libre.updateMatrix();
+  E.local.copy(E.seguir.matrixWorld).invert().multiply(libre.matrix);
+}
+function ponerSeguir(obj) {
+  E.seguir = obj || null;
+  libre.updateMatrix();
+  seguirGuardar();
+  $("seguir").value = obj ? obj.name : "";
+  rotulo();
+}
+
+// gestos: 1 dedo mira, 2 dedos acercan (pellizco) y corren la cámara (arrastre)
+const dedos = new Map();
+let pellizco = null;
+lienzo.addEventListener("pointerdown", (e) => {
+  if (E.modo !== "libre") return;
+  lienzo.setPointerCapture(e.pointerId);
+  dedos.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  pellizco = null;
+});
+lienzo.addEventListener("pointermove", (e) => {
+  if (!dedos.has(e.pointerId) || E.modo !== "libre") return;
+  const a = dedos.get(e.pointerId), dx = e.clientX - a.x, dy = e.clientY - a.y;
+  a.x = e.clientX; a.y = e.clientY;
+  const k = THREE.MathUtils.degToRad(libre.fov) / Math.max(200, lienzo.clientHeight);
+  if (dedos.size === 1) { E.entrada.yaw += dx * k; E.entrada.pitch += dy * k; }
+  else if (dedos.size === 2) {
+    const [p1, p2] = [...dedos.values()];
+    const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+    if (pellizco !== null) E.entrada.f += (dist - pellizco) * 0.01 * E.rapidez;
+    pellizco = dist;
+    E.entrada.r -= dx * 0.004 * E.rapidez / 2;
+    E.entrada.u += dy * 0.004 * E.rapidez / 2;
+  }
+});
+const soltar = (e) => { dedos.delete(e.pointerId); pellizco = null; };
+lienzo.addEventListener("pointerup", soltar);
+lienzo.addEventListener("pointercancel", soltar);
+lienzo.addEventListener("wheel", (e) => { if (E.modo === "libre") { e.preventDefault(); E.entrada.f -= e.deltaY * 0.004 * E.rapidez; } }, { passive: false });
+const EJES = { f: ["f", 1], b: ["f", -1], l: ["r", -1], r: ["r", 1], u: ["u", 1], d: ["u", -1] };
+for (const b of document.querySelectorAll("#cruceta [data-mov]")) {
+  const [eje, s] = EJES[b.dataset.mov];
+  const on = (e) => { e.preventDefault(); E.mov[eje] = s; b.classList.add("apretado"); };
+  const off = () => { if (E.mov[eje] === s) E.mov[eje] = 0; b.classList.remove("apretado"); };
+  b.addEventListener("pointerdown", on);
+  for (const ev of ["pointerup", "pointerleave", "pointercancel"]) b.addEventListener(ev, off);
+}
+const RAPIDECES = [2, 6, 0.5];
+$("rapidez").onclick = () => { E.rapidez = RAPIDECES[(RAPIDECES.indexOf(E.rapidez) + 1) % RAPIDECES.length]; $("rapidez").textContent = String(E.rapidez).replace(".", ","); };
+const TECLAS = { KeyW: ["f", 1], KeyS: ["f", -1], KeyA: ["r", -1], KeyD: ["r", 1], KeyE: ["u", 1], KeyQ: ["u", -1] };
 
 // ---------------------------------------------------------------- bucle
 let ultimo = performance.now();
@@ -250,7 +359,10 @@ function cuadroBucle(ahora) {
     if (t >= E.dur) { t = E.dur; E.jugando = false; $("play").textContent = "▶"; }
     irA(t);
   }
-  if (E.modo === "libre") orbita.update();
+  if (E.modo === "libre") {
+    seguirAplicar();
+    if (aplicarEntrada(dt)) { seguirGuardar(); rotulo(); }
+  }
   const w = lienzo.clientWidth, h = lienzo.clientHeight;
   rend.setScissorTest(true);
   rend.setViewport(0, 0, w, h); rend.setScissor(0, 0, w, h);
@@ -267,7 +379,6 @@ requestAnimationFrame(cuadroBucle);
 
 // ---------------------------------------------------------------- carga
 function aviso(txt) { $("aviso").textContent = txt || ""; }
-
 $("abrir").onclick = $("abrir2").onclick = () => $("archivo").click();
 $("archivo").onchange = (ev) => abrirArchivos([...ev.target.files]);
 $("vista").addEventListener("dragover", (e) => e.preventDefault());
@@ -285,7 +396,6 @@ async function abrirArchivos(lista) {
     aviso("No se pudo abrir: " + (e && e.message ? e.message : e) + ". ¿Es el .glb que te pasó Claude?");
   }
 }
-
 async function cargarURL(urlGlb, urlJson) {
   try {
     $("cargando").hidden = false; $("cargando").textContent = "bajando…";
@@ -295,7 +405,6 @@ async function cargarURL(urlGlb, urlJson) {
   } catch (e) { aviso("No se pudo bajar la escena de esa dirección. Abrila desde el archivo."); }
   $("cargando").hidden = true;
 }
-
 function cargar(buffer, datos, nombre) {
   return new Promise((ok, mal) => {
     $("cargando").hidden = false; $("cargando").textContent = "abriendo…";
@@ -308,28 +417,24 @@ function montar(g, datos, nombre) {
   if (E.escena) esc.remove(E.escena);
   E.mats.clear(); E.plano = false; $("plano").classList.remove("activo");
   const raiz = g.scene;
-  // la línea de tiempo puede venir dentro del GLB (extras) o aparte en el .json
   const d = datos || (raiz.userData && raiz.userData.estudio_previa) || (g.parser.json.extras && g.parser.json.extras.estudio_previa) || {};
   E.d = d; E.nombre = nombre;
   E.fps = d.fps || 30;
-  // sin luces del archivo: iluminación simple y pareja, sin sombras
-  raiz.traverse((o) => {
+  raiz.traverse((o) => {                                   // sin las luces del archivo ni sombras
     if (o.isLight) o.visible = false;
     if (o.isMesh) { o.castShadow = o.receiveShadow = false; o.frustumCulled = false; }
   });
   esc.add(raiz);
   E.escena = raiz;
   grilla.visible = false;
-  // cámaras de rodaje
   E.camaras = {};
   const camsGlb = g.cameras || [];
   for (const c of camsGlb) E.camaras[c.name] = c;
   raiz.traverse((o) => { if (o.isCamera && !E.camaras[o.name]) E.camaras[o.name] = o; });
-  // las tomas del json nombran la cámara como en Blender; three la guarda «saneada»
   E.tomas = (d.tomas || []).map((tm) => ({ ...tm, camara: E.camaras[tm.camara] ? tm.camara : san(tm.camara) }));
   const r = d.resolucion;
-  E.aspecto = Array.isArray(r) && r[0] && r[1] ? r[0] / r[1] : (camsGlb[0] && camsGlb[0].aspect) || 16 / 9;
-  // animación: todas las del archivo, juntas
+  E.res = Array.isArray(r) && r[0] && r[1] ? r : null;
+  E.aspecto = E.res ? r[0] / r[1] : (camsGlb[0] && camsGlb[0].aspect) || 16 / 9;
   E.mixer = null; E.clipDur = 0;
   if (g.animations.length) {
     E.mixer = new THREE.AnimationMixer(raiz);
@@ -341,19 +446,17 @@ function montar(g, datos, nombre) {
   }
   E.dur = d.duracion_s || (d.frames ? d.frames / E.fps : Math.max(0.04, E.clipDur - 1 / E.fps));
   E.frames = d.frames || Math.max(1, Math.round(E.dur * E.fps));
-  // objetos que aparecen y desaparecen (fogonazos, pelotas…)
   E.vis = [];
   for (const [n, tramos] of Object.entries(d.visibilidad || {})) {
     const o = raiz.getObjectByName(n) || raiz.getObjectByName(san(n));
     if (o) E.vis.push({ obj: o, tramos });
   }
   E.actores = d.actores || [];
-  // cámara libre: arranca donde está la primera toma
-  const c0 = E.tomas.length ? E.camaras[E.tomas[0].camara] : camsGlb[0];
+  llenarSeguir(raiz);
   E.mixer && E.mixer.setTime(1 / E.fps);
   raiz.updateMatrixWorld(true);
+  const c0 = E.tomas.length ? E.camaras[E.tomas[0].camara] : camsGlb[0];
   if (c0) ponerLibreDesde(c0); else encuadrarTodo(raiz);
-  // interfaz
   const titulo = [d.titulo, d.escena_id && `${d.escena_id} v${d.version || 1}`].filter(Boolean).join(" · ") || nombre;
   $("titulo").textContent = titulo;
   $("vacio").hidden = true;
@@ -361,31 +464,43 @@ function montar(g, datos, nombre) {
   E.notas = leerNotas();
   llenarSelector(); llenarTomas(); pintarNotas();
   E.tomaFija = E.tomas.length ? E.tomas[0].camara : Object.keys(E.camaras)[0] || null;
-  ponerModo(Object.keys(E.camaras).length ? "montaje" : "libre");
-  if (!E.tomas.length && Object.keys(E.camaras).length) ponerModo("toma");
+  ponerModo(E.tomas.length ? "montaje" : Object.keys(E.camaras).length ? "toma" : "libre");
   irA(0);
   const nc = Object.keys(E.camaras).length;
   aviso(`${titulo}: ${nc} cámara${nc === 1 ? "" : "s"}, ${E.tomas.length} toma${E.tomas.length === 1 ? "" : "s"}, ${coma(E.dur, 1)} s.` +
-    (datos || d.tomas ? "" : " Sin línea de tiempo: se ven las cámaras sueltas."));
+    (d.tomas ? "" : " Sin línea de tiempo: se ven las cámaras sueltas."));
   tamano();
 }
 
+// objetos a los que se puede pegar la cámara: de qué cuelgan las cámaras de rodaje (vagón, auto…) y los personajes
+function llenarSeguir(raiz) {
+  const s = $("seguir"); s.innerHTML = "";
+  s.add(new Option("nada (quieta)", ""));
+  const vistos = new Set();
+  const agregar = (o, etq) => { if (o && o !== raiz && !vistos.has(o.name)) { vistos.add(o.name); s.add(new Option(etq || o.name, o.name)); } };
+  for (const c of Object.values(E.camaras)) if (c.parent && c.parent !== raiz && c.parent.type !== "Scene") agregar(c.parent);
+  for (const a of E.actores) agregar(raiz.getObjectByName(a.nodo) || raiz.getObjectByName(san(a.nodo)), `${a.id} (personaje)`);
+}
+$("seguir").onchange = () => {
+  const o = $("seguir").value ? E.escena.getObjectByName($("seguir").value) : null;
+  ponerSeguir(o);
+  aviso(o ? `La cámara ahora viaja con «${o.name}».` : "La cámara queda quieta en el lugar.");
+};
+
 function ponerLibreDesde(c) {
   c.updateMatrixWorld(true);
-  const p = new THREE.Vector3(), q = new THREE.Quaternion(), s = new THREE.Vector3();
-  c.matrixWorld.decompose(p, q, s);
-  libre.position.copy(p); libre.quaternion.copy(q);
+  c.matrixWorld.decompose(libre.position, libre.quaternion, tmpV);
   libre.fov = c.fov || 40; libre.updateProjectionMatrix();
-  const adelante = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
-  orbita.target.copy(p).addScaledVector(adelante, 4);
-  orbita.update();
   $("lente").value = Math.round(lenteDe(libre, E.aspecto));
   $("lente_v").textContent = $("lente").value + " mm";
+  // si la cámara de rodaje cuelga de algo que se mueve (el vagón), la libre arranca pegada a eso
+  const p = c.parent;
+  ponerSeguir(p && p !== E.escena && p.type !== "Scene" ? p : null);
 }
 function encuadrarTodo(o) {
   const caja = new THREE.Box3().setFromObject(o), c = caja.getCenter(new THREE.Vector3()), r = caja.getSize(new THREE.Vector3()).length() || 5;
   libre.position.copy(c).add(new THREE.Vector3(r * 0.6, r * 0.4, r * 0.6));
-  orbita.target.copy(c); orbita.update();
+  libre.lookAt(c);
 }
 
 // ---------------------------------------------------------------- óptica (Blender: sensor de 36 mm, ajuste automático)
@@ -400,17 +515,17 @@ function fovDeLente(mm, aspecto) {
 }
 $("lente").oninput = () => {
   libre.fov = fovDeLente(+$("lente").value, E.aspecto); libre.updateProjectionMatrix();
-  $("lente_v").textContent = $("lente").value + " mm"; irA(E.t);
+  $("lente_v").textContent = $("lente").value + " mm"; rotulo();
 };
 
 // ---------------------------------------------------------------- modos
 function ponerModo(m) {
   if (m === "libre" && E.modo !== "libre") ponerLibreDesde(camaraActiva());
   E.modo = m;
-  orbita.enabled = m === "libre";
   for (const k of ["montaje", "toma", "libre"]) $("m_" + k).classList.toggle("activo", k === m);
-  $("fila_lente").hidden = m !== "libre";
+  $("fila_libre").hidden = $("cruceta").hidden = $("ayuda_libre").hidden = m !== "libre";
   $("sel_toma").hidden = m !== "toma";
+  $("colocar").textContent = m === "libre" ? "🎥 COLOCAR CÁMARA AQUÍ" : "🎥 COLOCAR CÁMARA";
   irA(E.t);
 }
 $("m_montaje").onclick = () => ponerModo(E.tomas.length ? "montaje" : "toma");
@@ -433,7 +548,7 @@ function llenarTomas() {
   E.tomas.forEach((tm, i) => {
     const el = document.createElement("div");
     el.className = "item"; el.dataset.i = i;
-    el.innerHTML = `<span class="n">${coma(tm.inicio_s, 1)} s</span><span class="t">${tm.id} · ${tm.tipo || ""}${tm.lente_mm ? " · " + Math.round(tm.lente_mm) + " mm" : ""}</span>`;
+    el.innerHTML = `<span class="n">${minSeg(tm.inicio_s)}</span><span class="t">${tm.id} · ${tm.tipo || ""}${tm.lente_mm ? " · " + Math.round(tm.lente_mm) + " mm" : ""}</span>`;
     el.onclick = () => { E.tomaFija = tm.camara; $("sel_toma").value = tm.camara; ponerModo("toma"); irA(tm.inicio_s + 0.001); };
     box.appendChild(el);
   });
@@ -463,9 +578,15 @@ function dibujarCortes() {
     x.fillStyle = i % 2 ? "#2f3642" : "#3a4250"; x.fillRect(a, 4, Math.max(1, b - a - 1), H - 8);
     if (b - a > 34) { x.fillStyle = "#9aa0a8"; x.font = "11px IBM Plex Mono, monospace"; x.fillText(tm.id, a + 4, H / 2 + 4, b - a - 8); }
   });
-  for (const n of E.notas) { const p = (n.t / E.dur) * W; x.fillStyle = "#e0645a"; x.fillRect(p - 1, 0, 3, H); }
+  for (const n of E.notas) {
+    if (n.tipo === "camara") {
+      const a = (n.desde / E.dur) * W, b = (n.hasta / E.dur) * W;
+      x.fillStyle = "rgba(224,100,90,.45)"; x.fillRect(a, H - 6, Math.max(2, b - a), 6);
+    }
+    const p = (n.t / E.dur) * W; x.fillStyle = n.tipo === "camara" ? "#e0645a" : "#e8b04a"; x.fillRect(p - 1, 0, 3, H);
+  }
   const p = (E.t / E.dur) * W;
-  x.fillStyle = "#e8b04a"; x.fillRect(p - 1, 0, 2, H);
+  x.fillStyle = "#e7e3da"; x.fillRect(p - 1, 0, 2, H);
 }
 $("deslizador").oninput = (e) => { E.jugando = false; $("play").textContent = "▶"; irA(+e.target.value * E.dur); };
 
@@ -500,107 +621,198 @@ $("plano").onclick = () => {
   });
 };
 
-// ---------------------------------------------------------------- notas para Claude
-function leerNotas() { try { return JSON.parse(localStorage.getItem(E.clave) || "[]"); } catch (e) { return []; } }
-function guardarNotas() { try { localStorage.setItem(E.clave, JSON.stringify(E.notas)); } catch (e) { /* sin almacenamiento: quedan en la página */ } }
-
-// pose de una cámara en coordenadas de Blender: (x, y, z)_b = (x, −z, y)_glTF; rotación R_b = C·R_glTF
+// ---------------------------------------------------------------- coordenadas de Blender
+// glTF → Blender: (x, y, z)_b = (x, −z, y)_g. Las cámaras miran a −Z local con +Y arriba en los dos programas, así que
+// la pose de una cámara pasa con M_b = C·M_g (mundo) y, respecto de un objeto, L_b = C·(P_g⁻¹·M_g).
 const CB = new THREE.Matrix4().set(1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1);
-function poseBlender(cam) {
-  cam.updateMatrixWorld(true);
+const r4 = (v) => Math.round(v * 1e4) / 1e4, gr = (v) => Math.round(THREE.MathUtils.radToDeg(v) * 100) / 100;
+function poseDe(mg) {
+  const mb = new THREE.Matrix4().multiplyMatrices(CB, mg);
   const p = new THREE.Vector3(), q = new THREE.Quaternion(), s = new THREE.Vector3();
-  cam.matrixWorld.decompose(p, q, s);
-  const rb = new THREE.Matrix4().multiplyMatrices(CB, new THREE.Matrix4().makeRotationFromQuaternion(q));
-  const eu = new THREE.Euler().setFromRotationMatrix(rb, "ZYX");          // = Euler XYZ de Blender
-  const qb = new THREE.Quaternion().setFromRotationMatrix(rb);
-  const r4 = (v) => Math.round(v * 1e4) / 1e4, g = (v) => Math.round(THREE.MathUtils.radToDeg(v) * 100) / 100;
+  mb.decompose(p, q, s);
+  const eu = new THREE.Euler().setFromQuaternion(q, "ZYX");               // = Euler XYZ de Blender
+  const fw = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
+  return { position: { x: r4(p.x), y: r4(p.y), z: r4(p.z) }, rotation: { x: gr(eu.x), y: gr(eu.y), z: gr(eu.z) },
+    quaternion: [r4(q.w), r4(q.x), r4(q.y), r4(q.z)], forward: { x: r4(fw.x), y: r4(fw.y), z: r4(fw.z) } };
+}
+function capturaLibre() {
+  libre.updateMatrixWorld(true);
+  const mundo = poseDe(libre.matrixWorld);
+  let rel = null;
+  if (E.seguir) {
+    E.seguir.updateWorldMatrix(true, false);
+    rel = poseDe(new THREE.Matrix4().copy(E.seguir.matrixWorld).invert().multiply(libre.matrixWorld));
+  }
   return {
-    position: { x: r4(p.x), y: r4(-p.z), z: r4(p.y) },
-    rotation: { x: g(eu.x), y: g(eu.y), z: g(eu.z) },
-    quaternion: [r4(qb.w), r4(qb.x), r4(qb.y), r4(qb.z)],
-    lens_mm: Math.round(lenteDe(cam, E.aspecto) * 10) / 10, fov_v_deg: Math.round(cam.fov * 100) / 100,
-    aspect: Math.round(E.aspecto * 1e4) / 1e4, sensor_mm: 36, sensor_fit: "AUTO",
+    mundo, relativa: rel, pegada_a: E.seguir ? E.seguir.name : null,
+    lens_mm: Math.round(lenteDe(libre, E.aspecto) * 10) / 10, fov_v_deg: Math.round(libre.fov * 100) / 100,
+    aspect: r4(E.aspecto), resolucion: E.res, sensor_mm: 36, sensor_fit: "AUTO",
+    gltf: { m: libre.matrixWorld.toArray().map(r4), local: E.seguir ? E.local.toArray().map((v) => Math.round(v * 1e6) / 1e6) : null, fov: libre.fov },
   };
 }
+
+// ---------------------------------------------------------------- órdenes y notas
+function leerNotas() { try { return JSON.parse(localStorage.getItem(E.clave) || "[]"); } catch (e) { return []; } }
+function guardarNotas() { try { localStorage.setItem(E.clave, JSON.stringify(E.notas)); } catch (e) { /* sin almacenamiento */ } }
+
+async function copiarTexto(txt, okMsg) {
+  const sal = $("salida");
+  sal.value = txt;
+  try {
+    await navigator.clipboard.writeText(txt);
+    sal.hidden = true;
+    aviso(okMsg);
+  } catch (e) {
+    sal.hidden = false; sal.focus(); sal.select();
+    aviso("No pude copiar solo: el texto está seleccionado abajo. Copialo y pegalo en el chat de Claude.");
+  }
+}
+
+$("colocar").onclick = () => {
+  if (!E.escena) { aviso("Primero abrí una escena."); return; }
+  E.jugando = false; $("play").textContent = "▶";
+  if (E.modo !== "libre") {
+    ponerModo("libre");
+    aviso("Mové la cámara hasta el cuadro que querés (arrastrá para mirar, cruceta para moverte) y tocá 🎥 COLOCAR CÁMARA AQUÍ.");
+    return;
+  }
+  const tm = tomaEn(E.t);
+  const n = {
+    id: Date.now(), tipo: "camara", t: r4(E.t), cuadro: cuadro(),
+    toma: tm ? tm.id : null, camara_toma: tm ? tm.camara : null,
+    reemplaza: tm ? tm.id : "nueva", desde: r4(E.t), hasta: r4(tm ? Math.min(tm.fin_s, E.dur) : E.dur),
+    movimiento: "fija", texto: "", cam: capturaLibre(),
+  };
+  E.notas.push(n); guardarNotas(); pintarNotas(); dibujarCortes();
+  copiarTexto(ordenCamara(n, E.notas.filter((x) => x.tipo === "camara").length),
+    "Cámara colocada. La orden ya está copiada: pegala en el chat de Claude (abajo podés ajustar desde/hasta y escribir algo más).");
+};
 
 $("marcar").onclick = () => {
   if (!E.escena) { aviso("Primero abrí una escena."); return; }
   E.jugando = false; $("play").textContent = "▶";
   const tm = tomaEn(E.t);
-  const cam = camaraActiva();
-  const n = {
-    id: Date.now(), t: Math.round(E.t * 1000) / 1000, cuadro: cuadro(), toma: tm ? tm.id : null,
-    camara_toma: tm ? tm.camara : null, modo: E.modo, viendo: E.modo === "libre" ? "cámara libre" : (cam.name || ""),
-    camara_nueva: E.modo === "libre" ? poseBlender(libre) : null, texto: "",
-  };
-  E.notas.push(n); guardarNotas(); pintarNotas(); dibujarCortes();
-  aviso(E.modo === "libre" ? "Marcado con la cámara libre: Claude recibe su posición exacta." : "Marcado. Escribí qué querés cambiar.");
-  const ta = $("notas").querySelector(`[data-id="${n.id}"] textarea`); if (ta) ta.focus();
+  E.notas.push({ id: Date.now(), tipo: "nota", t: r4(E.t), cuadro: cuadro(), toma: tm ? tm.id : null, camara_toma: tm ? tm.camara : null, texto: "" });
+  guardarNotas(); pintarNotas(); dibujarCortes();
+  aviso("Nota marcada. Escribí qué querés cambiar.");
+  const ta = $("notas").lastElementChild && $("notas").lastElementChild.querySelector("textarea"); if (ta) ta.focus();
 };
+
+const enc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const xyz = (v) => `x ${coma(v.x, 3)}, y ${coma(v.y, 3)}, z ${coma(v.z, 3)}`;
+const rxyz = (v) => `X ${coma(v.x, 2)}°, Y ${coma(v.y, 2)}°, Z ${coma(v.z, 2)}°`;
+function cabecera() {
+  const d = E.d || {};
+  return `${d.produccion || ""} · ${d.escena_id || E.nombre} v${d.version || 1}${d.huella ? " (huella " + d.huella + ")" : ""}`;
+}
+function ordenCamara(n, k) {
+  const c = n.cam, fd = cuadroDe(n.desde), fh = cuadroDe(n.hasta);
+  const toma = n.reemplaza === "nueva" ? "Es una TOMA NUEVA (no reemplaza ninguna; se corta a ella en ese tramo)."
+    : `Reemplaza la cámara de la toma ${n.reemplaza}${n.reemplaza === n.toma && n.camara_toma ? " (" + n.camara_toma + ")" : ""} en ese tramo.`;
+  const l = [
+    `🎥 ORDEN DE CÁMARA ${k} · ${cabecera()}`,
+    `• Momento: desde ${minSeg(n.desde)} (cuadro ${fd}) hasta ${minSeg(n.hasta)} (cuadro ${fh}). La coloqué viendo el ${minSeg(n.t)} (cuadro ${n.cuadro}).`,
+    `• ${toma}`,
+    `• Cámara ${n.movimiento === "fija" ? "fija" : n.movimiento}${c.pegada_a ? `, pegada a «${c.pegada_a}» (viaja con él)` : ", quieta en el mundo"}.`,
+  ];
+  if (c.relativa) {
+    l.push(`• Posición respecto de «${c.pegada_a}» (Blender, metros, en su marco: objeto.matrix_world⁻¹ · cámara.matrix_world): ${xyz(c.relativa.position)}`);
+    l.push(`• Rotación respecto de «${c.pegada_a}» (Euler XYZ de Blender): ${rxyz(c.relativa.rotation)}`);
+  }
+  l.push(`• Posición en el mundo en el cuadro ${n.cuadro} (Blender, metros): ${xyz(c.mundo.position)}`);
+  l.push(`• Rotación en el mundo (Euler XYZ de Blender): ${rxyz(c.mundo.rotation)} · mira hacia ${xyz(c.mundo.forward)}`);
+  l.push(`• Lente ${coma(c.lens_mm, 1)} mm (sensor 36 mm, ajuste AUTO)${c.resolucion ? ", cuadro " + c.resolucion[0] + "×" + c.resolucion[1] : ""}.`);
+  if (n.texto) l.push(`• Además: ${n.texto}`);
+  return l.join("\n");
+}
+function jsonOrdenes() {
+  const d = E.d || {};
+  return { formato: "estudio.visor_ordenes/1", produccion: d.produccion || null, escena: d.escena_id || E.nombre,
+    version: d.version || null, huella: d.huella || null, fps: E.fps,
+    camaras: E.notas.filter((n) => n.tipo === "camara").map((n) => ({ desde_s: n.desde, hasta_s: n.hasta,
+      cuadro_desde: cuadroDe(n.desde), cuadro_hasta: cuadroDe(n.hasta), colocada_en_cuadro: n.cuadro, reemplaza: n.reemplaza,
+      movimiento: n.movimiento, nota: n.texto, pegada_a: n.cam.pegada_a, relativa: n.cam.relativa, mundo: n.cam.mundo,
+      lens_mm: n.cam.lens_mm, fov_v_deg: n.cam.fov_v_deg, sensor_mm: 36, sensor_fit: "AUTO", aspecto: n.cam.aspect, resolucion: n.cam.resolucion })),
+    notas: E.notas.filter((n) => n.tipo !== "camara").map((n) => ({ cuadro: n.cuadro, t: n.t, toma: n.toma, nota: n.texto })) };
+}
+function textoParaClaude() {
+  let k = 0;
+  const partes = E.notas.map((n) => n.tipo === "camara" ? ordenCamara(n, ++k)
+    : `📍 NOTA · ${minSeg(n.t)} (cuadro ${n.cuadro})${n.toma ? " · toma " + n.toma : ""}: ${n.texto || "(sin texto)"}`);
+  return `VISOR DE ESCENA · ${cabecera()}\n\n${partes.join("\n\n")}\n\n\`\`\`json\n${JSON.stringify(jsonOrdenes())}\n\`\`\``;
+}
 
 function pintarNotas() {
   const box = $("notas"); box.innerHTML = "";
   $("n_notas").textContent = E.notas.length ? `(${E.notas.length})` : "";
-  if (!E.notas.length) { box.innerHTML = '<div class="etq">Todavía no marcaste nada.</div>'; return; }
+  if (!E.notas.length) { box.innerHTML = '<div class="etq">Todavía no colocaste cámaras ni notas.</div>'; return; }
+  let k = 0;
   E.notas.forEach((n, i) => {
     const el = document.createElement("div");
-    el.className = "nota"; el.dataset.id = n.id;
-    el.innerHTML = `<div class="cab"><span>${i + 1} · f ${n.cuadro} · ${coma(n.t)} s${n.toma ? " · " + n.toma : ""}${n.camara_nueva ? " · 🎥 " + n.camara_nueva.lens_mm + " mm" : ""}</span>
-      <button class="btn" type="button" data-ir>IR</button><button class="btn" type="button" data-borrar aria-label="Borrar nota">✕</button></div>
-      <textarea id="nota_${n.id}" placeholder="¿Qué cambio? Ej.: esta cámara más baja, que Luna mire a Nico, cortar antes…"></textarea>`;
-    el.querySelector("textarea").value = n.texto;
-    el.querySelector("textarea").oninput = (e) => { n.texto = e.target.value; guardarNotas(); };
+    const esCam = n.tipo === "camara";
+    const num = esCam ? ++k : null;
+    el.className = "nota" + (esCam ? " cam" : "");
+    const opcionesToma = esCam ? ['<option value="nueva">toma nueva</option>'].concat(E.tomas.map((tm) =>
+      `<option value="${enc(tm.id)}"${tm.id === n.reemplaza ? " selected" : ""}>reemplaza ${enc(tm.id)}</option>`)).join("") : "";
+    el.innerHTML = `
+      <div class="cab"><span>${esCam ? "🎥 CÁMARA " + num : "📍 NOTA"} · ${minSeg(n.t)} · f ${n.cuadro}${n.toma ? " · " + enc(n.toma) : ""}${esCam ? " · " + coma(n.cam.lens_mm, 0) + " mm" : ""}</span>
+        <span class="der"><button class="btn" type="button" data-ir>VER</button>${esCam ? '<button class="btn" type="button" data-copiar>COPIAR</button>' : ""}<button class="btn" type="button" data-borrar aria-label="Borrar">✕</button></span></div>
+      ${esCam ? `<div class="campos">
+        <select id="reemp_${n.id}" aria-label="Qué toma reemplaza">${opcionesToma}</select>
+        <label for="desde_${n.id}">desde</label><input id="desde_${n.id}" type="number" step="0.01" min="0" value="${(+n.desde).toFixed(2)}">
+        <label for="hasta_${n.id}">hasta</label><input id="hasta_${n.id}" type="number" step="0.01" min="0" value="${(+n.hasta).toFixed(2)}"> s
+        <select id="mov_${n.id}" aria-label="Movimiento"><option value="fija">fija</option><option value="con paneo suave siguiendo al personaje">paneo suave</option><option value="acercándose despacio (dolly in)">dolly in</option><option value="alejándose despacio (dolly out)">dolly out</option><option value="cámara en mano">en mano</option></select>
+      </div>` : ""}
+      <textarea id="nota_${n.id}" placeholder="${esCam ? "Algo más (opcional): que encuadre a Luna, más cerca…" : "¿Qué cambio? Ej.: que Luna mire a Nico, cortar antes…"}"></textarea>
+      ${esCam ? `<pre data-orden></pre>` : ""}`;
+    const ta = el.querySelector("textarea");
+    ta.value = n.texto;
+    const actualizar = () => { if (esCam) el.querySelector("[data-orden]").textContent = ordenCamara(n, num); guardarNotas(); dibujarCortes(); };
+    ta.oninput = (e) => { n.texto = e.target.value; actualizar(); };
+    if (esCam) {
+      el.querySelector(`#mov_${n.id}`).value = n.movimiento;
+      el.querySelector(`#reemp_${n.id}`).onchange = (e) => { n.reemplaza = e.target.value; actualizar(); };
+      el.querySelector(`#desde_${n.id}`).oninput = (e) => { const v = parseFloat(String(e.target.value).replace(",", ".")); if (!isNaN(v)) { n.desde = Math.max(0, Math.min(v, E.dur)); actualizar(); } };
+      el.querySelector(`#hasta_${n.id}`).oninput = (e) => { const v = parseFloat(String(e.target.value).replace(",", ".")); if (!isNaN(v)) { n.hasta = Math.max(0, Math.min(v, E.dur)); actualizar(); } };
+      el.querySelector(`#mov_${n.id}`).onchange = (e) => { n.movimiento = e.target.value; actualizar(); };
+      el.querySelector("[data-copiar]").onclick = () => copiarTexto(ordenCamara(n, num), `Orden de la cámara ${num} copiada. Pegala en el chat de Claude.`);
+      el.querySelector("[data-orden]").textContent = ordenCamara(n, num);
+    }
     el.querySelector("[data-ir]").onclick = () => {
-      if (n.camara_nueva) aviso("Esta nota tiene una cámara libre: está en el texto para Claude.");
+      E.jugando = false; $("play").textContent = "▶";
       irA(n.t);
+      if (esCam) {
+        if (E.modo !== "libre") ponerModo("libre");
+        const obj = n.cam.pegada_a ? E.escena.getObjectByName(n.cam.pegada_a) : null;
+        new THREE.Matrix4().fromArray(n.cam.gltf.m).decompose(libre.position, libre.quaternion, tmpV);
+        libre.fov = n.cam.gltf.fov; libre.updateProjectionMatrix();
+        $("lente").value = Math.round(n.cam.lens_mm); $("lente_v").textContent = $("lente").value + " mm";
+        ponerSeguir(obj);
+        if (obj && n.cam.gltf.local) E.local.fromArray(n.cam.gltf.local);
+        aviso(`Viendo la cámara ${num} en el momento en que la colocaste.`);
+      }
     };
     el.querySelector("[data-borrar]").onclick = () => { E.notas.splice(i, 1); guardarNotas(); pintarNotas(); dibujarCortes(); };
     box.appendChild(el);
   });
 }
 
-function textoParaClaude() {
-  const d = E.d || {};
-  const cab = `VISOR DE ESCENA · ${d.produccion || ""} ${d.escena_id || E.nombre} v${d.version || 1}${d.huella ? " · huella " + d.huella : ""}`;
-  const lineas = E.notas.map((n, i) => {
-    let s = `${i + 1}) cuadro ${n.cuadro} (${coma(n.t)} s)${n.toma ? " · toma " + n.toma + " (cámara " + n.camara_toma + ")" : ""}: ${n.texto || "(sin texto)"}`;
-    if (n.camara_nueva) {
-      const c = n.camara_nueva;
-      s += `\n   cámara nueva propuesta (coordenadas de Blender): posición (${c.position.x}, ${c.position.y}, ${c.position.z}) · rotación XYZ (${c.rotation.x}°, ${c.rotation.y}°, ${c.rotation.z}°) · lente ${c.lens_mm} mm`;
-    }
-    return s;
-  });
-  const json = { formato: "estudio.visor_notas/1", produccion: d.produccion || null, escena: d.escena_id || E.nombre,
-    version: d.version || null, huella: d.huella || null, fps: E.fps,
-    notas: E.notas.map((n) => ({ cuadro: n.cuadro, t: n.t, toma: n.toma, camara_toma: n.camara_toma, nota: n.texto, camara_nueva: n.camara_nueva })) };
-  return `${cab}\n\n${lineas.join("\n")}\n\n\`\`\`json\n${JSON.stringify(json)}\n\`\`\``;
-}
-
-$("copiar").onclick = async () => {
-  if (!E.notas.length) { aviso("No hay notas para copiar. Marcá algo primero con 📍."); return; }
-  const txt = textoParaClaude();
-  const sal = $("salida");
-  sal.value = txt;
-  try {
-    await navigator.clipboard.writeText(txt);
-    sal.hidden = true;
-    aviso("Copiado. Pegalo en el chat de Claude.");
-  } catch (e) {
-    sal.hidden = false; sal.focus(); sal.select();
-    aviso("No pude copiar solo: el texto está seleccionado abajo, copialo y pegalo en el chat.");
-  }
+$("copiar").onclick = () => {
+  if (!E.notas.length) { aviso("Todavía no hay nada para copiar: colocá una cámara o marcá una nota."); return; }
+  copiarTexto(textoParaClaude(), "Copiado todo. Pegalo en el chat de Claude.");
 };
 
-// atajos de teclado (computadora)
+// teclado (computadora)
 window.addEventListener("keydown", (e) => {
   if (/TEXTAREA|INPUT|SELECT/.test(document.activeElement.tagName)) return;
+  if (E.modo === "libre" && TECLAS[e.code]) { const [eje, s] = TECLAS[e.code]; E.mov[eje] = s; return; }
   if (e.code === "Space") { e.preventDefault(); $("play").click(); }
   if (e.key === "ArrowLeft") paso(-1);
   if (e.key === "ArrowRight") paso(1);
 });
+window.addEventListener("keyup", (e) => { if (TECLAS[e.code]) { const [eje, s] = TECLAS[e.code]; if (E.mov[eje] === s) E.mov[eje] = 0; } });
 
 tamano(); pintarNotas(); dibujarCortes();
-// dirección directa (?glb=…&json=…) cuando el visor se abre fuera del sitio de artefactos
 const q = new URLSearchParams(location.search);
 if (q.get("glb")) cargarURL(q.get("glb"), q.get("json"));
 })();
