@@ -40,6 +40,11 @@ def tela(nombre: str, color_srgb, rug=0.85, tipo="algodon", brillo=0.0) -> bpy.t
     b.inputs["Roughness"].default_value = rug
     metal = 1.0 if tipo == "metal" else 0.0
     b.inputs["Metallic"].default_value = metal
+    if tipo == "tecnico":                          # tela técnica de compresión: satinada, con trama muy fina
+        b.inputs["Sheen Weight"].default_value = 0.45
+        b.inputs["Sheen Roughness"].default_value = 0.3
+        b.inputs["Coat Weight"].default_value = 0.18
+        b.inputs["Coat Roughness"].default_value = 0.35
     if tipo in ("algodon", "jean"):
         b.inputs["Sheen Weight"].default_value = 0.6 if tipo == "algodon" else 0.25
         b.inputs["Sheen Roughness"].default_value = 0.4
@@ -78,9 +83,10 @@ def tela(nombre: str, color_srgb, rug=0.85, tipo="algodon", brillo=0.0) -> bpy.t
         bump.inputs["Distance"].default_value = 0.0006
         nt.links.new(w.outputs["Fac"], bump.inputs["Height"])
         nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
-    elif tipo in ("algodon", "cuero", "goma", "acanalado"):
+    elif tipo in ("algodon", "cuero", "goma", "acanalado", "tecnico"):
         nz = nt.nodes.new("ShaderNodeTexNoise")
-        nz.inputs["Scale"].default_value = {"algodon": 420.0, "cuero": 160.0, "goma": 60.0, "acanalado": 40.0}[tipo]
+        nz.inputs["Scale"].default_value = {"algodon": 420.0, "cuero": 160.0, "goma": 60.0, "acanalado": 40.0,
+                                            "tecnico": 900.0}[tipo]
         nz.inputs["Detail"].default_value = 10.0
         nt.links.new(geo.outputs["Object"], nz.inputs["Vector"])
         alto = nz.outputs["Fac"]
@@ -92,7 +98,8 @@ def tela(nombre: str, color_srgb, rug=0.85, tipo="algodon", brillo=0.0) -> bpy.t
             nt.links.new(geo.outputs["Object"], w.inputs["Vector"])
             alto = w.outputs["Fac"]
         bump = nt.nodes.new("ShaderNodeBump")
-        bump.inputs["Strength"].default_value = {"algodon": 0.25, "cuero": 0.18, "goma": 0.1, "acanalado": 0.5}[tipo]
+        bump.inputs["Strength"].default_value = {"algodon": 0.25, "cuero": 0.18, "goma": 0.1, "acanalado": 0.5,
+                                                 "tecnico": 0.12}[tipo]
         bump.inputs["Distance"].default_value = 0.0008
         nt.links.new(alto, bump.inputs["Height"])
         nt.links.new(bump.outputs["Normal"], b.inputs["Normal"])
@@ -872,8 +879,141 @@ def reloj(cb: Cuerpo, Z: dict, lado="Left"):
     return partes
 
 
+def _ruta_lateral(cb: Cuerpo, centros, sgn_x: int, eje: str, desp: float):
+    """Costura que recorre el costado del cuerpo: rayos desde afuera hacia una serie de centros."""
+    ruta = []
+    for c in centros:
+        d = np.array([sgn_x, 0, 0], dtype=float) if eje == "x" else np.array([0, sgn_x, 0], dtype=float)
+        hit = cb.bvh.ray_cast(Vector(c + d * 0.4 * cb.u), Vector(-d), 0.4 * cb.u)
+        if hit[0] is not None:
+            ruta.append(np.array(hit[0]) + d * desp)
+    return ruta
+
+
+def traje_primera_piel(cb: Cuerpo, Z: dict, color=(0.13, 0.14, 0.16), acento=(0.15, 0.62, 0.78),
+                       paneles=(0.20, 0.21, 0.24), nombre="traje"):
+    """Traje de primera piel (va debajo del traje espacial): una sola pieza pegada al cuerpo como una calza, de los
+    tobillos (con pie, tipo media) hasta el cuello alto que tapa la unión de la cabeza. Tela técnica de compresión con
+    vivos de color en las costuras laterales, de los brazos y del canesú, cierre corto adelante, rodilleras y coderas
+    acolchadas y un parche redondo en el pecho."""
+    pj, u, M = cb.pj, cb.u, Z["M"]
+    z = Z["z"]
+    info = pj.get("cabeza_humana") or {}
+    z_corte = info.get("z_corte", M["z_cuello"] + 0.03 * u)
+    cen_c = cb.h["Neck"][0]
+    radial_cuello = np.hypot(cb.pos[:, 0] - cen_c[0], cb.pos[:, 1] - cen_c[1])
+    # todo el cuerpo menos las manos; arriba sólo queda libre el cuello (los hombros sí van cubiertos)
+    tapa = ~Z["mano"] & ~((z > z_corte - 0.012 * u) & (radial_cuello < 0.085 * u))
+    gro = np.full(len(cb.pos), 0.0025 * u)
+    tela_b = tela(f"{nombre}_{pj['id']}", color, 0.55, "tecnico")
+    tela_p = tela(f"{nombre}_paneles_{pj['id']}", paneles, 0.6, "acanalado")
+    vivo = tela(f"{nombre}_vivo_{pj['id']}", acento, 0.35, "tecnico")
+    rod = {l: cb.h[f"{l}Leg"][0] for l in ("Left", "Right")}
+    cod = {l: cb.h[f"{l}ForeArm"][0] for l in ("Left", "Right")}
+
+    def mat_cara(i):
+        p = cb.pos[cb.caras[i]].mean(axis=0)
+        for c in list(rod.values()):
+            if np.linalg.norm(p - c) < 0.06 * u and p[1] < c[1]:          # rodillera (adelante)
+                return 1
+        for c in list(cod.values()):
+            if np.linalg.norm(p - c) < 0.045 * u and p[2] > c[2] - 0.01 * u:  # codera
+                return 1
+        return 0
+    ob, P, usados = cascara(cb, f"TRAJE_{pj['id']}", tapa, gro, [tela_b, tela_p], suavizado=6, minimo=0.0018 * u,
+                            mat_cara=mat_cara, solidificar=0.0015 * u)
+    partes = [ob]
+    # cuello alto: banda alrededor del cuello (cuerpo abajo, cuello de la cabeza arriba), tapa la unión
+    cen = cb.h["Neck"][0].copy()
+    bvh_cab = None
+    if info.get("obj") is not None:
+        bmc = bmesh.new()
+        bmc.from_mesh(info["obj"].data)
+        bvh_cab = BVHTree.FromBMesh(bmc)
+        bmc.free()
+    filas = []
+    for k, zz in enumerate(np.linspace(z_corte - 0.03 * u, z_corte + 0.03 * u, 7)):
+        fila = []
+        for a in np.linspace(0, 2 * math.pi, 33)[:-1]:
+            d = np.array([math.cos(a), math.sin(a), 0.0])
+            c0 = np.array([cen[0], cen[1], zz])
+            r = 0.0
+            for arbol in (cb.bvh, bvh_cab):
+                if arbol is None:
+                    continue
+                hit = arbol.ray_cast(Vector(c0 + d * 0.3 * u), Vector(-d), 0.3 * u)
+                if hit[0] is not None:
+                    r = max(r, float(np.linalg.norm(np.array(hit[0]) - c0)))
+            r = (r or 0.055 * u) + 0.005 * u
+            fila.append(c0 + d * r)
+        filas.append(fila)
+    V = [p for f in filas for p in f]
+    n = 32
+    F = [[i * n + j, i * n + (j + 1) % n, (i + 1) * n + (j + 1) % n, (i + 1) * n + j]
+         for i in range(len(filas) - 1) for j in range(n)]
+    partes.append(_objeto(f"CUELLO_TRAJE_{pj['id']}", pj, V, F, [tela_b], cuerpo=cb, subdiv=1,
+                          solidificar=0.002 * u))
+    # vivos: costados del torso y de las piernas, brazos por debajo, canesú y borde del cuello
+    piezas = []
+    zc = M["z_cintura"]
+    axila = {l: cb.h[f"{l}Arm"][0] for l in ("Left", "Right")}
+    for lado in ("Left", "Right"):
+        sgn = 1 if axila[lado][0] > M["x0"] else -1
+        tor = [np.array([M["x0"], M["y0"], zz]) for zz in np.linspace(axila[lado][2] - 0.04 * u, zc - 0.05 * u, 14)]
+        piezas.append(_ruta_lateral(cb, tor, sgn, "x", 0.003 * u))
+        cad, rodi, tob = cb.h[f"{lado}UpLeg"][0], cb.h[f"{lado}Leg"][0], cb.h[f"{lado}Foot"][0]
+        pierna = [cad + (rodi - cad) * t for t in np.linspace(0.1, 1, 10)] + \
+                 [rodi + (tob - rodi) * t for t in np.linspace(0.1, 0.92, 10)]
+        piezas.append(_ruta_lateral(cb, pierna, sgn, "x", 0.003 * u))
+        hom, codo, mun = cb.h[f"{lado}Arm"][0], cb.h[f"{lado}ForeArm"][0], cb.h[f"{lado}Hand"][0]
+        brazo = [hom + (codo - hom) * t for t in np.linspace(0.15, 1, 8)] + \
+                [codo + (mun - codo) * t for t in np.linspace(0.1, 0.9, 8)]
+        ruta = []
+        for c in brazo:                                    # por debajo del brazo (en pose T: rayos desde abajo)
+            hit = cb.bvh.ray_cast(Vector(c - np.array([0, 0, 0.3 * u])), Vector((0, 0, 1)), 0.3 * u)
+            if hit[0] is not None:
+                ruta.append(np.array(hit[0]) - np.array([0, 0, 0.003 * u]))
+        piezas.append(ruta)
+        # canesú: del hombro al centro del pecho
+        ruta = []
+        for t in np.linspace(0, 1, 12):
+            px = hom[0] * (1 - t) + M["x0"] * t
+            pz = (hom[2] - 0.01 * u) * (1 - t) + (cb.h["Spine2"][0][2] + 0.02 * u) * t
+            hit = cb.bvh.ray_cast(Vector((px, M["y0"] - 0.4 * u, pz)), Vector((0, 1, 0)), 0.5 * u)
+            if hit[0] is not None:
+                ruta.append(np.array(hit[0]) - np.array([0, 0.003 * u, 0]))
+        piezas.append(ruta)
+    tubos = [_tubo(r, 0.0011 * u, 5) for r in piezas if len(r) > 3]
+    V, F = _juntar(tubos)
+    partes.append(_objeto(f"VIVOS_{pj['id']}", pj, V, F, [vivo], cuerpo=cb))
+    # cierre corto adelante (del cuello al esternón) con tirador, y parche redondo en el pecho
+    metal = tela(f"cierre_{pj['id']}", (0.72, 0.74, 0.78), 0.25, "metal")
+    ruta = []
+    for zz in np.linspace(z_corte + 0.02 * u, cb.h["Spine2"][0][2] - 0.02 * u, 12):
+        hit = cb.bvh.ray_cast(Vector((M["x0"], M["y0"] - 0.4 * u, zz)), Vector((0, 1, 0)), 0.5 * u)
+        if hit[0] is not None:
+            ruta.append(np.array(hit[0]) - np.array([0, 0.0035 * u, 0]))
+    piezas_m = []
+    if len(ruta) > 2:
+        piezas_m.append(_tubo(ruta, 0.0016 * u, 6))
+        tir = ruta[1]
+        piezas_m.append(_tubo([tir, tir - np.array([0, 0.002 * u, 0.014 * u])], 0.0028 * u, 6))
+    hit = cb.bvh.ray_cast(Vector((M["x0"] + 0.07 * u * np.sign(cb.h["LeftArm"][0][0] - M["x0"]), M["y0"] - 0.4 * u,
+                                  cb.h["Spine2"][0][2] + 0.03 * u)), Vector((0, 1, 0)), 0.5 * u)
+    if hit[0] is not None:
+        c = np.array(hit[0]) - np.array([0, 0.003 * u, 0])
+        disco = [c + np.array([math.cos(a) * 0.022 * u, 0, math.sin(a) * 0.022 * u])
+                 for a in np.linspace(0, 2 * math.pi, 25)]
+        piezas_m.append(_tubo(disco, 0.0018 * u, 6))
+    if piezas_m:
+        V, F = _juntar(piezas_m)
+        partes.append(_objeto(f"CIERRE_{pj['id']}", pj, V, F, [metal], cuerpo=cb))
+    return partes
+
+
 PRENDAS = {"buzo_capucha": buzo_capucha, "remera": remera, "campera_jean": campera_jean, "jean": jean,
-           "zapatillas": zapatillas, "cartera": cartera, "reloj": reloj}
+           "zapatillas": zapatillas, "cartera": cartera, "reloj": reloj,
+           "traje_primera_piel": traje_primera_piel}
 
 
 def vestir(pj: dict, vestuario: list[dict]):

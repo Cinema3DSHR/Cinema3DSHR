@@ -16,6 +16,7 @@ func _initialize() -> void:
 	var h := int(args[3]) if args.size() > 3 else 1600
 	DisplayServer.window_set_size(Vector2i(w, h))
 	root.size = Vector2i(w, h)
+	root.mesh_lod_threshold = 0.0           # sin LOD automático (simplificaba el pelo de un solo lado)
 	var doc := GLTFDocument.new()
 	var st := GLTFState.new()
 	if doc.append_from_file(glb, st) != OK:
@@ -66,6 +67,8 @@ func _initialize() -> void:
 		["perfil", Vector3(d, c, 0), Vector3(0, c, 0), 40.0],
 		["cara", Vector3(0.12, cabeza, 0.62), Vector3(0, cabeza, 0), 30.0],
 		["cara_34", Vector3(0.45, cabeza + 0.02, 0.45), Vector3(0, cabeza, 0), 30.0],
+		["cara_34_der", Vector3(-0.45, cabeza + 0.02, 0.45), Vector3(0, cabeza, 0), 30.0],
+		["atras", Vector3(0, cabeza + 0.05, -0.62), Vector3(0, cabeza, 0), 30.0],
 		["pelo_atras", Vector3(-0.35, cabeza + 0.1, -0.5), Vector3(0, cabeza, 0), 32.0],
 		["pies", Vector3(0.5, 0.25, 0.9), Vector3(0, 0.06, 0.05), 30.0],
 	]
@@ -73,6 +76,14 @@ func _initialize() -> void:
 
 ## FORMAS='{"JawDrop": 0.5, …}': pesos de las formas clave (Godot no aplica los pesos por defecto del GLB)
 func _aplicar_formas(n: Node, formas) -> void:
+	if n is MeshInstance3D and OS.get_environment("OCULTAR") != "" and String(n.name).begins_with(OS.get_environment("OCULTAR")):
+		n.visible = false
+	if n is MeshInstance3D and OS.get_environment("SOLO") != "":
+		var ok := false
+		for pre in OS.get_environment("SOLO").split(","):
+			if String(n.name).begins_with(pre):
+				ok = true
+		n.visible = ok
 	if n is MeshInstance3D and n.mesh:
 		for i in n.mesh.get_blend_shape_count():
 			var nom: String = n.mesh.get_blend_shape_name(i)
