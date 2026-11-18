@@ -496,3 +496,31 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   10:43:55–10:44:06 sin error del render (GitHub los cortó; coincide con cambios del dueño en la organización) y el
   reparto quedó congelado hasta las 10:52. Con autorización del dueño se usó «Re-run failed jobs» (intento 2): los 13
   y el montaje salieron bien. Reloj total ~1 h 55 min.
+
+
+### 18/11/2026 — Visor de escenas en HTML (revisión rápida en el navegador)
+- Pedido del dueño: revisar las escenas en el navegador del celular con un GLB liviano, sin Godot ni esperar a la app, y
+  pedir cambios de cámara por el chat.
+- `visor/visor_escena.html` (+ `visor/LEEME.md`), publicado también para el teléfono en
+  https://claude.ai/artifact/SEW8AN7eTVhb1t3vaRAvJq. Abre el GLB (+ JSON) de `previa`; MONTAJE / TOMA / LIBRE, cuadro a
+  cuadro, cortes de toma, 📍 MARCAR y COPIAR PARA CLAUDE con la cámara en coordenadas de Blender.
+- Probado con la previsualización real de e01 v1 en Chromium con pantalla de Pixel 7: carga (12 cámaras, 12 tomas,
+  32,6 s), reproduce, el montaje cambia de cámara, cuadro a cuadro, y la cámara copiada coincide con la de Blender
+  (≤ 4 mm). No probado en un teléfono real.
+- No se tocó ningún flujo ni lo que corre en Actions (video30 de A la deriva en marcha).
+- Segunda vuelta (pedido del dueño: «recorrer la escena y colocar cámara, y que el HTML me dé el texto con dónde, en qué
+  minuto y en qué ubicación»): LIBRE para recorrer (1 dedo mira, 2 dedos acercan/corren, cruceta, rapidez), «Pegada a»
+  (arranca pegada a lo que lleva la cámara de la toma: en e01, el vagón `tren_06_cerrado`, que se mueve) y
+  🎥 COLOCAR CÁMARA, que copia al instante la orden (desde/hasta, qué toma reemplaza, fija o movimiento, pose respecto
+  del vagón y en el mundo en Blender, lente). Probado con e01: la pose relativa coincide con el `desp_local` de t05 y no
+  cambia entre 13,2 s y 14,5 s; la del mundo coincide con Blender.
+- Tercera vuelta (pedido del dueño: moverse libre, un botón de cámara que la agregue al texto, poder modificar las
+  cámaras ya puestas y agregar otras, y sólo COPIAR): ➕ CÁMARA NUEVA, ✏️ EDITAR CÁMARA DE LA TOMA, EDITAR en cada
+  cámara de la lista (lo que se mueve mientras edita queda en la orden, con el cambio en palabras), conos rojos y un único
+  📋 COPIAR PARA CLAUDE (JSON `estudio.visor_ordenes/2`). Probado con e01: editar t05 (subirla, lente 32 → 45 mm),
+  moverse sin editar no la cambia, cámara nueva en t08; sin errores de la página.
+- `docs/VISOR_Y_ORDENES_DE_CAMARA.md`: cómo funciona el visor, cómo pasarle el GLB al dueño por el chat y cómo recibir y
+  aplicar el texto `estudio.visor_ordenes/2` (quieta → toma `director`; pegada al vagón → toma rígida con ancla y
+  objetivo; modificar = aplicar el cambio). Enlazado desde `CLAUDE.md` y `docs/GUIA_PARA_OTRO_CHAT.md`.
+- Candado del render: el dueño pidió sacarlo; queda para cuando termine el `video30` de A la deriva (en curso,
+  corrida 44285010355), para no tocar nada mientras corre.
