@@ -307,3 +307,9 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   trabajos (como mucho cada 10 min). Era 11 al responder.
 - Sonda de 60 trabajos (corrida 44212957289): 13 corriendo a la vez y 47 en cola → cancelada (el dueño pidió cancelar si
   no superaba 20). No se renderizó nada.
+
+### 18/11/2026 — Guía para otro chat de Claude
+- Pedido del dueño: un documento para que otro chat aprenda a trabajar en la organización sin auditar los repositorios.
+- `docs/GUIA_PARA_OTRO_CHAT.md`: dueño y trato, repositorios y permisos, reglas (sobre todo la de render), mapa del
+  estudio y de los flujos, recetas, estado actual (Dúo Cero, concurrencia, app), cómo atender pedidos típicos y
+  pruebas. `CLAUDE.md` la nombra como punto de partida.
