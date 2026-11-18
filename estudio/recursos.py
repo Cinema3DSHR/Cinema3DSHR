@@ -86,6 +86,8 @@ def verificar(m: dict, externos: bool = True, mezcla: bool = True) -> tuple[list
             mal = _abre_audio(p)
             if mal:
                 errores.append(f"sonido.eventos[{i}] ({ev['tipo']}): {p.name} {mal}")
+    from estudio import clips as CL
+    avisos += [f"clip con estilo marcado: {x}" for x in CL.avisos_receta(m)]
     if externos:
         from estudio import manifiesto as MF
         for ref in MF.dependencias(m):

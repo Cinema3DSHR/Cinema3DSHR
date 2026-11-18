@@ -564,3 +564,33 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   terminado (personajes.py): las caminatas se planifican en ciclos enteros (`escenas_e02.py`).
 - e02 v1: 133,3 s, 31 tomas, calidad `hd540` (540x960). `pruebas/nave/tomas.gd` ahora aplica la visibilidad del
   JSON. Prueba de la app 18/18. GLB (29 MB) + JSON enviados al dueño para el visor.
+
+## 18/11/2026 — Mejora del sistema: componentes, escena de trabajo, recursos y biblioteca de clips (sin render)
+
+- Pedido del dueño tras rechazar la caminata de E02 v1 (Walking_2 = «Male Drunk Walk»: el catálogo lo decía y no se
+  consultó). Detalle completo en `docs/SISTEMA_COMPONENTES.md`.
+- A · Protección: `estudio/proteccion.py` + `producciones/p011_a_la_deriva/escenas/e02/v1/entregado.json` (huellas de
+  la receta y del GLB/JSON entregados); `MF.escribir` y los armadores de p011 se niegan a sobrescribir lo entregado.
+  E02 v1 no se modificó: receta, GLB y JSON intactos (verificado por sha256). No existía un .blend de E02: el sistema
+  armaba todo en memoria en cada previsualización.
+- B · `estudio/componentes.py`: la receta dividida en tiempo, escenario, personaje:*, despues, camara:*, render,
+  sonido (+ vehículos y pelota) con dependencias y huellas; `python -m estudio componentes`.
+- C · `config.ruta_recurso` (rutas relativas a `CINE_RAIZ`; las absolutas viejas de Dúo Cero se resuelven sin editar
+  sus recetas) y `estudio/recursos.py` (`validar --recursos`): si falta un audio, sus marcas de tiempo o un recurso
+  externo, la preparación se detiene (antes la boca se movía con sílabas del texto sin avisar). Encontró un error
+  real: `DEPENDENCIAS` de `nave_deriva_ampliada` no era una lista literal (Actions no la podía leer).
+- D/E · `estudio/blender/trabajo.py` + `python -m estudio trabajo construir|actualizar [--previa]`: escena de trabajo
+  guardada fuera de Git (`CINE_TRABAJO`); rehace sólo cámaras, personajes, utilería o render afectados; una versión
+  nueva hereda la escena de la anterior. El director se partió en fases (mismo resultado: E01 v2 rearmada da caderas,
+  cámaras y tomas idénticas). Las pruebas encontraron y se corrigieron: fps del FBX (24) si se partía el cierre;
+  cachés de retargets y materiales con referencias borradas; la colección «personajes» excluida al rehacer.
+- F · Previsualización desde la escena de trabajo sin modificarla (sha256 igual antes y después); biblioteca de clips:
+  `clips buscar` por descripción, `clips ficha` (esqueleto en 8 momentos, Pillow, no es render), aviso de clips con
+  estilo marcado en `validar --recursos` (E02 v1: Walking_2 borracho, Walk_To_Stop «llevando a alguien»,
+  Shake_Gesture «Big Vegas»). Reemplazos neutros revisados con sus fichas: Standard_Walk, Stop_Walking,
+  annoyed_head_shake.
+- Pruebas: `pruebas/sistema/test_componentes.py` 16/16 (sin Blender); `pruebas/sistema/test_trabajo.py` 19/19
+  (Blender, sin render); `pruebas/autorizacion/test_autorizacion.py` 40/40. Actions no se tocó.
+- Migración de E02: no hay .blend que migrar; hace falta UN armado completo de una copia de trabajo (≈8 min, sin
+  render) — pendiente de autorización del dueño. Desde ahí, la corrección de la caminata en una v2 rehace sólo a Aiden,
+  la utilería y sus 10 cámaras (el escenario de flores y comedor no), si los nuevos clips frenan en los mismos lugares.

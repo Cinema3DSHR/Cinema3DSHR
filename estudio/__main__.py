@@ -248,6 +248,20 @@ def cmd_trabajo(a):
         print("PREVIA", json.dumps(T.exportar_previa(m, Path(a.previa), res)))
 
 
+def cmd_clips(a):
+    """Buscar clips por su DESCRIPCIÓN (no por el nombre del archivo) y armar su ficha visual."""
+    from estudio import clips as CL
+    if a.accion == "buscar":
+        for c in CL.buscar(" ".join(a.texto), a.funcion or "", a.neutros, a.limite):
+            marca = f"  ⚠ estilo: {', '.join(c['estilo'])}" if c["estilo"] else ""
+            print(f"{c['ref']:70s} {c['duracion_s']:>5}s  {'en el lugar' if c['en_el_lugar'] else 'avanza'}  "
+                  f"«{c['en'] or c['descripcion']}»{marca}")
+        return 0
+    from estudio.blender import ficha_clip as FC
+    for ref in a.texto:
+        print(FC.ficha(ref, Path(a.salida)))
+
+
 def cmd_direccion(a):
     from estudio import direccion as DR
     print(DR.resumen(a.produccion))
@@ -352,6 +366,10 @@ def main(argv=None):
     p = sub.add_parser("previa"); p.add_argument("escena"); p.add_argument("--salida", default="salida/previa")
     p.set_defaults(f=cmd_previa)
     p = sub.add_parser("componentes"); p.add_argument("escena"); p.set_defaults(f=cmd_componentes)
+    p = sub.add_parser("clips"); p.add_argument("accion", choices=["buscar", "ficha"]); p.add_argument("texto", nargs="*")
+    p.add_argument("--funcion", help="caminar, sentarse, hablar, levantarse…"); p.add_argument("--neutros", action="store_true",
+                   help="sólo clips sin estilo marcado"); p.add_argument("--limite", type=int, default=40)
+    p.add_argument("--salida", default="salida/fichas_clips"); p.set_defaults(f=cmd_clips)
     p = sub.add_parser("trabajo"); p.add_argument("accion", choices=["construir", "actualizar"]); p.add_argument("escena")
     p.add_argument("--previa", help="carpeta donde exportar GLB + JSON del visor (nunca sobre lo entregado)")
     p.set_defaults(f=cmd_trabajo)

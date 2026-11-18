@@ -39,6 +39,13 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
   comentar y cerrar el pedido. No tocar lo que la corrección no menciona.
 - Render final: lo pide el dueño por el chat mientras el candado esté quitado (ver arriba).
 
+## Construcción por componentes (docs/SISTEMA_COMPONENTES.md)
+- Elegir clips por su DESCRIPCIÓN: `python -m estudio clips buscar …` y mirar `clips ficha` antes de usarlos;
+  `validar --recursos` avisa los de estilo marcado (borracho, herido, «llevando a alguien»…). Nunca elegir sólo por
+  velocidad o nombre de archivo.
+- Correcciones chicas: `trabajo actualizar` (rehace sólo lo afectado: una cámara, un personaje) y `--previa` para el
+  visor. Lo entregado tiene `entregado.json` y no se sobrescribe; si falta un recurso, la preparación se detiene.
+
 ## Revisión rápida en el navegador (visor HTML)
 El dueño revisa con `visor/visor_escena.html` y manda por el chat un texto `VISOR DE ESCENA …` con un JSON
 `estudio.visor_ordenes/2`: aplicarlo como dice `docs/VISOR_Y_ORDENES_DE_CAMARA.md` (versión nueva, sin render).

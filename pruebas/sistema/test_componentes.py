@@ -81,5 +81,13 @@ with tempfile.TemporaryDirectory() as td:
     copia = Path(td) / "escena.json"
     MF.escribir(copia, m)
     prueba("una copia de trabajo sí se escribe", copia.exists())
+# 6) clips: la descripción manda (Walking_2 es un borracho)
+from estudio import clips as CL  # noqa: E402
+av = CL.avisos_receta(m)
+prueba("E02 v1: avisa la caminata de borracho y el freno «llevando a alguien»",
+       any("Walking_2" in x for x in av) and any("Walk_To_Stop" in x for x in av), av)
+neutros = [c["ref"] for c in CL.buscar("standard walk", "caminar", sin_estilo=True)]
+prueba("buscar caminatas neutras encuentra Standard_Walk y no a los borrachos",
+       "mixamo:animaciones/caminar_correr/Standard_Walk.fbx" in neutros and not any("Walking_2.fbx" in r for r in neutros))
 print(f"\n{ok}/{ok + fallas} comprobaciones OK")
 sys.exit(1 if fallas else 0)
