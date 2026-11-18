@@ -5,14 +5,36 @@
  "genero": "Ciencia ficción · Drama · Romance",
  "sinopsis": "Serie espacial. Aiden lleva muchísimo tiempo a la deriva en una nave. EVA, la inteligencia artificial de la nave, le habla desde las computadoras. Él y Kate quieren volver a la Tierra y de a poco se van a enamorar. Episodio 01 (60 s): EVA le confirma que volver ya no es viable; Kate lleva nueve días sin responder.",
  "clase": "secuencia",
- "formato": {"aspecto": "9:16", "fps": 30, "duracion_s": 60},
+ "formato": {
+  "aspecto": "9:16",
+  "fps": 30,
+  "duracion_s": 60
+ },
  "estado": "en_preparacion",
  "personajes": {
-  "aiden": {"modelo": "humano:chico", "alto_m": 1.80, "voz": "aiden_es_ar"},
-  "kate": {"modelo": "humano:chica", "alto_m": 1.66, "voz": "kate_es_ar", "nota": "no aparece en el E01"},
-  "eva": {"voz": "eva", "nota": "IA de la nave: voz, interfaz y pantallas; sin cuerpo"}
+  "aiden": {
+   "modelo": "humano:chico",
+   "alto_m": 1.8,
+   "voz": "aiden_es_ar"
+  },
+  "kate": {
+   "modelo": "humano:chica",
+   "alto_m": 1.66,
+   "voz": "kate_es_ar",
+   "nota": "no aparece en el E01"
+  },
+  "eva": {
+   "voz": "eva",
+   "nota": "IA de la nave: voz, interfaz y pantallas; sin cuerpo"
+  },
+  "narradora": {
+   "voz": "narradora_deriva",
+   "nota": "voz en off que cuenta partes de la historia; se usa en otros capítulos (no en el E01)"
+  }
  },
  "documento": "E01_documento_produccion_v1_1.txt",
  "creada": "2026-11-18",
- "escenas": ["e01"]
+ "escenas": [
+  "e01"
+ ]
 }

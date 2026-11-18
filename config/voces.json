@@ -139,6 +139,14 @@
     "stability": 0.5
    },
    "modelo": "eleven_v3"
+  },
+  "narradora_deriva": {
+   "voice_id": "9EU0h6CVtEDS6vriwwq5",
+   "nombre": "Veronica — mujer joven, cálida, suave, casi susurrada (biblioteca compartida, es-AR; NARRADORA de «A la deriva», elegida por el dueño para contar partes de la historia en otros capítulos)",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
   }
  }
 }
