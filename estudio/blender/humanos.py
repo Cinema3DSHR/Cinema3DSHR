@@ -65,7 +65,7 @@ def _cabeza_propia(pj: dict) -> dict:
     return {"obj": ob, "z_corte": hn.z + (hh.z - hn.z) * 0.3, "rep": rep, "propia": True}
 
 
-def esculpir_cara(pj: dict, acortar: float = 0.17, menton: float = 0.10, aplanar: float = 1.0):
+def esculpir_cara(pj: dict, acortar: float = 0.17, menton: float = 0.10, aplanar: float = 1.0, alisar: int = 40):
     """La cara de los maniquíes es larga (mucho mentón): se acorta la parte de abajo de la cara (de la línea de los
     ojos al mentón) y el mentón se lleva un poco hacia atrás. Sólo adelante (la nuca y el cráneo no se tocan) y con
     transición suave hacia el cuello. Se cambia la malla en reposo: el esqueleto y las animaciones siguen igual."""
@@ -122,6 +122,39 @@ def esculpir_cara(pj: dict, acortar: float = 0.17, menton: float = 0.10, aplanar
                 continue
             w = float(np.clip((cy - y) / max(1e-6, cy - y_f), 0, 1)) ** 1.5
             P[i, 1] = y + sobra * w * min(1.0, aplanar)
+    # ---- alisar la cara: el modelo trae ondulaciones (pozos y lomos) en mejillas y mentón, y el recorte de arriba
+    # deja pequeños escalones. Alisado de Taubin (no achica) sólo en la cara, apagándose hacia el cráneo y el cuello.
+    if alisar:
+        vec = {}
+        for poly in malla.data.polygons:
+            vs = list(poly.vertices)
+            for k in range(len(vs)):
+                a_, b_ = vs[k], vs[(k + 1) % len(vs)]
+                vec.setdefault(a_, set()).add(b_)
+                vec.setdefault(b_, set()).add(a_)
+        cab_set = set(cab)
+        z_top_cara = ojos + 0.10 * alto
+        peso = {}
+        for i in cab:
+            x, y, z = P[i]
+            if z < z_cuello - 0.01 * u or z > z_top_cara + 0.03 * u:
+                continue
+            adelante = float(np.clip((cy - y) / (0.25 * D) + 0.2, 0, 1))
+            alto_w = float(np.clip((z_top_cara + 0.03 * u - z) / (0.03 * u), 0, 1)) * \
+                float(np.clip((z - (z_cuello - 0.01 * u)) / (0.03 * u), 0, 1))
+            w = adelante * alto_w
+            if w > 0:
+                peso[i] = w
+        idx = np.array(sorted(peso))
+        W = np.array([peso[i] for i in idx])
+        vecs = [np.array([j for j in vec.get(i, ()) if j in cab_set], dtype=np.int64) for i in idx]
+        for it in range(int(alisar)):
+            for lam in (0.55, -0.58):
+                Q = P.copy()
+                for k, i in enumerate(idx):
+                    if len(vecs[k]):
+                        Q[i] = P[i] + (P[vecs[k]].mean(axis=0) - P[i]) * lam * W[k]
+                P = Q
     Mi = np.array(M.inverted())
     co = P @ Mi[:3, :3].T + Mi[:3, 3]
     malla.data.vertices.foreach_set("co", co.astype(np.float32).ravel())
@@ -142,7 +175,7 @@ def preparar(pj: dict, spec: dict, fps: int, nf: int, otros: dict | None = None)
     pj["malla"].data.materials.append(piel)
     if perfil.get("acortar_cara", 0.17):
         esculpir_cara(pj, perfil.get("acortar_cara", 0.17), perfil.get("menton_atras", 0.10),
-                      perfil.get("aplanar_cara", 1.0))
+                      perfil.get("aplanar_cara", 1.0), perfil.get("alisar_cara", 40))
     pj["cabeza_humana"] = _cabeza_propia(pj)
     partes = CA.armar(pj, perfil.get("cara", "el" if perfil["genero"] > 0.5 else "ella"), perfil, pj["coleccion"])
     pj["cara"] = partes
