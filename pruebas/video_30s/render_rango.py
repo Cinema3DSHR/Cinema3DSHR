@@ -19,16 +19,19 @@ a = ap.parse_args()
 out = Path(a.salida); out.mkdir(parents=True, exist_ok=True)
 inicio = dt.datetime.now(dt.timezone.utc)
 m = MF.leer(a.escena); err = MF.validar(m); assert not err, err
-t0 = time.perf_counter(); res = D.construir(m, "revision"); t_build = time.perf_counter() - t0
+t0 = time.perf_counter(); CALIDAD = m.get("render", {}).get("calidad", "revision")   # la de la escena (revision = 720p, hd540 = 540p)
+res = D.construir(m, CALIDAD); t_build = time.perf_counter() - t0
 s = res["escena"]
 s.cycles.samples = a.muestras                       # ÚNICO ajuste de la prueba
 s.render.image_settings.file_format = "PNG"; s.render.image_settings.color_mode = "RGB"; s.render.image_settings.color_depth = "8"
-ESPERADA = (720, 1280) if m.get("render", {}).get("vertical") else (1280, 720)   # 9:16: el mismo 720p, parado
-assert (s.render.resolution_x, s.render.resolution_y, s.render.resolution_percentage, s.render.fps) == (*ESPERADA, 100, 30), "resolución/FPS distintos de 720p@30"
+from estudio import config as CFG
+_q = CFG.CALIDADES[CALIDAD]
+ESPERADA = (_q["alto"], _q["ancho"]) if m.get("render", {}).get("vertical") else (_q["ancho"], _q["alto"])   # 9:16: parado
+assert (s.render.resolution_x, s.render.resolution_y, s.render.resolution_percentage, s.render.fps) == (*ESPERADA, 100, 30), f"resolución/FPS distintos de {ESPERADA}@30"
 assert s.render.engine == "CYCLES"
 assert a.hasta <= res.get("frames_pelicula", s.frame_end), f"la escena tiene {res.get('frames_pelicula', s.frame_end)} fotogramas"
 from estudio import autorizacion as AUT              # REGLA: sin autorización del dueño no se renderiza
-AUT.exigir(m, AUT.config_de("1280x720", 30, a.muestras))
+AUT.exigir(m, AUT.config_de(f'{_q["ancho"]}x{_q["alto"]}', 30, a.muestras))
 def toma_de(f):
     for t in res["tomas"]:
         if t["frame_inicio"] <= f <= t["frame_fin"]: return t

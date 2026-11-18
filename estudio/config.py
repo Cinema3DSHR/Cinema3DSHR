@@ -51,6 +51,8 @@ def resolver(ref: str) -> Path:
 CALIDADES = {
     "humo":     {"ancho": 320,  "alto": 180,  "fps": 30, "muestras": 2,  "motor": "CYCLES", "crf": 30},  # pruebas
     "previa":   {"ancho": 854,  "alto": 480,  "fps": 30, "muestras": 4,  "motor": "CYCLES", "crf": 28},
+    # capítulos de series 9:16 desde «A la deriva» E02 (con "vertical": true sale 540x960), Cycles 6 muestras
+    "hd540":    {"ancho": 960,  "alto": 540,  "fps": 30, "muestras": 6,  "motor": "CYCLES", "crf": 18},
     "revision": {"ancho": 1280, "alto": 720,  "fps": 30, "muestras": 10, "motor": "CYCLES", "crf": 22},
     "final":    {"ancho": 1920, "alto": 1080, "fps": 30, "muestras": 48, "motor": "CYCLES", "crf": 19},
     "final4k":  {"ancho": 3840, "alto": 2160, "fps": 30, "muestras": 64, "motor": "CYCLES", "crf": 18},

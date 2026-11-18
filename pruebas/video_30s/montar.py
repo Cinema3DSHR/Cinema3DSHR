@@ -33,7 +33,7 @@ med, mn = (statistics.median(dentro), min(dentro)) if dentro else (None, None)  
 # 4) MP4: 30 fps constantes, 1280x720, audio original normalizado como en producción
 mp4 = S / f"{a.nombre}.mp4"
 cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-framerate", "30", "-start_number", "1", "-i", str(F / "f_%04d.png")]
-if Path(a.audio).exists(): cmd += ["-i", a.audio, "-map", "0:v", "-map", "1:a", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
+if Path(a.audio).exists(): cmd += ["-i", a.audio, "-map", "0:v", "-map", "1:a", "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-shortest"]
 if a.escena:                                     # «corte a negro» de la última toma (efecto de montaje fundido_negro)
     _m = json.loads(Path(a.escena).read_text()); _ult = max(_m["tomas"], key=lambda t: t["inicio_s"]); _ef = _ult.get("montaje") or {}
     if _ef.get("efecto") == "fundido_negro":
@@ -74,7 +74,7 @@ if a.produccion:
     res = f'{v["width"]}x{v["height"]}'
     (S / "audio.aac").unlink(missing_ok=True)
     if Path(a.audio).exists():
-        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", a.audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-f", "adts", str(S / "audio.aac")], check=True)
+        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", a.audio, "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "320k", "-ar", "48000", "-f", "adts", str(S / "audio.aac")], check=True)
     shutil.copy(mp4, S / f"{eid}_v{ver}_revision.mp4")                        # el nombre que la app busca en el catálogo
     # la app reproduce OGV (Theora + Vorbis), como los videos de revisión del estudio
     subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(mp4), "-vf", "scale='min(1280,iw)':-2", "-c:v", "libtheora",

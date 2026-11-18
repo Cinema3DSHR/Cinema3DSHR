@@ -534,3 +534,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   hay 5 nuevas del modo sin candado).
 - CLAUDE.md, REVISION_Y_AUTORIZACION.md, GUIA_PARA_OTRO_CHAT.md y VISOR_Y_ORDENES_DE_CAMARA.md actualizados. Claude
   sigue sin renderizar por iniciativa propia.
+
+## 18/11/2026 — A la deriva: configuración de los próximos capítulos (pedido del dueño)
+
+- E01 v2 le gustó al dueño. Desde E02: **540×960 vertical, 30 fps, MP4 H.264, Cycles 6 muestras** (mismos parámetros),
+  hasta 60 trabajos; duración según los diálogos (2 min o más). Nueva calidad `hd540` en `estudio/config.CALIDADES`
+  (960x540; con `"vertical": true` sale 540x960). `video30.yml` y `render_rango.py` ya no están fijos en 720p: usan la
+  calidad de la escena (la verificación también). Audio AAC 320 kbps (antes 192). Anotado en
+  `producciones/p011_a_la_deriva/produccion.json` → `render_capitulos`.
+- Revisión de cada escena: GLB liviano + JSON para el visor HTML por el chat (`python -m estudio previa`), sin render.
+  Candado del render quitado por el dueño (otro chat): se renderiza cuando él lo pide en el chat.

@@ -1,4 +1,4 @@
-name: Video 30 s (Cycles 6 muestras, 720p) en paralelo
+name: Video en paralelo (Cycles, resolución de la escena)
 
 # Produce un video COMPLETO repartiendo los fotogramas entre trabajos simultáneos y lo publica en una release.
 # No modifica el estudio: usa pruebas/video_30s/* (render por rangos, audio, montaje) sobre una copia de producción.
@@ -74,7 +74,7 @@ jobs:
           # REGLA PERMANENTE (docs/REVISION_Y_AUTORIZACION.md): ningún render —tampoco un ensayo con «limite»— sin que
           # el dueño haya revisado ESTA versión en la app, la haya aprobado y haya tocado AUTORIZAR RENDER FINAL.
           gh api "repos/${{ github.repository }}/issues?state=all&per_page=100" --paginate | jq -s 'add // []' > issues.json
-          python3 -m estudio autorizacion verificar "$ESCENA" --issues issues.json --resolucion 1280x720 --fps 30 --muestras ${{ inputs.muestras }}
+          python3 -m estudio autorizacion verificar "$ESCENA" --issues issues.json --resolucion "$(python3 -c "import json,sys; sys.path.insert(0,'.'); from estudio import config as C; m=json.load(open('$ESCENA')); q=C.CALIDADES[m.get('render',{}).get('calidad','revision')]; print(f\"{q['ancho']}x{q['alto']}\")")" --fps 30 --muestras ${{ inputs.muestras }}
       - name: Repartir los fotogramas
         id: plan
         env:
@@ -264,7 +264,7 @@ jobs:
         run: |
           R=${{ github.repository }}; T="${{ inputs.etiqueta }}"
           gh release view "$T" --repo "$R" >/dev/null 2>&1 || gh release create "$T" --repo "$R" --latest=false \
-            --title "Prueba 30 s — Cycles ${{ inputs.muestras }} muestras, 720p" --notes "Video de 30 s renderizado en paralelo en GitHub Actions. Informe en informe_rendimiento.json. Secuencia de fotogramas en frames_NN.zip."
+            --title "${{ inputs.etiqueta }}" --notes "Video renderizado en paralelo en GitHub Actions (Cycles ${{ inputs.muestras }} muestras). Informe en informe_rendimiento.json. Secuencia de fotogramas en frames_NN.zip."
           if [ -n "${{ inputs.produccion }}" ]; then
             gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/audio.aac salida/informe.json salida/$(basename "$(dirname "$(dirname "${{ inputs.escena }}")")")_v$(basename "$(dirname "${{ inputs.escena }}")" | tr -dc 0-9)_* --repo "$R" --clobber
           else

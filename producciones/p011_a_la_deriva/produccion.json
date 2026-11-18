@@ -36,5 +36,16 @@
  "creada": "2026-11-18",
  "escenas": [
   "e01"
- ]
+ ],
+ "render_capitulos": {
+  "desde": "e02",
+  "calidad": "hd540",
+  "resolucion": "540x960 (vertical)",
+  "fps": 30,
+  "muestras": 6,
+  "formato": "MP4 H.264 + AAC 320 kbps 48 kHz",
+  "trabajos": 60,
+  "duracion": "2 min o más, según los diálogos (nunca se recortan)",
+  "revision": "GLB liviano para el visor HTML por el chat antes de renderizar"
+ }
 }
