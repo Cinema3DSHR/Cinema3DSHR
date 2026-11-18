@@ -72,6 +72,7 @@ func _initialize() -> void:
 		["pelo_atras", Vector3(-0.35, cabeza + 0.1, -0.5), Vector3(0, cabeza, 0), 32.0],
 		["pies", Vector3(0.5, 0.25, 0.9), Vector3(0, 0.06, 0.05), 30.0],
 		["cuello", Vector3(0.22, alto * 0.84, 0.5), Vector3(0, alto * 0.835, 0), 28.0],
+		["cara_perfil", Vector3(0.68, cabeza, 0.02), Vector3(0, cabeza, 0.02), 30.0],
 		["cuello_atras", Vector3(-0.25, alto * 0.86, -0.5), Vector3(0, alto * 0.835, 0), 28.0],
 	]
 	_poner(0)

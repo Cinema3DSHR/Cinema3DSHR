@@ -12,6 +12,9 @@ def main():
     salida = Path(a[0]); salida.mkdir(parents=True, exist_ok=True)
     expr = a[a.index("--expresion") + 1] if "--expresion" in a else "neutral"
     especiales = {"habla": "neutral", "parpadeo": "neutral"}
+    audio = a[a.index("--audio") + 1] if "--audio" in a else None
+    cuadro = int(a[a.index("--cuadro") + 1]) if "--cuadro" in a else None
+    texto = a[a.index("--texto") + 1] if "--texto" in a else "Hola... ¿me escuchás?"
     caras = {expr: [{"t": 0, "expr": especiales.get(expr, expr)}]}
     quienes = [x for x in a[1:] if x in ("chico", "chica")] or ["chico", "chica"]
     pelo = a[a.index("--pelo") + 1] if "--pelo" in a else None
@@ -19,16 +22,17 @@ def main():
         bpy.ops.wm.read_factory_settings(use_empty=True)
         PJ.reiniciar()
         sc = bpy.context.scene
-        sc.frame_start, sc.frame_end = 1, 90
+        sc.frame_start, sc.frame_end = 1, 240
         alto = 1.80 if q == "chico" else 1.66
         cara = {"expresiones": caras[expr], "parpadeo": False}
         if expr == "habla":
-            cara["habla"] = [{"inicio_s": 0, "texto": "Hola... ¿me escuchás?", "intensidad": 1.0}]
+            cara["habla"] = [{"inicio_s": 0, "texto": texto, "intensidad": 1.0, **({"audio": audio} if audio else {})}]
         spec = {"id": q, "modelo": f"humano:{q}", "alto_m": alto, "acciones": [], "cara": cara}
         if pelo:
             spec["perfil"] = {"pelo_modelo": pelo}
         pj = PJ.crear(spec, 30)
-        bpy.context.scene.frame_set(5 if expr == "habla" else 20)   # la expresión ya completa (transición 0,25 s)
+        sc.frame_end = max(sc.frame_end, (cuadro or 0) + 5)
+        bpy.context.scene.frame_set(cuadro or (5 if expr == "habla" else 20))   # la expresión ya completa (transición 0,25 s)
         if expr == "parpadeo":
             for o in bpy.data.objects:
                 if o.type == "MESH" and o.data.shape_keys:
@@ -48,7 +52,7 @@ def main():
                 o.data.vertices.foreach_set("co", co)
         from estudio.blender import previa as PV
         PV._aplanar_materiales()                    # como la previsualización real (colores planos)
-        bpy.ops.export_scene.gltf(filepath=str(salida / f"{q}_{expr}{'_' + pelo if pelo else ''}.glb"), export_format="GLB",
+        bpy.ops.export_scene.gltf(filepath=str(salida / f"{q}_{expr}{'_' + pelo if pelo else ''}{'_' + str(cuadro) if cuadro else ''}.glb"), export_format="GLB",
                                   export_apply=False, export_animations=False, export_image_format="WEBP")
         print("OK", q, expr)
 

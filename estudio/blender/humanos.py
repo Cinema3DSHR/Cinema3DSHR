@@ -65,7 +65,7 @@ def _cabeza_propia(pj: dict) -> dict:
     return {"obj": ob, "z_corte": hn.z + (hh.z - hn.z) * 0.3, "rep": rep, "propia": True}
 
 
-def esculpir_cara(pj: dict, acortar: float = 0.17, menton: float = 0.10):
+def esculpir_cara(pj: dict, acortar: float = 0.17, menton: float = 0.10, aplanar: float = 1.0):
     """La cara de los maniquíes es larga (mucho mentón): se acorta la parte de abajo de la cara (de la línea de los
     ojos al mentón) y el mentón se lleva un poco hacia atrás. Sólo adelante (la nuca y el cráneo no se tocan) y con
     transición suave hacia el cuello. Se cambia la malla en reposo: el esqueleto y las animaciones siguen igual."""
@@ -99,6 +99,29 @@ def esculpir_cara(pj: dict, acortar: float = 0.17, menton: float = 0.10):
         fz = float(np.clip((nariz - z) / max(1e-6, nariz - menton_z), 0, 1))
         dy = menton * fz * max(0.0, cy - y)
         P[i] = (x, y + dy * wf, z + dz * wf)
+    # ---- aplanar el frente: de las cejas para abajo la cara no puede sobresalir más que la frente (los maniquíes
+    # tienen la boca y el mentón adelantados, como un hocico). Línea objetivo: a la altura de las cejas igual que la
+    # frente, y retrocediendo de a poco hasta el mentón (1,2 cm); se empuja hacia atrás lo que sobra, más cuanto más
+    # adelante está el punto (la nuca y los costados no se mueven).
+    if aplanar:
+        H2 = P[cab]
+        z_ceja = ojos + 0.06 * alto
+        banda = np.abs(H2[:, 2] - z_ceja) < 0.012 * u
+        y_frente = H2[banda][:, 1].min() if banda.any() else H2[:, 1].min()
+        for i in cab:
+            x, y, z = P[i]
+            if z >= z_ceja or z < z_cuello:
+                continue
+            f = float(np.clip((z_ceja - z) / max(1e-6, z_ceja - menton_z), 0, 1.3))
+            y_obj = y_frente + 0.012 * u * f * aplanar
+            # frente de la cara a esta altura
+            fila = np.abs(P[cab][:, 2] - z) < 0.006 * u
+            y_f = P[cab][fila][:, 1].min() if fila.any() else y
+            sobra = y_obj - y_f
+            if sobra <= 0:
+                continue
+            w = float(np.clip((cy - y) / max(1e-6, cy - y_f), 0, 1)) ** 1.5
+            P[i, 1] = y + sobra * w * min(1.0, aplanar)
     Mi = np.array(M.inverted())
     co = P @ Mi[:3, :3].T + Mi[:3, 3]
     malla.data.vertices.foreach_set("co", co.astype(np.float32).ravel())
@@ -118,7 +141,8 @@ def preparar(pj: dict, spec: dict, fps: int, nf: int, otros: dict | None = None)
     pj["malla"].data.materials.clear()
     pj["malla"].data.materials.append(piel)
     if perfil.get("acortar_cara", 0.17):
-        esculpir_cara(pj, perfil.get("acortar_cara", 0.17), perfil.get("menton_atras", 0.10))
+        esculpir_cara(pj, perfil.get("acortar_cara", 0.17), perfil.get("menton_atras", 0.10),
+                      perfil.get("aplanar_cara", 1.0))
     pj["cabeza_humana"] = _cabeza_propia(pj)
     partes = CA.armar(pj, perfil.get("cara", "el" if perfil["genero"] > 0.5 else "ella"), perfil, pj["coleccion"])
     pj["cara"] = partes
