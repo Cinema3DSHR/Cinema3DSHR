@@ -45,7 +45,8 @@ BANDEJA = Vector((-1.12, -15.84, 0.68))                             # bandeja de
 MESA_KATE = Vector((0.0, -30.0, 0.0))                              # mesa de Kate (centro, al piso)
 MESA_ALTO = 0.75
 KATE_SILLA = Vector((0.0, -30.62, 0.0))                            # Kate sentada, mira a +Y (hacia la puerta)
-AIDEN_MESA = Vector((0.0, -29.32, 0.0))                            # donde se para Aiden, del otro lado de la mesa
+AIDEN_MESA = Vector((0.0, -29.32, 0.0))
+TABLET = Vector((MESA_KATE.x + 0.28, MESA_KATE.y - 0.12, MESA_ALTO + 0.115))   # centro de la pantalla de Kate                            # donde se para Aiden, del otro lado de la mesa
 
 
 def _lin(c):
@@ -397,10 +398,18 @@ def _pantalla_kate(col):
     for i in range(1, len(texto) + 1):
         estados[f"t{i:02d}"] = (texto[:i], True, False)
     estados["listo"] = (texto, True, True)
-    centro = Vector((MESA_KATE.x + 0.28, MESA_KATE.y - 0.12, MESA_ALTO + 0.06))
+    # sobre su soporte, con el borde de abajo 1,5 cm arriba de la mesa (en la v1/v2 quedaba hundido 3–4 cm en la tapa
+    # y no se leía el mensaje)
+    centro = Vector(TABLET)
     rot = (math.radians(62), 0, 0)                      # la pantalla mira a −Y (a Kate) y hacia arriba
     K.caja("tablet_kate", centro + Vector((0, 0.008, -0.004)), (0.31, 0.012, 0.22), bpy.data.materials["metal_oscuro"],
            col).rotation_euler = (math.radians(62 - 90), 0, 0)
+    # soporte: pata trasera apoyada en la mesa y un tope adelante
+    pata = K.caja("tablet_kate_pata", (centro.x, centro.y + 0.075, MESA_ALTO + 0.055), (0.12, 0.008, 0.115),
+                  bpy.data.materials["metal_oscuro"], col)
+    pata.rotation_euler = (math.radians(30), 0, 0)
+    K.caja("tablet_kate_tope", (centro.x, centro.y - 0.045, MESA_ALTO + 0.008), (0.3, 0.02, 0.016),
+           bpy.data.materials["metal_oscuro"], col)
     planos = {}
     for nom, (t, cur, env) in estados.items():
         m = _pantalla(f"ui_msj_{nom}", ui_mensaje(t, cur, env), 1.4)
@@ -461,7 +470,7 @@ def construir(parametros: dict | None = None) -> dict:
         "comedor": (0.0, (COM["y0"] + COM["y1"]) / 2, 1.2),
         "mesa_kate": (MESA_KATE.x, MESA_KATE.y, MESA_ALTO),
         "kate": (KATE_SILLA.x, KATE_SILLA.y + 0.05, 1.15),
-        "pantalla_kate": (MESA_KATE.x + 0.28, MESA_KATE.y - 0.12, MESA_ALTO + 0.06),
+        "pantalla_kate": tuple(TABLET),
         "flor_mesa": tuple(p.get("flor_mesa", (MESA_KATE.x - 0.08, MESA_KATE.y + 0.08, MESA_ALTO + 0.01))),
         "flor_mesa2": tuple(p.get("flor_mesa2", (MESA_KATE.x - 0.2, MESA_KATE.y - 0.18, MESA_ALTO))),
         "botella_mesa": tuple(p.get("botella_mesa", (MESA_KATE.x - 0.3, MESA_KATE.y + 0.15, MESA_ALTO))),
