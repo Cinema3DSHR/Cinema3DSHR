@@ -1,6 +1,6 @@
 # 3D Film Studio — instrucciones para Claude Code
 
-Hablar con el dueño en español rioplatense. Leer primero `docs/REGISTRO.md` (estado) y `docs/FLUJO_DE_PRODUCCION.md` (cómo producir).
+Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GUIA_PARA_OTRO_CHAT.md` (todo lo necesario sin auditar). Leer primero `docs/REGISTRO.md` (estado) y `docs/FLUJO_DE_PRODUCCION.md` (cómo producir).
 
 ## Repositorios
 - **Cinema3DSHR** (este, público): todo el trabajo. Rama de la sesión indicada por el sistema.

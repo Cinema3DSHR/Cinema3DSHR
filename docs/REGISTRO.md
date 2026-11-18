@@ -447,3 +447,24 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   (huella `61228e9425de750c`). Único cambio fuera de los números: la cámara se estiró a 52,77 s para tapar un resto
   de 0,14 s (4 cuadros) de la toma vieja antes de t07. Comprobado en la captura: Aiden de tres cuartos, cara a la
   vista. La aprobación de v1 no vale para v2. Prueba de la app 18/18. Sin render.
+
+### 18/11/2026 — Guía para otro chat de Claude
+- Pedido del dueño: un documento para que otro chat aprenda a trabajar en la organización sin auditar los repositorios.
+- `docs/GUIA_PARA_OTRO_CHAT.md`: dueño y trato, repositorios y permisos, reglas (sobre todo la de render), mapa del
+  estudio y de los flujos, recetas, estado actual (Dúo Cero, concurrencia, app), cómo atender pedidos típicos y
+  pruebas. `CLAUDE.md` la nombra como punto de partida.
+
+### 18/11/2026 — Respaldo completo de lo enviado por el chat + inventario de recursos en la guía
+- Pedido del dueño: «subí todo y actualizá el documento así tiene esos recursos nuevos (helicópteros, los nuevos
+  personajes)».
+- Revisado todo lo que mandó por el chat: helicóptero y los otros 12 GLB, auto rampa, protagonistas, Messi, Cristiano,
+  Stickman definitivos y armas Stickman YA estaban en mixamo-respaldo; Sweet Home está en Nexus. Faltaban y se
+  agregaron (mixamo-respaldo `2e62ee5`, sólo agregados): `personajes_pelicula/versiones_anteriores/stickman_*_v1`
+  (primera tanda, no usar) y `futbol_free_kick_swipe/01_animaciones/json_originales/` (2 023 clips JSON de Fútbol 5).
+- `docs/GUIA_PARA_OTRO_CHAT.md` § 4 bis: inventario de recursos (personajes, vehículos con el helicóptero y cómo se le
+  ponen los rotores, decorados, otros repos y recursos del estudio).
+
+### 18/11/2026 — Pack Sweet Home 3D respaldado en mixamo-respaldo
+- Comparado archivo por archivo: los 723 GLB y `models.json` del pack que mandó el dueño están idénticos en Nexus
+  (`game/assets/sh3d`), pero faltaban las 723 miniaturas y el README. Se guardó el zip original completo, sin
+  modificar, en `mixamo-respaldo/sweethome3d/` (`9739149`, con LEEME y sha256). La guía lo explica (§ 4 bis).
