@@ -1,0 +1,67 @@
+name: Montar una corrida ya renderizada
+
+# Arma el video con los fotogramas y el audio que dejó una corrida de «Video en paralelo» (video30.yml) SIN volver a
+# renderizar: baja sus artefactos, rellena los fotogramas que falten repitiendo el anterior (se informa cuáles),
+# codifica el MP4 con montar.py y lo publica en la release. Sólo a mano (pedido del dueño).
+on:
+  workflow_dispatch:
+    inputs:
+      corrida: {description: "ID de la corrida de video30 que renderizó los fotogramas", required: true}
+      escena: {description: "Ruta del escena.json", required: true}
+      etiqueta: {description: "Tag de la release", required: true}
+      nombre: {description: "Nombre del MP4 (sin extensión)", required: true}
+      produccion: {description: "Id de la producción", required: true}
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - uses: actions/download-artifact@v4
+        with: {path: descargas, run-id: "${{ inputs.corrida }}", github-token: "${{ github.token }}"}
+      - name: Reunir la secuencia y rellenar los fotogramas que falten
+        id: reunir
+        env:
+          ESCENA: ${{ inputs.escena }}
+        run: |
+          mkdir -p frames && for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d frames; done
+          python3 - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          m = json.load(open(os.environ["ESCENA"]))
+          total = round(m["duracion_s"] * m.get("render", {}).get("fps", 30))
+          F = Path("frames")
+          faltan = [n for n in range(1, total + 1) if not (F / f"f_{n:04d}.png").exists()]
+          for n in faltan:                       # se repite el fotograma anterior que exista
+              k = n - 1
+              while k > 0 and not (F / f"f_{k:04d}.png").exists():
+                  k -= 1
+              shutil.copy(F / f"f_{k:04d}.png", F / f"f_{n:04d}.png")
+          print(f"total {total} · rellenados {len(faltan)}: {faltan}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"total={total}\nrellenados={json.dumps(faltan)}\n")
+          PY
+      - name: Codificar el MP4 y armar el informe
+        run: >
+          python3 pruebas/video_30s/montar.py frames descargas/audio/audio.wav salida --total ${{ steps.reunir.outputs.total }}
+          --nombre "${{ inputs.nombre }}" --produccion "${{ inputs.produccion }}" --escena "${{ inputs.escena }}"
+          --escena-id "$(basename "$(dirname "$(dirname "${{ inputs.escena }}")")")"
+          --version "$(basename "$(dirname "${{ inputs.escena }}")" | tr -dc 0-9)"
+      - name: Publicar en la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          R=${{ github.repository }}; T="${{ inputs.etiqueta }}"
+          E="$(basename "$(dirname "$(dirname "${{ inputs.escena }}")")")_v$(basename "$(dirname "${{ inputs.escena }}")" | tr -dc 0-9)"
+          echo '${{ steps.reunir.outputs.rellenados }}' > salida/${E}_fotogramas_rellenados.json
+          gh release view "$T" --repo "$R" >/dev/null 2>&1 || gh release create "$T" --repo "$R" --latest=false --title "$T" --notes "Entregables de $T."
+          gh release upload "$T" salida/${{ inputs.nombre }}.mp4 salida/${E}_* --repo "$R" --clobber
+      - uses: actions/upload-artifact@v4
+        with: {name: entrega, path: salida/, retention-days: 14}
