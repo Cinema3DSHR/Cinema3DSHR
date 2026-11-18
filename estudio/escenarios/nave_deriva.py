@@ -32,6 +32,9 @@ from mathutils import Matrix, Vector
 from estudio.blender import kit as K
 from estudio.blender import importar as I
 
+# Recursos externos (para que Actions baje sólo esto): la silla de oficina de Sweet Home 3D (Nexus).
+DEPENDENCIAS = ["sh3d:models/chair_office_chair.glb"]
+
 PARAMETROS = {"semilla": 11}
 
 # ---------------------------------------------------------------------------------------------- posiciones clave

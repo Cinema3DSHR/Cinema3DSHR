@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       escena: {description: "Ruta del escena.json (p. ej. producciones/<produccion>/escenas/e01/v2/escena.json)", required: true}
+      mixamo_ref: {description: "Rama de mixamo-respaldo (vacío = la variable MIXAMO_REF)", required: false, default: ""}
       rama_catalogo: {description: "Rama desde la que se rearma el catálogo (vacío = la rama de este flujo)", required: false, default: ""}
 
 permissions:
@@ -73,7 +74,7 @@ jobs:
           pip install -q -r requirements-produccion.txt
       - uses: actions/checkout@v4
         if: ${{ steps.plan.outputs.mixamo != '' }}
-        with: {repository: webmaletin-art/mixamo-respaldo, ref: "${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/mixamo-respaldo, sparse-checkout: "${{ steps.plan.outputs.mixamo }}", sparse-checkout-cone-mode: false}
+        with: {repository: webmaletin-art/mixamo-respaldo, ref: "${{ inputs.mixamo_ref || vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/mixamo-respaldo, sparse-checkout: "${{ steps.plan.outputs.mixamo }}", sparse-checkout-cone-mode: false}
       - uses: actions/checkout@v4
         if: ${{ steps.plan.outputs.nexus != '' }}
         with: {repository: webmaletin-art/Operaci-n-Nexus-1, ref: "${{ vars.NEXUS_REF }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/nexus, sparse-checkout: "${{ steps.plan.outputs.nexus }}", sparse-checkout-cone-mode: false}

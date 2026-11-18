@@ -416,3 +416,9 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Previsualización hecha en el contenedor y probada con `pruebas/revision/revision_ui.gd` (18/18; la prueba pedía 2
   personajes y este episodio tiene 1) y capturas por toma (`pruebas/nave/tomas.gd`). **No publicada**: `previa.yml`
   necesita los modelos y pelos en mixamo-respaldo (autorización del dueño pendiente). Sin render.
+- Con autorización del dueño («copialos a mixamo-respaldo y publicala»): los maniquíes (chico, chica, con sus `.fbm`)
+  y los pelos `hair02` y `summer_girl` quedaron respaldados sin modificar en mixamo-respaldo,
+  `personajes_pelicula/a_la_deriva/` (rama `claude/inspiring-sagan-1ogr0n`, hecha sobre `ccr-6d21fe8a-76t9c3`;
+  hashes en `indice_personajes.json`). `humanos.py` y `pelo_modelo.py` los leen de ahí (`mixamo:`), `blender_deps`
+  los declara para Actions, `nave_deriva.DEPENDENCIAS` declara la silla de Sweet Home y `previa.yml` acepta la
+  entrada `mixamo_ref` (rama del respaldo). Huella nueva de e01/v1: `f7e399b32f6f0463`.

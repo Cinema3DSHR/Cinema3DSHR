@@ -7,7 +7,7 @@ Cada pelo del catálogo trae su malla (tarjetas con textura transparente) y sus 
   · la textura se tiñe del color del personaje conservando el dibujo de las hebras; la transparencia va en la misma
     imagen (recorte «MASK» en el GLB: el EDITOR 3D del teléfono la respeta);
   · sigue a la cabeza (pesos al hueso Head); el pelo largo pasa de a poco a seguir la espalda debajo del cuello.
-Los archivos viven fuera del repositorio (fuente «subidas:», ../modelos_subidos).
+Los archivos viven en mixamo-respaldo (personajes_pelicula/a_la_deriva/pelos).
 """
 from __future__ import annotations
 import math
@@ -20,7 +20,7 @@ from mathutils.bvhtree import BVHTree
 
 from estudio import config
 
-BASE = "subidas:un_sueno_de_a_dos/pelos"
+BASE = "mixamo:personajes_pelicula/a_la_deriva/pelos"  # «bob» no se respaldó (no se usa)
 CATALOGO = {
     # el del dueño para él: corto, tarjetas en gris para teñir
     "hair02": {"archivo": f"{BASE}/hair02/hair02.fbx", "color": f"{BASE}/hair02/hair02_D.tga",

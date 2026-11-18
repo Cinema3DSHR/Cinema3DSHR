@@ -1,5 +1,8 @@
 """Dependencias de los modelos de personajes (sin importar bpy, para el planificador de Actions)."""
 MODELOS_DEPS = {
+    # «A la deriva» (p011): maniquí Tripo + su pelo (carpetas enteras: el .fbm trae las texturas)
+    "humano:chico": ["mixamo:personajes_pelicula/a_la_deriva/chico", "mixamo:personajes_pelicula/a_la_deriva/pelos/hair02"],
+    "humano:chica": ["mixamo:personajes_pelicula/a_la_deriva/chica", "mixamo:personajes_pelicula/a_la_deriva/pelos/summer_girl"],
     "futbol:jugador": ["mixamo:futbol_free_kick_swipe/exportados/jugador_con_animaciones.glb",
                        "mixamo:futbol_free_kick_swipe/02_jugador/assets/characters/player",
                        "mixamo:futbol_free_kick_swipe/raices_clips.json"],

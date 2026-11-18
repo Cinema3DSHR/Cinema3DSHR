@@ -17,7 +17,7 @@ Las rutas de audio van RELATIVAS al repositorio (en GitHub Actions la carpeta de
 """
 from __future__ import annotations
 
-BASE_SUBIDAS = "subidas:un_sueno_de_a_dos"
+BASE_SUBIDAS = "mixamo:personajes_pelicula/a_la_deriva"  # respaldo del dueño (antes subidas:un_sueno_de_a_dos)
 MODELOS = {
     "humano:chico": {"ref": f"{BASE_SUBIDAS}/chico/tripo_convert_149bc4a7-9bf8-493a-b51e-14da191a88e2.fbx",
                      "alto_modelo": 0.93},
