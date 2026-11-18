@@ -11,7 +11,9 @@ signal catalogo_listo(catalogo: Dictionary, desde_red: bool)
 signal aviso(texto: String)
 signal progreso(clave: String, fraccion: float)
 
-const REPO := "webmaletin-art/Cinema3DSHR"
+const REPO := "Cinema3DSHR/Cinema3DSHR"  # el repo se mudó a la organización (la dirección vieja da 307 al crear pedidos)
+## La clave con la que se guarda cifrado el token sigue usando el nombre viejo: así no hay que cargarlo de nuevo.
+const REPO_CLAVE := "webmaletin-art/Cinema3DSHR"
 const URL_CATALOGO := "https://github.com/%s/releases/download/catalogo/catalogo.json"
 const API := "https://api.github.com/repos/%s"
 const CACHE := "user://cache"
@@ -162,7 +164,7 @@ func limpiar_cache() -> void:
 # ------------------------------------------------------------------------------------------- cuenta (token)
 
 func _clave() -> String:
-	return "cine3d|" + OS.get_unique_id() + "|" + REPO
+	return "cine3d|" + OS.get_unique_id() + "|" + REPO_CLAVE
 
 func guardar_token(t: String) -> void:
 	var f := FileAccess.open_encrypted_with_pass(ARCH_TOKEN, FileAccess.WRITE, _clave())

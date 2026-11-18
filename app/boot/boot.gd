@@ -7,7 +7,7 @@ extends Control
 ## Si la release trae una APK más nueva (cambió el motor o el lanzador), la interfaz ofrece instalarla:
 ## está firmada con la misma clave, así que se instala ENCIMA sin desinstalar ni perder datos.
 
-const REPO := "webmaletin-art/Cinema3DSHR"
+const REPO := "Cinema3DSHR/Cinema3DSHR"
 const URL_APP_JSON := "https://github.com/%s/releases/download/app/app.json"
 const DIR_APP := "user://app"
 

@@ -10,7 +10,7 @@ PRODUCCIONES = RAIZ / "producciones"
 SALIDA = Path(os.environ.get("CINE_SALIDA", RAIZ / "salida"))  # renders y temporales (fuera de Git)
 
 # Repositorio público donde se publican entregables (GitHub Releases) y el catálogo que lee la app.
-REPO = os.environ.get("CINE_REPO", "webmaletin-art/Cinema3DSHR")
+REPO = os.environ.get("CINE_REPO", "Cinema3DSHR/Cinema3DSHR")
 
 # Fuentes de recursos pesados reutilizables. Se referencian como "<fuente>:<ruta relativa>".
 # Los originales NUNCA se modifican: el sistema sólo lee de estas carpetas.

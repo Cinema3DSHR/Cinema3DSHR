@@ -426,3 +426,12 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   en verde: exportó, publicó en la release de la producción y rearmó el catálogo). Antes se armó igual en el
   contenedor sin la carpeta de subidas (todo desde mixamo-respaldo) y pasó `revision_ui.gd` 18/18. Espera la revisión
   del dueño en EDITOR 3D. Sin render.
+
+## 18/11/2026 — La app rechazaba APROBAR con «código 307»
+
+- Causa: el repositorio ya está en la organización (`Cinema3DSHR/Cinema3DSHR`) y la app seguía usando
+  `webmaletin-art/Cinema3DSHR`. Las lecturas siguen por la redirección de GitHub, pero crear el pedido (POST) recibe
+  307 y la app lo tomaba como rechazo. Corregido `REPO` en `app/main/api.gd`, `app/boot/boot.gd` y
+  `estudio/config.py` (paso 13 de `docs/MIGRACION_ORGANIZACION.md`). La clave del token guardado sigue con el nombre
+  viejo (`REPO_CLAVE`) para no pedirlo de nuevo. Llega en `app.pck` (se baja solo al abrir la app). Prueba de la app
+  18/18. El dueño pidió «renderizalo» por chat: no se renderiza hasta que APROBAR + AUTORIZAR salgan desde la app.
