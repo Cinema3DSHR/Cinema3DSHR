@@ -1,0 +1,82 @@
+{
+  "aspect": 1.777778,
+  "camera_id": "camera_001",
+  "coordinates": "Blender: metros, Z arriba; rotation = rotation_euler XYZ de la cámara de Blender",
+  "created": "2026-11-18T09:33:58Z",
+  "escena": "e01",
+  "formato": "estudio.camara/1",
+  "forward": {
+    "x": -0.364918,
+    "y": -0.887176,
+    "z": -0.282407
+  },
+  "fov": 54.4322,
+  "fov_h_deg": 84.8725,
+  "fov_v_deg": 54.4322,
+  "frame_capture": 1489,
+  "godot": {
+    "basis_columns": [
+      [
+        -0.924821,
+        0.0,
+        -0.380402
+      ],
+      [
+        -0.107428,
+        0.959295,
+        0.261176
+      ],
+      [
+        0.364918,
+        0.282407,
+        -0.887176
+      ]
+    ],
+    "origin": [
+      0.319349,
+      1.376554,
+      -1.846681
+    ]
+  },
+  "huella_escena": "f7e399b32f6f0463",
+  "lens_mm": 19.6875,
+  "name": "01 ver cafa",
+  "notes": "Encuadre elegido por el director",
+  "position": {
+    "x": 0.319349,
+    "y": 1.846681,
+    "z": 1.376554
+  },
+  "produccion": "p011_a_la_deriva",
+  "quaternion": [
+    0.15524963,
+    0.11613329,
+    0.58763045,
+    0.78555787
+  ],
+  "resolution": [
+    1280,
+    720
+  ],
+  "rotation": {
+    "x": 73.5961,
+    "y": 0.0,
+    "z": 157.6414
+  },
+  "rotation_mode": "XYZ",
+  "sensor_fit": "HORIZONTAL (AUTO, imagen apaisada)",
+  "sensor_mm": 36.0,
+  "shot": "t06_reflejo",
+  "source_view": "libre",
+  "time_capture": 49.6313,
+  "time_end": 52.63,
+  "time_start": 49.63,
+  "transition": "corte",
+  "up": {
+    "x": -0.107428,
+    "y": -0.261176,
+    "z": 0.959295
+  },
+  "version_escena": 1,
+  "issue": 5
+}

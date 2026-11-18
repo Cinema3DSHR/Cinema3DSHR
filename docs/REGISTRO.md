@@ -437,3 +437,13 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   temporal (artefacto `3DFilmStudio-PRUEBA-firma-temporal-v7`, corrida 44276199602): en el repositorio movido no está
   el secreto `ANDROID_KEYSTORE_PASSWORD` ni la release `app`, así que no hay actualización automática; hay que
   instalarla a mano. El dueño pidió «renderizalo» por chat: no se renderiza hasta que APROBAR + AUTORIZAR salgan desde la app.
+
+## 18/11/2026 — A la deriva E01 v2: cámara del director (pedido #5)
+
+- El dueño aprobó v1 desde la app (#6, ya funciona con la dirección nueva del repositorio) y pidió una cámara que
+  muestre un poco la cara (#5, «01 ver cafa», t06_reflejo, 49,63–52,63 s). El flujo «direccion» falló porque corre
+  en la rama por defecto, donde p011 todavía no está: la cámara se guardó igual que lo hace el flujo en
+  `producciones/p011_a_la_deriva/director/cameras/camera_001.json` y se aplicó con `aplicar-direccion` → **v2**
+  (huella `61228e9425de750c`). Único cambio fuera de los números: la cámara se estiró a 52,77 s para tapar un resto
+  de 0,14 s (4 cuadros) de la toma vieja antes de t07. Comprobado en la captura: Aiden de tres cuartos, cara a la
+  vista. La aprobación de v1 no vale para v2. Prueba de la app 18/18. Sin render.
