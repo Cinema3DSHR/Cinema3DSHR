@@ -10,6 +10,8 @@ var i := 0
 var espera := 0
 var salida := ""
 var esc: Node
+var vis := {}                     # Node3D -> [[f0, f1), …] (como el EDITOR 3D)
+var fps := 30.0
 
 func _initialize() -> void:
 	var a := OS.get_cmdline_user_args()
@@ -24,6 +26,11 @@ func _initialize() -> void:
 	root.add_child(esc)
 	var d = JSON.parse_string(FileAccess.get_file_as_string(a[1]))
 	tomas = d["tomas"]
+	fps = float(d.get("fps", 30))
+	for nombre in d.get("visibilidad", {}):
+		var nv := esc.find_child(str(nombre), true, false)
+		if nv is Node3D:
+			vis[nv] = d["visibilidad"][nombre]
 	for n in esc.find_children("*", "", true, false):
 		if n is Camera3D:
 			cams[str(n.name)] = n
@@ -59,6 +66,13 @@ func _poner() -> void:
 		for nombre in ap.get_animation_list():
 			ap.play(nombre)
 			ap.seek(mitad, true)
+	var f := int(round(mitad * fps)) + 1
+	for n in vis:
+		var on := false
+		for r in vis[n]:
+			if f >= int(r[0]) and f < int(r[1]):
+				on = true
+		n.visible = on
 	for k in cams:
 		if k.find(str(t["id"])) >= 0:
 			cams[k].current = true

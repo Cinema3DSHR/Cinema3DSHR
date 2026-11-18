@@ -392,7 +392,7 @@ def _pantalla_kate(col):
         estados[f"t{i:02d}"] = (texto[:i], True, False)
     estados["listo"] = (texto, True, True)
     centro = Vector((MESA_KATE.x + 0.28, MESA_KATE.y - 0.12, MESA_ALTO + 0.06))
-    rot = (math.radians(62), 0, math.radians(180))     # mira a −Y (a Kate) y hacia arriba
+    rot = (math.radians(62), 0, 0)                      # la pantalla mira a −Y (a Kate) y hacia arriba
     K.caja("tablet_kate", centro + Vector((0, 0.008, -0.004)), (0.31, 0.012, 0.22), bpy.data.materials["metal_oscuro"],
            col).rotation_euler = (math.radians(62 - 90), 0, 0)
     planos = {}
