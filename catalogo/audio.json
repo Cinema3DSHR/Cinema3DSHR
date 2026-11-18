@@ -2011,6 +2011,166 @@
    "variantes": 0,
    "volumen_db": -12,
    "prompt": "single soft futuristic computer interface chime, subtle, clean"
+  },
+  {
+   "id": "voz_39a32f59ef7d1392",
+   "nombre": "[calm] Aiden. ¿Sigues despierto?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_39a32f59ef7d1392.mp3",
+   "duracion_s": 2.19,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] Aiden. ¿Sigues despierto?",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_15c1a3c63e7e4b9f",
+   "nombre": "[calm, precise] Tus constantes indican que llevas treinta y una horas sin dormir",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_15c1a3c63e7e4b9f.mp3",
+   "duracion_s": 7.0,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, precise] Tus constantes indican que llevas treinta y una horas sin dormir. ¿Quieres que vuelva a preguntarte si estás bien?",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_bec7f38e94e36d28",
+   "nombre": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_bec7f38e94e36d28.mp3",
+   "duracion_s": 7.16,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No existe una solución viable de retorno.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_571727ba47eb4e68",
+   "nombre": "[precise, matter-of-fact, fast] Combustible insuficiente, velocidad relativa inc",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_571727ba47eb4e68.mp3",
+   "duracion_s": 19.41,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[precise, matter-of-fact, fast] Combustible insuficiente, velocidad relativa incompatible y ninguna ventana de transferencia que podamos alcanzar. Incluso con una maniobra de asistencia gravitatoria, el delta-v requerido supera nuestra capacidad. La probabilidad de regresar es inferior al margen de error de los sensores.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_94f2ace6b4cdf594",
+   "nombre": "[calm] Puedo dejar de mostrarte los resultados. No puedo cambiar las ecuaciones.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_94f2ace6b4cdf594.mp3",
+   "duracion_s": 5.41,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] Puedo dejar de mostrarte los resultados. No puedo cambiar las ecuaciones.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_a96021bf52f72684",
+   "nombre": "[calm, precise] Keit lleva nueve días sin responder a tus mensajes.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_a96021bf52f72684.mp3",
+   "duracion_s": 4.99,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, precise] Keit lleva nueve días sin responder a tus mensajes.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_218da83addc666bf",
+   "nombre": "[calm] Puedo abrir el canal.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_218da83addc666bf.mp3",
+   "duracion_s": 1.23,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] Puedo abrir el canal.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_d0fd50d6cfd8c5c7",
+   "nombre": "[calm, slightly bold] Entendido. Aunque, estadísticamente, el aislamiento no est",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_d0fd50d6cfd8c5c7.mp3",
+   "duracion_s": 5.96,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, slightly bold] Entendido. Aunque, estadísticamente, el aislamiento no está mejorando tu estado.",
+   "rol": "eva"
   }
  ],
  "fuentes_existentes_para_importar": [

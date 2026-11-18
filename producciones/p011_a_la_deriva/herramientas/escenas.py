@@ -121,9 +121,10 @@ def armar(version: int = 1) -> dict:
             v["movil"] = "aiden"
         voces.append(v)
     sonido = {"generador": "procedural", "ambiente": "nave_interior", "eventos": voces + [
-        {"tipo": "musica", "prompt": f"Very subtle ambient space score, {int(dur)} seconds, no vocals, no drums: a "
+        # música ya generada (85 s, ElevenLabs): se reutiliza tal cual aunque la escena dure un poco más
+        {"tipo": "musica", "prompt": "Very subtle ambient space score, 85 seconds, no vocals, no drums: a "
                                      "low warm synth pad and distant soft piano notes, lonely and melancholic, slow, "
-                                     "lots of silence, never competing with dialogue", "duracion_s": dur,
+                                     "lots of silence, never competing with dialogue", "duracion_s": 85.06,
          "inicio_s": 0.0, "volumen": 0.22},
         {"tipo": "efecto", "prompt": "single soft futuristic computer interface chime, subtle, clean", "duracion_s": 1.0,
          "inicio_s": round(t_kate, 2), "volumen": 0.5}]}

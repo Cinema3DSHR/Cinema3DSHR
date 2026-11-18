@@ -5,7 +5,7 @@
  "numero": 1,
  "version": 1,
  "titulo": "A la deriva · E01",
- "duracion_s": 85.06,
+ "duracion_s": 88.49,
  "guion": "Documento de producción v1.1 (ver E01_documento_produccion_v1_1.txt). EVA confirma que volver a la Tierra ya no es viable; Kate lleva nueve días sin responder.",
  "escenario": {
   "id": "nave_deriva",
@@ -18,52 +18,52 @@
   {
    "accion": "luces_navegacion",
    "inicio_s": 0.0,
-   "nf": 2552,
+   "nf": 2655,
    "fps": 30
   },
   {
    "accion": "eva_habla",
    "inicio_s": 0.0,
-   "nf": 2552,
+   "nf": 2655,
    "fps": 30,
    "lineas": [
     {
      "inicio_s": 8.4,
-     "audio": "audio/biblioteca/voz_53929e7ef9ada44d.mp3"
+     "audio": "audio/biblioteca/voz_39a32f59ef7d1392.mp3"
     },
     {
-     "inicio_s": 13.14,
-     "audio": "audio/biblioteca/voz_7bcb5176ba092fa0.mp3"
+     "inicio_s": 12.56,
+     "audio": "audio/biblioteca/voz_15c1a3c63e7e4b9f.mp3"
     },
     {
-     "inicio_s": 21.14,
-     "audio": "audio/biblioteca/voz_fdf393504804902c.mp3"
+     "inicio_s": 21.45,
+     "audio": "audio/biblioteca/voz_bec7f38e94e36d28.mp3"
     },
     {
-     "inicio_s": 29.96,
-     "audio": "audio/biblioteca/voz_6da3a9c582c8983b.mp3"
+     "inicio_s": 30.66,
+     "audio": "audio/biblioteca/voz_571727ba47eb4e68.mp3"
     },
     {
-     "inicio_s": 49.67,
-     "audio": "audio/biblioteca/voz_beb00352973708e6.mp3"
+     "inicio_s": 52.77,
+     "audio": "audio/biblioteca/voz_94f2ace6b4cdf594.mp3"
     },
     {
-     "inicio_s": 65.56,
-     "audio": "audio/biblioteca/voz_e95cfd14c7b1a7d0.mp3"
+     "inicio_s": 69.24,
+     "audio": "audio/biblioteca/voz_a96021bf52f72684.mp3"
     },
     {
-     "inicio_s": 69.56,
-     "audio": "audio/biblioteca/voz_0016c786a471b9c7.mp3"
+     "inicio_s": 74.68,
+     "audio": "audio/biblioteca/voz_218da83addc666bf.mp3"
     },
     {
-     "inicio_s": 74.38,
-     "audio": "audio/biblioteca/voz_09d1767719a79a42.mp3"
+     "inicio_s": 78.93,
+     "audio": "audio/biblioteca/voz_d0fd50d6cfd8c5c7.mp3"
     }
    ]
   },
   {
    "accion": "estado_kate",
-   "inicio_s": 67.69
+   "inicio_s": 72.234
   }
  ],
  "vehiculos": [],
@@ -85,7 +85,7 @@
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Talking.fbx",
-     "inicio_s": 55.55,
+     "inicio_s": 59.23,
      "pos": [
       0.0,
       0.5,
@@ -96,7 +96,7 @@
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Idle.fbx",
-     "inicio_s": 65.11,
+     "inicio_s": 68.78999999999999,
      "pos": [
       0.0,
       0.5,
@@ -107,7 +107,7 @@
     },
     {
      "clip": "mixamo:animaciones/sentado_manejar/Sitting_Dazed.fbx",
-     "inicio_s": 67.28999999999999,
+     "inicio_s": 71.83399999999999,
      "pos": [
       0.0,
       0.5,
@@ -129,104 +129,104 @@
       "transicion": 0.6
      },
      {
-      "t": 11.62,
+      "t": 11.04,
       "expr": "cansado",
       "transicion": 0.6
      },
      {
-      "t": 13.14,
+      "t": 12.56,
       "expr": "cansado",
       "transicion": 0.6
      },
      {
-      "t": 19.7,
+      "t": 20.01,
       "expr": "seria",
       "transicion": 0.6
      },
      {
-      "t": 21.14,
+      "t": 21.45,
       "expr": "preocupado",
       "transicion": 0.6
      },
      {
-      "t": 28.36,
+      "t": 29.06,
       "expr": "preocupado",
       "transicion": 0.6
      },
      {
-      "t": 29.96,
+      "t": 30.66,
       "expr": "preocupado",
       "transicion": 0.6
      },
      {
-      "t": 47.42,
+      "t": 50.52,
       "expr": "seria",
       "transicion": 0.6
      },
      {
-      "t": 49.67,
+      "t": 52.77,
       "expr": "triste_sutil",
       "transicion": 0.6
      },
      {
-      "t": 55.55,
+      "t": 59.23,
       "expr": "triste",
       "transicion": 0.6
      },
      {
-      "t": 65.56,
+      "t": 69.24,
       "expr": "triste",
       "transicion": 0.6
      },
      {
-      "t": 69.56,
+      "t": 74.68,
       "expr": "triste",
       "transicion": 0.6
      },
      {
-      "t": 71.81,
+      "t": 76.36,
       "expr": "triste",
       "transicion": 0.6
      },
      {
-      "t": 74.38,
+      "t": 78.93,
       "expr": "triste",
       "transicion": 0.6
      }
     ],
     "habla": [
      {
-      "inicio_s": 11.62,
+      "inicio_s": 11.04,
       "audio": "audio/biblioteca/voz_5163a0d6c1d94a0e.mp3",
       "texto": "[tired, dry] ¿Qué te parece?",
       "alineacion": "audio/biblioteca/voz_5163a0d6c1d94a0e.alin.json"
      },
      {
-      "inicio_s": 19.7,
+      "inicio_s": 20.01,
       "audio": "audio/biblioteca/voz_9bb4b082046f02ac.mp3",
       "texto": "[flat, tired] No hace falta.",
       "alineacion": "audio/biblioteca/voz_9bb4b082046f02ac.alin.json"
      },
      {
-      "inicio_s": 28.36,
+      "inicio_s": 29.06,
       "audio": "audio/biblioteca/voz_7f5c948ee0aa4200.mp3",
       "texto": "[quiet] ¿Por el combustible?",
       "alineacion": "audio/biblioteca/voz_7f5c948ee0aa4200.alin.json"
      },
      {
-      "inicio_s": 47.42,
+      "inicio_s": 50.52,
       "audio": "audio/biblioteca/voz_94fb8fa177ba86e8.mp3",
       "texto": "[tired, dry] Entonces deja de calcularlo.",
       "alineacion": "audio/biblioteca/voz_94fb8fa177ba86e8.alin.json"
      },
      {
-      "inicio_s": 55.55,
+      "inicio_s": 59.23,
       "audio": "audio/biblioteca/voz_e3326c569c0500a0.mp3",
       "texto": "[pause] [tired, softly] ¿Por qué no hablas con Keit? A lo mejor ella todavía quiere escuchar a alguien. [sighs] Es la única interacción humana que voy a tener hasta que me muera.",
       "alineacion": "audio/biblioteca/voz_e3326c569c0500a0.alin.json"
      },
      {
-      "inicio_s": 71.81,
+      "inicio_s": 76.36,
       "audio": "audio/biblioteca/voz_6f968d0ca9d8b093.mp3",
       "texto": "[quiet, firm] No. Déjala.",
       "alineacion": "audio/biblioteca/voz_6f968d0ca9d8b093.alin.json"
@@ -234,50 +234,50 @@
     ],
     "miradas": [
      {
-      "t": 13.440000000000001,
-      "hasta": 14.74,
+      "t": 12.860000000000001,
+      "hasta": 14.16,
       "u": 0.0,
       "v": 0.6
      },
      {
-      "t": 21.44,
-      "hasta": 22.740000000000002,
+      "t": 21.75,
+      "hasta": 23.05,
       "u": 0.0,
       "v": 0.6
      },
      {
-      "t": 30.26,
-      "hasta": 31.560000000000002,
+      "t": 30.96,
+      "hasta": 32.26,
       "u": 0.0,
       "v": 0.6
      },
      {
-      "t": 49.97,
-      "hasta": 51.27,
+      "t": 53.07,
+      "hasta": 54.370000000000005,
       "u": 0.0,
       "v": 0.6
      },
      {
-      "t": 65.86,
-      "hasta": 67.16,
+      "t": 69.53999999999999,
+      "hasta": 70.83999999999999,
       "u": 0.0,
       "v": 0.6
      },
      {
-      "t": 74.67999999999999,
-      "hasta": 75.97999999999999,
+      "t": 79.23,
+      "hasta": 80.53,
       "u": 0.0,
       "v": 0.6
      },
      {
-      "t": 67.89,
-      "hasta": 70.56,
+      "t": 72.434,
+      "hasta": 75.68,
       "u": 0.7,
       "v": 0.0
      },
      {
-      "t": 70.56,
-      "hasta": 85.06,
+      "t": 75.68,
+      "hasta": 88.49,
       "u": 0.0,
       "v": -0.6
      }
@@ -337,7 +337,7 @@
    "tipo": "dolly",
    "plano": "interior: Aiden de espaldas frente a la estación; la Tierra en el ventanal",
    "inicio_s": 8.4,
-   "duracion_s": 4.74,
+   "duracion_s": 4.16,
    "desde": [
     0.55,
     -2.6,
@@ -362,8 +362,8 @@
    "id": "t04_hombro",
    "tipo": "dolly",
    "plano": "sobre el hombro: telemetría y la voz de EVA",
-   "inicio_s": 13.14,
-   "duracion_s": 8.0,
+   "inicio_s": 12.56,
+   "duracion_s": 8.89,
    "desde": [
     0.62,
     -0.25,
@@ -388,8 +388,8 @@
    "id": "t05_trayectoria",
    "tipo": "paneo",
    "plano": "detalle: la trayectoria, RETORNO NO VIABLE; sube al núcleo de EVA",
-   "inicio_s": 21.14,
-   "duracion_s": 14.82,
+   "inicio_s": 21.45,
+   "duracion_s": 15.21,
    "desde": [
     0.35,
     1.05,
@@ -412,8 +412,8 @@
    "id": "t06_reflejo",
    "tipo": "dolly",
    "plano": "lateral: Aiden contra el ventanal, reflejos de las pantallas",
-   "inicio_s": 35.96,
-   "duracion_s": 13.71,
+   "inicio_s": 36.66,
+   "duracion_s": 16.11,
    "desde": [
     -1.55,
     1.25,
@@ -433,8 +433,8 @@
    "id": "t07_espalda_media",
    "tipo": "dolly",
    "plano": "espalda de Aiden; EVA no puede cambiar las ecuaciones",
-   "inicio_s": 49.67,
-   "duracion_s": 5.88,
+   "inicio_s": 52.77,
+   "duracion_s": 6.46,
    "desde": [
     0.3,
     -1.0,
@@ -454,8 +454,8 @@
    "id": "t08_keit",
    "tipo": "dolly",
    "plano": "Aiden pide que EVA hable con Kate (de perfil, lejos)",
-   "inicio_s": 55.55,
-   "duracion_s": 11.84,
+   "inicio_s": 59.23,
+   "duracion_s": 12.704,
    "desde": [
     1.5,
     0.3,
@@ -475,8 +475,8 @@
    "id": "t09_sin_respuesta",
    "tipo": "paneo",
    "plano": "la pantalla del módulo de Kate: COMUNICACIÓN SIN RESPUESTA; Aiden baja la cabeza",
-   "inicio_s": 67.39,
-   "duracion_s": 2.37,
+   "inicio_s": 71.934,
+   "duracion_s": 2.946,
    "desde": [
     -1.3,
     0.2,
@@ -499,8 +499,8 @@
    "id": "t10_canal",
    "tipo": "estatica",
    "plano": "EVA ofrece abrir el canal; Aiden: «No. Déjala»",
-   "inicio_s": 69.76,
-   "duracion_s": 4.62,
+   "inicio_s": 74.88,
+   "duracion_s": 4.05,
    "desde": [
     0.45,
     -0.5,
@@ -520,8 +520,8 @@
    "id": "t11_final",
    "tipo": "dolly",
    "plano": "final: Aiden inmóvil; la Tierra pequeña en el ventanal. Corte a negro",
-   "inicio_s": 74.38,
-   "duracion_s": 10.68,
+   "inicio_s": 78.93,
+   "duracion_s": 9.56,
    "desde": [
     0.4,
     -1.6,
@@ -543,7 +543,7 @@
    "lente_mm": 22,
    "montaje": {
     "efecto": "fundido_negro",
-    "desde_s": 9.28,
+    "desde_s": 8.16,
     "duracion_s": 1.2
    }
   }
@@ -567,7 +567,7 @@
     "texto": "[tired, dry] ¿Qué te parece?",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 11.62,
+    "inicio_s": 11.04,
     "volumen": 1.0,
     "movil": "aiden"
    },
@@ -577,7 +577,7 @@
     "texto": "[calm, precise] Tus constantes indican que llevas treinta y una horas sin dormir. ¿Quieres que vuelva a preguntarte si estás bien?",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 13.14,
+    "inicio_s": 12.56,
     "volumen": 1.0
    },
    {
@@ -586,7 +586,7 @@
     "texto": "[flat, tired] No hace falta.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 19.7,
+    "inicio_s": 20.01,
     "volumen": 1.0,
     "movil": "aiden"
    },
@@ -596,7 +596,7 @@
     "texto": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No existe una solución viable de retorno.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 21.14,
+    "inicio_s": 21.45,
     "volumen": 1.0
    },
    {
@@ -605,7 +605,7 @@
     "texto": "[quiet] ¿Por el combustible?",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 28.36,
+    "inicio_s": 29.06,
     "volumen": 1.0,
     "movil": "aiden"
    },
@@ -615,7 +615,7 @@
     "texto": "[precise, matter-of-fact, fast] Combustible insuficiente, velocidad relativa incompatible y ninguna ventana de transferencia que podamos alcanzar. Incluso con una maniobra de asistencia gravitatoria, el delta-v requerido supera nuestra capacidad. La probabilidad de regresar es inferior al margen de error de los sensores.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 29.96,
+    "inicio_s": 30.66,
     "volumen": 1.0
    },
    {
@@ -624,7 +624,7 @@
     "texto": "[tired, dry] Entonces deja de calcularlo.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 47.42,
+    "inicio_s": 50.52,
     "volumen": 1.0,
     "movil": "aiden"
    },
@@ -634,7 +634,7 @@
     "texto": "[calm] Puedo dejar de mostrarte los resultados. No puedo cambiar las ecuaciones.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 49.67,
+    "inicio_s": 52.77,
     "volumen": 1.0
    },
    {
@@ -643,7 +643,7 @@
     "texto": "[pause] [tired, softly] ¿Por qué no hablas con Keit? A lo mejor ella todavía quiere escuchar a alguien. [sighs] Es la única interacción humana que voy a tener hasta que me muera.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 55.55,
+    "inicio_s": 59.23,
     "volumen": 1.0,
     "movil": "aiden"
    },
@@ -653,7 +653,7 @@
     "texto": "[calm, precise] Keit lleva nueve días sin responder a tus mensajes.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 65.56,
+    "inicio_s": 69.24,
     "volumen": 1.0
    },
    {
@@ -662,7 +662,7 @@
     "texto": "[calm] Puedo abrir el canal.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 69.56,
+    "inicio_s": 74.68,
     "volumen": 1.0
    },
    {
@@ -671,7 +671,7 @@
     "texto": "[quiet, firm] No. Déjala.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 71.81,
+    "inicio_s": 76.36,
     "volumen": 1.0,
     "movil": "aiden"
    },
@@ -681,7 +681,7 @@
     "texto": "[calm, slightly bold] Entendido. Aunque, estadísticamente, el aislamiento no está mejorando tu estado.",
     "modelo": "eleven_v3",
     "alineacion": true,
-    "inicio_s": 74.38,
+    "inicio_s": 78.93,
     "volumen": 1.0
    },
    {
@@ -695,7 +695,7 @@
     "tipo": "efecto",
     "prompt": "single soft futuristic computer interface chime, subtle, clean",
     "duracion_s": 1.0,
-    "inicio_s": 67.69,
+    "inicio_s": 72.23,
     "volumen": 0.5
    }
   ]
