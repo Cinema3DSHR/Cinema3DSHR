@@ -2171,6 +2171,618 @@
    "voice_id": "8gK5gnQBZnJWm1ta8R8X",
    "texto": "[calm, slightly bold] Entendido. Aunque, estadísticamente, el aislamiento no está mejorando tu estado.",
    "rol": "eva"
+  },
+  {
+   "id": "voz_36bf2edf650cac7b",
+   "nombre": "[calm] Keit está en el comedor.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_36bf2edf650cac7b.mp3",
+   "duracion_s": 1.57,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] Keit está en el comedor.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_da29677a5673ddd8",
+   "nombre": "[tired, dry] ¿Y?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_da29677a5673ddd8.mp3",
+   "duracion_s": 1.49,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[tired, dry] ¿Y?",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_7f9ab5672b3dee72",
+   "nombre": "[calm] Lleva un rato ahí. Está sola.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_7f9ab5672b3dee72.mp3",
+   "duracion_s": 2.93,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] Lleva un rato ahí. Está sola.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_5c338ee780fb8f3f",
+   "nombre": "[tired, quietly] No sé qué querés que haga.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_5c338ee780fb8f3f.mp3",
+   "duracion_s": 1.65,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[tired, quietly] No sé qué querés que haga.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_2335d89c820d7590",
+   "nombre": "[gentle, precise] Podrías sentarte con ella. No tenés que solucionar nada. Solo ",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_2335d89c820d7590.mp3",
+   "duracion_s": 6.43,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[gentle, precise] Podrías sentarte con ella. No tenés que solucionar nada. Solo compartir un momento.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_a2a0ef2f93382d60",
+   "nombre": "[quiet, unsure] No creo que quiera verme.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_a2a0ef2f93382d60.mp3",
+   "duracion_s": 1.65,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet, unsure] No creo que quiera verme.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_2d2b18b73b4414cb",
+   "nombre": "[calm] No podés saberlo si nunca lo intentás.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_2d2b18b73b4414cb.mp3",
+   "duracion_s": 2.35,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] No podés saberlo si nunca lo intentás.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_16f0faafd1b11388",
+   "nombre": "[dry, ironic] Tu insistencia empieza a parecer humana.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_16f0faafd1b11388.mp3",
+   "duracion_s": 2.43,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[dry, ironic] Tu insistencia empieza a parecer humana.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_a37c678905f18752",
+   "nombre": "[slightly amused] Lo tomaré como un cumplido.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_a37c678905f18752.mp3",
+   "duracion_s": 1.65,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[slightly amused] Lo tomaré como un cumplido.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_76034966dea3f737",
+   "nombre": "[dry] Era una crítica.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_76034966dea3f737.mp3",
+   "duracion_s": 1.07,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[dry] Era una crítica.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_db093e7e0440cc3b",
+   "nombre": "[calm, bold] Lo sé.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_db093e7e0440cc3b.mp3",
+   "duracion_s": 0.68,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, bold] Lo sé.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_a036417b77b0e1f6",
+   "nombre": "[softly, surprised] No recordaba que hubiera tantas flores.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_a036417b77b0e1f6.mp3",
+   "duracion_s": 2.51,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[softly, surprised] No recordaba que hubiera tantas flores.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_238d14a7959e9a49",
+   "nombre": "[calm, warm] El módulo botánico sigue funcionando. Algunas cosas todavía crecen ",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_238d14a7959e9a49.mp3",
+   "duracion_s": 5.07,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, warm] El módulo botánico sigue funcionando. Algunas cosas todavía crecen aquí.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_6c8b0f60ed9de048",
+   "nombre": "[quiet, moved] No pensé que quedara algo tan... vivo.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_6c8b0f60ed9de048.mp3",
+   "duracion_s": 3.63,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet, moved] No pensé que quedara algo tan... vivo.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_b0dda0a62125ee68",
+   "nombre": "[gentle] Hay más cosas vivas de las que mirás, Aiden.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_b0dda0a62125ee68.mp3",
+   "duracion_s": 2.35,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[gentle] Hay más cosas vivas de las que mirás, Aiden.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_ff019874e1bd0769",
+   "nombre": "[awkward, soft] Hola.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_ff019874e1bd0769.mp3",
+   "duracion_s": 1.31,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[awkward, soft] Hola.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_3b01f3e1bb8010c0",
+   "nombre": "[quiet, guarded] Hola.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_3b01f3e1bb8010c0.mp3",
+   "duracion_s": 1.57,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[quiet, guarded] Hola.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_96313bb274ffa591",
+   "nombre": "[awkward, soft] Te traje esto.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_96313bb274ffa591.mp3",
+   "duracion_s": 1.23,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[awkward, soft] Te traje esto.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_9f1df03aaa08b592",
+   "nombre": "[hesitant, sincere, quiet] Perdón por todo esto. No sé cómo arreglar lo que nos ",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_9f1df03aaa08b592.mp3",
+   "duracion_s": 7.71,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[hesitant, sincere, quiet] Perdón por todo esto. No sé cómo arreglar lo que nos pasó... pero voy a intentar que las cosas no sigan así.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_1b38d6a4f3c4933e",
+   "nombre": "[soft] No hace falta que digas nada. Te dejo tranquila.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_1b38d6a4f3c4933e.mp3",
+   "duracion_s": 3.32,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[soft] No hace falta que digas nada. Te dejo tranquila.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_715b7ce1697e8e42",
+   "nombre": "[quiet] Que estés bien.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_715b7ce1697e8e42.mp3",
+   "duracion_s": 0.99,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet] Que estés bien.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_8a22ad567bae09fd",
+   "nombre": "[calm, teasing] ¿Vas a seguir fingiendo que no te importa?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_8a22ad567bae09fd.mp3",
+   "duracion_s": 2.43,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, teasing] ¿Vas a seguir fingiendo que no te importa?",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_1296263afd5d95f8",
+   "nombre": "[tired, annoyed] No empieces.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_1296263afd5d95f8.mp3",
+   "duracion_s": 1.15,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[tired, annoyed] No empieces.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_6ffcac05905e8efa",
+   "nombre": "[precise, bold] No es realista. Te gusta Keit. ¿Por qué no aceptás lo que sentís",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_6ffcac05905e8efa.mp3",
+   "duracion_s": 5.88,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[precise, bold] No es realista. Te gusta Keit. ¿Por qué no aceptás lo que sentís y se lo decís?",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_1f80fc2a25fc43f6",
+   "nombre": "[quiet] Porque no sé si ella quiere escuchar eso.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_1f80fc2a25fc43f6.mp3",
+   "duracion_s": 2.35,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet] Porque no sé si ella quiere escuchar eso.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_04fc1009887c9672",
+   "nombre": "[calm] Podrías averiguarlo.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_04fc1009887c9672.mp3",
+   "duracion_s": 1.31,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] Podrías averiguarlo.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_b32564a9e22d61fd",
+   "nombre": "[dry, tired] No todo se resuelve con un cálculo.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_b32564a9e22d61fd.mp3",
+   "duracion_s": 2.43,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[dry, tired] No todo se resuelve con un cálculo.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_3bbbe8f65be5fe0e",
+   "nombre": "[warm] Disculpame. Solo intento ayudarte. [soft brief laugh]",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_3bbbe8f65be5fe0e.mp3",
+   "duracion_s": 4.6,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e02",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[warm] Disculpame. Solo intento ayudarte. [soft brief laugh]",
+   "rol": "eva"
+  },
+  {
+   "id": "mus_7020de2e88a74eb9",
+   "nombre": "Very subtle, warm and fragile ambient score for a quiet sci-fi love story in an ",
+   "categoria": "musica",
+   "archivo": "audio/biblioteca/mus_7020de2e88a74eb9.mp3",
+   "duracion_s": 60.08,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "Very subtle, warm and fragile ambient score for a quiet sci-fi love story in an isolated spaceship, 60 seconds, no vocals, no drums: soft felt piano and a warm string pad, slowly blooming with wonder in the middle (a hidden garden of flowers), tender and hopeful but sad, lots of space and silence, never competing with dialogue"
+  },
+  {
+   "id": "mus_7140670721bf345c",
+   "nombre": "Short tender solo felt piano motif, 18 seconds, intimate and warm, a shy blush, ",
+   "categoria": "musica",
+   "archivo": "audio/biblioteca/mus_7140670721bf345c.mp3",
+   "duracion_s": 18.0,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "Short tender solo felt piano motif, 18 seconds, intimate and warm, a shy blush, a small hopeful melody that ends unresolved on a suspended chord, no other instruments, quiet"
+  },
+  {
+   "id": "sfx_2440d714e7edfb94",
+   "nombre": "very quiet hydroponic greenhouse ambience inside a spaceship: gentle water circu",
+   "categoria": "efecto",
+   "archivo": "audio/biblioteca/sfx_2440d714e7edfb94.mp3",
+   "duracion_s": 20.04,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "very quiet hydroponic greenhouse ambience inside a spaceship: gentle water circulation, soft air flow, faint drip, no birds"
+  },
+  {
+   "id": "sfx_d6ec221a460b7508",
+   "nombre": "single soft futuristic message notification ping, subtle, clean",
+   "categoria": "efecto",
+   "archivo": "audio/biblioteca/sfx_d6ec221a460b7508.mp3",
+   "duracion_s": 1.04,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "single soft futuristic message notification ping, subtle, clean"
   }
  ],
  "fuentes_existentes_para_importar": [
