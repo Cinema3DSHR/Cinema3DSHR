@@ -59,6 +59,10 @@ def _filtro_efecto(efecto: dict | None, fps: int) -> str:
             partes.append(f"drawtext=text='{txt}'{ff}:fontcolor=white:fontsize={tam}:x=(w-text_w)/2:y={y}:"
                           f"alpha='{alfa}':shadowcolor=black@0.6:shadowx=3:shadowy=3")
         return ",".join(partes)
+    if efecto.get("efecto") == "fundido_negro":
+        # «corte a negro» suave: la toma se apaga en sus últimos «duracion_s» (relativo a la toma: desde «desde_s»)
+        a = float(efecto.get("desde_s", 0.0))
+        return f"fade=t=out:st={a:.3f}:d={float(efecto.get('duracion_s', 1.2)):.3f}"
     return "null"
 
 

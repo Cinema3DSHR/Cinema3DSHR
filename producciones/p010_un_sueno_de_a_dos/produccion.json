@@ -5,12 +5,31 @@
  "genero": "Romance cotidiano · Drama emocional",
  "sinopsis": "Al atardecer, un joven mira un auto en la vidriera de una concesionaria: lo sueña, pero todavía está lejos. Llega su novia con dos helados y le recuerda que están ahorrando juntos y que cree en él. Se van caminando del brazo; él mira el auto una última vez, ahora sonriendo. «Los sueños se disfrutan más cuando alguien camina a tu lado».",
  "clase": "escena",
- "formato": {"aspecto": "9:16", "fps": 30, "duracion_s": 60},
- "estado": "en_preparacion",
+ "formato": {
+  "aspecto": "9:16",
+  "fps": 30,
+  "duracion_s": 60
+ },
+ "estado": "descartada",
  "personajes": {
-  "el": {"modelo": "humano:chico", "alto_m": 1.78, "voz_candidatas": ["aiden_es_ar", "antonio_es_ar"]},
-  "ella": {"modelo": "humano:chica", "alto_m": 1.65, "voz_candidatas": ["kate_es_ar", "hellen_es_ar"]}
+  "el": {
+   "modelo": "humano:chico",
+   "alto_m": 1.78,
+   "voz_candidatas": [
+    "aiden_es_ar",
+    "antonio_es_ar"
+   ]
+  },
+  "ella": {
+   "modelo": "humano:chica",
+   "alto_m": 1.65,
+   "voz_candidatas": [
+    "kate_es_ar",
+    "hellen_es_ar"
+   ]
+  }
  },
  "creada": "2026-11-18",
- "escenas": []
+ "escenas": [],
+ "nota": "Reemplazada por la serie «A la deriva» (p011) a pedido del dueño, 18/11/2026."
 }

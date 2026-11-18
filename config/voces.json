@@ -131,6 +131,14 @@
     "stability": 0.5
    },
    "modelo": "eleven_v3"
+  },
+  "eva": {
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "nombre": "Selena — asistente IA, clara, segura y cercana (biblioteca compartida; EVA, la IA de la nave de «A la deriva»). Alternativas probadas: Martina jw1XYij1FCiI9FENSxIf, Elsa 7yuqhKJfGa6zud57AaAx",
+   "ajustes": {
+    "stability": 0.5
+   },
+   "modelo": "eleven_v3"
   }
  }
 }

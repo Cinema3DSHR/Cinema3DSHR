@@ -1,0 +1,67 @@
+
+A LA DERIVA
+EPISODIO 01 · DOCUMENTO DE PRODUCCIÓN
+«A la deriva» · 60 segundos · Vertical 9:16 · 30 FPS · 1.800 fotogramas
+1. Objetivo
+Abrir directamente en el espacio, sin prólogo ni explicación previa. La Tierra se ve a lo lejos; la cámara descubre la nave y luego a Aiden de espaldas, sentado frente a una gran estación de computadoras. EVA inicia una conversación cotidiana que deja claro que llevan muchísimo tiempo a la deriva. Ella le comunica, con frialdad y fundamento técnico, que regresar a la Tierra ya no es viable. Aiden sugiere que EVA intente hablar con Kate: quizá sea su única interacción humana hasta morir.
+2. Escenario: centro de operaciones de la nave
+Construir un interior de nave espacial cinematográfico, creíble y funcional. El espacio principal debe sentirse como un centro de control compacto: Aiden sentado de espaldas en una silla frente a una consola amplia, varias pantallas y paneles de navegación. La pantalla principal o ventanal panorámico muestra el espacio profundo y la Tierra distante.
+Usar primero los recursos disponibles en «Seat Home» y los archivos/assets existentes en la computadora del usuario. Reutilizar todo lo que encaje.
+Antes de crear recursos nuevos, inspeccionar y catalogar modelos de nave, consolas, monitores, paneles, luces, cables, sillas, módulos, ventanas, estrellas, planetas, nebulosas y efectos.
+No reemplazar assets existentes por versiones inventadas si ya hay equivalentes utilizables. Si falta algo imprescindible, documentar qué falta y proponer una solución compatible.
+Diseñar un set coherente y reutilizable: puesto de Aiden, consola central, pantallas secundarias, ventanal/pantalla panorámica, iluminación ambiental y profundidad hacia otros módulos.
+La computadora debe sentirse activa: interfaces de navegación, telemetría, trayectoria, combustible, energía y comunicaciones. Evitar texto ilegible dominante; priorizar gráficos e indicadores visuales.
+Exterior atractivo y con escala: Tierra pequeña y distante, estrellas con profundidad, un planeta o luna lejana y nebulosidad sutil si mejora la composición.
+Paleta de azules fríos, grises metálicos, negros profundos y pequeñas luces ámbar/rojas. La nave está habitada, pero transmite silencio, desgaste y aislamiento.
+EVA no necesita cuerpo humano en este episodio. Su presencia se representa mediante voz, interfaz, indicadores y respuesta de las pantallas.
+3. Cámara y composición
+Apertura: plano espacial amplio de la Tierra; la cámara se aleja y revela la nave diminuta frente al vacío.
+Transición al interior: ver la Tierra a través del ventanal/pantalla principal y descubrir a Aiden desde atrás.
+Plano principal: Aiden en primer término, de espaldas; consola y pantalla espacial dominan el encuadre.
+Durante el diálogo, usar variaciones suaves: hombro/espalda de Aiden, reflejos de pantallas y detalles de telemetría. Mantener la distancia emocional.
+Final: Aiden inmóvil frente a la consola; la Tierra queda pequeña en el encuadre. Corte a negro.
+4. Guion cronometrado — 60 segundos
+00:00–00:08 · EL UNIVERSO
+Plano exterior lejano: la Tierra ocupa una pequeña parte del encuadre. La cámara se aleja lentamente y revela la nave, diminuta frente al espacio. Corte al interior: desde atrás vemos a Aiden sentado ante una gran estación de computadoras. La Tierra aparece a través del ventanal/pantalla principal. Sonido de sistemas y ventilación; música casi imperceptible.
+00:08–00:18 · EVA
+EVA (voz serena, artificial y sin emoción): «Aiden. ¿Sigues despierto?»
+AIDEN (sin darse vuelta): «¿Qué te parece?»
+EVA: «Tus constantes indican que llevas treinta y una horas sin dormir. ¿Quieres que vuelva a preguntarte si estás bien?»
+AIDEN: «No hace falta.»
+00:18–00:34 · LA REALIDAD
+EVA: «He recalculado la trayectoria otras cuatrocientas doce veces. No existe una solución viable de retorno.»
+AIDEN: «¿Por el combustible?»
+EVA: «Combustible insuficiente, velocidad relativa incompatible y ninguna ventana de transferencia que podamos alcanzar. Incluso con una maniobra de asistencia gravitatoria, el delta-v requerido supera nuestra capacidad. La probabilidad de regresar es inferior al margen de error de los sensores.»
+AIDEN: «Entonces deja de calcularlo.»
+00:34–00:48 · KATE
+EVA: «Puedo dejar de mostrarte los resultados. No puedo cambiar las ecuaciones.»
+AIDEN (tras una pausa): «¿Por qué no hablas con Kate? A lo mejor ella todavía quiere escuchar a alguien. Es la única interacción humana que voy a tener hasta que me muera.»
+EVA: «Kate lleva nueve días sin responder a tus mensajes.»
+00:48–01:00 · EL GANCHO
+Aiden baja la cabeza. En una pantalla secundaria aparece el estado del módulo de Kate: COMUNICACIÓN SIN RESPUESTA.
+EVA: «Puedo abrir el canal.»
+AIDEN: «No. Déjala.»
+Silencio breve.
+EVA: «Entendido. Aunque, estadísticamente, el aislamiento no está mejorando tu estado.»
+Aiden no responde. La Tierra queda pequeña en el ventanal. Corte a negro.
+5. Voces y sonido
+Aiden: utilizar la voz seleccionada por el usuario para Aiden. Interpretación masculina agotada, contenida, con ironía seca; no llorar ni sobreactuar.
+EVA: voz femenina sintética, precisa, fría y ligeramente audaz. Inteligente y funcional, no malvada.
+Kate no habla ni aparece físicamente en este episodio. Su ausencia se comunica con el estado de comunicación sin respuesta.
+Ambiente: ventilación, vibración baja de la nave, pulsos electrónicos discretos y sonidos suaves de consola.
+Música instrumental ambiental muy sutil; dejar espacios de silencio y no competir con los diálogos.
+6. Reglas de producción
+Usar modelos, escenarios, texturas, sonidos y recursos existentes en Seat Home y en la computadora del usuario siempre que sean compatibles.
+No afirmar que un asset existe sin verificarlo. Revisar archivos, formatos, escala, materiales y compatibilidad.
+Mantener intactos los archivos originales. Trabajar en una escena/proyecto separado y registrar los assets reutilizados.
+No ejecutar render final ni render de prueba sin revisión de la escena y autorización explícita del usuario. Preparar primero una previsualización inspeccionable.
+La previsualización debe permitir revisar cámara, encuadre, escala, iluminación, continuidad, posición de Aiden, legibilidad de pantallas y vista exterior.
+Duración exacta: 60 segundos a 30 FPS, 1.800 fotogramas, del 0 al 1.799.
+7. Continuidad narrativa
+Aiden: astronauta humano, aislado y emocionalmente agotado.
+Kate: otra humana a bordo, actualmente sin responder a los mensajes de Aiden.
+EVA: inteligencia artificial de la nave; fría, inteligente, directa y audaz.
+El público todavía no conoce qué ocurrió con la misión ni por qué están a la deriva. No explicarlo en este episodio.
+La manipulación emocional de EVA para acercar a Aiden y Kate se desarrollará más adelante; no revelarla todavía.
+DOCUMENTO MAESTRO · VERSIÓN 1.1 · 18 NOVIEMBRE 2026
+

@@ -1662,6 +1662,355 @@
    "voice_id": "5VEiwGrUkeImJGduR2wd",
    "texto": "[warmly, tender] Ay, amor... si yo sé cuánto lo soñás. Por eso estamos ahorrando juntos, ¿te acordás?",
    "rol": null
+  },
+  {
+   "id": "voz_fdf393504804902c",
+   "nombre": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_fdf393504804902c.mp3",
+   "duracion_s": 6.77,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p010",
+    "eva",
+    "muestra",
+    "selena"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No existe una solución viable de retorno.",
+   "rol": null
+  },
+  {
+   "id": "voz_b2f2fc62cda471d8",
+   "nombre": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_b2f2fc62cda471d8.mp3",
+   "duracion_s": 6.11,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p010",
+    "eva",
+    "muestra",
+    "martina"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "jw1XYij1FCiI9FENSxIf",
+   "texto": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No existe una solución viable de retorno.",
+   "rol": null
+  },
+  {
+   "id": "voz_600120bd71b69d3b",
+   "nombre": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_600120bd71b69d3b.mp3",
+   "duracion_s": 9.48,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p010",
+    "eva",
+    "muestra",
+    "elsa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "7yuqhKJfGa6zud57AaAx",
+   "texto": "[calm, precise] He recalculado la trayectoria otras cuatrocientas doce veces. No existe una solución viable de retorno.",
+   "rol": null
+  },
+  {
+   "id": "voz_53929e7ef9ada44d",
+   "nombre": "[calm] Aiden. ¿Sigues despierto?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_53929e7ef9ada44d.mp3",
+   "duracion_s": 2.77,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[calm] Aiden. ¿Sigues despierto?",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_5163a0d6c1d94a0e",
+   "nombre": "[tired, dry] ¿Qué te parece?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_5163a0d6c1d94a0e.mp3",
+   "duracion_s": 1.07,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[tired, dry] ¿Qué te parece?",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_7bcb5176ba092fa0",
+   "nombre": "[calm, precise] Tus constantes indican que llevas treinta y una horas sin dormir",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_7bcb5176ba092fa0.mp3",
+   "duracion_s": 6.11,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[calm, precise] Tus constantes indican que llevas treinta y una horas sin dormir. ¿Quieres que vuelva a preguntarte si estás bien?",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_9bb4b082046f02ac",
+   "nombre": "[flat, tired] No hace falta.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_9bb4b082046f02ac.mp3",
+   "duracion_s": 0.99,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[flat, tired] No hace falta.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_7f5c948ee0aa4200",
+   "nombre": "[quiet] ¿Por el combustible?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_7f5c948ee0aa4200.mp3",
+   "duracion_s": 1.15,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet] ¿Por el combustible?",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_6da3a9c582c8983b",
+   "nombre": "[precise, matter-of-fact, fast] Combustible insuficiente, velocidad relativa inc",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_6da3a9c582c8983b.mp3",
+   "duracion_s": 17.01,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[precise, matter-of-fact, fast] Combustible insuficiente, velocidad relativa incompatible y ninguna ventana de transferencia que podamos alcanzar. Incluso con una maniobra de asistencia gravitatoria, el delta-v requerido supera nuestra capacidad. La probabilidad de regresar es inferior al margen de error de los sensores.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_94fb8fa177ba86e8",
+   "nombre": "[tired, dry] Entonces deja de calcularlo.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_94fb8fa177ba86e8.mp3",
+   "duracion_s": 1.8,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[tired, dry] Entonces deja de calcularlo.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_beb00352973708e6",
+   "nombre": "[calm] Puedo dejar de mostrarte los resultados. No puedo cambiar las ecuaciones.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_beb00352973708e6.mp3",
+   "duracion_s": 4.83,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[calm] Puedo dejar de mostrarte los resultados. No puedo cambiar las ecuaciones.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_e3326c569c0500a0",
+   "nombre": "[pause] [tired, softly] ¿Por qué no hablas con Keit? A lo mejor ella todavía qui",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_e3326c569c0500a0.mp3",
+   "duracion_s": 9.56,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[pause] [tired, softly] ¿Por qué no hablas con Keit? A lo mejor ella todavía quiere escuchar a alguien. [sighs] Es la única interacción humana que voy a tener hasta que me muera.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_e95cfd14c7b1a7d0",
+   "nombre": "[calm, precise] Keit lleva nueve días sin responder a tus mensajes.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_e95cfd14c7b1a7d0.mp3",
+   "duracion_s": 3.55,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[calm, precise] Keit lleva nueve días sin responder a tus mensajes.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_0016c786a471b9c7",
+   "nombre": "[calm] Puedo abrir el canal.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_0016c786a471b9c7.mp3",
+   "duracion_s": 1.8,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[calm] Puedo abrir el canal.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_6f968d0ca9d8b093",
+   "nombre": "[quiet, firm] No. Déjala.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_6f968d0ca9d8b093.mp3",
+   "duracion_s": 2.12,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet, firm] No. Déjala.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_09d1767719a79a42",
+   "nombre": "[calm, slightly bold] Entendido. Aunque, estadísticamente, el aislamiento no est",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_09d1767719a79a42.mp3",
+   "duracion_s": 7.08,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e01",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "kVp3G6YINMUwOL7ROfIF",
+   "texto": "[calm, slightly bold] Entendido. Aunque, estadísticamente, el aislamiento no está mejorando tu estado.",
+   "rol": "eva"
+  },
+  {
+   "id": "mus_8d9d70d0b7b7e342",
+   "nombre": "Very subtle ambient space score, 85 seconds, no vocals, no drums: a low warm syn",
+   "categoria": "musica",
+   "archivo": "audio/biblioteca/mus_8d9d70d0b7b7e342.mp3",
+   "duracion_s": 85.11,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "Very subtle ambient space score, 85 seconds, no vocals, no drums: a low warm synth pad and distant soft piano notes, lonely and melancholic, slow, lots of silence, never competing with dialogue"
+  },
+  {
+   "id": "sfx_0ee5f1e161b2d9a5",
+   "nombre": "single soft futuristic computer interface chime, subtle, clean",
+   "categoria": "efecto",
+   "archivo": "audio/biblioteca/sfx_0ee5f1e161b2d9a5.mp3",
+   "duracion_s": 1.04,
+   "procedencia": "ElevenLabs (sound-generation)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [],
+   "variantes": 0,
+   "volumen_db": -12,
+   "prompt": "single soft futuristic computer interface chime, subtle, clean"
   }
  ],
  "fuentes_existentes_para_importar": [

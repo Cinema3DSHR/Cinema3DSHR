@@ -147,6 +147,11 @@ def ruta_en_biblioteca(ev: dict) -> Path:
     return p
 
 
+def ruta_alineacion(ev: dict) -> Path:
+    """Marcas de tiempo por letra de una voz (las devuelve ElevenLabs con /with-timestamps)."""
+    return BIBLIOTECA / f"{id_biblioteca(ev)}.alin.json"
+
+
 def duracion_s(ruta: Path) -> float:
     r = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(ruta)],
                        capture_output=True, text=True, check=True)
@@ -201,7 +206,18 @@ def generar(ev: dict) -> Path:
         cuerpo = {"text": p["texto"], "model_id": p["modelo"]}
         if p["ajustes"]:
             cuerpo["voice_settings"] = p["ajustes"]
-        audio, cab = _pedir("POST", f"/v1/text-to-speech/{p['voice_id']}?output_format={FORMATO}", cuerpo, binario=True)
+        if ev.get("alineacion"):
+            # con marcas de tiempo por letra (mismo costo): la boca de los personajes sigue cada sonido
+            import base64
+            d, cab = _pedir("POST", f"/v1/text-to-speech/{p['voice_id']}/with-timestamps?output_format={FORMATO}",
+                            cuerpo, timeout=180)
+            audio = base64.b64decode(d.get("audio_base64", ""))
+            alin = d.get("alignment") or d.get("normalized_alignment")
+            if alin:
+                ruta_alineacion(ev).write_text(json.dumps(alin, ensure_ascii=False))
+        else:
+            audio, cab = _pedir("POST", f"/v1/text-to-speech/{p['voice_id']}?output_format={FORMATO}", cuerpo,
+                                binario=True)
         extra = {"modelo": p["modelo"], "voice_id": p["voice_id"], "texto": p["texto"], "rol": ev.get("rol")}
     elif ev["tipo"] == "efecto":
         cuerpo = {"text": ev["prompt"].strip(), "prompt_influence": ev.get("influencia", 0.5)}

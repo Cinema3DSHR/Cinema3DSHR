@@ -390,6 +390,9 @@ def generar(manifiesto: dict, pistas: dict, salida: Path) -> Path:
     elif amb == "arcade_duelo":                 # «Al vacío»: los audios del juego en cada evento del duelo
         from estudio.audio import arcade as AR
         mezcla += AR.duelo(pistas, n, rng, son.get("publico", 0.35))
+    elif amb == "nave_interior":                 # «A la deriva»: ventilación, zumbido y pulsos de consola
+        from estudio.audio import nave as NV
+        mezcla += NV.ambiente_interior(n, rng) * 0.35
     elif amb == "tren_llanura":
         from estudio.audio import tren as TRA
         mezcla += TRA.ambiente_llanura(n, rng) * 0.5

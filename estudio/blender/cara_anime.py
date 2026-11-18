@@ -324,18 +324,93 @@ EXPRESIONES = {
     "enojado": {"cejas:enojo": 1.0, "boca:enojo": 1.0, "ojos:entrecerrado": 0.3},
     "triste": {"cejas:triste": 1.0, "ojos:triste": 1.0, "boca:triste": 1.0},
 }
+EXPRESIONES["cansado"] = {"ojos:entrecerrado": 0.5, "cejas:preocupado": 0.25, "boca:triste": 0.2}
+EXPRESIONES["triste_sutil"] = {"cejas:triste": 0.55, "ojos:triste": 0.45, "boca:triste": 0.5}
 EXPRESIONES["preocupada"] = EXPRESIONES["preocupado"]
 EXPRESIONES["enojo"] = EXPRESIONES["enojado"]
 
 
 def actuar(partes: dict, cara: dict, fps: int, nf: int, semilla: int = 1):
-    """La actuación de los Stickman (`stickman.actuar`) con la tabla de expresiones de los humanos."""
+    """La actuación de los Stickman (`stickman.actuar`) con la tabla de expresiones de los humanos; después, en las
+    líneas que traen marcas de tiempo por letra (ElevenLabs /with-timestamps), la boca hace la forma de cada sonido."""
     vieja = SM.EXPRESIONES
     SM.EXPRESIONES = {**vieja, **EXPRESIONES}
     try:
         SM.actuar(partes, cara, fps, nf, semilla)
     finally:
         SM.EXPRESIONES = vieja
+    for h in cara.get("habla", []):
+        if h.get("alineacion"):
+            _labios_por_letra(partes["boca"], h, fps, nf)
+
+
+# forma de la boca por letra (español): A abierta, E estirada, O redonda, M labios juntos
+_VISEMA = {**{c: {"A": 1.0} for c in "aá"}, **{c: {"E": 0.85, "A": 0.15} for c in "eé"},
+           **{c: {"E": 0.7} for c in "iíy"}, **{c: {"O": 0.9, "A": 0.1} for c in "oó"},
+           **{c: {"O": 0.75} for c in "uúü"}, **{c: {"M": 1.0} for c in "mbp"},
+           **{c: {"M": 0.55, "E": 0.15} for c in "fv"}, **{c: {"E": 0.35} for c in "sczxjgkqt"},
+           **{c: {"A": 0.3} for c in "lnrdhñ"}}
+
+
+def _labios_por_letra(boca, h: dict, fps: int, nf: int):
+    import json as _json
+    from pathlib import Path as _P
+    from estudio import config as _cfg
+    alin = h["alineacion"]
+    if isinstance(alin, str):
+        q = _P(alin)
+        q = q if q.is_absolute() else _cfg.RAIZ / q
+        if not q.exists():
+            return
+        alin = _json.loads(q.read_text())
+    car = alin.get("characters", [])
+    t0s = alin.get("character_start_times_seconds", [])
+    t1s = alin.get("character_end_times_seconds", [])
+    if not car:
+        return
+    f0 = int(round(h["inicio_s"] * fps))
+    rec = h.get("recorte_s") or [0.0, 1e9]
+    dur = min(t1s[-1], rec[1]) - rec[0]
+    n = int(dur * fps) + 3
+    curvas = {k: np.zeros(n) for k in ("A", "E", "O", "M")}
+    for c, a, b in zip(car, t0s, t1s):
+        a, b = a - rec[0], b - rec[0]
+        if b < 0 or a > dur:
+            continue
+        for k, w in _VISEMA.get(c.lower(), {}).items():
+            fa, fb = int(a * fps), max(int(a * fps) + 1, int(np.ceil(b * fps)))
+            seg = curvas[k][max(0, fa):min(n, fb + 1)]
+            np.maximum(seg, w, out=seg)
+    # apertura con el volumen real de la voz (si está el audio)
+    abre = np.ones(n)
+    if h.get("audio") and _P(h["audio"]).exists():
+        env = SM._envolvente_audio(_P(h["audio"]), fps)
+        if len(env):
+            e = env[int(rec[0] * fps):int(rec[0] * fps) + n, 0]
+            abre[:len(e)] = np.clip(0.35 + e, 0.35, 1.15)
+    k_ = np.array([0.25, 0.5, 0.25])
+    sk = boca.data.shape_keys
+    act = sk.animation_data.action if sk.animation_data else None
+    for k, arr in curvas.items():
+        arr = np.convolve(arr, k_, mode="same") * (abre if k != "M" else 1.0) * h.get("intensidad", 1.0)
+        if k not in sk.key_blocks or act is None:
+            continue
+        fc = act.fcurve_ensure_for_datablock(sk, f'key_blocks["{k}"].value')
+        frames = np.arange(1, nf + 1)
+        viejo = np.array([fc.evaluate(f) for f in frames])
+        nuevo = viejo.copy()
+        a, b = max(0, f0), min(nf, f0 + n)
+        if b > a:
+            nuevo[a:b] = arr[a - f0:b - f0]
+        fc.keyframe_points.clear()
+        fc.keyframe_points.add(nf)
+        co = np.empty(nf * 2)
+        co[0::2] = frames
+        co[1::2] = np.clip(nuevo, 0, 1.3)
+        fc.keyframe_points.foreach_set("co", co)
+        fc.keyframe_points.foreach_set("interpolation", [1] * nf)
+        fc.update()
+        sk.key_blocks[k].slider_max = 2.0
 
 
 def armar(pj: dict, tipo: str, perfil: dict, col) -> dict:
