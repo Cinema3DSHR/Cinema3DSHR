@@ -625,3 +625,15 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - v3 (copia de v2 con `nueva-version`) reconstruida entera: 439 s de escena + exportación (526 s en total). Capturas:
   la tablet se ve y el mensaje «Gracias por la flor» se lee (tomas 28–31). Revisión de la app 18/18. Entregado:
   `e02_v3_previa.glb` + `.json` (`escenas/e02/v3/entregado.json`). v2 intacta (verificada). Sin render ni Actions.
+
+## 18/11/2026 — «A la deriva» E02 v3: render final (60 trabajos) y montaje
+
+- Render autorizado por el dueño en el chat: `video30.yml`, corrida 44361974666, 540x960, 30 fps, Cycles 6 muestras,
+  60 trabajos (hasta 31 a la vez; 16–24 min cada uno). 59/60 bien; el trabajo 30 se cortó en el fotograma 2063
+  («sin toma»: hueco de un cuadro entre t18 y t19 por redondeo) y su paso terminó en verde igual. Arreglado
+  `render_rango.py` (usa la cámara de la toma anterior, como Blender). Se relanzó el render completo y el dueño lo
+  canceló: pidió armarlo «así nomás».
+- Flujo nuevo «Montar una corrida ya renderizada» (`montar_corrida.yml`, autorizado por el dueño): corrida 44378165497
+  armó el video con los fotogramas de 44361974666, rellenando 2063–2077 (15 cuadros, medio segundo) con el 2062.
+  Informe: 3.998/3.998 fotogramas, 540x960, 133,27 s, audio AAC 48 kHz. Publicado en la release `p011_a_la_deriva`
+  (`a_la_deriva_e02_v3.mp4`, `e02_v3_revision.mp4/.ogv`, portada, miniatura, info, `e02_v3_fotogramas_rellenados.json`).
