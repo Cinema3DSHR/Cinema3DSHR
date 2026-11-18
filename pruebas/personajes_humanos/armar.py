@@ -26,12 +26,14 @@ def main():
             cara["habla"] = [{"inicio_s": 0, "texto": "Amor, mirá lo que te traje", "intensidad": 1.0}]
         pj = PJ.crear({"id": q, "modelo": f"humano:{q}", "alto_m": alto, "acciones": [], "cara": cara}, 30)
         bpy.context.scene.frame_set(4 if expr == "habla" else 1)
-        for o in bpy.data.objects:                  # el GLB lleva el valor del cuadro como peso por defecto
-            if o.type == "MESH" and o.data.shape_keys and o.data.shape_keys.animation_data:
-                for kb in o.data.shape_keys.key_blocks[1:]:
-                    v = kb.value
-                    o.data.shape_keys.animation_data_clear()
-                    break
+        # la expresión de ese cuadro se hornea en la malla (el visor de prueba no aplica pesos por defecto del GLB)
+        for o in list(bpy.data.objects):
+            if o.type == "MESH" and o.data.shape_keys and o.name.startswith("CARA_"):
+                mezcla = o.shape_key_add(name="mezcla", from_mix=True)
+                co = [0.0] * (len(o.data.vertices) * 3)
+                mezcla.data.foreach_get("co", co)
+                o.shape_key_clear()
+                o.data.vertices.foreach_set("co", co)
         from estudio.blender import previa as PV
         PV._aplanar_materiales()                    # como la previsualización real (colores planos)
         bpy.ops.export_scene.gltf(filepath=str(salida / f"{q}_{expr}.glb"), export_format="GLB",
