@@ -819,7 +819,8 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
                 f_k = f0 + nf if (k == 0 and nf > 1) else (f0 if k == 0 else st.frame_start + k * por_ciclo)
                 v_k = pos + giro @ (d * ((nf / por_ciclo) if (k == 0 and nf > 1) else k))
                 llaves.append((f_k, v_k, r))
-                continuas.add(round(f_k, 3))
+                if k > 0:                      # el comienzo del tramo sí se sostiene (puede haber un corte o un giro)
+                    continuas.add(round(f_k, 3))
                 if k == vueltas - 1:
                     f_fin = st.frame_start + vueltas * por_ciclo
                     llaves.append((f_fin, pos + giro @ (d * vueltas), r))

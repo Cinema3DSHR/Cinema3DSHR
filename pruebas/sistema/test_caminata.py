@@ -14,11 +14,16 @@ ac = [{"clip": A + "trabajo_acciones/Breathing_Idle.fbx", "inicio_s": 0.0, "pos"
       {"clip": A + "caminar_correr/Standard_Walk.fbx", "inicio_s": 1.0 + 2 * 35 / 30 / 0.72, "encadenar": True,
        "mirando_deg": -90, "giro_s": 0.6, "repetir": 3, "velocidad": 0.72},
       {"clip": A + "caminar_correr/Stop_Walking.fbx", "inicio_s": 1.0 + 5 * 35 / 30 / 0.72, "encadenar": True,
-       "mirando_deg": -90, "mezcla_s": 0.4}]
+       "mirando_deg": -90, "mezcla_s": 0.4},
+      {"clip": A + "trabajo_acciones/Breathing_Idle.fbx", "inicio_s": 13.0, "encadenar": True, "mirando_deg": -90,
+       "mezcla_s": 0.6},
+      # se da vuelta en un corte y camina hacia el otro lado: mientras espera, NO debe ir girando ni moviéndose
+      {"clip": A + "caminar_correr/Standard_Walk.fbx", "inicio_s": 19.0, "pos": [0.0, -3.0, 0.0], "mirando_deg": 90,
+       "repetir": 2, "mezcla_s": 0.2}]
 m = {"tipo": "escena", "id": "caminata-e01", "produccion": "caminata", "numero": 1, "version": 1, "titulo": "c",
-     "duracion_s": 13.0, "escenario": {"id": "prueba_minima", "generador": "prueba_minima", "parametros": {}},
+     "duracion_s": 22.0, "escenario": {"id": "prueba_minima", "generador": "prueba_minima", "parametros": {}},
      "personajes": [{"id": "chico", "modelo": "humano:chico", "alto_m": 1.8, "acciones": ac}],
-     "tomas": [{"id": "t", "tipo": "estatica", "inicio_s": 0, "duracion_s": 13.0, "desde": [3, 3, 2],
+     "tomas": [{"id": "t", "tipo": "estatica", "inicio_s": 0, "duracion_s": 22.0, "desde": [3, 3, 2],
                 "objetivo": {"ancla": "centro"}}], "render": {"calidad": "hd540", "fps": 30}}
 res = D.construir(m, "hd540")
 arm = res["personajes"]["chico"]["armadura"]
@@ -48,6 +53,15 @@ peor_apoyo = max(min(lentos[i:i + 20]) for i in range(0, len(lentos) - 20, 20))
 resultados.append((peor_apoyo < 0.35, f"pie apoyado: el más lento de cada tramo va a {peor_apoyo:.2f} m/s como mucho"))
 vaiven = max(alturas) - min(alturas)
 resultados.append((0.02 < vaiven < 0.15, f"la cadera sube y baja al caminar {vaiven * 100:.1f} cm"))
+# la espera (14–18,8 s) queda quieta: ni gira ni se desplaza
+sc.frame_set(int(14 * 30))
+r0, c0 = res["personajes"]["chico"]["raiz"].matrix_world.to_euler().z, (arm.matrix_world @ cad.head).copy()
+sc.frame_set(int(18.8 * 30))
+r1, c1 = res["personajes"]["chico"]["raiz"].matrix_world.to_euler().z, (arm.matrix_world @ cad.head).copy()
+import math as _m
+giro = abs(_m.degrees((r1 - r0 + _m.pi) % (2 * _m.pi) - _m.pi))
+resultados.append((giro < 2 and (c1 - c0).length < 0.08, f"esperando antes de un corte: gira {giro:.1f}° y se mueve "
+                   f"{(c1 - c0).length * 100:.1f} cm"))
 for ok_, txt in resultados:
     print(("OK   " if ok_ else "FALLA"), txt)
 n = sum(1 for o, _ in resultados if o)
