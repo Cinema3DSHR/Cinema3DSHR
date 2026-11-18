@@ -138,6 +138,7 @@ def _guardar(d: Path, m: dict, ruta_receta: str, registro: dict, ctx, pjs: dict,
     nombres_obj = {mid: mv["objeto"].name for mid, mv in ctx.moviles.items() if mv.get("objeto") is not None}
     estado = {"formato": "estudio.trabajo/1", "receta": ruta_receta, "huella_receta": None,
               "huellas": {c: v["huella"] for c, v in comps.items()},
+              "codigo_sha": CO.codigo_sha(m),
               "objetos": {c: sorted(set(v)) for c, v in registro.items()},
               "contexto": _ctx_a_json(ctx, nombres_obj),
               "personajes": {pid: _pj_a_json(pj) for pid, pj in pjs.items()},
@@ -227,6 +228,27 @@ def heredar(m: dict) -> Path | None:
             (d / "heredada_de.txt").write_text(f"v{k}\n")
             return prev
     return None
+
+
+def reestampar(m: dict, ids: list[str], motivo: str, archivos_cambiados: list[str]) -> dict:
+    """Recalcula las huellas guardadas de `ids` SIN reconstruir, sólo si ninguno de los archivos que cambiaron desde que
+    se guardó la escena forma parte del código de esos componentes y su porción de la receta es la misma (p. ej. cambió
+    la regla de huellas, no lo que arma el componente). Deja constancia en el estado."""
+    d = carpeta(m)
+    estado = _leer_estado(d)
+    comps = CO.componentes(m)
+    usados = CO.codigo_por_componente(m)
+    for c in ids:
+        toca = sorted(set(archivos_cambiados) & set(usados.get(c, [])))
+        if toca:
+            raise ValueError(f"{c} usa {toca}, que cambió: hay que reconstruirlo")
+    antes = {c: estado["huellas"].get(c) for c in ids}
+    for c in ids:
+        estado["huellas"][c] = comps[c]["huella"]
+    estado.setdefault("reestampados", []).append({"ids": ids, "motivo": motivo, "archivos_cambiados": archivos_cambiados,
+                                                  "antes": antes, "fecha": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
+    (d / "estado.json").write_text(json.dumps(estado, ensure_ascii=False) + "\n")
+    return {c: (antes[c], estado["huellas"][c]) for c in ids}
 
 
 def plan(m: dict) -> dict:

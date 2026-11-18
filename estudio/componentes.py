@@ -42,24 +42,26 @@ def _canon(x) -> bytes:
 
 
 def _codigo(archivos) -> list[str]:
-    """Archivos de código + los módulos del estudio que importan (recursivo, cualquier forma de import)."""
-    vistos, cola = [], list(archivos)
+    """Archivos de código + los módulos del estudio que importan. Los imports del nivel del módulo se siguen
+    (recursivo); los que están adentro de una función cuentan como archivo directo, sin seguir lo que importan ellos
+    (si no, cualquier escenario «dependía» de todo el estudio a través de stickman → personajes)."""
+    vistos, cola = {}, [(a, True) for a in archivos]          # archivo → ya se siguieron sus imports
     while cola:
-        rel = cola.pop()
+        rel, seguir = cola.pop()
         p = config.RAIZ / rel
-        if rel in vistos or not p.exists():
+        if not p.exists() or (rel in vistos and (vistos[rel] or not seguir)):
             continue
-        vistos.append(rel)
-        if not rel.endswith(".py"):
+        vistos[rel] = seguir
+        if not rel.endswith(".py") or not seguir:
             continue
         txt = p.read_text()
-        for mod in re.findall(r"^\s*from (estudio(?:\.\w+)+) import", txt, re.M) + \
-                re.findall(r"^\s*import (estudio(?:\.\w+)+)", txt, re.M):
-            cola.append(mod.replace(".", "/") + ".py")
-        for paquete, nombres in re.findall(r"^\s*from (estudio(?:\.\w+)*) import ([^\n(]+)", txt, re.M):
+        for sangria, mod in re.findall(r"^(\s*)from (estudio(?:\.\w+)+) import", txt, re.M) + \
+                re.findall(r"^(\s*)import (estudio(?:\.\w+)+)", txt, re.M):
+            cola.append((mod.replace(".", "/") + ".py", not sangria))
+        for sangria, paquete, nombres in re.findall(r"^(\s*)from (estudio(?:\.\w+)*) import ([^\n(]+)", txt, re.M):
             for n in nombres.split(","):
                 n = n.strip().split(" as ")[0]
-                cola.append(f"{paquete.replace('.', '/')}/{n}.py")
+                cola.append((f"{paquete.replace('.', '/')}/{n}.py", not sangria))
     return sorted(vistos)
 
 
@@ -129,10 +131,12 @@ def componentes(m: dict) -> dict:
     """{id: {"id", "tipo", "deps": [...], "huella"}} de la receta m."""
     out = {}
 
-    def poner(cid, tipo, porcion, deps=(), codigo=(), recursos=()):
+    def poner(cid, tipo, porcion, deps=(), codigo=(), recursos=(), codigo_plano=()):
+        """codigo: archivos + lo que importan (recursivo); codigo_plano: sólo ese archivo (el director importa todo
+        el estudio, pero el escenario usa sólo su fase)."""
         h = hashlib.sha256()
         h.update(_canon(porcion))
-        h.update(_huella_archivos(_codigo(codigo)).encode())
+        h.update(_huella_archivos(_codigo(codigo) + list(codigo_plano)).encode())
         for r in sorted(set(recursos)):
             h.update(_huella_recurso(r).encode())
         out[cid] = {"id": cid, "tipo": tipo, "deps": sorted(set(deps)), "huella": h.hexdigest()[:16]}
@@ -144,7 +148,7 @@ def componentes(m: dict) -> dict:
     params_desp = {k: params.pop(k) for k in (despues or ()) if k in params}
     esc = {**m["escenario"], "parametros": params}
     poner("escenario", "escenario", {"escenario": esc, "eventos": m.get("eventos", [])}, ["tiempo"],
-          [gen_rel, "estudio/blender/director.py"], _audios_de(m.get("eventos", [])))
+          [gen_rel], _audios_de(m.get("eventos", [])), codigo_plano=["estudio/blender/director.py"])
     for v in m.get("vehiculos", []):
         poner(f"vehiculo:{v['id']}", "vehiculo", v, ["tiempo", "escenario"], ["estudio/blender/vehiculos.py"])
     for pj in m.get("personajes", []):
@@ -174,6 +178,25 @@ def componentes(m: dict) -> dict:
     if resto:                                   # claves que este módulo no conoce: cuentan como parte del escenario
         poner("otros", "otros", resto, ["tiempo"])
     return out
+
+
+def codigo_por_componente(m: dict) -> dict:
+    """{componente: [archivos de código que lo arman]} (la misma regla que usan las huellas)."""
+    gen_rel, despues = _generador(m)
+    out = {"escenario": _codigo([gen_rel]) + ["estudio/blender/director.py"]}
+    for p in m.get("personajes", []):
+        out[f"personaje:{p['id']}"] = _codigo(list(CODIGO_PERSONAJES))
+    if despues is not None:
+        out["despues"] = _codigo([gen_rel])
+    for t in m.get("tomas", []):
+        out[f"camara:{t['id']}"] = _codigo(list(CODIGO_CAMARAS))
+    return out
+
+
+def codigo_sha(m: dict) -> dict:
+    """sha256 (16) de cada archivo de código que usa la escena: queda en el estado de la escena de trabajo."""
+    archivos = sorted({a for v in codigo_por_componente(m).values() for a in v})
+    return {a: hashlib.sha256((config.RAIZ / a).read_bytes()).hexdigest()[:16] for a in archivos if (config.RAIZ / a).exists()}
 
 
 def afectados(previo: dict, actual: dict) -> dict:

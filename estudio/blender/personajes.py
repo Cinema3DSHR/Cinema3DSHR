@@ -790,7 +790,9 @@ def _crear_mixamo(spec: dict, fps: int, col=None) -> dict:
     prev = None
     for f0, (pz, rz) in claves:
         if prev is not None and f0 - prev[0] > 1.001:
-            lineal.append((f0 - 0.01, prev[1], prev[2]))        # sostener hasta el salto (no se arrastra)
+            # sostener hasta el salto (no se arrastra). Con 0,05 de margen: a 0,01 Blender funde las dos claves cuando el
+            # ciclo dura cuadros fraccionarios (velocidad ≠ 1) y la raíz avanzaba sola → la cadera saltaba 1,7 m
+            lineal.append((f0 - 0.05, prev[1], prev[2]))
         lineal.append((f0, pz, rz))
         prev = (f0, pz, rz)
     for f0, pz, rz in lineal:
