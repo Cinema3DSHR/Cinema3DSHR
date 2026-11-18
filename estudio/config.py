@@ -45,6 +45,33 @@ def resolver(ref: str) -> Path:
     return p
 
 
+# Raíz contra la que se resuelven las rutas de las recetas (audio/…, producciones/…). Se puede cambiar con CINE_RAIZ
+# (p. ej. otra copia del repositorio); por defecto, este repositorio.
+RAIZ_RECETAS = Path(os.environ.get("CINE_RAIZ", RAIZ))
+# Escenas de trabajo (.blend editables + estado de sus componentes): fuera de Git, una carpeta por versión de escena.
+TRABAJO = Path(os.environ.get("CINE_TRABAJO", RAIZ.parent / "trabajo_cine"))
+
+
+def ruta_recurso(ruta: str | Path) -> Path:
+    """Ruta de un archivo que nombra una receta (audio, marcas de tiempo…), RELATIVA a la raíz del proyecto.
+    Compatibilidad: las recetas viejas (Dúo Cero) guardaron rutas absolutas de la máquina donde se armaron
+    («/home/user/Cinema3DSHR/audio/…»); si esa ruta no existe acá, se toma lo que sigue a «Cinema3DSHR/»."""
+    p = Path(ruta)
+    if not p.is_absolute():
+        return RAIZ_RECETAS / p
+    if p.exists():
+        return p
+    partes = p.parts
+    for i, x in enumerate(partes):
+        if x.lower() == RAIZ.name.lower() and i + 1 < len(partes):
+            return RAIZ_RECETAS.joinpath(*partes[i + 1:])
+    return p
+
+
+def es_absoluta(ruta: str) -> bool:
+    return Path(str(ruta)).is_absolute()
+
+
 # Niveles de calidad (sección 17). Medido en un servidor de 4 núcleos SIN GPU (igual a los de GitHub Actions):
 # Cycles CPU + OIDN rinde mejor que EEVEE por software (Mesa llvmpipe): 17–24 s por fotograma a 720p contra 35–65 s,
 # y con luces de faros/reflejos correctos. EEVEE queda disponible para máquinas con GPU ("motor": "BLENDER_EEVEE").

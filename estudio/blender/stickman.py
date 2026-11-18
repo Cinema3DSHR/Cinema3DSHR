@@ -1040,8 +1040,12 @@ def actuar(partes: dict, cara: dict, fps: int, nf: int, semilla: int = 1):
     agudo = np.zeros(nf)
     for h in cara.get("habla", []):
         env = None
-        if h.get("audio") and Path(h["audio"]).exists():
-            env = _envolvente_audio(Path(h["audio"]), fps)
+        if h.get("audio"):
+            from estudio import config as _cfg
+            pa = _cfg.ruta_recurso(h["audio"])
+            if not pa.exists():          # nunca sílabas inventadas en lugar de la voz real
+                raise FileNotFoundError(f"Falta el audio de la línea «{h.get('texto', '')[:40]}»: {h['audio']}")
+            env = _envolvente_audio(pa, fps)
             if h.get("recorte_s"):
                 r0, r1 = h["recorte_s"]
                 env = env[int(r0 * fps): int(r1 * fps) + 1]

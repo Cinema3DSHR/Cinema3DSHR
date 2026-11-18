@@ -28,9 +28,14 @@ from estudio.escenarios import nave_deriva as ND
 from estudio.escenarios.nave_deriva import eva_habla, luces_navegacion, estado_kate   # noqa: F401 (eventos)
 
 PLANTAS_SH3D = ["bush_spider_plant", "bush_indoor_plant", "bush_plant_2"]
-DEPENDENCIAS = list(ND.DEPENDENCIAS) + [f"sh3d:models/{n}.glb" for n in PLANTAS_SH3D] + \
-    ["sh3d:models/bush_indoor_plant_leaf.jpg", "sh3d:models/bush_plant_2_leaf.jpg"]
+# lista LITERAL (el planificador de Actions la lee sin importar el módulo): la silla del puesto + plantas en maceta
+DEPENDENCIAS = ["sh3d:models/chair_office_chair.glb",
+                "sh3d:models/bush_spider_plant.glb", "sh3d:models/bush_spider_plant_leaf.jpg",
+                "sh3d:models/bush_indoor_plant.glb", "sh3d:models/bush_indoor_plant_leaf.jpg",
+                "sh3d:models/bush_plant_2.glb", "sh3d:models/bush_plant_2_leaf.jpg"]
 PARAMETROS = {"semilla": 11, "semilla_flores": 23}
+# parámetros que sólo usa `despues_personajes` (la utilería): si cambian, no hace falta rehacer el escenario
+PARAMETROS_DESPUES = ("utileria",)
 
 PAS = {"y0": -3.2, "y1": -10.2, "x": 0.95, "alto": 2.5}            # pasillo de tránsito (el del E01)
 BOT = {"y0": -10.2, "y1": -20.2, "x": 1.8, "alto": 2.8}            # pasillo botánico

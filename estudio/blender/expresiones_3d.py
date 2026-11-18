@@ -210,8 +210,7 @@ def actuar(pj: dict, cara: dict, fps: int, nf: int, otros: dict | None = None):
         f0 = int(round(h["inicio_s"] * fps))
         env = None
         if h.get("audio"):
-            p = Path(h["audio"])
-            p = p if p.is_absolute() else config.RAIZ / p
+            p = config.ruta_recurso(h["audio"])
             if p.exists():
                 from estudio.blender.stickman import _envolvente_audio
                 e = _envolvente_audio(p, fps)

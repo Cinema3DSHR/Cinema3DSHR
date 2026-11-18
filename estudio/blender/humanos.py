@@ -193,4 +193,4 @@ def ruta_audio(ruta: str) -> str:
     from pathlib import Path
     from estudio import config
     p = Path(ruta)
-    return str(p if p.is_absolute() else config.RAIZ / p)
+    return str(config.ruta_recurso(p))

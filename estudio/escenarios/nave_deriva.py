@@ -783,10 +783,9 @@ def eva_habla(animables: dict, frame_inicio: int = 1, lineas: list | None = None
     from estudio.blender import stickman as SM
     amp = np.zeros(nf + 1)
     for ln in lineas or []:
-        ruta = Path(ln["audio"])
-        ruta = ruta if ruta.is_absolute() else config.RAIZ / ruta
+        ruta = config.ruta_recurso(ln["audio"])
         if not ruta.exists():
-            continue
+            raise FileNotFoundError(f"eva_habla: falta el audio {ln['audio']}")
         env = SM._envolvente_audio(ruta, fps)[:, 0]
         f0 = int(round(ln["inicio_s"] * fps)) + 1
         n = min(len(env), nf + 1 - f0)

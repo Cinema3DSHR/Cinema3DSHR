@@ -362,10 +362,9 @@ def _labios_por_letra(boca, h: dict, fps: int, nf: int):
     from estudio import config as _cfg
     alin = h["alineacion"]
     if isinstance(alin, str):
-        q = _P(alin)
-        q = q if q.is_absolute() else _cfg.RAIZ / q
-        if not q.exists():
-            return
+        q = _cfg.ruta_recurso(alin)
+        if not q.exists():               # sin marcas por letra no se inventan: es un error de la receta
+            raise FileNotFoundError(f"Faltan las marcas de tiempo por letra: {alin}")
         alin = _json.loads(q.read_text())
     car = alin.get("characters", [])
     t0s = alin.get("character_start_times_seconds", [])
@@ -387,8 +386,8 @@ def _labios_por_letra(boca, h: dict, fps: int, nf: int):
             np.maximum(seg, w, out=seg)
     # apertura con el volumen real de la voz (si está el audio)
     abre = np.ones(n)
-    if h.get("audio") and _P(h["audio"]).exists():
-        env = SM._envolvente_audio(_P(h["audio"]), fps)
+    if h.get("audio") and _cfg.ruta_recurso(h["audio"]).exists():
+        env = SM._envolvente_audio(_cfg.ruta_recurso(h["audio"]), fps)
         if len(env):
             e = env[int(rec[0] * fps):int(rec[0] * fps) + n, 0]
             abre[:len(e)] = np.clip(0.35 + e, 0.35, 1.15)

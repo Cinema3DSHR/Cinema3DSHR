@@ -25,6 +25,8 @@ def _modulo_escenario(gen: str):
 
 def construir(manifiesto: dict, calidad: str = "revision") -> dict:
     fps = manifiesto.get("render", {}).get("fps", 30)
+    from estudio import recursos as R
+    R.exigir(manifiesto, externos=False, mezcla=False)   # audios y marcas de tiempo de las líneas: si faltan, se corta
     K.reiniciar_materiales()
     P.reiniciar()
     s = K.escena_vacia(manifiesto["id"])

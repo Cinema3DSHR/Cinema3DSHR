@@ -47,6 +47,12 @@ def _cargar(ruta) -> dict:
 def cmd_validar(a):
     m = MF.leer(Path(a.escena))
     errs = MF.validar(m)
+    if getattr(a, "recursos", False):
+        from estudio import recursos as R
+        er, av = R.verificar(m)
+        errs += [f"recurso: {e}" for e in er]
+        for x in av:
+            print("aviso:", x)
     print("OK" if not errs else "\n".join(errs))
     print("huella:", MF.huella(m))
     return 1 if errs else 0
@@ -190,6 +196,8 @@ def cmd_previa(a):
     if err:
         print("\n".join(err))
         return 1
+    from estudio import recursos as R
+    R.exigir(m)                                   # sin recursos completos no se prepara nada
     res = D.construir(m, "revision")
     eid = m["id"].split("-")[-1]
     out = Path(a.salida)
@@ -281,7 +289,9 @@ def cmd_autorizacion(a):
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="estudio", description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    p = sub.add_parser("validar"); p.add_argument("escena"); p.set_defaults(f=cmd_validar)
+    p = sub.add_parser("validar"); p.add_argument("escena")
+    p.add_argument("--recursos", action="store_true", help="también audios, marcas de tiempo, clips y modelos")
+    p.set_defaults(f=cmd_validar)
     p = sub.add_parser("matriz"); p.add_argument("escena"); p.set_defaults(f=cmd_matriz)
     p = sub.add_parser("fijas"); p.add_argument("escena"); p.add_argument("--calidad", default="previa")
     p.add_argument("--salida", default=str(config.SALIDA / "fijas")); p.set_defaults(f=cmd_fijas)
