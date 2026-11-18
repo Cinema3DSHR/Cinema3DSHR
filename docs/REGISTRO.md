@@ -487,3 +487,12 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   hasta 60 trabajos (la organización), `render_rango.py` acepta el 720p vertical, `montar.py --escena` aplica el
   fundido a negro de la última toma (antes se perdía) y los entregables salen con la versión real (`e01_v2_*`, antes
   fijo `e01_v1_*`). Configuración de Cycles sin tocar.
+- **Render terminado** (corrida 44285010355, `video30.yml`, 59 trabajos): 2.655/2.655 fotogramas, sin faltantes,
+  sobrantes ni repetidos; 720x1280, 88,5 s, audio AAC 48 kHz; fundido a negro final comprobado (luminancia 16 en el
+  último segundo). 21,9 s por fotograma de media (13–15 min por trabajo de 45). Publicado en la release
+  `p011_a_la_deriva` (`e01_v2_revision.mp4/.ogv`, portada, miniatura, info, informe) y catálogo rearmado.
+- Incidentes: la organización sólo dio 19–20 trabajos simultáneos aunque la página de Runners muestra «19/60» (causa
+  no confirmada; desde esta sesión no se ven los ajustes de la organización). 13 trabajos se cancelaron juntos a las
+  10:43:55–10:44:06 sin error del render (GitHub los cortó; coincide con cambios del dueño en la organización) y el
+  reparto quedó congelado hasta las 10:52. Con autorización del dueño se usó «Re-run failed jobs» (intento 2): los 13
+  y el montaje salieron bien. Reloj total ~1 h 55 min.
