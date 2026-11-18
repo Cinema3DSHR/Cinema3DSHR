@@ -11,9 +11,12 @@ Stickman (`stickman.actuar`). Lo que cambia es el dibujo, más humano:
   · NARIZ sugerida: sombra lateral del tabique y las dos aletas.
   · BOCA con labios: labio de arriba y de abajo rosados, interior oscuro y dientes que asoman al abrirla.
   · RUBOR suave (semitransparente).
-Formas clave (mismos nombres que los Stickman, así sirven sus 18 expresiones):
-  ojos: cerrado, feliz, entrecerrado, abajo_parpado, grande, mirar_der/izq/arriba/abajo
-  cejas: arriba, enojo, preocupado, plana · boca: sonrisa, sonrisa_abierta, picara, triste, A, E, O, M · rubor: visible
+Formas clave (los nombres de los Stickman + las de las láminas «Stickman cinematográfico»):
+  ojos: cerrado, feliz, entrecerrado, abajo_parpado, grande, triste, mirar_der/izq/arriba/abajo
+  cejas: arriba, feliz, enojo, preocupado, triste, plana
+  boca: sonrisa, sonrisa_abierta (en D, con dientes y lengua), picara, triste, o_chica, enojo, preocupada,
+        y las vocales A, E, O, M · rubor: visible
+Las alturas de ojos, cejas, nariz y boca se miden en cada cabeza (`_alturas`).
 """
 from __future__ import annotations
 import math
@@ -31,12 +34,12 @@ def _lin(c):
 # Medidas en radianes sobre la cabeza (u, v). Se midió el perfil de cada maniquí (v = 0 a la altura del centro;
 # mentón en v ≈ −0,9): ojos a media cabeza, cejas arriba, base de la nariz y boca en los tercios de la cara.
 PROPORCIONES = {
-    "el": {"ojo_sep": 0.37, "ojo_alto": -0.03, "ojo_rx": 0.165, "ojo_ry": 0.088, "iris": 0.86, "mirada": 0.42,
-           "ceja_alto": 0.22, "ceja_w": 0.20, "ceja_g": 0.065, "nariz_alto": -0.47, "boca_alto": -0.64,
-           "boca_w": 0.21, "labio": 0.035, "pestanas": 0, "sobre": 0.010},
-    "ella": {"ojo_sep": 0.35, "ojo_alto": -0.10, "ojo_rx": 0.168, "ojo_ry": 0.10, "iris": 0.88, "mirada": 0.42,
-             "ceja_alto": 0.14, "ceja_w": 0.18, "ceja_g": 0.048, "nariz_alto": -0.50, "boca_alto": -0.67,
-             "boca_w": 0.19, "labio": 0.042, "pestanas": 5, "sobre": 0.010},
+    "el": {"ojo_sep": 0.37, "ojo_alto": -0.03, "ojo_rx": 0.165, "ojo_ry": 0.098, "iris": 0.98, "mirada": 0.42,
+           "ceja_alto": 0.22, "ceja_w": 0.20, "ceja_g": 0.078, "nariz_alto": -0.47, "boca_alto": -0.64,
+           "boca_w": 0.21, "labio": 0.030, "pestanas": 0, "sobre": 0.010},
+    "ella": {"ojo_sep": 0.35, "ojo_alto": -0.10, "ojo_rx": 0.168, "ojo_ry": 0.11, "iris": 1.0, "mirada": 0.42,
+             "ceja_alto": 0.14, "ceja_w": 0.18, "ceja_g": 0.058, "nariz_alto": -0.50, "boca_alto": -0.67,
+             "boca_w": 0.19, "labio": 0.038, "pestanas": 5, "sobre": 0.010},
 }
 
 
@@ -48,12 +51,13 @@ def _ojo(lado: int, P: dict):
     cx, cy, rx, ry = lado * P["ojo_sep"], P["ojo_alto"], P["ojo_rx"], P["ojo_ry"]
     xs = np.linspace(-1, 1, N)
 
-    def parpados(abre=1.0, sube_inf=0.0, escala=1.0, baja_sup=0.0, feliz=0.0):
-        """Curvas del párpado de arriba y de abajo (y relativa al centro), por punto."""
+    def parpados(abre=1.0, sube_inf=0.0, escala=1.0, baja_sup=0.0, feliz=0.0, caida=0.0):
+        """Curvas del párpado de arriba y de abajo (y relativa al centro), por punto. caida: el de arriba baja más
+        hacia afuera (ojos tristes)."""
         sup = ry * escala * (1 - xs ** 2) ** 0.72 * (1 - 0.10 * xs) * abre
-        inf = -ry * escala * 0.55 * (1 - xs ** 2) ** 0.9 * (1 - 0.15 * xs)
-        inf = inf + (ry * escala * 0.55 * (1 - xs ** 2) ** 0.9) * sube_inf
-        sup = sup - (sup - inf) * baja_sup
+        inf = -ry * escala * 0.62 * (1 - xs ** 2) ** 0.9 * (1 - 0.15 * xs)
+        inf = inf + (ry * escala * 0.62 * (1 - xs ** 2) ** 0.9) * sube_inf
+        sup = sup - (sup - inf) * np.clip(baja_sup + caida * 0.45 * ((xs + 1) / 2) ** 1.2, 0, 1)
         if feliz:
             # «ojos felices»: el de abajo sube en arco y el de arriba baja sobre él
             arco = ry * escala * 0.35 * (1 - xs ** 2) ** 0.8
@@ -62,8 +66,8 @@ def _ojo(lado: int, P: dict):
         sup = np.maximum(sup, inf)
         return sup, inf
 
-    def islas(abre=1.0, sube_inf=0.0, escala=1.0, baja_sup=0.0, feliz=0.0, gx=0.0, gy=0.0):
-        sup, inf = parpados(abre, sube_inf, escala, baja_sup, feliz)
+    def islas(abre=1.0, sube_inf=0.0, escala=1.0, baja_sup=0.0, feliz=0.0, gx=0.0, gy=0.0, caida=0.0):
+        sup, inf = parpados(abre, sube_inf, escala, baja_sup, feliz, caida)
         X = cx + lado * xs * rx * escala                       # x hacia afuera según el lado
         def dentro(px, py):
             # recorte contra la almendra: interpolar las curvas en la x del punto
@@ -78,7 +82,7 @@ def _ojo(lado: int, P: dict):
         # 2) iris, anillo y pupila: círculos recortados por los párpados
         ri = ry * escala * P["iris"]
         icx, icy = cx + lado * gx * rx * escala, cy + gy * ry * escala - ry * 0.05
-        for nombre, r in (("anillo", ri), ("iris", ri * 0.82), ("pupila", ri * 0.42)):
+        for nombre, r in (("anillo", ri), ("iris", ri * 0.84), ("pupila", ri * 0.48)):
             pts = [(icx, dentro(icx, icy) if True else icy)]
             for a in np.linspace(0, 2 * math.pi, 20, endpoint=False):
                 px = icx + r * math.cos(a) * 0.95
@@ -86,7 +90,7 @@ def _ojo(lado: int, P: dict):
             out[nombre] = pts
         # 3) brillos (arriba a un costado del iris); se esconden cuando el ojo se cierra
         vis = max(0.0, min(1.0, (sup[N // 2] - inf[N // 2]) / (ry * 0.8)))
-        for nombre, (dx, dy, r) in (("brillo1", (0.35, 0.40, 0.30)), ("brillo2", (-0.38, -0.30, 0.14))):
+        for nombre, (dx, dy, r) in (("brillo1", (0.33, 0.36, 0.34)), ("brillo2", (-0.36, -0.34, 0.15))):
             bx, by = icx + lado * dx * ri, icy + dy * ri
             rr = ri * r * vis
             out[nombre] = [(bx, dentro(bx, by))] + [(bx + rr * math.cos(a), dentro(bx, by) + rr * math.sin(a))
@@ -122,6 +126,7 @@ def _ojo(lado: int, P: dict):
         "entrecerrado": islas(baja_sup=0.42),
         "abajo_parpado": islas(sube_inf=0.35),
         "grande": islas(abre=1.12, escala=1.12),
+        "triste": islas(baja_sup=0.28, caida=0.8, gy=-0.12),
         "mirar_der": islas(gx=g),
         "mirar_izq": islas(gx=-g),
         "mirar_arriba": islas(gy=0.55 * g),
@@ -180,12 +185,13 @@ def _ceja(lado: int, P: dict):
             x = cx + lado * s * w
             pico = 0.35                                            # el arco más alto hacia afuera
             yc = cy + dy + arco * w * 0.35 * (1 - ((s - pico) / (1 + abs(pico))) ** 2) - gir * w * 0.42 * (-s)
-            g = gro * (1.0 - 0.75 * (s + 1) / 2) * (0.75 if s < -0.85 else 1.0)
+            g = gro * (1.0 - 0.45 * (s + 1) / 2) * (0.35 + 0.65 * max(0.0, 1 - s ** 8) ** 0.5)
             sup.append((x, yc + g / 2))
             inf.append((x, yc - g / 2))
         return sup + inf
-    formas = {"base": tira(), "arriba": tira(0.42, 0.06), "enojo": tira(0.08, -0.012, 0.7),
-              "preocupado": tira(0.18, 0.025, -0.65), "plana": tira(0.05, -0.008)}
+    formas = {"base": tira(), "arriba": tira(0.5, 0.07), "enojo": tira(0.02, -0.02, 0.9),
+              "preocupado": tira(0.15, 0.025, -0.75), "plana": tira(0.05, -0.008),
+              "triste": tira(-0.12, -0.004, -0.8), "feliz": tira(0.6, 0.045)}
     caras = [(i, i + 1, K_ + i + 1, K_ + i) for i in range(K_ - 1)]
     return formas, caras, [P["sobre"] * 1.2] * (2 * K_), [0] * len(caras)
 
@@ -216,20 +222,25 @@ def _boca(P: dict):
     y0, W, L = P["boca_alto"], P["boca_w"], P["labio"]
     ts = np.linspace(-1, 1, N)
 
-    def forma(abre=0.0, sonr=0.0, ancho=1.0, dy=0.0, ladeo=0.0, redondo=0.0, dientes=0.6):
-        """abre: separación de los labios; sonr > 0 comisuras arriba (< 0 abajo); redondo: «O»."""
+    def forma(abre=0.0, sonr=0.0, ancho=1.0, dy=0.0, ladeo=0.0, redondo=0.0, dientes=0.6, plano=0.0,
+              apretar=1.0, lengua=0.38):
+        """abre: separación de los labios; sonr > 0 comisuras arriba (< 0 abajo); redondo: «O»; plano: el labio
+        de arriba queda casi recto (sonrisa en D); apretar < 1: labios finos (enojo)."""
         x = ts * W * ancho * (1 - 0.25 * redondo)
         comis = sonr * 0.05 * ts ** 2 + ladeo * 0.02 * ts
         sep = abre * 0.13 * (1 - ts ** 2) ** (0.7 - 0.3 * redondo)
-        in_sup = y0 + dy + comis + sep * 0.25
+        in_sup = y0 + dy + comis * (1 - plano) + sep * 0.25
         in_inf = y0 + dy + comis - sep * 0.75
         # arco de cupido en el labio de arriba y labio de abajo más lleno
-        cup = L * (0.75 + 0.35 * np.exp(-((np.abs(ts) - 0.28) / 0.2) ** 2) - 0.25 * np.exp(-(ts / 0.1) ** 2))
+        cup = L * apretar * (0.75 + 0.35 * np.exp(-((np.abs(ts) - 0.28) / 0.2) ** 2) - 0.25 * np.exp(-(ts / 0.1) ** 2))
         out_sup = in_sup + cup * (1 - ts ** 2) ** 0.55 + 0.002
-        out_inf = in_inf - L * 1.15 * (1 - ts ** 2) ** 0.6 - 0.002
-        dient = np.maximum(in_inf, in_sup - dientes * 0.045 * (1 - ts ** 2) ** 0.6 * min(1.0, abre * 3))
+        out_inf = in_inf - L * apretar * 1.15 * (1 - ts ** 2) ** 0.6 - 0.002
+        # dientes de arriba: una banda pareja debajo del labio (más baja en el centro, nunca más que la boca)
+        dient = np.maximum(in_inf + 0.25 * (in_sup - in_inf),
+                           in_sup - dientes * 0.05 * (1 - ts ** 2) ** 0.35 * min(1.0, abre * 3))
+        leng = np.minimum(dient, in_inf + (in_sup - in_inf) * lengua * (1 - ts ** 2) ** 0.6)
         pts = []
-        for a, b in ((out_sup, in_sup), (in_sup, in_inf), (in_sup, dient), (in_inf, out_inf)):
+        for a, b in ((out_sup, in_sup), (in_sup, in_inf), (in_inf, leng), (in_sup, dient), (in_inf, out_inf)):
             pts += [(x[i], a[i]) for i in range(N)] + [(x[i], b[i]) for i in range(N)]
         # línea de la boca (oscura, fina) entre los labios
         pts += [(x[i], (in_sup[i] + in_inf[i]) / 2 + 0.004) for i in range(N)]
@@ -239,16 +250,20 @@ def _boca(P: dict):
     formas = {
         "base": forma(),
         "sonrisa": forma(sonr=1.0, ancho=1.08, dy=0.006),
-        "sonrisa_abierta": forma(abre=0.55, sonr=1.2, ancho=1.1, dy=0.01, dientes=1.0),
+        "sonrisa_abierta": forma(abre=1.9, sonr=1.6, ancho=1.1, dy=0.02, dientes=0.75, plano=0.8, lengua=0.4),
         "picara": forma(sonr=0.5, ladeo=1.0, ancho=0.95),
-        "triste": forma(sonr=-0.9, ancho=0.92),
+        "triste": forma(sonr=-1.6, ancho=0.82, apretar=0.85, dy=0.004),
+        "o_chica": forma(abre=1.0, ancho=0.42, redondo=1.0, dientes=0.0, lengua=0.25),
+        "enojo": forma(sonr=-0.45, ancho=0.86, apretar=0.55, dy=-0.004),
+        "preocupada": forma(sonr=-0.6, ancho=0.76, ladeo=0.35, apretar=0.8),
         "A": forma(abre=1.0, ancho=0.9, dientes=0.5),
         "E": forma(abre=0.45, ancho=1.05, dientes=0.9),
         "O": forma(abre=0.75, ancho=0.62, redondo=1.0, dientes=0.2),
         "M": forma(ancho=0.92, dy=-0.002),
     }
     caras, mat_idx, sobre = [], [], []
-    capas = [(1.6, 1), (1.0, 2), (1.3, 3), (1.6, 1), (1.7, 0)]   # labio sup, interior, dientes, labio inf, línea
+    # labio sup, interior, lengua, dientes, labio inf, línea
+    capas = [(1.6, 1), (1.0, 2), (1.15, 4), (1.3, 3), (1.6, 1), (1.7, 0)]
     for k, (s, mi) in enumerate(capas):
         ini = k * 2 * N
         for i in range(N - 1):
@@ -270,26 +285,81 @@ def _rubor(lado: int, P: dict):
 
 # ------------------------------------------------------------------------------------------------ armado
 
+def _alturas(cab, datos) -> dict:
+    """Alturas de ojos, cejas, nariz y boca medidas sobre la cabeza real: de la coronilla al mentón (perfil del
+    centro de la cara), con las proporciones de una cara humana: ojos a la mitad, base de la nariz a 0,20 y la boca a
+    0,31 de la altura de la cabeza por debajo de los ojos; cejas a 0,085 por encima."""
+    vs = np.linspace(-1.5, 1.3, 120)
+    pts = [cab.punto(0.0, float(v), 0.0) for v in vs]
+    z = np.array([p.z for p in pts])
+    adelante = np.array([cab.c.y - p.y for p in pts])           # cuánto sobresale hacia el frente
+    # el mentón: el punto más bajo que todavía es «cara» (debajo, los rayos ya tocan el cuello y el pecho)
+    cara = (vs < 0.0) & (adelante >= 0.85 * adelante.max())
+    i_m = int(np.argmin(np.where(cara, z, np.inf)))
+    z_m = float(z[i_m])
+    reg = datos["reg"] == 0
+    top = float(datos["pos"][reg][:, 2].max()) if reg.any() else float(z.max())
+    alto = top - z_m
+    sel = vs >= vs[i_m]
+    zs, vv = z[sel], vs[sel]
+    orden = np.argsort(zs)
+
+    def v_de(zz):
+        return float(np.interp(zz, zs[orden], vv[orden]))
+    ojos = z_m + 0.5 * alto
+    return {"ojo_alto": v_de(ojos), "ceja_alto": v_de(ojos + 0.085 * alto),
+            "nariz_alto": v_de(ojos - 0.20 * alto), "boca_alto": v_de(ojos - 0.31 * alto)}
+
+
+# Expresiones de los personajes humanos («Stickman cinematográfico – híbrido realista»): las seis principales de las
+# láminas del dueño + las de los Stickman (mismos nombres, así sirven las recetas).
+EXPRESIONES = {
+    "neutral": {},
+    "feliz": {"boca:sonrisa_abierta": 1.0, "ojos:feliz": 0.22, "cejas:feliz": 0.6, "rubor": 0.25},
+    "sonrisa": {"boca:sonrisa": 1.0, "ojos:feliz": 0.15, "cejas:arriba": 0.2},
+    "sonrisa_suave": {"boca:sonrisa": 0.55},
+    "carinosa": {"rubor": 0.45, "boca:sonrisa": 0.7, "ojos:feliz": 0.2, "cejas:arriba": 0.2},
+    "sorpresa": {"cejas:arriba": 1.0, "ojos:grande": 0.9, "boca:o_chica": 1.0},
+    "preocupado": {"cejas:preocupado": 1.0, "boca:preocupada": 1.0, "ojos:abajo_parpado": 0.15},
+    "enojado": {"cejas:enojo": 1.0, "boca:enojo": 1.0, "ojos:entrecerrado": 0.3},
+    "triste": {"cejas:triste": 1.0, "ojos:triste": 1.0, "boca:triste": 1.0},
+}
+EXPRESIONES["preocupada"] = EXPRESIONES["preocupado"]
+EXPRESIONES["enojo"] = EXPRESIONES["enojado"]
+
+
+def actuar(partes: dict, cara: dict, fps: int, nf: int, semilla: int = 1):
+    """La actuación de los Stickman (`stickman.actuar`) con la tabla de expresiones de los humanos."""
+    vieja = SM.EXPRESIONES
+    SM.EXPRESIONES = {**vieja, **EXPRESIONES}
+    try:
+        SM.actuar(partes, cara, fps, nf, semilla)
+    finally:
+        SM.EXPRESIONES = vieja
+
+
 def armar(pj: dict, tipo: str, perfil: dict, col) -> dict:
     """Crea las piezas de la cara sobre la cabeza real del maniquí. Devuelve {nombre: objeto} (como los Stickman)."""
     datos = SM.datos_reposo(pj["malla"], pj["raiz"])
     c, r = SM.esfera_cabeza(datos)
     cab = SM.Cabeza(c, r, SM.bvh_cabeza(pj["malla"], datos))
     pj["cabeza"] = cab
-    P = {**PROPORCIONES[tipo], **perfil.get("cara_proporciones", {})}
+    P = {**PROPORCIONES[tipo], **_alturas(cab, datos), **perfil.get("cara_proporciones", {})}
     pid = pj["id"]
     piel = perfil["piel"]
     m = {
         "linea": K.material(f"cara_linea_{pid}", _lin((0.10, 0.06, 0.05)), 0.5),
         "blanco": K.material(f"cara_blanco_{pid}", _lin((0.94, 0.92, 0.89)), 0.35),
         "anillo": K.material(f"cara_anillo_{pid}", _lin(tuple(x * 0.45 for x in perfil["iris"])), 0.3),
-        "iris": K.material(f"cara_iris_{pid}", _lin(perfil["iris"]), 0.25),
+        "iris": K.material(f"cara_iris_{pid}", _lin(tuple(x * 0.75 for x in perfil["iris"])), 0.25),
         "pupila": K.material(f"cara_pupila_{pid}", _lin((0.02, 0.015, 0.015)), 0.2),
         "brillo": K.material(f"cara_brillo_{pid}", (0.95, 0.95, 0.95), 0.2, emision=(1, 1, 1), fuerza=0.8),
         "pliegue": K.material(f"cara_pliegue_{pid}", _lin(tuple(x * 0.72 for x in piel)), 0.5),
         "ceja": K.material(f"cara_ceja_{pid}", _lin(perfil["cejas"]), 0.6),
         "nariz": K.material(f"cara_nariz_{pid}", _lin(tuple(x * 0.66 for x in piel)), 0.55),
-        "labios": K.material(f"cara_labios_{pid}", _lin(perfil["labios"]), 0.35),
+        "labios": K.material(f"cara_labios_{pid}", _lin(tuple(0.5 * a + 0.5 * b for a, b in
+                                                              zip(perfil["labios"], piel))), 0.35),
+        "lengua": K.material(f"cara_lengua_{pid}", _lin((0.80, 0.42, 0.45)), 0.4),
         "boca": K.material(f"cara_boca_{pid}", _lin((0.22, 0.05, 0.06)), 0.5),
         "dientes": K.material(f"cara_dientes_{pid}", _lin((0.95, 0.93, 0.88)), 0.3),
         "linea_boca": K.material(f"cara_linea_boca_{pid}", _lin(tuple(x * 0.55 for x in perfil["labios"])), 0.5),
@@ -308,7 +378,7 @@ def armar(pj: dict, tipo: str, perfil: dict, col) -> dict:
                                                       mi, col)
     f, ca, s, mi = _boca(P)
     partes["boca"] = SM._malla_con_formas(f"CARA_{pid}_boca", pj, cab, f, ca, s,
-                                          [m["linea_boca"], m["labios"], m["boca"], m["dientes"]], mi, col)
+                                          [m["linea_boca"], m["labios"], m["boca"], m["dientes"], m["lengua"]], mi, col)
     f, ca, s, mi = _nariz(P)
     nariz = SM._malla_con_formas(f"CARA_{pid}_nariz", pj, cab, f, ca, s, [m["nariz"]], mi, col)
     for k in list(nariz.data.shape_keys.key_blocks)[::-1]:

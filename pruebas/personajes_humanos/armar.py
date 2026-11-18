@@ -11,11 +11,8 @@ def main():
     a = sys.argv[1:]
     salida = Path(a[0]); salida.mkdir(parents=True, exist_ok=True)
     expr = a[a.index("--expresion") + 1] if "--expresion" in a else "neutral"
-    caras = {"neutral": [{"t": 0, "expr": "neutral"}], "sonrisa": [{"t": 0, "expr": "sonrisa"}],
-             "triste": [{"t": 0, "expr": "preocupada"}], "sorpresa": [{"t": 0, "expr": "sorpresa"}],
-             "habla": [{"t": 0, "expr": "neutral"}], "carinosa": [{"t": 0, "expr": "carinosa"}],
-             "miedo": [{"t": 0, "expr": "sorpresa"}], "parpadeo": [{"t": 0, "expr": "neutral"}],
-             "triste_fuerte": [{"t": 0, "expr": "triste"}]}
+    especiales = {"habla": "neutral", "parpadeo": "neutral"}
+    caras = {expr: [{"t": 0, "expr": especiales.get(expr, expr)}]}
     quienes = [x for x in a[1:] if x in ("chico", "chica")] or ["chico", "chica"]
     pelo = a[a.index("--pelo") + 1] if "--pelo" in a else None
     for q in quienes:
@@ -31,7 +28,7 @@ def main():
         if pelo:
             spec["perfil"] = {"pelo_modelo": pelo}
         pj = PJ.crear(spec, 30)
-        bpy.context.scene.frame_set(5 if expr == "habla" else 1)
+        bpy.context.scene.frame_set(5 if expr == "habla" else 20)   # la expresión ya completa (transición 0,25 s)
         if expr == "parpadeo":
             for o in bpy.data.objects:
                 if o.type == "MESH" and o.data.shape_keys:

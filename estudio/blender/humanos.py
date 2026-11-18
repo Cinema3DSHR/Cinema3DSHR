@@ -65,6 +65,46 @@ def _cabeza_propia(pj: dict) -> dict:
     return {"obj": ob, "z_corte": hn.z + (hh.z - hn.z) * 0.3, "rep": rep, "propia": True}
 
 
+def esculpir_cara(pj: dict, acortar: float = 0.17, menton: float = 0.10):
+    """La cara de los maniquíes es larga (mucho mentón): se acorta la parte de abajo de la cara (de la línea de los
+    ojos al mentón) y el mentón se lleva un poco hacia atrás. Sólo adelante (la nuca y el cráneo no se tocan) y con
+    transición suave hacia el cuello. Se cambia la malla en reposo: el esqueleto y las animaciones siguen igual."""
+    import numpy as np
+    from estudio.blender import cabeza_mh as CM
+    rep = CM.reposo(pj)
+    malla, arm = pj["malla"], pj["armadura"]
+    M = arm.matrix_world.inverted() @ malla.matrix_world
+    P = rep["pos"].copy()
+    u = pj["u"]
+    cab = [i for i, p in enumerate(rep["pesos"]) if sum(w for g, w in p.items() if g.startswith("Head")) > 0.5]
+    H = P[cab]
+    top = H[:, 2].max()
+    y0, y1 = H[:, 1].min(), H[:, 1].max()
+    cy, D = (y0 + y1) / 2, y1 - y0
+    menton_z = H[H[:, 1] < cy - 0.25 * D][:, 2].min()
+    alto = top - menton_z
+    ojos = top - 0.5 * alto
+    nariz = ojos - 0.2 * alto
+    z_cuello = rep["huesos"]["Neck"][0].z
+    for i in range(len(P)):
+        x, y, z = P[i]
+        if z >= ojos or z < z_cuello:
+            continue
+        wf = float(np.clip((cy - y) / (0.3 * D) + 0.35, 0, 1))
+        wf = wf * wf * (3 - 2 * wf)
+        if z >= menton_z:
+            dz = acortar * (ojos - z)
+        else:                                   # debajo del mentón: se apaga hacia el cuello
+            dz = acortar * (ojos - menton_z) * float(np.clip((z - (menton_z - 0.05 * u)) / (0.05 * u), 0, 1))
+        fz = float(np.clip((nariz - z) / max(1e-6, nariz - menton_z), 0, 1))
+        dy = menton * fz * max(0.0, cy - y)
+        P[i] = (x, y + dy * wf, z + dz * wf)
+    Mi = np.array(M.inverted())
+    co = P @ Mi[:3, :3].T + Mi[:3, 3]
+    malla.data.vertices.foreach_set("co", co.astype(np.float32).ravel())
+    malla.data.update()
+
+
 def preparar(pj: dict, spec: dict, fps: int, nf: int, otros: dict | None = None):
     """Cara dibujada (sistema Stickman, estilo anime realista), pelo modelado y traje de un humano recién creado
     por personajes._crear_mixamo. La cabeza es la ORIGINAL del maniquí."""
@@ -77,12 +117,14 @@ def preparar(pj: dict, spec: dict, fps: int, nf: int, otros: dict | None = None)
     piel = material_piel(f"piel_{pj['id']}", perfil["piel"], 0.5)
     pj["malla"].data.materials.clear()
     pj["malla"].data.materials.append(piel)
+    if perfil.get("acortar_cara", 0.17):
+        esculpir_cara(pj, perfil.get("acortar_cara", 0.17), perfil.get("menton_atras", 0.10))
     pj["cabeza_humana"] = _cabeza_propia(pj)
     partes = CA.armar(pj, perfil.get("cara", "el" if perfil["genero"] > 0.5 else "ella"), perfil, pj["coleccion"])
     pj["cara"] = partes
     cara = dict(spec.get("cara", {}))
     cara["habla"] = [{**h, "audio": ruta_audio(h["audio"])} if h.get("audio") else h for h in cara.get("habla", [])]
-    SM.actuar(partes, cara, fps, nf, semilla=sum(map(ord, pj["id"])))
+    CA.actuar(partes, cara, fps, nf, semilla=sum(map(ord, pj["id"])))
     if perfil.get("pelo_modelo"):
         PM.poner(pj, perfil["pelo_modelo"], perfil["pelo"], perfil.get("pelo_holgura", 1.12))
     RH.vestir(pj, perfil.get("vestuario", []))

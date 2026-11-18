@@ -379,3 +379,17 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   que mandó el dueño no traen expresiones (sólo forma); no se usaron.
 - `humanos._cabeza_propia`: malla auxiliar de la cabeza del maniquí para encajar el pelo y medir la mandíbula.
 - Traje: no sube a la cabeza; cuello alto más bajo adelante y cierre que arranca en el cuello (antes en el mentón).
+
+## 18/11/2026 (noche) — Caras más reales y expresiones «Stickman cinematográfico»
+
+- Pedido del dueño: caras menos largas (mucho mentón) y las expresiones de sus láminas «Stickman cinematográfico –
+  híbrido realista» (neutro, feliz, sorpresa, preocupado, enojado, triste), más reales.
+- `humanos.esculpir_cara`: acorta la parte de abajo de la cara (de los ojos al mentón, 17 %) y lleva el mentón un
+  poco atrás, sólo adelante y con transición al cuello (cambia la malla en reposo; esqueleto y animaciones igual).
+- `cara_anime`: alturas de ojos, cejas, nariz y boca medidas en cada cabeza con proporciones humanas (`_alturas`;
+  error propio corregido: el «mentón» se tomaba en el cuello y la boca quedaba fuera de la cara); ojos más redondos
+  con iris oscuro grande y brillos; cejas gruesas redondeadas; formas nuevas: ojos «triste», cejas «feliz»/«triste»,
+  boca en D con dientes y lengua, «o» de sorpresa, enojo y preocupada; tabla `EXPRESIONES` propia (las seis de las
+  láminas + las de los Stickman) usada por `cara_anime.actuar`.
+- Prueba: las capturas tomaban el cuadro 1, con la expresión a mitad de su transición (se veía floja); ahora el 20.
+- Pendiente visto en las capturas: en la sonrisa abierta de ella los dientes se ven cortados de un lado.
