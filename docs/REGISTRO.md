@@ -433,5 +433,7 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   `webmaletin-art/Cinema3DSHR`. Las lecturas siguen por la redirección de GitHub, pero crear el pedido (POST) recibe
   307 y la app lo tomaba como rechazo. Corregido `REPO` en `app/main/api.gd`, `app/boot/boot.gd` y
   `estudio/config.py` (paso 13 de `docs/MIGRACION_ORGANIZACION.md`). La clave del token guardado sigue con el nombre
-  viejo (`REPO_CLAVE`) para no pedirlo de nuevo. Llega en `app.pck` (se baja solo al abrir la app). Prueba de la app
-  18/18. El dueño pidió «renderizalo» por chat: no se renderiza hasta que APROBAR + AUTORIZAR salgan desde la app.
+  viejo (`REPO_CLAVE`) para no pedirlo de nuevo. Prueba de la app 18/18. La APK salió como PRUEBA con firma
+  temporal (artefacto `3DFilmStudio-PRUEBA-firma-temporal-v7`, corrida 44276199602): en el repositorio movido no está
+  el secreto `ANDROID_KEYSTORE_PASSWORD` ni la release `app`, así que no hay actualización automática; hay que
+  instalarla a mano. El dueño pidió «renderizalo» por chat: no se renderiza hasta que APROBAR + AUTORIZAR salgan desde la app.
