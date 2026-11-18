@@ -594,3 +594,24 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Migración de E02: no hay .blend que migrar; hace falta UN armado completo de una copia de trabajo (≈8 min, sin
   render) — pendiente de autorización del dueño. Desde ahí, la corrección de la caminata en una v2 rehace sólo a Aiden,
   la utilería y sus 10 cámaras (el escenario de flores y comedor no), si los nuevos clips frenan en los mismos lugares.
+
+## 18/11/2026 — «A la deriva» E02 v2: Aiden con clips neutros, por componentes (sin render, sin Actions)
+
+- Autorización del dueño: armar la copia de trabajo y entregar la previsualización de la v2 (no el render).
+- v2 = la v1 con SÓLO las acciones de Aiden cambiadas (`herramientas/e02_v2.py`): Standard_Walk, Stop_Walking,
+  annoyed_head_shake y, por pedido del dueño, Breathing_Idle en lugar de Bored (brazos en péndulo: las manos recorrían
+  0,87 m; ahora 0,12 m). Mismos lugares y segundos que la v1 (la mano cae en la bandeja en el mismo punto, ±2 cm).
+  Elegidos por su descripción y revisados con sus fichas (`clips ficha`, con el recorrido de manos medido).
+- Tiempos: copia de trabajo de v1 482 s (escenario 28, personajes 376, utilería y muestreo 73, cámaras 0,3);
+  actualización final de v2 459 s (personajes 377, utilería y muestreo 76, cámaras 0,2); exportar la previa 96 s.
+  El escenario (flores y comedor) y las otras 21 cámaras NO se rehicieron. Kate se rehízo porque cambió el código
+  común de personajes (arreglos de abajo); quedó idéntica a la v1 (diferencia 0,0000 m).
+- Arreglos del motor de caminatas encontrados al verificar (afectaban también a la v1: la cadera saltaba ~1,7 m):
+  (1) la clave de sostén de la raíz a 0,01 cuadros se fundía con ciclos fraccionarios; (2) los clips que avanzan ahora
+  se usan «en el lugar» y la raíz avanza continua (los fundidos mezclaban caderas de raíces distintas); (3) el
+  comienzo de cada tramo se sigue sosteniendo (si no, la raíz giraba durante la espera previa a un corte). Prueba
+  `pruebas/sistema/test_caminata.py` 4/4; `test_trabajo.py` 19/19; `test_componentes.py` 16/16; revisión de la app 18/18.
+- Huellas: los imports dentro de funciones ya no se siguen (el escenario «dependía» de personajes por stickman); la
+  escena de trabajo guarda el sha de cada archivo de código y `trabajo.reestampar` recalcula huellas sólo si el código
+  de esos componentes no cambió (usado una vez, con constancia en el estado).
+- Entregado: `e02_v2_previa.glb` + `.json` (huellas en `escenas/e02/v2/entregado.json`). E02 v1 intacta (verificada).

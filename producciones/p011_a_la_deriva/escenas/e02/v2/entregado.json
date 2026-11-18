@@ -1,0 +1,27 @@
+{
+ "fecha": "2026-11-18T16:57:17Z",
+ "nota": "previsualización v2 (Aiden con clips neutros) enviada por el chat el 18/11/2026",
+ "produccion": "p011_a_la_deriva",
+ "escena": "e02",
+ "version": 2,
+ "huella": "23c775b44b118da8",
+ "receta": {
+  "ruta": "producciones/p011_a_la_deriva/escenas/e02/v2/escena.json",
+  "sha256": "17b2e68c4645dab50659e4ca71232bce58119a74a37ec9f124a0aa8cc30f7e84"
+ },
+ "derivados": [
+  {
+   "nombre": "e02_v2_previa.glb",
+   "bytes": 29515656,
+   "sha256": "6f09868fa508d38019eb43c5610dedf6d9742a61aa1f0c67ae758fdca6159114",
+   "ruta_al_entregar": "tmp/a_la_deriva/e02_v2_previa.glb"
+  },
+  {
+   "nombre": "e02_v2_previa.json",
+   "bytes": 40320,
+   "sha256": "ec0de707d98e4b908ffa5baf325ab23d0b18b8bb12a28fcb83f8be25dc7c7da5",
+   "ruta_al_entregar": "tmp/a_la_deriva/e02_v2_previa.json"
+  }
+ ],
+ "regla": "No se sobrescribe la receta ni estos archivos. Correcciones = versión nueva o copia de trabajo."
+}
