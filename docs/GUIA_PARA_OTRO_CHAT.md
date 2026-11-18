@@ -165,7 +165,10 @@ en `01_animaciones/json_originales/`).
 - Dream Rally (`rally:`): los 28 autos con física real (`estudio/fisica_dr`), pilotos, motos, vegetación y rutas.
 - Nexus (`nexus:`): armas, operador, vehículo y audio.
 - Extraction (`extraction:`): armas con puntos de agarre.
-- Sweet Home (`sh3d:`): 724 muebles y árboles a escala real.
+- Sweet Home (`sh3d:`): 723 muebles, árboles, plantas, puertas y ventanas a escala real. El estudio los lee de
+  `Operaci-n-Nexus-1/game/assets/sh3d`. El **pack original completo** (GLB + 723 miniaturas + `models.json` +
+  `CREDITS.txt`) está respaldado en `mixamo:sweethome3d/sweethome3d-models-master.zip`. Si Nexus cambiara,
+  descomprimilo y apuntá `CINE_SH3D_DIR` a su carpeta `models/`. Respetá las licencias de `CREDITS.txt`.
 
 **Del estudio** (este repo): `escenarios/` (mansión moderna de noche, estadio de fútbol 11 de noche, más los
 generadores de `estudio/escenarios/`: tren, ruta del atardecer, etc.), `catalogo/*.json` (animaciones, armas,

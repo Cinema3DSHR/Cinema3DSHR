@@ -323,3 +323,8 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   (primera tanda, no usar) y `futbol_free_kick_swipe/01_animaciones/json_originales/` (2 023 clips JSON de Fútbol 5).
 - `docs/GUIA_PARA_OTRO_CHAT.md` § 4 bis: inventario de recursos (personajes, vehículos con el helicóptero y cómo se le
   ponen los rotores, decorados, otros repos y recursos del estudio).
+
+### 18/11/2026 — Pack Sweet Home 3D respaldado en mixamo-respaldo
+- Comparado archivo por archivo: los 723 GLB y `models.json` del pack que mandó el dueño están idénticos en Nexus
+  (`game/assets/sh3d`), pero faltaban las 723 miniaturas y el README. Se guardó el zip original completo, sin
+  modificar, en `mixamo-respaldo/sweethome3d/` (`9739149`, con LEEME y sha256). La guía lo explica (§ 4 bis).
