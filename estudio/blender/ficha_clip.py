@@ -42,6 +42,16 @@ def ficha(ref: str, salida: Path, n: int = 8) -> Path:
         sc.frame_set(f)
         poses.append({h: pos(h) for par in HUESOS for h in par})
     cad = [p["Hips"] for p in poses]
+    # cuánto se mueven las manos respecto de la cadera en todo el clip (cada 2 cuadros): un «péndulo» da números altos
+    rec = {"LeftHand": [], "RightHand": []}
+    for f in range(f0, f1 + 1, 2):
+        sc.frame_set(f)
+        hc = pos("Hips")
+        for h in rec:
+            v = pos(h)
+            if v is not None and hc is not None:
+                rec[h].append(v - hc)
+    manos = max((max((a - b).length for a in r for b in r) if r else 0.0) for r in rec.values())
     W, H, M = 220, 300, 30
     img = Image.new("RGB", (W * n, H * 2 + 90), (18, 20, 24))
     d = ImageDraw.Draw(img)
@@ -75,6 +85,7 @@ def ficha(ref: str, salida: Path, n: int = 8) -> Path:
     dur = (f1 - f0) / 30
     titulo = f"{ref.split('/')[-1]} — «{c.get('descripcion_en') or c.get('descripcion') or '?'}»"
     sub = (f"{dur:.2f} s · avanza {avance.length:.2f} m ({avance.length / max(dur, 1e-3):.2f} m/s) · "
+           f"manos recorren {manos:.2f} m · "
            f"{'ESTILO MARCADO: ' + ', '.join(c.get('estilo_marcado', [])) if c.get('estilo_marcado') else 'estilo neutro'}"
            f" · azul = izquierda, naranja = derecha")
     d.text((10, 8), titulo, font=fuente, fill=(255, 220, 120))
@@ -82,4 +93,7 @@ def ficha(ref: str, salida: Path, n: int = 8) -> Path:
     salida.mkdir(parents=True, exist_ok=True)
     out = salida / (ref.split("/")[-1].rsplit(".", 1)[0] + ".png")
     img.save(out)
+    (salida / (out.stem + ".json")).write_text(__import__("json").dumps(
+        {"ref": ref, "duracion_s": round(dur, 3), "avance_m": round(avance.length, 3), "manos_m": round(manos, 3),
+         "descripcion": c.get("descripcion_en") or c.get("descripcion"), "estilo": c.get("estilo_marcado", [])}))
     return out
