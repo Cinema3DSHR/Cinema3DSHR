@@ -24,6 +24,25 @@ def _modulo_escenario(gen: str):
 
 
 def construir(manifiesto: dict, calidad: str = "revision") -> dict:
+    """La escena completa. Las fases son las mismas que usa la escena de trabajo (estudio/blender/trabajo.py), que
+    rehace sólo las que cambiaron; acá se corren todas, en este orden."""
+    s, fps, mod, info, ctx = fase_escenario(manifiesto)
+    fase_vehiculos(manifiesto, ctx, fps)
+    pjs = fase_personajes(manifiesto, s, info, fps)
+    fase_despues(mod, info, pjs, ctx, manifiesto, fps)
+    duracion_f = int(round(manifiesto["duracion_s"] * fps))
+    fase_muestreo(manifiesto, pjs, ctx, duracion_f)
+    # pelota con física (sale de una patada)
+    if manifiesto.get("pelota"):
+        _pelota(manifiesto["pelota"], pjs, ctx, fps, duracion_f)
+    tomas = [C.crear_toma(t, ctx) for t in manifiesto["tomas"]]
+    duracion_f = fase_cierre(manifiesto, s, tomas, ctx, calidad)
+    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs, "frames_pelicula": duracion_f,
+            "manifiesto": manifiesto}
+
+
+def fase_escenario(manifiesto: dict):
+    """Escena vacía + escenario + sus eventos. Devuelve (escena, fps, módulo del escenario, info, contexto)."""
     fps = manifiesto.get("render", {}).get("fps", 30)
     from estudio import recursos as R
     R.exigir(manifiesto, externos=False, mezcla=False)   # audios y marcas de tiempo de las líneas: si faltan, se corta
@@ -45,8 +64,10 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
             raise ValueError(f"El escenario {esc['generador']} no sabe hacer {ev['accion']!r}")
         fn(info["animables"], frame_inicio=int(ev["inicio_s"] * fps) + 1,
            **{k: v for k, v in ev.items() if k not in ("accion", "inicio_s")})
+    return s, fps, mod, info, ctx
 
-    # vehículos
+
+def fase_vehiculos(manifiesto: dict, ctx, fps: int):
     for vh in manifiesto.get("vehiculos", []):
         modelo = vh.get("modelo", "procedural:sedan")
         if modelo == "procedural:sedan":
@@ -59,48 +80,66 @@ def construir(manifiesto: dict, calidad: str = "revision") -> dict:
                                       duracion_s=manifiesto.get("duracion_s"))
         ctx.moviles[vh["id"]] = {"tray": tray, "anclas": veh["anclas"]}
 
-    # personajes animados (bancos de clips)
+
+def fase_personajes(manifiesto: dict, s, info: dict, fps: int, solo: set | None = None,
+                    al_crear=None) -> dict:
+    """Personajes animados (bancos de clips). solo: ids a crear (None = todos). al_crear(id, función) envuelve la
+    creación de cada uno (la escena de trabajo marca así qué objetos son de quién)."""
     pjs = {}
-    seguidos = {t.get("movil") for t in manifiesto["tomas"]} | {
-        (t.get(k) or {}).get("movil") for t in manifiesto["tomas"] for k in ("objetivo", "desde", "hasta", "centro", "foco")
-        if isinstance(t.get(k), dict)}
     # el retarget evalúa la escena hueso por hueso y cuadro por cuadro: con el escenario afuera de la capa de vista
     # (miles de objetos: árboles, vía, tren) no se re-evalúa todo en cada paso
     excluidas = []
     for lc in s.view_layers[0].layer_collection.children:
-        if not lc.exclude:
+        # la colección «personajes» no: ahí se crean (en una escena de trabajo reabierta ya existe y, excluida, Blender no
+        # evalúa la escala del personaje nuevo: el avance de la caminata se medía a la mitad)
+        if not lc.exclude and lc.name != "personajes":
             lc.exclude = True
             excluidas.append(lc)
     try:
         # personajes de la receta + los que calcula el escenario (p. ej. Mateo bajándose donde frenó el auto)
         for spec in manifiesto.get("personajes", []) + info.get("personajes", []):
-            pjs[spec["id"]] = P.crear({**spec, "_nf": int(round(manifiesto["duracion_s"] * fps))}, fps)
+            if solo is not None and spec["id"] not in solo:
+                continue
+            crear = (lambda sp=spec: P.crear({**sp, "_nf": int(round(manifiesto["duracion_s"] * fps))}, fps))
+            pjs[spec["id"]] = al_crear(spec["id"], crear) if al_crear else crear()
     finally:
         for lc in excluidas:
             lc.exclude = False
+    return pjs
+
+
+def fase_despues(mod, info: dict, pjs: dict, ctx, manifiesto: dict, fps: int):
     # el escenario puede jugar algo que depende de los personajes (p. ej. el duelo de «Al vacío»: pelotas en el pie,
     # trampillas, caídas): antes de muestrear sus trayectorias para las cámaras
     if hasattr(mod, "despues_personajes"):
         mod.despues_personajes(info, pjs, ctx, manifiesto, fps)
-    duracion_f = int(round(manifiesto["duracion_s"] * fps))
+
+
+def seguidos(manifiesto: dict) -> set:
+    """Móviles que alguna toma sigue o mira."""
+    return {t.get("movil") for t in manifiesto["tomas"]} | {
+        (t.get(k) or {}).get("movil") for t in manifiesto["tomas"] for k in ("objetivo", "desde", "hasta", "centro", "foco")
+        if isinstance(t.get(k), dict)}
+
+
+def fase_muestreo(manifiesto: dict, pjs: dict, ctx, duracion_f: int):
+    sg = seguidos(manifiesto)
     for pid, pj in pjs.items():
-        if pid in seguidos:
+        if pid in sg:
             ctx.moviles[pid] = {"tray": _muestrear_personaje(pj, duracion_f), "anclas": ANCLAS_PERSONAJE}
 
-    # pelota con física (sale de una patada)
-    if manifiesto.get("pelota"):
-        _pelota(manifiesto["pelota"], pjs, ctx, fps, duracion_f)
 
-    # tomas
-    tomas = [C.crear_toma(t, ctx) for t in manifiesto["tomas"]]
+def fase_cierre(manifiesto: dict, s, tomas: list, ctx, calidad: str) -> int:
+    """Rango de la escena, cámara activa, cabinas y ajustes de render. Devuelve los cuadros de la película."""
+    # los fps de la RECETA: importar FBX deja la escena en 24 y acá se vuelve a poner el valor correcto
+    fps = manifiesto.get("render", {}).get("fps", 30)
     duracion_f = max(t["frame_fin"] for t in tomas)
     s.frame_start, s.frame_end = 1, int(math.ceil(ctx.cuadro(duracion_f)))     # la escena dura menos si hay cámara lenta
     s.render.fps = fps
     s.camera = tomas[0]["camara"]
     _cabinas_por_toma(tomas, ctx)
     ajustes_render(s, calidad, manifiesto.get("render", {}))
-    return {"escena": s, "tomas": tomas, "contexto": ctx, "info": info, "personajes": pjs, "frames_pelicula": duracion_f,
-            "manifiesto": manifiesto}
+    return duracion_f
 
 
 def _cabinas_por_toma(tomas: list, ctx):

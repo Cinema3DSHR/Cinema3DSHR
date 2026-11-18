@@ -73,7 +73,11 @@ def material(nombre: str, color=(0.8, 0.8, 0.8), rugosidad=0.5, metal=0.0, *, em
     (propiedad "estudio") para que el exportador del visor pueda reconstruir un color plano.
     """
     if nombre in _MATS:
-        return _MATS[nombre]
+        try:
+            _MATS[nombre].name                      # sigue existiendo (al rehacer un componente se purgan materiales)
+            return _MATS[nombre]
+        except ReferenceError:
+            del _MATS[nombre]
     mat = bpy.data.materials.new(nombre)
     nt, bsdf, out = _nodos(mat)
     col = (*color[:3], 1.0)

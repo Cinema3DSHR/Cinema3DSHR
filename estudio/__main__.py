@@ -205,6 +205,49 @@ def cmd_previa(a):
     print("PREVIA", json.dumps(tam))
 
 
+def cmd_componentes(a):
+    """Componentes de la receta y, si hay escena de trabajo, qué cambió (sin Blender)."""
+    from estudio import componentes as CO
+    m = MF.leer(Path(a.escena))
+    previo = None
+    est = Path(_carpeta_trabajo(m)) / "estado.json"
+    if est.exists():
+        previo = json.loads(est.read_text())["huellas"]
+        print(f"escena de trabajo: {est.parent}")
+    else:
+        print("sin escena de trabajo todavía (python -m estudio trabajo construir …)")
+    print(CO.resumen(m, previo))
+
+
+def _carpeta_trabajo(m):
+    from estudio import config as CF
+    return CF.TRABAJO / m["produccion"] / m["id"].split("-")[-1] / f"v{m['version']}"
+
+
+def cmd_trabajo(a):
+    """Escena de trabajo (Blender, sin render): construir una vez, después actualizar sólo lo que cambió."""
+    from estudio.blender import trabajo as T
+    m = MF.leer(Path(a.escena))
+    err = MF.validar(m)
+    if err:
+        print("\n".join(err))
+        return 1
+    rel = str(Path(a.escena).resolve().relative_to(config.RAIZ)) if str(Path(a.escena).resolve()).startswith(str(config.RAIZ)) else a.escena
+    if a.accion == "construir":
+        r = T.construir(m, rel)
+        print("TRABAJO construida", T.carpeta(m), json.dumps(r["estado"]["tiempos_s"]))
+        res = r
+    else:
+        r = T.actualizar(m, rel)
+        print("TRABAJO actualizada:", "TODO (cambió la base)" if r["completa"] else (", ".join(r["rehecho"]) or "nada"),
+              json.dumps(r.get("tiempos_s", {})))
+        res = r.get("res")
+    if a.previa:
+        if res is None:
+            res = T.abrir(m)
+        print("PREVIA", json.dumps(T.exportar_previa(m, Path(a.previa), res)))
+
+
 def cmd_direccion(a):
     from estudio import direccion as DR
     print(DR.resumen(a.produccion))
@@ -308,6 +351,10 @@ def main(argv=None):
     p.add_argument("--motivo", default=""); p.set_defaults(f=cmd_nueva_version)
     p = sub.add_parser("previa"); p.add_argument("escena"); p.add_argument("--salida", default="salida/previa")
     p.set_defaults(f=cmd_previa)
+    p = sub.add_parser("componentes"); p.add_argument("escena"); p.set_defaults(f=cmd_componentes)
+    p = sub.add_parser("trabajo"); p.add_argument("accion", choices=["construir", "actualizar"]); p.add_argument("escena")
+    p.add_argument("--previa", help="carpeta donde exportar GLB + JSON del visor (nunca sobre lo entregado)")
+    p.set_defaults(f=cmd_trabajo)
     p = sub.add_parser("direccion"); p.add_argument("produccion"); p.set_defaults(f=cmd_direccion)
     p = sub.add_parser("aplicar-direccion"); p.add_argument("produccion"); p.add_argument("escena")
     p.add_argument("--camaras", required=True, help="ids separados por comas: camera_001,camera_002")

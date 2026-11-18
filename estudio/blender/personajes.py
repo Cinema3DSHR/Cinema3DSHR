@@ -135,6 +135,7 @@ def biblioteca(modelo: str) -> dict:
 
 def reiniciar():
     _BIBLIOTECAS.clear()
+    _RETARGETS.clear()          # al abrir otra escena (escena de trabajo, pruebas) las acciones viejas ya no existen
 
 
 def _material_uniforme(nombre: str, info: dict, colores: dict) -> bpy.types.Material:
@@ -436,7 +437,11 @@ def _rt(modelo: str, ref: str, arm, raiz, info: dict, dueno: str, hasta_s: float
         nueva["futbol_clip"] = clip
         _RETARGETS[clave] = nueva
         return nueva
-    if clave not in _RETARGETS or _RETARGETS[clave].name not in bpy.data.actions:
+    try:
+        vigente = clave in _RETARGETS and _RETARGETS[clave].name in bpy.data.actions
+    except ReferenceError:      # la acción del caché fue borrada (otra escena abierta en el mismo proceso)
+        vigente = False
+    if not vigente:
         antes = set(bpy.data.actions)
         tmp = I.importar(ref)
         acc = next(a for a in bpy.data.actions if a not in antes)

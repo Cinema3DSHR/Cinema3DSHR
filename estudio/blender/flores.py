@@ -50,7 +50,11 @@ def reiniciar():
 def _mat_petalo(nombre: str, base, punta, sss: float = 0.35, brillo: float = 0.35) -> bpy.types.Material:
     """Pétalo: color de base a punta por el atributo «grad», algo de translucidez (subsuperficie) y terciopelo."""
     if nombre in _MATS:
-        return _MATS[nombre]
+        try:
+            _MATS[nombre].name
+            return _MATS[nombre]
+        except ReferenceError:
+            del _MATS[nombre]
     b, p = _lin(base), _lin(punta)
     m = bpy.data.materials.new(nombre)
     m.use_nodes = True
@@ -83,7 +87,11 @@ def _mat_petalo(nombre: str, base, punta, sss: float = 0.35, brillo: float = 0.3
 
 def _mat_simple(nombre: str, color, rug=0.5, sss=0.0) -> bpy.types.Material:
     if nombre in _MATS:
-        return _MATS[nombre]
+        try:
+            _MATS[nombre].name
+            return _MATS[nombre]
+        except ReferenceError:
+            del _MATS[nombre]
     c = _lin(color)
     m = bpy.data.materials.new(nombre)
     m.use_nodes = True
