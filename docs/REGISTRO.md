@@ -544,3 +544,23 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   `producciones/p011_a_la_deriva/produccion.json` → `render_capitulos`.
 - Revisión de cada escena: GLB liviano + JSON para el visor HTML por el chat (`python -m estudio previa`), sin render.
   Candado del render quitado por el dueño (otro chat): se renderiza cuando él lo pide en el chat.
+
+## 18/11/2026 — «A la deriva» E02 «Una flor en el vacío» v1 (previsualización para el visor, sin render)
+
+- Documento Maestro v2 del dueño. Guion como datos: `herramientas/guion_e02.py` (28 líneas, voseo; «Keit» en la voz);
+  voces con marcas por letra (Aiden, EVA = Alma, Kate = kate_es_ar). Música: dos piezas (botánico y final) + ambiente
+  del invernadero + aviso del mensaje. Gasto: ~1.355 (voces) + 820 (música y efectos); quedan 21.664.
+- Escenario nuevo `nave_deriva_ampliada` (el E01 no cambia): centro de operaciones → pasillo → **pasillo botánico**
+  (12 incubadoras de vidrio con 16–22 flores procedurales cada una, `estudio/blender/flores.py`: 7 especies, todas
+  distintas, se mecen con el aire; raíces en el agua, sustrato, gotas en el vidrio, luz de cultivo) → **comedor**
+  (mesas largas, banquetas, estanterías con comida sellada, botellas, ventanal, plantas en maceta de Sweet Home). El
+  monitor del puesto muestra la cámara del comedor; la tablet de Kate escribe «Gracias por la flor» letra por letra.
+  Sin casco exterior (sus tapas atravesaban los pasillos).
+- Utilería de mano en mano (`despues_personajes`): la flor bandeja → mano de Aiden → mesa → mano de Kate → mesa; la
+  botella consola → mano izquierda → mesa. Posiciones medidas con la mano real del clip (Taking_Item).
+- Traje: se borra la piel que queda debajo (con margen en cuello y muñecas): ya no asoma en pecho ni brazos.
+  Kate: expresiones nuevas `conmovida`, `ruborizada`, `sonrisa_contenida` (rubor progresivo).
+- Lección: un tramo de caminata que se corta antes de terminar sus repeticiones deja al siguiente donde habría
+  terminado (personajes.py): las caminatas se planifican en ciclos enteros (`escenas_e02.py`).
+- e02 v1: 133,3 s, 31 tomas, calidad `hd540` (540x960). `pruebas/nave/tomas.gd` ahora aplica la visibilidad del
+  JSON. Prueba de la app 18/18. GLB (29 MB) + JSON enviados al dueño para el visor.
