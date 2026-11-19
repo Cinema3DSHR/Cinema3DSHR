@@ -49,6 +49,14 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
 - Correcciones chicas: `trabajo actualizar` (rehace sólo lo afectado: una cámara, un personaje) y `--previa` para el
   visor. Lo entregado tiene `entregado.json` y no se sobrescribe; si falta un recurso, la preparación se detiene.
 
+## Pipeline Godot → GLB → AutoFinisher → .blend → Cycles (docs/AUTOFINISHER.md, docs/CONSTRUIR_Y_RENDERIZAR.md)
+- Construir una versión = `construir_produccion.yml` (Godot → GLB → AutoFinisher → `.blend` autónomo + manifiesto con
+  SHA-256 → Release `blend-<prod>-v<NNN>`). Una versión publicada es inmutable: cualquier cambio es una versión nueva.
+- Renderizar = `render_desde_blend.yml` sobre una versión publicada: nunca instala Godot ni reconstruye la escena;
+  verifica el hash, no rellena cuadros faltantes (recuperación explícita con `cuadros` + `corrida_previa`).
+- Efectos: sólo los que pide la receta, deterministas por cuadro (`estudio/autofinisher/recetas_efectos/`). La prueba
+  original `pruebas/godot_blender/` no se toca.
+
 ## Revisión rápida en el navegador (visor HTML)
 El dueño revisa con `visor/visor_escena.html` y manda por el chat un texto `VISOR DE ESCENA …` con un JSON
 `estudio.visor_ordenes/2`: aplicarlo como dice `docs/VISOR_Y_ORDENES_DE_CAMARA.md` (versión nueva, sin render).

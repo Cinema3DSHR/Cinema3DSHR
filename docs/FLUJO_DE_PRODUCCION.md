@@ -84,3 +84,12 @@ mantener el eje de acción, usar profundidad de campo en detalles.
 | final4k | 3840×2160 | Cycles 64 mp | si el servidor lo permite | no viable en Actions estándar |
 
 No se vuelve a renderizar una versión publicada (salvo `forzar`) ni una aprobada. Para cambiar algo, versión nueva.
+
+## 7. Pipeline Godot → GLB → AutoFinisher → .blend → Cycles (desde el 19/11/2026)
+
+Segundo camino de producción, independiente del de recetas del estudio (§2–§6): la escena se arma en **Godot**, el
+**AutoFinisher** la termina en un `.blend` autónomo e inmutable (manifiesto + SHA-256) que se publica en su Release, y
+el render distribuido trabaja **sólo desde ese `.blend`** (sin Godot ni reconstrucción). Herramienta y estándar de
+nombres: `docs/AUTOFINISHER.md`. Construir, publicar, renderizar y recuperar cuadros: `docs/CONSTRUIR_Y_RENDERIZAR.md`.
+Flujos: `construir_produccion.yml` y `render_desde_blend.yml` (a mano; preparados, todavía sin ejecutar).
+

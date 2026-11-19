@@ -125,6 +125,10 @@ Para lanzar un flujo usá `mcp__github__actions_run_trigger` (`run_workflow`, `r
 `actions_list` / `actions_get` y los registros con `get_job_logs`. La API sin autenticar de este repo está bloqueada
 desde la sesión: usá las herramientas MCP.
 
+**Pipeline nuevo (19/11/2026):** Godot → GLB → AutoFinisher (`estudio/autofinisher/`) → `.blend` autónomo e
+inmutable en una Release → render distribuido desde ese `.blend` (`construir_produccion.yml`, `render_desde_blend.yml`).
+Leé `docs/AUTOFINISHER.md` y `docs/CONSTRUIR_Y_RENDERIZAR.md` antes de construir o renderizar con él.
+
 ## 4 bis. Inventario de recursos (qué hay y dónde, sin auditar)
 
 En las recetas y en el código los recursos se nombran `<fuente>:<ruta>` (`estudio/config.py` → `FUENTES`).
@@ -238,6 +242,9 @@ xvfb-run -a godot --path app --rendering-driver opengl3 --script res://../prueba
     PREVIA.glb PREVIA.json <prod> <escena> <version> SALIDA_DIR    # app + EDITOR 3D con una previa real (18/18)
 pruebas/app/toques_vertical.gd (6/6), pruebas/app/toques_rotacion.gd (7/7)   # toques en vertical / al girar
 ```
+
+- `python3 pruebas/autofinisher/test_autofinisher.py` (32) y `$PY pruebas/autofinisher/test_general.py` (13): el
+  AutoFinisher y los flujos nuevos, sin render.
 
 ## 9. Documentos para ampliar (sólo si hace falta)
 

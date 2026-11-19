@@ -1,0 +1,207 @@
+name: Renderizar desde BLEND (versión publicada → Cycles distribuido → MP4)
+
+# RENDER de una versión YA PUBLICADA por «Construir producción» (docs/CONSTRUIR_Y_RENDERIZAR.md).
+# No instala Godot ni reconstruye la escena: cada trabajo descarga UNA vez el .blend autónomo de la Release
+# «blend-<produccion>-v<NNN>», verifica su SHA-256 contra el manifiesto y renderiza sólo sus cuadros.
+# Si falta un cuadro, NO se rellena: el montaje se detiene y lo informa. Recuperación explícita: correr de nuevo con
+# `cuadros` = los que faltaron y `corrida_previa` = el número de la corrida anterior (junta los cuadros de las dos).
+# Sólo a mano, por orden del dueño en el chat (respeta el candado del render: config/candado_render.json).
+on:
+  workflow_dispatch:
+    inputs:
+      produccion: {description: "Id de la producción (p. ej. casa_tormenta)", required: true}
+      version: {description: "Versión exacta (entero)", required: true}
+      ancho: {description: "Ancho en píxeles (vacío = el del manifiesto)", required: false, default: ""}
+      alto: {description: "Alto en píxeles (vacío = el del manifiesto)", required: false, default: ""}
+      fps: {description: "FPS (tiene que ser el del manifiesto; vacío = el del manifiesto)", required: false, default: ""}
+      muestras: {description: "Muestras de Cycles (vacío = las del manifiesto)", required: false, default: ""}
+      trabajos: {description: "Trabajos de render pedidos (máx. 60; GitHub encola los que sobren)", required: false, default: "60"}
+      nombre_mp4: {description: "Nombre del MP4 sin extensión", required: true}
+      release_destino: {description: "Tag de la Release donde publicar el video (no se sobrescribe un archivo existente)", required: true}
+      cuadros: {description: "RECUPERACIÓN: sólo estos cuadros (p. ej. 12,40-45); vacío = todos", required: false, default: ""}
+      corrida_previa: {description: "RECUPERACIÓN: número de la corrida anterior cuyos cuadros se suman", required: false, default: ""}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: render-blend-${{ inputs.produccion }}-${{ inputs.version }}
+  cancel-in-progress: false
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  REPO: ${{ github.repository }}
+
+jobs:
+  planificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      trozos: ${{ steps.plan.outputs.trozos }}
+      tag: ${{ steps.plan.outputs.tag }}
+      blend: ${{ steps.plan.outputs.blend }}
+      total: ${{ steps.plan.outputs.total }}
+      ancho: ${{ steps.plan.outputs.ancho }}
+      alto: ${{ steps.plan.outputs.alto }}
+      fps: ${{ steps.plan.outputs.fps }}
+      muestras: ${{ steps.plan.outputs.muestras }}
+      solicitados: ${{ steps.plan.outputs.solicitados }}
+      inicio: ${{ steps.plan.outputs.inicio }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Candado del render (con candado puesto, este flujo no corre)
+        run: |
+          python3 -c "import json,sys; c=json.load(open('config/candado_render.json')); sys.exit('::error::Candado del render PUESTO: hace falta APROBAR + AUTORIZAR en la app' if c.get('activo', True) else 0)"
+      - name: Manifiesto de la versión y reparto de cuadros
+        id: plan
+        env:
+          PROD: ${{ inputs.produccion }}
+          VER: ${{ inputs.version }}
+          IN_ANCHO: ${{ inputs.ancho }}
+          IN_ALTO: ${{ inputs.alto }}
+          IN_FPS: ${{ inputs.fps }}
+          IN_MUESTRAS: ${{ inputs.muestras }}
+          IN_TRABAJOS: ${{ inputs.trabajos }}
+          IN_CUADROS: ${{ inputs.cuadros }}
+          DESTINO: ${{ inputs.release_destino }}
+          MP4: ${{ inputs.nombre_mp4 }}
+        run: |
+          set -e
+          TAG=$(python3 -c "from estudio.autofinisher import manifiesto as MF; import os; print(MF.tag_release(os.environ['PROD'], int(os.environ['VER'])))")
+          gh release download "$TAG" --repo "$REPO" -p manifest.json -D manif || { echo "::error::No existe la versión publicada $TAG (o no tiene manifest.json)"; exit 1; }
+          if gh release view "$DESTINO" --repo "$REPO" --json assets -q '.assets[].name' 2>/dev/null | grep -qx "$MP4.mp4"; then
+            echo "::error::La Release $DESTINO ya tiene $MP4.mp4: no se sobrescribe. Elegí otro nombre o destino."; exit 1
+          fi
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import datetime, json, os
+          from estudio.autofinisher import manifiesto as MF, reparto as RP
+          m = MF.leer("manif/manifest.json"); r = m["render"]
+          fps = int(os.environ["IN_FPS"] or r["fps"])
+          assert fps == r["fps"], f"fps {fps} ≠ {r['fps']} del manifiesto: la animación está hecha a {r['fps']} fps"
+          ancho = int(os.environ["IN_ANCHO"] or r["resolucion"][0]); alto = int(os.environ["IN_ALTO"] or r["resolucion"][1])
+          muestras = int(os.environ["IN_MUESTRAS"] or r["muestras"]); total = r["cuadros"]
+          lista = os.environ["IN_CUADROS"].strip()
+          t = RP.repartir_lista(RP.parse_lista(lista, total), int(os.environ["IN_TRABAJOS"])) if lista \
+              else RP.repartir(total, int(os.environ["IN_TRABAJOS"]))
+          print(f"trozos={json.dumps(t)}"); print(f"tag={m['release']}"); print(f"blend={m['archivos']['blend']['nombre']}")
+          print(f"total={total}"); print(f"ancho={ancho}"); print(f"alto={alto}"); print(f"fps={fps}"); print(f"muestras={muestras}")
+          print(f"solicitados={len(t)}"); print("inicio=" + datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"))
+          PY
+          grep -E "^(tag|blend|total|ancho|alto|fps|muestras|solicitados)=" "$GITHUB_OUTPUT"
+
+  render:
+    needs: planificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 60
+      matrix:
+        trozo: ${{ fromJSON(needs.planificar.outputs.trozos) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13", cache: pip, cache-dependency-path: requirements-produccion.txt}
+      - name: Blender (bpy) — sin Godot
+        run: |
+          t=$(date +%s)
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q -r requirements-produccion.txt
+          echo "{\"instalar_s\": $(( $(date +%s) - t ))}" > t_instalar.json
+      - name: Descargar el .blend de la versión (una vez por trabajo) y verificar su SHA-256
+        run: |
+          set -e
+          t=$(date +%s.%N)
+          gh release download "${{ needs.planificar.outputs.tag }}" --repo "$REPO" -p "${{ needs.planificar.outputs.blend }}" -p manifest.json -D escena
+          python3 -c "import json,os,time; s=os.path.getsize('escena/${{ needs.planificar.outputs.blend }}'); d=time.time()-float('$t'); json.dump({'descarga_s': round(d,2), 'blend_mb': round(s/1e6,2), 'mb_por_s': round(s/1e6/max(d,1e-6),2)}, open('t_descarga.json','w'))"
+          python3 -m estudio.autofinisher verificar-blend --manifiesto escena/manifest.json --blend "escena/${{ needs.planificar.outputs.blend }}"
+      - name: Renderizar cuadros ${{ matrix.trozo.desde }}–${{ matrix.trozo.hasta }}
+        run: |
+          R=0
+          if [ -n "${{ matrix.trozo.cuadros }}" ]; then SEL="--cuadros ${{ matrix.trozo.cuadros }}"; else SEL="--desde ${{ matrix.trozo.desde }} --hasta ${{ matrix.trozo.hasta }}"; fi
+          python -m estudio.autofinisher render-trozo --blend "escena/${{ needs.planificar.outputs.blend }}" --manifiesto escena/manifest.json \
+            $SEL --ancho ${{ needs.planificar.outputs.ancho }} --alto ${{ needs.planificar.outputs.alto }} \
+            --muestras ${{ needs.planificar.outputs.muestras }} --reintentos 1 --salida out 2>&1 \
+            | grep -E "^cuadro|FALLO|reintento|Error|Traceback|RENDER DETENIDO|\"" || R=$?
+          python3 - <<'PY'
+          import glob, json
+          p = glob.glob("out/informe_*.json")
+          if p:
+              d = json.load(open(p[0]))
+              for f in ("t_instalar.json", "t_descarga.json"):
+                  d.update(json.load(open(f)))
+              d["trabajo"] = "${{ matrix.trozo.n }}"
+              json.dump(d, open(p[0], "w"), indent=1)
+          PY
+          ls out/f_*.png 2>/dev/null | wc -l
+          exit $R
+      - name: Empaquetar
+        if: ${{ always() }}
+        run: cd out && zip -0 -q "../frames_${{ matrix.trozo.n }}.zip" f_*.png informe_*.json || true
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with: {name: "frames-${{ matrix.trozo.n }}", path: "frames_${{ matrix.trozo.n }}.zip", compression-level: 0, retention-days: 14}
+
+  montar:
+    needs: [planificar, render]
+    if: ${{ !cancelled() && needs.planificar.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: FFmpeg
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - uses: actions/download-artifact@v4
+        with: {pattern: "frames-*", path: descargas}
+      - name: RECUPERACIÓN explícita — sumar los cuadros de la corrida previa
+        if: ${{ inputs.corrida_previa != '' }}
+        run: |
+          set -e
+          gh run download "${{ inputs.corrida_previa }}" --repo "$REPO" -p "frames-*" -D previa
+          echo "recuperación: se suman los cuadros de la corrida ${{ inputs.corrida_previa }} (los nuevos tienen prioridad)" | tee recuperacion.txt
+      - name: Reunir los cuadros y verificar que estén TODOS (NO se rellena nada)
+        id: verif
+        run: |
+          mkdir -p frames informes
+          for z in previa/frames-*/frames_*.zip; do [ -f "$z" ] && unzip -q -o "$z" -d frames; done
+          for z in descargas/frames-*/frames_*.zip; do unzip -q -o "$z" -d frames; done
+          mv frames/informe_*.json informes/ 2>/dev/null || true
+          python3 -m estudio.autofinisher verificar-cuadros --carpeta frames --total ${{ needs.planificar.outputs.total }} > verificacion.json || true
+          cat verificacion.json
+          gh api "repos/$REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs?per_page=100" --paginate --jq '.jobs[]' > jobs.jsonl || true
+          python3 -c "import json; json.dump({'jobs': [json.loads(l) for l in open('jobs.jsonl') if l.strip()]}, open('jobs.json','w'))" || echo '{"jobs": []}' > jobs.json
+          python3 -m estudio.autofinisher informe-render --informes informes --solicitados ${{ needs.planificar.outputs.solicitados }} \
+            --total ${{ needs.planificar.outputs.total }} --verificacion verificacion.json --jobs jobs.json --salida informe_render.json >/dev/null || true
+          python3 -c "import json,sys; v=json.load(open('verificacion.json')); sys.exit(0 if v['completo'] else '::error::FALTAN CUADROS: ' + v['faltan_texto'] + ' — publicación detenida. Recuperar con cuadros=' + v['faltan_texto'] + ' y corrida_previa=${{ github.run_id }}')"
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with: {name: "informe-render", path: "informe_render.json\nverificacion.json\njobs.json", retention-days: 30}
+      - name: Codificar el MP4 y verificarlo (cuadros, resolución, fps, duración)
+        run: |
+          set -e
+          ffmpeg -v error -y -framerate ${{ needs.planificar.outputs.fps }} -i frames/f_%04d.png -c:v libx264 -pix_fmt yuv420p -crf 18 \
+            -movflags +faststart "${{ inputs.nombre_mp4 }}.mp4"
+          python3 -m estudio.autofinisher verificar-video --mp4 "${{ inputs.nombre_mp4 }}.mp4" --ancho ${{ needs.planificar.outputs.ancho }} \
+            --alto ${{ needs.planificar.outputs.alto }} --fps ${{ needs.planificar.outputs.fps }} --cuadros ${{ needs.planificar.outputs.total }} | tee video.json
+          python3 - <<'PY'
+          import datetime, json
+          r = json.load(open("informe_render.json"))
+          r["video"] = json.load(open("video.json")); r["version"] = "${{ needs.planificar.outputs.tag }}"
+          r["blend_sha256"] = json.load(open(sorted(__import__("glob").glob("informes/informe_*.json"))[0]))["blend_sha256"]
+          ini = datetime.datetime.fromisoformat("${{ needs.planificar.outputs.inicio }}".replace("Z", "+00:00"))
+          r["reloj_total_s"] = round((datetime.datetime.now(datetime.timezone.utc) - ini).total_seconds(), 1)
+          r["recuperacion"] = "${{ inputs.corrida_previa }}" or None
+          json.dump(r, open("informe_render.json", "w"), indent=1, ensure_ascii=False)
+          print(json.dumps({k: r[k] for k in ("trabajos_solicitados", "trabajos_con_informe", "cuadros_renderizados", "reintentos", "segundos_por_cuadro", "reloj_total_s")}, indent=1))
+          PY
+      - name: Publicar el video y su informe (sin sobrescribir)
+        run: |
+          set -e
+          D="${{ inputs.release_destino }}"
+          gh release view "$D" --repo "$REPO" >/dev/null 2>&1 || gh release create "$D" --repo "$REPO" --latest=false --title "$D" --notes "Renders desde la versión ${{ needs.planificar.outputs.tag }}."
+          if gh release view "$D" --repo "$REPO" --json assets -q '.assets[].name' | grep -qx "${{ inputs.nombre_mp4 }}.mp4"; then
+            echo "::error::$D ya tiene ${{ inputs.nombre_mp4 }}.mp4: no se sobrescribe."; exit 1
+          fi
+          cp informe_render.json "${{ inputs.nombre_mp4 }}_informe.json"
+          gh release upload "$D" --repo "$REPO" "${{ inputs.nombre_mp4 }}.mp4" "${{ inputs.nombre_mp4 }}_informe.json"

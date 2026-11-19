@@ -738,3 +738,48 @@ tocó. La etiqueta `respaldo-pre-limpieza-2026-11-19` no se pudo subir (la polí
   por falta de los recursos de «A la deriva»; con el estado previo, 14/16.
 - Los JSON de `catalogo/` y `config/` son válidos.
 - `test_trabajo` 19/19 y `test_caminata` 4/4: arman escenas en Blender sin renderizar.
+
+## 19/11/2026 — Pipeline Godot → GLB → AutoFinisher → .blend → Cycles (implementado, sin ejecutar)
+
+Pedido del dueño (plan aprobado con 10 condiciones). Rama `claude/inspiring-sagan-1ogr0n`. **Sin renders, sin Actions,
+sin Releases, sin publicar nada.** La prueba original (`pruebas/godot_blender/`: b6–b9, `armar.py`, su flujo) no se
+tocó, ni los flujos existentes ni «A la deriva».
+
+- **AutoFinisher** (`estudio/autofinisher/`), herramienta general. Módulos:
+  - AutoImport, AutoLights (perfiles de luz), AutoMaterials, AutoEffects, AutoCinema, AutoPack, AutoReport;
+  - receta de terminación, manifiesto (`estudio.version_blend/1`, SHA-256, inmutable), reparto de cuadros,
+    verificación de cuadros y de video, mediciones (tiempo y RAM por etapa), bajada de recursos;
+  - `render_trozo` (hash antes de abrir, reintentos por cuadro, `--sin-render`) e informe del render.
+- **Estándar de nombres Godot → Blender**: `Luz_<perfil>_…`, `vidrio*`, `emisivo*`/`neon*`, `FX_<efecto>`, `Colision_*`,
+  y la metadata `cine_tipo` con prioridad sobre el nombre.
+- **Biblioteca de efectos** deterministas por cuadro: lluvia, fuego, humo, brasas y relámpago. Son los de la prueba,
+  ahora con parámetros. El **fuego quedó corregido** (umbral 0,08→0,05, ganancia 9→12, emisión 22→90), sin
+  verificar con render. No se agregó ningún efecto que no estuviera pedido.
+- **Flujos nuevos e independientes** (preparados, nunca ejecutados):
+  - `construir_produccion.yml`: Godot → GLB → AutoFinisher → validación → manifiesto → Release
+    `blend-<prod>-v<NNN>`. Se niega si la Release existe.
+  - `render_desde_blend.yml`:
+    - sólo el `.blend` publicado, que verifica por SHA-256, y sin Godot;
+    - reparto de la prueba, reintento por cuadro;
+    - si falta un cuadro, se detiene sin rellenar; la recuperación es explícita (`cuadros` + `corrida_previa`);
+    - MP4 verificado;
+    - mide trabajos pedidos y ejecutados, simultaneidad real, cola, descarga, preparación, tiempo por cuadro, RAM,
+      fallos y reintentos.
+- **Reconstrucción local de «Casa moderna en tormenta»** (`pruebas/autofinisher/COMPARACION.md`): mismo GLB.
+  - Comparación campo por campo: 721 iguales y 6 distintos. Las diferencias son el fuego corregido y el nombre de la
+    colección de auxiliares ocultos.
+  - Se encontró que `vidrio_opalino` se convertía por el prefijo; quedó excluido en la receta.
+  - 3,06 s de máquina, RAM máxima 877 MB, `.blend` de 37,1 MB autónomo.
+- **Pruebas** (sin render):
+  - `test_autofinisher.py` 32/32;
+  - `test_general.py` 13/13, con una escena que no es la casa;
+  - validación y hash, `render-trozo --sin-render`;
+  - descarga real de un archivo de Release con SHA-256 igual al de GitHub;
+  - bajada de la Kodiak;
+  - montaje simulado con un cuadro faltante (se detiene) y completo (MP4 verificado).
+- **Docs**: `docs/AUTOFINISHER.md`, `docs/CONSTRUIR_Y_RENDERIZAR.md`, `FLUJO_DE_PRODUCCION.md` §7, `CLAUDE.md`, la guía.
+- **Pendiente:**
+  - la primera construcción y el primer render reales, que decide el dueño;
+  - verificar el fuego con un render;
+  - el MP4 sale sin audio;
+  - «descargar un .blend publicado» se probó con otro archivo de Release, porque todavía no hay ninguno.
