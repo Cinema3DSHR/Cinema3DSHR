@@ -662,3 +662,157 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   sin faltantes. Preparación 1,5 min, 21,75 s por cuadro de media, 14 min de reloj de punta a punta (05:17 → 05:31 UTC).
   Publicado: release `prueba_godot_blender` (`casa_tormenta_540p.mp4`, `informe_render.json`). Visto: el fuego
   volumétrico sale tenue (se ven más las brasas que las llamas); para la próxima prueba hay que subirle la emisión.
+
+## 19/11/2026 — Limpieza general: el repositorio queda dedicado a «A la deriva»
+
+Pedido del dueño: dejar sólo «A la deriva» (p011), las herramientas comunes del pipeline, los flujos, la documentación y
+los registros. Rama `claude/inspiring-sagan-1ogr0n`. Sin renders, sin Actions, sin Releases nuevas ni borradas.
+
+**Copia de seguridad (estado previo completo):** el commit `150fcea` (padre del commit de esta limpieza; para recuperar
+un archivo: `git show 150fcea:<ruta>` o `git checkout 150fcea -- <ruta>`) y la rama `ccr-6d21fe8a-76t9c3`, que no se
+tocó. La etiqueta `respaldo-pre-limpieza-2026-11-19` no se pudo subir (la política de la sesión rechaza etiquetas con
+403); hubo además un `git bundle --all` verificado en la carpeta temporal de la sesión (efímero).
+
+**Borrado (172 archivos), con certeza de que era de otras producciones y que el código que queda no lo usa:**
+- `producciones/`: p000 mansión, p001 fútbol tiro libre, p002 la jefa, p003 fútbol 30 s, p004 mansión de día, p005 CQB,
+  p006 Tren Fantasma, p007 Al vacío, p008 Drift Sunset, p009 Dúo Cero, p010 Un sueño de a dos (descartada) y
+  `producciones/pruebas/` (fichas del render de prueba de la CQB).
+- `escenarios/` (mansion_moderna_noche, estadio_futbol11_noche).
+- Generadores de escenario exclusivos: `estudio/escenarios/{al_vacio,drift_sunset,duo_cero,estadio_futbol,mansion_cqb,
+  mansion_moderna,tren_fantasma}.py`.
+- Módulos de Blender que sólo usaban esas producciones (comprobado con el grafo de importaciones, también las que están
+  dentro de funciones): `estudio/blender/{auto_rampa_s03,batalla_s03,salto_tren,tren,via_ferrea,paisaje,vehiculos_dr,
+  ruedas,vidrios_dr,tiroteo}.py`.
+- Física de Dream Rally (`estudio/fisica_dr/`, `datos/fisica_dr/` con las simulaciones guardadas) y su documento
+  `docs/FISICA_DREAM_RALLY.md`.
+- 66 archivos de voces de `audio/biblioteca/` usados sólo por recetas de Dúo Cero, las muestras de voz de p010 y la voz
+  de prueba de la jefa, más sus 66 entradas de `catalogo/audio.json` (el registro de gasto `audio/ledger.jsonl` se
+  conserva entero).
+
+**Conservado a propósito:**
+- Todo `producciones/p011_a_la_deriva/` (recetas e01 v1–v2, e02 v1–v3, `entregado.json`, guiones, documento del dueño,
+  cámaras del director): sin tocar.
+- Herramientas comunes: `estudio/` (director, cámaras, personajes, humanos, stickman —lo usan los humanos de «A la
+  deriva»—, previa, trabajo, componentes, recursos, clips, manifiesto, protección, autorización, montaje, publicación,
+  audio procedural y ElevenLabs), `app/`, `visor/`, `catalogo/`, `config/`, `tools` locales.
+- Módulos nacidos en otras producciones que el código común importa (borrarlos rompe el pipeline o exige cambiarlo):
+  `blender/pelota.py` (lo importa `director`), `blender/armas.py` y `armas_stickman.py` (`personajes`/`stickman`),
+  `blender/efectos.py`, `blender/vehiculos.py`, `audio/{arcade,dream_rally,tren,radio}.py` y sus sonidos
+  `audio/biblioteca/{free_kick_swipe,dream_rally}/` (los llama `audio/procedural.py`), `catalogo/futbol.json` (lo leen
+  `director`, `personajes` y el buscador de animaciones). Candidatos a una poda posterior con un cambio dedicado.
+- Herramientas generales sin uso hoy: `blender/animar.py`, `blender/proyectar_textura.py`, `blender/pelo_realista.py`,
+  `blender/expresiones_3d.py`.
+- `pruebas/godot_blender/` («Casa moderna en tormenta»): es la base del pipeline Godot → Blender → Cycles.
+- `pruebas/` del sistema, de la app, de la autorización, del render por rangos y por bloques, del editor, de la nave y
+  de los personajes humanos; `pruebas/motor_002` y `pruebas/resolucion_001` como registro histórico (sus scripts ya
+  estaban deshabilitados; de ahí salió la configuración de Cycles).
+- Todos los flujos de `.github/workflows/`, los documentos históricos (`INFORME_ETAPA1`, `MIGRACION_ORGANIZACION`,
+  `docs/informes/`) y este registro.
+
+**Ambiguos, NO borrados (decidir):**
+- 45 audios de `audio/biblioteca/` que no nombra ninguna receta y no tienen etiqueta de producción. Por el texto,
+  parecen de fútbol, Drift Sunset, el tren y Al vacío, pero también hay ambientes y músicas que podrían ser de «A la
+  deriva»: música espacial, invernadero, timbres de consola.
+- Siete voces de Eva de «A la deriva» (etiqueta p011) que ninguna receta usa: versiones anteriores.
+- Roles de voz de Dúo Cero en `config/voces.json` y modelos de otras producciones en `estudio/blender_deps.py` y en
+  los catálogos: apuntan a recursos de mixamo-respaldo, que no se tocó (es de sólo lectura).
+- Valores por defecto obsoletos que no se cambiaron, porque la tarea del pipeline pide no tocar esos flujos sin
+  necesidad. Si se lanzan sin datos fallan solos, sin renderizar nada:
+  - `video30.yml`: escena de fútbol p003;
+  - `episodio.yml`: Dúo Cero;
+  - `pruebas/episodio/informe.py`;
+  - las pruebas de la app: etiquetas p005 y p009, que sólo son textos.
+
+**Ajustes para no romper referencias:**
+- `pruebas/autorizacion/test_autorizacion.py` ahora usa «A la deriva» e02 v3 (antes usaba Dúo Cero e01).
+- Ejemplos de escenario en `README.md`, `docs/ARQUITECTURA.md` y `docs/FLUJO_DE_PRODUCCION.md`.
+- `docs/GUIA_PARA_OTRO_CHAT.md` (§4, §4 bis y §6).
+
+**Verificación (sin render):**
+- Ningún archivo que queda importa un módulo borrado: lo comprobé con `git grep` y con el grafo de importaciones.
+- Importan los 53 módulos de `estudio` con el Python de Blender.
+- La línea de comandos `estudio` funciona.
+- Las 5 recetas de «A la deriva» validan, y sus huellas son **idénticas antes y después** de la limpieza.
+- `test_autorizacion`: 40/40.
+- `test_componentes`: 16/16, con mixamo-respaldo local actualizado (sólo descarga). Antes de actualizarlo daba 15/16
+  por falta de los recursos de «A la deriva»; con el estado previo, 14/16.
+- Los JSON de `catalogo/` y `config/` son válidos.
+- `test_trabajo` 19/19 y `test_caminata` 4/4: arman escenas en Blender sin renderizar.
+
+## 19/11/2026 — Pipeline Godot → GLB → AutoFinisher → .blend → Cycles (implementado, sin ejecutar)
+
+Pedido del dueño (plan aprobado con 10 condiciones). Rama `claude/inspiring-sagan-1ogr0n`. **Sin renders, sin Actions,
+sin Releases, sin publicar nada.** La prueba original (`pruebas/godot_blender/`: b6–b9, `armar.py`, su flujo) no se
+tocó, ni los flujos existentes ni «A la deriva».
+
+- **AutoFinisher** (`estudio/autofinisher/`), herramienta general. Módulos:
+  - AutoImport, AutoLights (perfiles de luz), AutoMaterials, AutoEffects, AutoCinema, AutoPack, AutoReport;
+  - receta de terminación, manifiesto (`estudio.version_blend/1`, SHA-256, inmutable), reparto de cuadros,
+    verificación de cuadros y de video, mediciones (tiempo y RAM por etapa), bajada de recursos;
+  - `render_trozo` (hash antes de abrir, reintentos por cuadro, `--sin-render`) e informe del render.
+- **Estándar de nombres Godot → Blender**: `Luz_<perfil>_…`, `vidrio*`, `emisivo*`/`neon*`, `FX_<efecto>`, `Colision_*`,
+  y la metadata `cine_tipo` con prioridad sobre el nombre.
+- **Biblioteca de efectos** deterministas por cuadro: lluvia, fuego, humo, brasas y relámpago. Son los de la prueba,
+  ahora con parámetros. El **fuego quedó corregido** (umbral 0,08→0,05, ganancia 9→12, emisión 22→90), sin
+  verificar con render. No se agregó ningún efecto que no estuviera pedido.
+- **Flujos nuevos e independientes** (preparados, nunca ejecutados):
+  - `construir_produccion.yml`: Godot → GLB → AutoFinisher → validación → manifiesto → Release
+    `blend-<prod>-v<NNN>`. Se niega si la Release existe.
+  - `render_desde_blend.yml`:
+    - sólo el `.blend` publicado, que verifica por SHA-256, y sin Godot;
+    - reparto de la prueba, reintento por cuadro;
+    - si falta un cuadro, se detiene sin rellenar; la recuperación es explícita (`cuadros` + `corrida_previa`);
+    - MP4 verificado;
+    - mide trabajos pedidos y ejecutados, simultaneidad real, cola, descarga, preparación, tiempo por cuadro, RAM,
+      fallos y reintentos.
+- **Reconstrucción local de «Casa moderna en tormenta»** (`pruebas/autofinisher/COMPARACION.md`): mismo GLB.
+  - Comparación campo por campo: 721 iguales y 6 distintos. Las diferencias son el fuego corregido y el nombre de la
+    colección de auxiliares ocultos.
+  - Se encontró que `vidrio_opalino` se convertía por el prefijo; quedó excluido en la receta.
+  - 3,06 s de máquina, RAM máxima 877 MB, `.blend` de 37,1 MB autónomo.
+- **Pruebas** (sin render):
+  - `test_autofinisher.py` 32/32;
+  - `test_general.py` 13/13, con una escena que no es la casa;
+  - validación y hash, `render-trozo --sin-render`;
+  - descarga real de un archivo de Release con SHA-256 igual al de GitHub;
+  - bajada de la Kodiak;
+  - montaje simulado con un cuadro faltante (se detiene) y completo (MP4 verificado).
+- **Docs**: `docs/AUTOFINISHER.md`, `docs/CONSTRUIR_Y_RENDERIZAR.md`, `FLUJO_DE_PRODUCCION.md` §7, `CLAUDE.md`, la guía.
+- **Pendiente:**
+  - la primera construcción y el primer render reales, que decide el dueño;
+  - verificar el fuego con un render;
+  - el MP4 sale sin audio;
+  - «descargar un .blend publicado» se probó con otro archivo de Release, porque todavía no hay ninguno.
+
+## 19/11/2026 — Flujo definitivo: creo → previa → correcciones → aprobada → la nube entrega el MP4
+
+Pedido del dueño: una sola aprobación (la del chat), sin formularios ni entornos protegidos de GitHub; al aprobar, la
+publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
+
+- **Nuevo:** `python -m estudio aprobar` (exige la previsualización entregada con la misma huella),
+  `python -m estudio publicar-escena preparar|validar|cerrar`, `estudio/version_escena.py` (manifiesto
+  `estudio.version_escena/1`), `estudio/blender/publicar_escena.py`, flujos `publicar_escena.yml` (publica y llama
+  solo a) `render_escena.yml`; `previa --audio` (mezcla en .m4a para el visor) y `previa.yml` la sube; visor con
+  audio sincronizado (el reloj es el del audio) y botón 💡 LUCES DE LA ESCENA.
+- **Cambiado (mínimo):** `montar.py --audio-intacto` y `--fps` (sin la opción hace lo mismo que antes);
+  `render_trozo.py` escribe también los campos de los informes de `render_rango.py`; `autofinisher/manifiesto.leer`
+  acepta las dos clases de manifiesto; `proteccion.verificar` reconoce la receta aprobada.
+- **Sin tocar:** `elevenlabs.py`, `cara_anime.py`, `expresiones_3d.py`, `stickman.py`, `procedural.py`,
+  `audio_escena.py`, `director.py`, `video30.yml`, A la deriva y sus recursos.
+- **Encontrado con la prueba real:** `director.guardar_blend` borraba las acciones de las formas de la cara
+  (expresiones y labios cuelgan de las shape keys, no de los objetos): el `.blend` reabierto tenía las caras quietas
+  (568 valores distintos). `publicar_escena` guarda por su cuenta. Además: un cuadro de corte (3408) donde el
+  marcador daba la toma siguiente y `render_rango.py` la anterior (los marcadores se rehacen desde esa tabla), y
+  materiales sueltos del FBX de un pelo con una textura inexistente (se borran los datos sin uso antes de empaquetar).
+- **Prueba local con E02 v3 (modo ensayo, sin publicar, sin render, sin Actions):** preparar 539 s (RAM máx.
+  1,72 GB; BLEND 45,6 MB autónomo, 44 voces y alineaciones en el zip); validar: 3998/3998 cuadros con la cámara
+  correcta y 2790 valores de cara iguales en 31 cuadros de control; `audio_escena.py` 524 s: WAV idéntico byte a byte
+  al de control (133,28 s, 48 kHz, estéreo); `render-trozo --sin-render` abre el BLEND en 0,84 s; `montar.py
+  --audio-intacto` con el WAV real y 3998 cuadros de prueba de ffmpeg (no es un render): desfase 0 muestras, volumen
+  −18,78 dB = −18,78 dB, MP4 3998 cuadros 30 fps 133,28 s. Un WAV con un byte cambiado se rechaza.
+- **Previsualización con audio de E02 v3:** `previa --audio` → GLB 29,5 MB (14 mallas de cara con formas animadas:
+  los labios se ven), JSON y M4A 2,2 MB (AAC 48 kHz, 133,28 s). Visor probado en Chromium como Pixel 7 con los tres
+  archivos: carga sin errores, ▶ avanza con el reloj del audio, 💡 LUCES DE LA ESCENA con exposición tipo cámara (sin
+  ella el sol de 2732 lux quemaba la imagen). Visor publicado en el artifact (versión 4).
+- **No probado:** los flujos en Actions (no se ejecutaron), un render real desde el BLEND, la publicación de la Release
+  y el visor en un teléfono real.

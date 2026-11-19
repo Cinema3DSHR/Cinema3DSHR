@@ -45,7 +45,7 @@ autorización de créditos.
 {
   "tipo": "escena", "id": "<produccion>-eNN", "produccion": "<produccion>", "numero": 1, "version": 1,
   "titulo": "…", "guion": "…", "duracion_s": 28,
-  "escenario": {"id": "mansion_moderna_noche", "generador": "mansion_moderna", "parametros": {…}},
+  "escenario": {"id": "nave_deriva_ampliada", "generador": "nave_deriva_ampliada", "parametros": {…}},
   "eventos": [{"accion": "abrir_porton", "inicio_s": 4.0, "duracion_f": 75}],      // acciones del escenario
   "vehiculos": [{"id": "auto", "modelo": "procedural:sedan", "color": [r,g,b],
                  "recorrido": [[x,y,z], {"ancla": "porton", "desp": [0,-0.5,0]}, …],
@@ -84,3 +84,12 @@ mantener el eje de acción, usar profundidad de campo en detalles.
 | final4k | 3840×2160 | Cycles 64 mp | si el servidor lo permite | no viable en Actions estándar |
 
 No se vuelve a renderizar una versión publicada (salvo `forzar`) ni una aprobada. Para cambiar algo, versión nueva.
+
+## 7. Pipeline Godot → GLB → AutoFinisher → .blend → Cycles (desde el 19/11/2026)
+
+Segundo camino de producción, independiente del de recetas del estudio (§2–§6): la escena se arma en **Godot**, el
+**AutoFinisher** la termina en un `.blend` autónomo e inmutable (manifiesto + SHA-256) que se publica en su Release, y
+el render distribuido trabaja **sólo desde ese `.blend`** (sin Godot ni reconstrucción). Herramienta y estándar de
+nombres: `docs/AUTOFINISHER.md`. Construir, publicar, renderizar y recuperar cuadros: `docs/CONSTRUIR_Y_RENDERIZAR.md`.
+Flujos: `construir_produccion.yml` y `render_desde_blend.yml` (a mano; preparados, todavía sin ejecutar).
+

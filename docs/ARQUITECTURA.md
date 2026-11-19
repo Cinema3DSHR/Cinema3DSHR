@@ -6,7 +6,7 @@
 |---|---|---|
 | `estudio/` (Python) | Sesión de Claude y GitHub Actions | Todo el sistema de producción. `python -m estudio …` |
 | `estudio/blender/kit.py` | | Piezas procedurales: materiales PBR en coordenadas de mundo, cajas con bisel, instancias, luces, cielo nocturno, niebla, utilidades de animación. |
-| `estudio/escenarios/<generador>.py` | | Un generador por tipo de escenario (hoy: `mansion_moderna`). Devuelve **anclas** (puntos de interés) y **animables** (portón, garaje, puerta…). |
+| `estudio/escenarios/<generador>.py` | | Un generador por tipo de escenario (hoy: `nave_deriva`, `nave_deriva_ampliada` de «A la deriva» y `prueba_minima` de las pruebas). Devuelve **anclas** (puntos de interés) y **animables** (portón, garaje, puerta…). |
 | `estudio/blender/vehiculos.py` | | Sedán procedural genérico; recorridos suaves con tiempos y paradas (interpolación monótona: nunca retrocede). |
 | `estudio/blender/camaras.py` | | Tipos de toma cinematográfica calculados fotograma a fotograma (dolly, grúa, órbita/aérea, seguimiento, detalle, vigilancia, subjetiva, paneo…), profundidad de campo, cámara en mano, luz de relleno. |
 | `estudio/blender/director.py` | | Arma la escena desde su manifiesto, configura el render, renderiza por toma (reanudable), exporta pistas para el sonido, guarda el `.blend`, exporta el GLB del visor. |

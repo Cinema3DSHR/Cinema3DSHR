@@ -19,7 +19,7 @@ recorrer en 3D, aprobar, pedir correcciones y exportar.
 ```
 estudio/        sistema de producción (python -m estudio …)
   blender/      kit procedural, cámaras, vehículos, director (bpy)
-  escenarios/   generadores de escenarios (mansion_moderna, …)
+  escenarios/   generadores de escenarios (nave_deriva, nave_deriva_ampliada, prueba_minima)
   audio/        sonido procedural (ElevenLabs: Etapa 6)
   catalogo/     inventario y buscador de animaciones
 catalogo/       animaciones.json (3292 clips), armas.json, vehiculos.json, audio.json

@@ -68,7 +68,7 @@ coincide con el código, **manda el código**: corregí esta guía en el mismo c
 
 ```
 Claude escribe una RECETA  producciones/<prod>/escenas/<eNN>/v<k>/escena.json
-        │   (las de Dúo Cero se generan con producciones/p009_duo_cero/herramientas/escenas.py)
+        │   (las de A la deriva se generan con producciones/p011_a_la_deriva/herramientas/escenas*.py)
         ▼
 python -m estudio validar <escena.json>
         ▼
@@ -125,6 +125,10 @@ Para lanzar un flujo usá `mcp__github__actions_run_trigger` (`run_workflow`, `r
 `actions_list` / `actions_get` y los registros con `get_job_logs`. La API sin autenticar de este repo está bloqueada
 desde la sesión: usá las herramientas MCP.
 
+**Pipeline nuevo (19/11/2026):** Godot → GLB → AutoFinisher (`estudio/autofinisher/`) → `.blend` autónomo e
+inmutable en una Release → render distribuido desde ese `.blend` (`construir_produccion.yml`, `render_desde_blend.yml`).
+Leé `docs/AUTOFINISHER.md` y `docs/CONSTRUIR_Y_RENDERIZAR.md` antes de construir o renderizar con él.
+
 ## 4 bis. Inventario de recursos (qué hay y dónde, sin auditar)
 
 En las recetas y en el código los recursos se nombran `<fuente>:<ruta>` (`estudio/config.py` → `FUENTES`).
@@ -169,7 +173,8 @@ con jaula y rampa adelante, FBX; mira a +Y y no trae ruedas: se le ponen las de 
 en `01_animaciones/json_originales/`).
 
 **De los otros repos**:
-- Dream Rally (`rally:`): los 28 autos con física real (`estudio/fisica_dr`), pilotos, motos, vegetación y rutas.
+- Dream Rally (`rally:`): los 28 autos, pilotos, motos, vegetación y rutas (la integración de su física, `estudio/fisica_dr`,
+  se borró en la limpieza del 19/11/2026; está en el historial).
 - Nexus (`nexus:`): armas, operador, vehículo y audio.
 - Extraction (`extraction:`): armas con puntos de agarre.
 - Sweet Home (`sh3d:`): 723 muebles, árboles, plantas, puertas y ventanas a escala real. El estudio los lee de
@@ -196,21 +201,14 @@ Convenciones aprendidas a los golpes (detalle en `docs/ERRORES.md`):
   `HOLD_FORWARD`.
 - Las coordenadas de las cámaras del director están en Blender: usá esos números, nunca adivines desde una captura.
 
-## 6. Estado actual de los trabajos (18/11/2026)
+## 6. Estado actual de los trabajos (19/11/2026)
 
-**Dúo Cero (`p009_duo_cero`), Episodio 01**: estilo Stickman, 6 escenas, 180 s, 5 400 fotogramas.
-- **Personajes**: modelos definitivos del dueño (Stickman masculino y femenino proporcionados a Mixamo), en
-  `mixamo-respaldo/personajes_pelicula/stickman_{masculino,femenino}` y `armas_stickman`. Nico, con corte Kingsman, y
-  Luna son los protagonistas. Los guardias tienen cresta o mohicano.
-- **Voces**: ElevenLabs v3 rioplatenses, ya generadas (57 líneas y 6 músicas). Nico «Tomas», Luna «Malena», guardia
-  «Uriel», Central «Carlos» (`config/voces.json`).
-- **Configuración de render fijada por el dueño** (no se cambia): Cycles CPU, **960×540, 30 fps, 6 muestras**,
-  adaptativo 0,05, OIDN, 6 rebotes, Light Tree, semilla 0.
-- **Revisión**: e01 v1 tiene previsualización publicada y está **LISTA PARA REVISIÓN** (huella `d4d2e3909563bce1`).
-  e02–e06 están **EN PREPARACIÓN**: falta publicar su previsualización con `previa.yml`. Nada está aprobado ni
-  autorizado todavía, y **no se renderizó el episodio**.
-- **Tiempos medidos**: unos 12,2 s por fotograma, unas 18 h de máquina en total, más ~4,5 min fijos por trabajo
-  (`docs/informes/duo_cero_ep01_tiempos.md`). Conviene repartirlo en 60 trabajos chicos (~23 min cada uno).
+**Limpieza general del 19/11/2026: el repositorio queda dedicado a «A la deriva» (`p011_a_la_deriva`)**, más las
+herramientas comunes del estudio y la prueba técnica Godot → Blender (`pruebas/godot_blender`, base del pipeline nuevo).
+Se borraron las demás producciones (p000–p010: mansión, fútbol, la jefa, CQB, Tren Fantasma, Al vacío, Drift Sunset,
+Dúo Cero, Un sueño de a dos), sus escenarios, sus módulos exclusivos y la física de Dream Rally. Detalle, motivos y
+cómo recuperar algo: `docs/REGISTRO.md` → «Limpieza general». Las Releases de esas producciones NO se borraron y los
+recursos originales siguen en mixamo-respaldo. Para recuperar un archivo: `git show 150fcea:<ruta>`.
 
 **Concurrencia de GitHub Actions** (`docs/informes/ticket_github_concurrencia.md`):
 - El repositorio pasó a la organización Cinema3DSHR (plan Team, 60 trabajos simultáneos en teoría).
@@ -222,8 +220,7 @@ Convenciones aprendidas a los golpes (detalle en `docs/ERRORES.md`):
 **App**: la APK época 2 (orientación «sensor») arregló que en vertical no respondía ningún botón. El dueño tiene que
 instalarla y confirmarlo: no se probó en un teléfono real, sólo con pruebas de toques en Godot.
 
-Otras producciones (p000–p008: mansión, fútbol, tren fantasma, Al vacío, Drift Sunset…): su historia está en
-`docs/REGISTRO.md`. No las toques si no te lo piden.
+La historia de las producciones borradas sigue en `docs/REGISTRO.md`.
 
 ## 7. Cómo atender pedidos típicos
 
@@ -245,6 +242,9 @@ xvfb-run -a godot --path app --rendering-driver opengl3 --script res://../prueba
     PREVIA.glb PREVIA.json <prod> <escena> <version> SALIDA_DIR    # app + EDITOR 3D con una previa real (18/18)
 pruebas/app/toques_vertical.gd (6/6), pruebas/app/toques_rotacion.gd (7/7)   # toques en vertical / al girar
 ```
+
+- `python3 pruebas/autofinisher/test_autofinisher.py` (32) y `$PY pruebas/autofinisher/test_general.py` (13): el
+  AutoFinisher y los flujos nuevos, sin render.
 
 ## 9. Documentos para ampliar (sólo si hace falta)
 

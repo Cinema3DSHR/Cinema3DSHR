@@ -1,0 +1,38 @@
+{
+ "formato": "estudio.receta_autofinisher/1",
+ "produccion": "casa_tormenta",
+ "titulo": "Prueba técnica «Casa moderna en tormenta» (reconstrucción con el AutoFinisher; la original está en pruebas/godot_blender)",
+ "godot": {
+  "proyecto": "pruebas/godot_blender/godot",
+  "script": "herramientas/construir.gd",
+  "args": [],
+  "glb": "salida/casa_tormenta.glb",
+  "version": "4.7.2",
+  "recursos": [
+   {"repo": "webmaletin-art/Rally-Sim-movile", "ref": "main",
+    "archivos": ["godot/game/models/cars/kodiak.glb", "godot/game/models/cars/kodiak_lo.glb"],
+    "destino": "pruebas/godot_blender/godot/modelos"}
+  ]
+ },
+ "escena": {"fps": 30, "cuadro_inicial": 0, "cuadro_final": 899, "camara": "Camara"},
+ "render": {"resolucion": [540, 960], "muestras": 6},
+ "materiales": {
+  "vidrios": {
+   "vidrio": {"rugosidad": 0.0, "ior": 1.45, "color": [0.92, 0.96, 1.0]},
+   "vidrio_verde": {"rugosidad": 0.05, "ior": 1.5},
+   "vidrio_ambar": {"rugosidad": 0.05, "ior": 1.5},
+   "vidrio_negro": null,
+   "vidrio_opalino": null
+  }
+ },
+ "mundo": {"nombre": "Mundo_tormenta", "color": [0.004, 0.006, 0.011], "fuerza": 1.0},
+ "efectos": [
+  {"receta": "lluvia", "ancla": "FX_lluvia", "parametros": {
+    "choque_objetos": ["Kodiak_carroceria"],
+    "cajas_choque": [{"nombre": "Choque_techo_casa", "centro_godot": [0.5, 3.4, 0.0], "tam": [24.0, 8.6, 1.0]}]}},
+  {"receta": "fuego", "ancla": "FX_fuego"},
+  {"receta": "humo", "ancla": "FX_humo", "parametros": {"z_centro": 0.86}},
+  {"receta": "brasas", "ancla": "FX_brasas"},
+  {"receta": "relampago"}
+ ]
+}

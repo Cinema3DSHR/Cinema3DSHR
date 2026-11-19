@@ -3,6 +3,9 @@
 Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GUIA_PARA_OTRO_CHAT.md` (todo lo necesario sin auditar). Leer primero `docs/REGISTRO.md` (estado) y `docs/FLUJO_DE_PRODUCCION.md` (cómo producir).
 
 ## Repositorios
+- **Desde el 19/11/2026 este repositorio está dedicado a «A la deriva» (`producciones/p011_a_la_deriva`)** más las
+  herramientas comunes y la prueba Godot → Blender (`pruebas/godot_blender`). Las demás producciones se borraron
+  (detalle y cómo recuperar: `docs/REGISTRO.md` → «Limpieza general»; estado previo en el commit `150fcea`).
 - **Cinema3DSHR** (este, público): todo el trabajo. Rama de la sesión indicada por el sistema.
 - **mixamo-respaldo** (privado): animaciones originales. **Sólo lectura** — nunca borrar, mover ni sobrescribir.
 - Operaci-n-Nexus-1 / Extraction-tactical: sólo para tomar recursos (armas, operador, audio). No auditarlos.
@@ -19,6 +22,16 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
    `pruebas/revision/revision_ui.gd`, sin render). `fijas` es un render: sólo si el dueño lo pide. No decir que algo
    funciona sin haberlo probado.
 8. Registrar cada avance en `docs/REGISTRO.md`.
+
+## FLUJO DEFINITIVO (19/11/2026, `docs/FLUJO_DEFINITIVO.md`): creo → previa → correcciones → aprobada → la nube entrega
+- Crear la escena → `python -m estudio previa <escena.json> --salida <scratchpad>/previa --audio` → mandar GLB + JSON +
+  M4A por el chat y registrar la entrega. Correcciones = versión nueva + previa nueva. Nada de render en la revisión.
+- Cuando el dueño dice que está **aprobada**: `python -m estudio aprobar <escena.json> --nota "<su frase>"`, commit +
+  push y lanzar `publicar_escena.yml` (entrada `escena`). Esa frase es la autorización: el flujo publica BLEND + WAV
+  (`audio_escena.py`) + voces/alineaciones + manifiesto y dispara solo `render_escena.yml` hasta el MP4 final. No pedir
+  otra aprobación ni usar entornos protegidos de GitHub. Si una verificación falla: contarle al dueño cuál.
+- Nunca: publicar sin aprobación, reconstruir una versión aprobada, tocar el sistema de voces/labios, normalizar o
+  correr el audio final.
 
 ## Render: lo ordena el dueño en el chat (candado QUITADO el 18/11/2026)
 - El dueño pidió sacar el candado de la app: `config/candado_render.json` → `"activo": false`. Con eso, cuando el dueño
@@ -45,6 +58,14 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
   velocidad o nombre de archivo.
 - Correcciones chicas: `trabajo actualizar` (rehace sólo lo afectado: una cámara, un personaje) y `--previa` para el
   visor. Lo entregado tiene `entregado.json` y no se sobrescribe; si falta un recurso, la preparación se detiene.
+
+## Pipeline Godot → GLB → AutoFinisher → .blend → Cycles (docs/AUTOFINISHER.md, docs/CONSTRUIR_Y_RENDERIZAR.md)
+- Construir una versión = `construir_produccion.yml` (Godot → GLB → AutoFinisher → `.blend` autónomo + manifiesto con
+  SHA-256 → Release `blend-<prod>-v<NNN>`). Una versión publicada es inmutable: cualquier cambio es una versión nueva.
+- Renderizar = `render_desde_blend.yml` sobre una versión publicada: nunca instala Godot ni reconstruye la escena;
+  verifica el hash, no rellena cuadros faltantes (recuperación explícita con `cuadros` + `corrida_previa`).
+- Efectos: sólo los que pide la receta, deterministas por cuadro (`estudio/autofinisher/recetas_efectos/`). La prueba
+  original `pruebas/godot_blender/` no se toca.
 
 ## Revisión rápida en el navegador (visor HTML)
 El dueño revisa con `visor/visor_escena.html` y manda por el chat un texto `VISOR DE ESCENA …` con un JSON

@@ -89,7 +89,8 @@ def verificar(ruta_escena: Path, buscar_en: list[Path] | None = None) -> list[st
     if not reg:
         return [f"{_rel(ruta_escena)}: sin registro de entrega"]
     out = []
-    if sha256(ruta_escena) != reg["receta"]["sha256"]:
+    # al aprobarla sólo cambian estado/bloqueada/historial: el registro anota la receta aprobada
+    if sha256(ruta_escena) not in (reg["receta"]["sha256"], reg.get("aprobacion", {}).get("receta_sha256")):
         out.append(f"LA RECETA CAMBIÓ: {_rel(ruta_escena)} no coincide con lo entregado")
     for d in reg["derivados"]:
         cands = [config.RAIZ / d["ruta_al_entregar"]] + [Path(b) / d["nombre"] for b in (buscar_en or [])]

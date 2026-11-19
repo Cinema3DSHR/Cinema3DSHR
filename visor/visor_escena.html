@@ -106,8 +106,8 @@ input[type=range].fino { width: 150px; accent-color: var(--acento); }
         <h1>Abrí el GLB de la escena</h1>
         <p>Claude te pasa la escena como un archivo <b>.glb</b> liviano (y a veces un <b>.json</b> con las tomas). Se ve con las animaciones y las cámaras de rodaje, sin render.</p>
         <ol>
-          <li>Tocá <b>ABRIR ESCENA</b> y elegí el .glb (si vino un .json, elegí los dos juntos).</li>
-          <li>▶ para ver el montaje. Pasá a <b>LIBRE</b> para recorrer la escena: arrastrá para mirar, la cruceta para moverte.</li>
+          <li>Tocá <b>ABRIR ESCENA</b> y elegí juntos los archivos que te pasó Claude: el <b>.glb</b>, el <b>.json</b> y, si vino, el audio <b>.m4a</b> (mantené apretado para elegir varios).</li>
+          <li>▶ para ver el montaje con su sonido (voces, música y ambiente en sincronía; 🔊 lo silencia). <b>💡 LUCES DE LA ESCENA</b> muestra la iluminación aproximada. Pasá a <b>LIBRE</b> para recorrer la escena: arrastrá para mirar, la cruceta para moverte.</li>
           <li><b>➕ CÁMARA NUEVA</b> agrega una cámara donde estás mirando; <b>✏️ EDITAR</b> cambia una cámara de la película (más alta, otro lente…). Todo lo que movés queda anotado solo.</li>
           <li>Al final, <b>📋 COPIAR PARA CLAUDE</b> y lo pegás en el chat.</li>
         </ol>
@@ -166,6 +166,8 @@ input[type=range].fino { width: 150px; accent-color: var(--acento); }
     <div class="fila">
       <button class="btn" id="marcar" type="button">📍 NOTA</button>
       <button class="btn" id="plano" type="button">COLOR PLANO</button>
+      <button class="btn" id="luces" type="button">💡 LUCES DE LA ESCENA</button>
+      <button class="btn" id="sonido" type="button" hidden>🔊 AUDIO</button>
     </div>
     <div id="aviso" role="status"></div>
     <textarea id="salida" hidden readonly aria-label="Texto para Claude"></textarea>
@@ -186,7 +188,7 @@ const C_FONDO = 0x0b0c0e, C_CIELO = 0x23262c;
 
 // ---------------------------------------------------------------- estado
 const E = {
-  d: null, fps: 30, dur: 1, frames: 30, t: 0, jugando: false, vel: 1,
+  d: null, fps: 30, dur: 1, frames: 30, t: 0, jugando: false, vel: 1, audio: null, mudo: false, luces: false, lucesArchivo: [],
   modo: "montaje", tomaFija: null, escena: null, mixer: null, clipDur: 0,
   camaras: {}, tomas: [], vis: [], actores: [], aspecto: 16 / 9, plano: false, mats: new Map(),
   notas: [], clave: "visor-notas", nombre: "",
@@ -201,7 +203,8 @@ rend.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
 rend.outputEncoding = THREE.sRGBEncoding;
 const esc = new THREE.Scene();
 esc.background = new THREE.Color(C_CIELO);
-esc.add(new THREE.HemisphereLight(0xf2efe8, 0x4a4640, 0.95));
+const amb = new THREE.HemisphereLight(0xf2efe8, 0x4a4640, 0.95);
+esc.add(amb);
 const sol = new THREE.DirectionalLight(0xffffff, 0.75);
 sol.position.set(4, 10, 6);
 esc.add(sol);
@@ -362,8 +365,10 @@ let ultimo = performance.now();
 function cuadroBucle(ahora) {
   const dt = Math.min(0.1, (ahora - ultimo) / 1000);
   ultimo = ahora;
+  if (!E.jugando && E.audio && !E.audio.paused) E.audio.pause();
   if (E.jugando && E.escena) {
-    let t = E.t + dt * E.vel;
+    // con audio sonando, el reloj es el del audio: la imagen sigue al sonido (labios y voces en sincronía)
+    let t = (E.audio && !E.audio.paused && !E.mudo) ? E.audio.currentTime : E.t + dt * E.vel;
     if (t >= E.dur) { t = E.dur; E.jugando = false; $("play").textContent = "▶"; }
     irA(t);
   }
@@ -394,9 +399,11 @@ $("vista").addEventListener("dragover", (e) => e.preventDefault());
 $("vista").addEventListener("drop", (e) => { e.preventDefault(); abrirArchivos([...e.dataTransfer.files]); });
 
 async function abrirArchivos(lista) {
-  const glb = lista.find((f) => /\.(glb|gltf)$/i.test(f.name)) || lista.find((f) => !/\.json$/i.test(f.name));
+  const glb = lista.find((f) => /\.(glb|gltf)$/i.test(f.name)) || lista.find((f) => !/\.(json|m4a|mp3|ogg|oga|opus|wav|aac)$/i.test(f.name));
   const js = lista.find((f) => /\.json$/i.test(f.name));
-  if (!glb) { aviso("Elegí el archivo .glb de la escena (y el .json si vino uno)."); return; }
+  const au = lista.find((f) => /\.(m4a|mp3|ogg|oga|opus|wav|aac)$/i.test(f.name));
+  if (au) ponerAudio(URL.createObjectURL(au), au.name);
+  if (!glb) { if (!au) aviso("Elegí juntos el .glb de la escena, su .json y, si vino, el audio .m4a."); return; }
   try {
     const datos = js ? JSON.parse(await js.text()) : null;
     await cargar(await glb.arrayBuffer(), datos, glb.name);
@@ -429,8 +436,10 @@ function montar(g, datos, nombre) {
   const d = datos || (raiz.userData && raiz.userData.estudio_previa) || (g.parser.json.extras && g.parser.json.extras.estudio_previa) || {};
   E.d = d; E.nombre = nombre;
   E.fps = d.fps || 30;
-  raiz.traverse((o) => {                                   // sin las luces del archivo ni sombras
-    if (o.isLight) o.visible = false;
+  E.lucesArchivo = []; E.luces = false; $("luces").classList.remove("activo"); amb.intensity = 0.95; sol.visible = true;
+  rend.physicallyCorrectLights = false; rend.toneMapping = THREE.NoToneMapping; rend.toneMappingExposure = 1;
+  raiz.traverse((o) => {                                   // sin las luces del archivo ni sombras (💡 las prende)
+    if (o.isLight) { o.visible = false; E.lucesArchivo.push(o); }
     if (o.isMesh) { o.castShadow = o.receiveShadow = false; o.frustumCulled = false; }
   });
   esc.add(raiz);
@@ -607,13 +616,48 @@ $("play").onclick = () => {
   if (!E.escena) return;
   if (E.t >= E.dur) irA(0);
   E.jugando = !E.jugando; $("play").textContent = E.jugando ? "⏸" : "▶";
+  sincronizarAudio();
 };
+function sincronizarAudio() {
+  const a = E.audio;
+  if (!a) return;
+  if (!E.jugando || E.mudo || E.t >= a.duration) { a.pause(); return; }
+  a.currentTime = E.t; a.playbackRate = E.vel;
+  a.play().catch(() => aviso("El navegador no dejó reproducir el audio: tocá ▶ otra vez."));
+}
+$("sonido").onclick = () => {
+  E.mudo = !E.mudo; $("sonido").textContent = E.mudo ? "🔇 SIN AUDIO" : "🔊 AUDIO"; $("sonido").classList.toggle("activo", !E.mudo);
+  sincronizarAudio();
+};
+function ponerAudio(url, nombre) {
+  if (E.audio) { E.audio.pause(); URL.revokeObjectURL && E.audio.src.startsWith("blob:") && URL.revokeObjectURL(E.audio.src); }
+  E.audio = new Audio(url); E.audio.preload = "auto"; E.mudo = false;
+  $("sonido").hidden = false; $("sonido").textContent = "🔊 AUDIO"; $("sonido").classList.add("activo");
+  aviso("Audio de la escena cargado (" + nombre + "): suena con ▶ a la velocidad elegida.");
+}
 const paso = (k) => { E.jugando = false; $("play").textContent = "▶"; irA((cuadro() - 1 + k) / E.fps + 1e-6); };
 $("atras").onclick = () => paso(-1);
 $("adelante").onclick = () => paso(1);
 $("inicio").onclick = () => { E.jugando = false; $("play").textContent = "▶"; irA(0); };
 const VELS = [1, 0.5, 0.25, 2];
-$("vel").onclick = () => { E.vel = VELS[(VELS.indexOf(E.vel) + 1) % VELS.length]; $("vel").textContent = "×" + String(E.vel).replace(".", ","); };
+$("vel").onclick = () => { E.vel = VELS[(VELS.indexOf(E.vel) + 1) % VELS.length]; $("vel").textContent = "×" + String(E.vel).replace(".", ","); sincronizarAudio(); };
+// luces del archivo (las de Blender, aproximadas: el render final es Cycles) en lugar de la luz pareja del visor
+$("luces").onclick = () => {
+  if (!E.escena) return;
+  E.luces = !E.luces; $("luces").classList.toggle("activo", E.luces);
+  for (const l of E.lucesArchivo) l.visible = E.luces;
+  // Blender exporta en unidades físicas (lux, candelas): una exposición tipo cámara conserva las proporciones entre
+  // luces; referencia = el sol de la escena o, si no hay, la puntual más fuerte a ~2 m
+  const dirs = E.lucesArchivo.filter((l) => l.isDirectionalLight).map((l) => l.intensity);
+  const pts = E.lucesArchivo.filter((l) => !l.isDirectionalLight).map((l) => l.intensity / 4);
+  const ref = Math.max(1e-3, ...(dirs.length ? dirs : pts.length ? pts : [1]));
+  rend.physicallyCorrectLights = E.luces;
+  rend.toneMapping = E.luces ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
+  rend.toneMappingExposure = E.luces ? 1.6 / ref : 1;
+  amb.intensity = E.luces ? 0.12 * ref / 1.6 : 0.95; sol.visible = !E.luces;
+  E.escena.traverse((o) => { if (o.isMesh && o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { m.needsUpdate = true; }); });
+  aviso(E.luces ? "Luces de la escena (aproximadas; el render final las calcula con Cycles)." : "Luz pareja del visor.");
+};
 
 // ---------------------------------------------------------------- color plano (sin luz)
 $("plano").onclick = () => {
@@ -936,6 +980,7 @@ window.addEventListener("keyup", (e) => { if (TECLAS[e.code]) { const [eje, s] =
 
 tamano(); pintarNotas(); dibujarCortes();
 const q = new URLSearchParams(location.search);
+if (q.get("audio")) ponerAudio(q.get("audio"), q.get("audio").split("/").pop());
 if (q.get("glb")) cargarURL(q.get("glb"), q.get("json"));
 })();
 </script>
