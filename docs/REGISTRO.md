@@ -920,3 +920,12 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
 - Montaje con voz: `ffmpeg` copia el video (sin recodificar) y suma `audio/narracion_v001.m4a` (clips de la voz Yuli en el
   inicio de cada toma + 0,15 s; sin música, sin acelerar, sin normalizar). Se entregó al dueño por el chat. No se pudo subir
   a la Release: `gh release upload` usa GraphQL y el entorno lo bloquea (permiso técnico que falta; no se esquivó).
+
+## 19/11/2026 — p014 «Rally Convoy» (cinemática de Dream Racing, solo etapa Godot)
+
+- Pedido del dueño: cinemática de ~5 min, 480×854 vertical, siete autos originales conducidos por la física y la IA reales del juego, en pelotón;
+  detenerse en Godot (sin Blender, sin efectos); mostrar un video grabado del motor de Godot (MP4 liviano). Además: auto fantasma invisible con
+  cámara, zoom de lente que sigue y se aleja, dron no muy alto, trazadas reales; guardar el set.
+- Hecho: ruta nueva con el generador de la Aventura, simulación (0 solapamientos de autos, 0 salidas de camino, deslizamiento máx. 31° en montaña,
+  llegada a los 308 s), dirección de cámaras, grabación 3552 cuadros (296 s) con el sonido original. Set en `producciones/p014_rally_convoy/`.
+- Entregado el video al dueño por el chat. No se hizo Blender ni render final; no se publicó nada.

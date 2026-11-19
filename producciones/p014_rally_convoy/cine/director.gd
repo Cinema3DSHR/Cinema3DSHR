@@ -20,6 +20,7 @@ var _ghost_v := 0.0
 var _cam_pos := Vector3.ZERO
 var _cam_look := Vector3.ZERO
 var _have_prev := false
+var _raise := 0.0
 var _rng := RandomNumberGenerator.new()
 var telemetry: Dictionary = {}
 var shot_log: Array = []
@@ -33,6 +34,8 @@ func setup(p_sc) -> void:
 	if FileAccess.file_exists(tf):
 		telemetry = JSON.parse_string(FileAccess.get_file_as_string(tf))
 	plan = _make_plan()
+	for pl in plan:
+		print("[plan] %6.1f–%6.1f  %-12s auto %d" % [float(pl["t0"]), float(pl["t1"]), str(pl["type"]), int(pl.get("car", 0))])
 	if sc.args.has("cam"): # prueba: un solo plano permanente
 		plan = [{"t0": 0.0, "t1": 1e9, "type": sc._arg("cam"), "car": int(sc._arg("car", "0"))}]
 
@@ -126,6 +129,11 @@ func _make_plan() -> Array:
 	var T_toll := _t_at_s(s_toll)
 	var T_toll_out := _t_at_s(s_toll + 60.0)
 	var T_end := minf(float(telemetry.get("t_end", 320.0)), 296.0)
+	var cut_prev := func(tc: float) -> void:
+		while not p.is_empty() and float(p.back()["t0"]) >= tc:
+			p.pop_back()
+		if not p.is_empty() and float(p.back()["t1"]) > tc:
+			p.back()["t1"] = tc
 	# 1) salida: la estación con los siete reunidos, los pilotos, el arranque y el peaje
 	p.append({"t0": 0.0, "t1": 3.2, "type": "grid_orbit", "car": 3})
 	p.append({"t0": 3.2, "t1": 4.8, "type": "interior", "car": 4})
@@ -152,6 +160,7 @@ func _make_plan() -> Array:
 			bridge_done = true
 			var tb0 := _t_at_s(bridge_s0 - 120.0)
 			var tb1 := _t_at_s(bridge_s1 + 80.0)
+			cut_prev.call(tb0)
 			var seg := (tb1 - tb0) / 4.0
 			p.append({"t0": tb0, "t1": tb0 + seg, "type": "drone", "car": 5})
 			p.append({"t0": tb0 + seg, "t1": tb0 + 2.0 * seg, "type": "bridge_side", "car": 0, "s_ref": (bridge_s0 + bridge_s1) * 0.5})
@@ -177,6 +186,7 @@ func update(dt: float) -> void:
 		cur = _find(t)
 		_shot_t = 0.0
 		_have_prev = false
+		_raise = 0.0
 		_ghost_init()
 		shot_log.append([snappedf(t, 0.1), plan[cur]["type"], plan[cur]["car"]])
 	_shot_t += dt
@@ -198,6 +208,16 @@ func _apply(r: Dictionary, dt: float) -> void:
 	# nunca bajo el suelo
 	var gy := ground_y(pos.x, pos.z)
 	pos.y = maxf(pos.y, gy + float(r.get("min_h", 0.35)))
+	# línea de vista: si el terreno (un cerro, un talud) se interpone entre la cámara y lo que mira, la cámara sube lo necesario (nunca queda adentro de la montaña)
+	var raise_need := 0.0
+	for q in range(1, 11):
+		var uq := float(q) / 11.0
+		var pq := pos.lerp(look, uq)
+		var need := (ground_y(pq.x, pq.z) + 0.7 - pq.y) / maxf(0.05, 1.0 - uq)
+		raise_need = maxf(raise_need, need)
+	if r.get("min_h", 0.35) != 0.0 or true:
+		_raise = lerpf(_raise, clampf(raise_need, 0.0, 22.0), 1.0 - exp(-dt * (6.0 if raise_need > _raise else 1.5)))
+		pos.y += _raise
 	var sm: float = float(r.get("smooth", 0.0))
 	if sm > 0.0 and _have_prev:
 		var k := 1.0 - exp(-dt * sm)
@@ -280,15 +300,26 @@ func _eval(sh: Dictionary, dt: float) -> Dictionary:
 			var fwd := car_fwd(leader())
 			var pos := c - fwd * 26.0 + Vector3(0, 17.0, 0) + Vector3(fwd.z, 0, -fwd.x) * (10.0 * sin(u * 0.3))
 			return {"pos": pos, "look": c + fwd * 12.0, "fov": 66.0, "smooth": 2.5, "min_h": 4.0}
-		"ground": # fija a ras del asfalto en la banquina, a la salida de una recta: los autos pasan frente a la cámara
+		"ground": # fija a ras del asfalto en la banquina, adelante del pelotón: los autos pasan frente a la cámara
 			var tgt_s: float = core.pel.s[leader()]
+			var mtn := int(core.track.biomea[clampi(core.track.idx_at(tgt_s), 0, core.track.n - 1)]) == 3
 			if not sh.has("s_fix"):
-				sh["s_fix"] = tgt_s + 62.0
+				sh["s_fix"] = tgt_s + (34.0 if mtn else 62.0)
 			var sf: float = float(sh["s_fix"])
 			var side := 1.0 if (k % 2 == 0) else -1.0
 			var base := route_pt(sf, (hw_at(sf) + 1.6) * side, 0.30)
-			var c := pack_center()
-			return {"pos": base, "look": c.lerp(route_pt(sf, 0.0, 0.8), clampf(1.0 - (c - base).length() / 60.0, 0.0, 0.8)), "fov": 70.0, "min_h": 0.25}
+			var nearest_q := 0
+			var ndist := 1e9
+			for q in core.cars.size():
+				var dq := car_pos(q).distance_to(base)
+				if dq < ndist:
+					ndist = dq
+					nearest_q = q
+			var road_pt := route_pt(sf - 34.0, 0.0, 0.8) # mientras el pelotón se acerca mira el camino por donde viene
+			var lk := car_pos(nearest_q) + Vector3(0, 0.6, 0) if (ndist < 55.0 and core.pel.s[nearest_q] < sf + 25.0) else road_pt
+			if core.pel.s[leader()] > sf + 12.0: # ya pasaron: los sigue de espaldas
+				lk = pack_center() + Vector3(0, 0.6, 0)
+			return {"pos": base, "look": lk, "fov": 70.0, "min_h": 0.25, "smooth": 4.0}
 		"front_pack": # delante del pelotón, mirando hacia ellos
 			var l: int = leader()
 			var fwd := car_fwd(l)
@@ -336,6 +367,6 @@ func _eval(sh: Dictionary, dt: float) -> Dictionary:
 			return {"pos": tgt3, "look": cp + Vector3(0, 0.6, 0), "fov": lerpf(30.0, 62.0, p_u), "smooth": 6.0}
 		"bridge_side": # a un costado del puente, rasante, con los autos cruzando
 			var sm := float(sh.get("s_ref", 0.0))
-			var pos4 := route_pt(sm - 10.0, hw_at(sm) + 5.5, 0.9)
-			return {"pos": pos4, "look": pack_center() + Vector3(0, 0.8, 0), "fov": 60.0, "smooth": 2.0}
+			var pos4 := route_pt(sm - 14.0, hw_at(sm) + 9.0, 7.0 + 1.5 * sin(u * 0.5))
+			return {"pos": pos4, "look": pack_center() + Vector3(0, 0.8, 0), "fov": 58.0, "smooth": 2.0, "min_h": 5.0}
 	return {"pos": cp + Vector3(0, 3, -8), "look": cp, "fov": 70.0}
