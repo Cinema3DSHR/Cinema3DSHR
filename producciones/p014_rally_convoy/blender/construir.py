@@ -9,6 +9,10 @@ import math
 import re
 import bpy
 import bmesh
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import cabinas
+import camara_cfg
 from mathutils import Vector
 
 GLB, DATOS, SALIDA = sys.argv[sys.argv.index("--") + 1:][:3]
@@ -29,39 +33,6 @@ def nuevo_material(nombre):
     for n in list(nt.nodes):
         nt.nodes.remove(n)
     return m, nt
-
-
-# ───────────────────────────────────────────── cámara: zoom de lente por cuadro y cortes secos
-def camara(s):
-    cam = bpy.data.objects["Camara"]
-    s.camera = cam
-    cd = cam.data
-    cd.sensor_fit = "HORIZONTAL"
-    cd.sensor_width = 36.0
-    cd.clip_start = 0.08
-    cd.clip_end = 3000.0
-    fovs = D["fov_horizontal_por_cuadro"]
-    for f, fov in enumerate(fovs):
-        cd.lens = (cd.sensor_width * 0.5) / math.tan(math.radians(max(10.0, min(120.0, fov))) * 0.5)
-        cd.keyframe_insert("lens", frame=f)
-    # cortes de cámara: interpolación en escalón en la posición y la rotación (sin barridos entre planos)
-    ad = cam.animation_data
-    from bpy_extras import anim_utils
-    n_fc = 0
-    if ad and ad.action:
-        cb = anim_utils.action_get_channelbag_for_slot(ad.action, ad.action_slot)
-        for fc in (cb.fcurves if cb else []):
-            for kp in fc.keyframe_points:
-                kp.interpolation = "CONSTANT"
-            n_fc += 1
-    if cd.animation_data and cd.animation_data.action:
-        for cap in cd.animation_data.action.layers:
-            for ti in cap.strips:
-                for cb2 in ti.channelbags:
-                    for fc in cb2.fcurves:
-                        for kp in fc.keyframe_points:
-                            kp.interpolation = "CONSTANT"
-    return n_fc
 
 
 # ───────────────────────────────────────────── materiales
@@ -337,12 +308,13 @@ def main():
     tiempo(s)
     col = bpy.data.collections.new("Efectos_p014")
     s.collection.children.link(col)
-    info["camara_curvas"] = camara(s)
+    info["camara_curvas"] = camara_cfg.camara(s, D)
     info["materiales"] = materiales()
     info["arboles"] = arboles()
     info["sol"] = cielo(s)
     info["bruma"] = bruma(s, col)
     info["humo"] = humo(s, col)
+    info["cabinas"] = cabinas.cabinas(D, s)
     cycles(s)
     bpy.ops.file.pack_all()
     bpy.ops.wm.save_as_mainfile(filepath=SALIDA, compress=True)

@@ -311,7 +311,8 @@ func _eval(sh: Dictionary, dt: float) -> Dictionary:
 				sh["s_fix"] = tgt_s + (34.0 if mtn else 62.0)
 			var sf: float = float(sh["s_fix"])
 			var side := 1.0 if (k % 2 == 0) else -1.0
-			var base := route_pt(sf, (hw_at(sf) + 1.6) * side, 0.30)
+			var shl_g := float(core.track.shl[clampi(core.track.idx_at(sf), 0, core.track.n - 1)])
+			var base := route_pt(sf, (hw_at(sf) + shl_g + 1.1) * side, 0.95) # detrás del guardarraíl y por encima de él: los rieles no tapan la imagen
 			var nearest_q := 0
 			var ndist := 1e9
 			for q in core.cars.size():
@@ -323,7 +324,7 @@ func _eval(sh: Dictionary, dt: float) -> Dictionary:
 			var lk := car_pos(nearest_q) + Vector3(0, 0.6, 0) if (ndist < 55.0 and core.pel.s[nearest_q] < sf + 25.0) else road_pt
 			if core.pel.s[leader()] > sf + 12.0: # ya pasaron: los sigue de espaldas
 				lk = pack_center() + Vector3(0, 0.6, 0)
-			return {"pos": base, "look": lk, "fov": 70.0, "min_h": 0.25, "smooth": 4.0}
+			return {"pos": base, "look": lk, "fov": 70.0, "min_h": 0.8, "smooth": 4.0}
 		"front_pack": # delante del pelotón, mirando hacia ellos
 			var l: int = leader()
 			var fwd := car_fwd(l)

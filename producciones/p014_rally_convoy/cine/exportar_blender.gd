@@ -20,6 +20,7 @@ var cuts: Array = []
 var inside_log: Array = []
 var tele: Array = [] # por auto: {slip: [], frenada: [], v: []} por cuadro (para el humo de las gomas en Blender)
 var _last_shot := -1
+var diag := {} # tipo de plano → [cuadros, cuadros con la cámara pegada al terreno, cuadros con terreno delante]
 
 func _arg(k: String, d := "") -> String:
 	return str(args.get(k, d))
@@ -46,6 +47,10 @@ func _run() -> void:
 		_detect()
 		quit()
 		return
+	if args.has("solo_camara"):
+		await _solo_camara(t_end)
+		return
+	var solo := args.has("solo_json")
 	_prepare_nodes()
 	anim = Animation.new()
 	anim.length = t_end
@@ -56,7 +61,8 @@ func _run() -> void:
 	var lib := AnimationLibrary.new()
 	lib.add_animation("toma", anim)
 	ap.add_animation_library("", lib)
-	_make_tracks()
+	if not solo:
+		_make_tracks()
 	var n_frames := int(round(t_end * FPS))
 	var t0 := Time.get_ticks_msec()
 	sc.fps = FPS
@@ -68,6 +74,12 @@ func _run() -> void:
 		if f % 300 == 0:
 			print("[export] cuadro %d/%d · %.0f s de reloj" % [f, n_frames, (Time.get_ticks_msec() - t0) / 1000.0])
 	print("[export] animación lista: %d pistas de nodos + %d de huesos" % [tracks.size(), bone_tracks.size()])
+	if solo:
+		_write_json(t_end, n_frames)
+		print("[export] solo JSON escrito")
+		print("[diag] ", diag)
+		quit()
+		return
 	_strip_invisible()
 	var doc := GLTFDocument.new()
 	var st := GLTFState.new()
@@ -110,7 +122,7 @@ func _prepare_nodes() -> void:
 	for mk in sc.adv_world.mats.keys():
 		(sc.adv_world.mats[mk] as Material).resource_name = "mundo_" + str(mk)
 	for k in sc.core.cars.size():
-		tele.append({"slip": PackedFloat32Array(), "frenada": PackedFloat32Array(), "v": PackedFloat32Array()})
+		tele.append({"slip": [], "frenada": [], "v": []})
 	sc.cam.name = "Camara"
 
 func _strip_invisible() -> void:
@@ -273,9 +285,26 @@ func _record(f: int, t: float) -> void:
 		anim.scale_track_insert_key(int(head_tracks[kk]), t, Vector3.ONE * (0.001 if sc.dir.inside_car == int(kk) else 1.0))
 	for kq in sc.core.cars.size():
 		var ph = sc.core.cars[kq].phys
-		(tele[kq]["slip"] as PackedFloat32Array).append(snappedf(rad_to_deg(atan2(ph.vLat, maxf(1.0, absf(ph.vLong)))), 0.1))
-		(tele[kq]["frenada"] as PackedFloat32Array).append(snappedf(sc.core.drivers[kq].brake, 0.01))
-		(tele[kq]["v"] as PackedFloat32Array).append(snappedf(sqrt(ph.vx * ph.vx + ph.vz * ph.vz), 0.1))
+		tele[kq]["slip"].append(snappedf(rad_to_deg(atan2(ph.vLat, maxf(1.0, absf(ph.vLong)))), 0.1))
+		tele[kq]["frenada"].append(snappedf(sc.core.drivers[kq].brake, 0.01))
+		tele[kq]["v"].append(snappedf(sqrt(ph.vx * ph.vx + ph.vz * ph.vz), 0.1))
+	if args.has("diag"):
+		var cp: Vector3 = sc.cam.global_position
+		var fwd: Vector3 = -sc.cam.global_transform.basis.z
+		var gy: float = sc.dir.ground_y(cp.x, cp.z)
+		var blocked := false
+		for dd in [1.5, 3.0, 5.0, 8.0]:
+			var q: Vector3 = cp + fwd * dd
+			if sc.dir.ground_y(q.x, q.z) > q.y + 0.15:
+				blocked = true
+		var ty := str(sc.dir.plan[sc.dir.cur]["type"])
+		var rec: Array = diag.get(ty, [0, 0, 0])
+		rec[0] += 1
+		if cp.y < gy + 0.2:
+			rec[1] += 1
+		if blocked:
+			rec[2] += 1
+		diag[ty] = rec
 	fov_log.append(sc.cam.fov)
 	var shot: int = sc.dir.cur
 	if shot != _last_shot:
@@ -298,3 +327,60 @@ func _write_json(t_end: float, n_frames: int) -> void:
 	var f := FileAccess.open(_arg("out", "/home/user/rally_cine/salida/rally_convoy_godot.glb").get_basename() + ".json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(d, "\t"))
 	f.close()
+
+## Sólo la cámara: un GLB chico con la cámara animada (posición y rotación por cuadro) que se importa al BLEND en lugar de la anterior,
+## y el JSON con cortes, zoom y telemetría. Sirve para corregir la dirección de cámaras sin repetir el export de 260 MB.
+func _solo_camara(t_end: float) -> void:
+	var croot := Node3D.new()
+	croot.name = "CamRoot"
+	var c2 := Camera3D.new()
+	c2.name = "Camara"
+	croot.add_child(c2)
+	var ap := AnimationPlayer.new()
+	ap.name = "Animacion"
+	croot.add_child(ap)
+	anim = Animation.new()
+	anim.length = t_end
+	anim.step = 1.0 / float(FPS)
+	var lib := AnimationLibrary.new()
+	lib.add_animation("toma", anim)
+	ap.add_animation_library("", lib)
+	var ip := anim.add_track(Animation.TYPE_POSITION_3D)
+	anim.track_set_path(ip, NodePath("Camara"))
+	var ir := anim.add_track(Animation.TYPE_ROTATION_3D)
+	anim.track_set_path(ir, NodePath("Camara"))
+	for k in sc.core.cars.size():
+		tele.append({"slip": [], "frenada": [], "v": []})
+	var n_frames := int(round(t_end * FPS))
+	sc.fps = FPS
+	for f in n_frames:
+		var t := float(f) / float(FPS)
+		sc._advance(t)
+		sc._step_visuals(1.0 / float(FPS))
+		anim.position_track_insert_key(ip, t, sc.cam.global_position)
+		anim.rotation_track_insert_key(ir, t, sc.cam.global_transform.basis.get_rotation_quaternion().normalized())
+		_record_datos(f, t)
+		if f % 1500 == 0:
+			print("[camara] cuadro %d/%d" % [f, n_frames])
+	var doc := GLTFDocument.new()
+	var st := GLTFState.new()
+	var e := doc.append_from_scene(croot, st)
+	var out := _arg("out", "/home/user/rally_cine/salida/camara.glb")
+	var e2 := doc.write_to_filesystem(st, out)
+	print("[camara] escrito ", out, " ", e, " ", e2)
+	_write_json(t_end, n_frames)
+	quit()
+
+func _record_datos(f: int, t: float) -> void:
+	for kq in sc.core.cars.size():
+		var ph = sc.core.cars[kq].phys
+		tele[kq]["slip"].append(snappedf(rad_to_deg(atan2(ph.vLat, maxf(1.0, absf(ph.vLong)))), 0.1))
+		tele[kq]["frenada"].append(snappedf(sc.core.drivers[kq].brake, 0.01))
+		tele[kq]["v"].append(snappedf(sqrt(ph.vx * ph.vx + ph.vz * ph.vz), 0.1))
+	fov_log.append(sc.cam.fov)
+	var shot: int = sc.dir.cur
+	if shot != _last_shot:
+		_last_shot = shot
+		var sh: Dictionary = sc.dir.plan[shot]
+		cuts.append({"cuadro": f, "t": snappedf(t, 0.01), "tipo": str(sh["type"]), "auto": int(sh.get("car", 0))})
+	inside_log.append(sc.dir.inside_car)
