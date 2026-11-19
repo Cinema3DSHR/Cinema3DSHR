@@ -1,0 +1,18 @@
+{
+  "tipo": "produccion",
+  "id": "p012_cls63_plataforma",
+  "titulo": "CLS 63 en plataforma",
+  "clase": "clip",
+  "formato": {"aspecto": "16:9", "resolucion": "1280x720", "fps": 30, "duracion_s": 30},
+  "estado": "en_preparacion",
+  "audio": "opcional: sin sonido por ahora (sin voces, música ni ambiente)",
+  "origen": {
+    "godot": "godot/ (escena base: escena/principal.tscn, herramientas/principal.gd)",
+    "modelo": "CLS63 (GLB, subido por el dueño; fuera de Git: modelos/cls63.glb)"
+  },
+  "render": {"motor": "CYCLES", "dispositivo": "CPU", "muestras": 6, "adaptive_threshold": 0.05,
+             "denoiser": "OPENIMAGEDENOISE", "rebotes_luz": 6, "light_tree": true, "semilla": "fija"},
+  "pendiente": ["bisagra puerta trasera (hecha en Godot, revisar en Blender)", "materiales y texturas (Blender)",
+                "iluminación cinematográfica (Blender)", "humo y niebla volumétrica (Blender)",
+                "revisión de cámaras y cortes", "BLEND autónomo", "previsualización para revisión"]
+}
