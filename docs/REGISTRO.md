@@ -657,3 +657,8 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   `render_prueba_godot_blender.yml`. Arma todo desde cero en un trabajo (Kodiak de Rally-Sim-movile main → Godot → GLB
   → Blender), reparte los 900 cuadros en 60 trabajos a 720x1280, 6 muestras (`blender/render_trozo.py`), y monta y
   publica el MP4 en la release `prueba_godot_blender`.
+- El dueño corrigió la orden a 540p (lo entregado). La corrida 44463973456 (720p) se canceló durante la preparación,
+  antes de renderizar. **Render terminado**: corrida 44464073661, 540x960, 6 muestras, 60 trabajos, 900/900 cuadros
+  sin faltantes. Preparación 1,5 min, 21,75 s por cuadro de media, 14 min de reloj de punta a punta (05:17 → 05:31 UTC).
+  Publicado: release `prueba_godot_blender` (`casa_tormenta_540p.mp4`, `informe_render.json`). Visto: el fuego
+  volumétrico sale tenue (se ven más las brasas que las llamas); para la próxima prueba hay que subirle la emisión.

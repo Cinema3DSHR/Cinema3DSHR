@@ -131,3 +131,12 @@ con su lente y animaciones de transformación. En cambio, en Blender hay que reh
 
 Esas reglas ya quedaron en scripts generales (`b7_materiales.py`, `b8_efectos.py`), así que la próxima escena
 reutiliza todo y sólo cambia las posiciones, que se toman de los vacíos `FX_*` que exporta Godot.
+
+## Render real (19/11/2026, por orden del dueño)
+
+- Corrida 44464073661 de `render_prueba_godot_blender.yml`: 540x960, 6 muestras, 60 trabajos, 900/900 cuadros sin
+  faltantes. Release `prueba_godot_blender` → `casa_tormenta_540p.mp4`.
+- **Medido**: 21,75 s por cuadro de media (estimado antes: 20–40). La preparación (Godot → GLB → Blender en Actions)
+  tardó 1,5 min. Fueron 14 min de reloj de punta a punta, con hasta 50 trabajos a la vez.
+- Para corregir en la próxima prueba: el fuego volumétrico sale tenue en Cycles (se ven más las brasas que las
+  llamas); hay que subir su emisión o su densidad.
