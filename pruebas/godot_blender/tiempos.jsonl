@@ -1,0 +1,21 @@
+{"etapa":"inicio","utc":"2026-11-19T04:39:46Z"}
+{"etapa": "0_vehiculo", "evento": "nota", "utc": "2026-11-19T04:47:01Z", "nota": "kodiak.glb (CÓNDOR Kodiak Raid, 958k tris, 1 material con textura, sin ruedas: el juego las arma aparte) elegida tras el rar de GTA (no convertible)"}
+{"etapa": "1_construccion_godot", "evento": "inicio", "utc": "2026-11-19T04:47:01Z"}
+{"etapa": "1_construccion_godot", "evento": "fin", "utc": "2026-11-19T04:51:09Z", "nota": "geometría + camioneta; tscn 76 KB; script 0,28 s; captura negra (sin luces todavía, esperado)"}
+{"etapa": "2_materiales_luces", "evento": "inicio", "utc": "2026-11-19T04:51:09Z"}
+{"etapa": "2_materiales_luces", "evento": "fin", "utc": "2026-11-19T04:52:14Z", "nota": "53 materiales PBR + 7 neones emisivos + 17 luces (omni/spot/direccional) + ambiente; captura del visor OK; neones bajados tras la primera captura"}
+{"etapa": "3_animacion", "evento": "inicio", "utc": "2026-11-19T04:52:14Z"}
+{"etapa": "3_animacion", "evento": "fin", "utc": "2026-11-19T04:55:02Z", "nota": "cámara 901 claves (muestreada cuadro a cuadro de 12 pasos), ventilador 313 claves (1,3 vueltas/s), 7 destellos (energía de la luz + escala del cielo y del rayo), parpadeo del fuego; arreglado: los edificios tapaban el cielo por el ventanal (se alejaron y bajaron)"}
+{"etapa": "4_efectos_godot", "evento": "inicio", "utc": "2026-11-19T04:55:02Z"}
+{"etapa": "4_efectos_godot", "evento": "fin", "utc": "2026-11-19T04:56:33Z", "nota": "lluvia 9000 gotas (choca con la camioneta, piso y techo), fuego 80, brasas 45, humo 40 (GPUParticles3D); fuego atenuado tras la captura"}
+{"etapa": "5_exportacion_glb", "evento": "inicio", "utc": "2026-11-19T04:56:33Z"}
+{"etapa": "5_exportacion_glb", "evento": "fin", "utc": "2026-11-19T04:56:43Z", "nota": "GLTFDocument.append_from_scene + write_to_filesystem: 1,55 s, automático; 47 MB (35 MB son la Kodiak de 958k triángulos)"}
+{"etapa": "6_importacion_blender", "evento": "inicio", "utc": "2026-11-19T04:57:17Z"}
+{"etapa": "6_importacion_blender", "evento": "fin", "utc": "2026-11-19T04:59:42Z", "nota": "importador glTF de Blender 5.3, 2,4 s, automático. Llegan: 220 mallas, 54 materiales, cámara (68° vertical), 16 luces, acción 'toma' (cámara, aspas, escala de cielo y rayo, energía de Relampago_luz y Luz_fuego por KHR_animation_pointer). Problemas: la escena queda a 24 fps (la acción ocupa 0–720) → hay que poner 30 fps ANTES de importar; energías ~0 (conversión de unidades); partículas, colisiones y WorldEnvironment llegan como vacíos"}
+{"etapa": "7_correccion_materiales", "evento": "inicio", "utc": "2026-11-19T04:59:42Z"}
+{"etapa": "7_correccion_materiales", "evento": "fin", "utc": "2026-11-19T05:00:05Z", "nota": "vidrios alfa→transmisión (3), energías de 16 luces recuperadas (escala por tipo) y 312 claves animadas reescaladas; hallado: las claves de luces puntuales por KHR_animation_pointer llegan con un 1/4π de más; mundo de Blender nuevo (el WorldEnvironment no viaja)"}
+{"etapa": "8_efectos_blender", "evento": "inicio", "utc": "2026-11-19T05:00:05Z"}
+{"etapa": "8_efectos_blender", "evento": "fin", "utc": "2026-11-19T05:04:46Z", "nota": "lluvia por nodos de geometría (9000 gotas en bucle, viento, se cortan contra la carrocería original de la Kodiak y el techo; 0,15 s por cuadro), fuego volumétrico (emisión + ruido 4D), humo volumétrico, 45 brasas por nodos; relámpagos: animación del GLB + emisión. Probado: la copia reducida de la carrocería tenía agujeros (8 % de gotas la atravesaban) → se usa la original"}
+{"etapa": "9_preparacion_cycles", "evento": "inicio", "utc": "2026-11-19T05:04:46Z"}
+{"etapa": "9_preparacion_cycles", "evento": "fin", "utc": "2026-11-19T05:04:46Z", "nota": "parámetros del estudio hd540 vertical (540x960, 30 fps, 900 cuadros, 6 muestras, OIDN, AgX) + pasos de volumen; .blend autónomo (textura empaquetada en el GLB); SIN render"}
+{"etapa": "10_previa_e_informe", "evento": "fin", "utc": "2026-11-19T05:08:28Z", "nota": "previa del visor de Godot (--write-movie, 900 cuadros, 540x960, 8 MB) + INFORME.md"}

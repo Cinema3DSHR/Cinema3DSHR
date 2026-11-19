@@ -637,3 +637,19 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   armó el video con los fotogramas de 44361974666, rellenando 2063–2077 (15 cuadros, medio segundo) con el 2062.
   Informe: 3.998/3.998 fotogramas, 540x960, 133,27 s, audio AAC 48 kHz. Publicado en la release `p011_a_la_deriva`
   (`a_la_deriva_e02_v3.mp4`, `e02_v3_revision.mp4/.ogv`, portada, miniatura, info, `e02_v3_fotogramas_rellenados.json`).
+
+## 19/11/2026 — Prueba técnica Godot → Blender: casa moderna en tormenta (sin render, sin Actions)
+
+- Toma de 30 s, 540x960, 30 fps, un solo movimiento de cámara de derecha a izquierda: cocina → mesas → ventilador →
+  ventanal con la calle, farolas y lluvia → relámpagos → hogar. A pedido del dueño, el jardín se cambió por la CÓNDOR
+  Kodiak Raid de Dream Racing (`kodiak.glb`, la camioneta con el arco de hierro en la caja), estacionada de cola al
+  ventanal entre dos farolas. El RAR del mod de GTA no se pudo usar (formato RPF y licencia).
+- Godot 4.7.2: escena armada por scripts, una etapa por archivo (`pruebas/godot_blender/godot/herramientas/e1…e4`).
+  Queda `escena/casa_tormenta.tscn` editable. GLB exportado con GLTFDocument.
+- Blender 5.3: importación y correcciones generales (`pruebas/godot_blender/blender/b6…b9`, `armar.py`) →
+  `casa_tormenta.blend` con Cycles preparado con los parámetros hd540.
+- Resultados, tiempos reales por etapa (≈25 min en total), lo que pasó y lo que se rehízo, problemas de compatibilidad
+  y costo estimado del render (5–10 h de CPU, 15–25 min de reloj con 60 trabajos): `pruebas/godot_blender/INFORME.md`.
+- Previa liviana: captura en tiempo real del visor de Godot (no es Cycles), 8 MB, más un GLB liviano de 2 MB.
+- GLB, .blend, previa y proyecto comprimido se mandaron por el chat (no van a Git). No se hizo ningún render ni se usó
+  Actions.

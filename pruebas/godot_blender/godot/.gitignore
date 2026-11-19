@@ -1,0 +1,6 @@
+.godot/
+modelos/*.glb
+modelos/*.import
+salida/
+modelos/*.png
+modelos/*.png.import

@@ -1,0 +1,1000 @@
+{
+ "segundos_importacion": 2.36,
+ "objetos": {
+  "MESH": 220,
+  "EMPTY": 44,
+  "CAMERA": 1,
+  "LIGHT": 16
+ },
+ "fps": 24,
+ "frames": [
+  1,
+  250
+ ],
+ "camaras": [
+  {
+   "nombre": "Camara",
+   "lente_mm": 17.79,
+   "sensor_fit": "VERTICAL",
+   "anim": true
+  }
+ ],
+ "luces": [
+  {
+   "nombre": "Luz_colgante_0",
+   "tipo": "POINT",
+   "energia": 0.02,
+   "color": [
+    1.0,
+    0.578,
+    0.195
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_colgante_1",
+   "tipo": "POINT",
+   "energia": 0.02,
+   "color": [
+    1.0,
+    0.578,
+    0.195
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_colgante_2",
+   "tipo": "POINT",
+   "energia": 0.02,
+   "color": [
+    1.0,
+    0.578,
+    0.195
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_farola_0",
+   "tipo": "SPOT",
+   "energia": 0.17,
+   "color": [
+    1.0,
+    0.521,
+    0.144
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_farola_1",
+   "tipo": "SPOT",
+   "energia": 0.17,
+   "color": [
+    1.0,
+    0.521,
+    0.144
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_farola_2",
+   "tipo": "SPOT",
+   "energia": 0.17,
+   "color": [
+    1.0,
+    0.521,
+    0.144
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_farola_3",
+   "tipo": "SPOT",
+   "energia": 0.17,
+   "color": [
+    1.0,
+    0.521,
+    0.144
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_fuego",
+   "tipo": "POINT",
+   "energia": 0.0,
+   "color": [
+    1.0,
+    0.195,
+    0.023
+   ],
+   "anim": true
+  },
+  {
+   "nombre": "Luz_luna",
+   "tipo": "SUN",
+   "energia": 0.0,
+   "color": [
+    0.102,
+    0.156,
+    0.323
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_neon_cocina",
+   "tipo": "POINT",
+   "energia": 0.01,
+   "color": [
+    0.051,
+    0.807,
+    1.0
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_neon_frente",
+   "tipo": "POINT",
+   "energia": 0.01,
+   "color": [
+    0.051,
+    0.807,
+    1.0
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_neon_hogar",
+   "tipo": "POINT",
+   "energia": 0.01,
+   "color": [
+    1.0,
+    0.051,
+    0.631
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_neon_living",
+   "tipo": "POINT",
+   "energia": 0.01,
+   "color": [
+    1.0,
+    0.051,
+    0.631
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_velador",
+   "tipo": "POINT",
+   "energia": 0.01,
+   "color": [
+    1.0,
+    0.539,
+    0.195
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Luz_ventilador",
+   "tipo": "POINT",
+   "energia": 0.02,
+   "color": [
+    1.0,
+    0.761,
+    0.434
+   ],
+   "anim": false
+  },
+  {
+   "nombre": "Relampago_luz",
+   "tipo": "SUN",
+   "energia": 0.0,
+   "color": [
+    0.624,
+    0.716,
+    1.0
+   ],
+   "anim": true
+  }
+ ],
+ "acciones": {
+  "toma": {
+   "rango": [
+    0.0,
+    720.0
+   ],
+   "curvas": [
+    "rotation_quaternion[0]:313",
+    "rotation_quaternion[1]:313",
+    "rotation_quaternion[2]:313",
+    "rotation_quaternion[3]:313",
+    "scale[0]:10",
+    "scale[1]:10",
+    "scale[2]:10",
+    "scale[0]:51",
+    "scale[1]:51",
+    "scale[2]:51",
+    "location[0]:901",
+    "location[1]:901"
+   ],
+   "n_curvas": 19
+  }
+ },
+ "animados": [
+  "Camara",
+  "Relampago_cielo",
+  "Relampago_rayo",
+  "Ventilador_aspas"
+ ],
+ "materiales": {
+  "acero": {
+   "base": [
+    0.479,
+    0.503,
+    0.527,
+    1.0
+   ],
+   "rug": 0.25,
+   "metal": 1.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "alfombra": {
+   "base": [
+    0.262,
+    0.195,
+    0.133,
+    1.0
+   ],
+   "rug": 1.0,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "asfalto_mojado": {
+   "base": [
+    0.008,
+    0.008,
+    0.009,
+    1.0
+   ],
+   "rug": 0.06,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "azulejo": {
+   "base": [
+    0.028,
+    0.102,
+    0.125,
+    1.0
+   ],
+   "rug": 0.2,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "brasa": {
+   "base": [
+    1.0,
+    0.068,
+    0.005,
+    1.0
+   ],
+   "rug": 0.8,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 8.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "cera": {
+   "base": [
+    0.896,
+    0.823,
+    0.687,
+    1.0
+   ],
+   "rug": 0.6,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "ceramica": {
+   "base": [
+    0.791,
+    0.716,
+    0.61,
+    1.0
+   ],
+   "rug": 0.3,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "cerros": {
+   "base": [
+    0.003,
+    0.004,
+    0.007,
+    1.0
+   ],
+   "rug": 1.0,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "cielo_tormenta": {
+   "base": [
+    0.011,
+    0.017,
+    0.033,
+    1.0
+   ],
+   "rug": 1.0,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 1.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "cordon": {
+   "base": [
+    0.091,
+    0.091,
+    0.102,
+    1.0
+   ],
+   "rug": 0.3,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "cuadro": {
+   "base": [
+    0.047,
+    0.091,
+    0.117,
+    1.0
+   ],
+   "rug": 0.6,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "cuero": {
+   "base": [
+    0.102,
+    0.034,
+    0.014,
+    1.0
+   ],
+   "rug": 0.55,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "edificio": {
+   "base": [
+    0.01,
+    0.012,
+    0.018,
+    1.0
+   ],
+   "rug": 0.8,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "flor": {
+   "base": [
+    0.644,
+    0.045,
+    0.156,
+    1.0
+   ],
+   "rug": 0.7,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "fruta_naranja": {
+   "base": [
+    0.761,
+    0.162,
+    0.012,
+    1.0
+   ],
+   "rug": 0.45,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "fruta_verde": {
+   "base": [
+    0.195,
+    0.376,
+    0.042,
+    1.0
+   ],
+   "rug": 0.45,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "goma": {
+   "base": [
+    0.006,
+    0.006,
+    0.006,
+    1.0
+   ],
+   "rug": 0.8,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "hoja": {
+   "base": [
+    0.028,
+    0.147,
+    0.023,
+    1.0
+   ],
+   "rug": 0.7,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "hollin": {
+   "base": [
+    0.004,
+    0.003,
+    0.003,
+    1.0
+   ],
+   "rug": 1.0,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "led_calido": {
+   "base": [
+    1.0,
+    0.694,
+    0.352,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 6.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "leña": {
+   "base": [
+    0.068,
+    0.03,
+    0.014,
+    1.0
+   ],
+   "rug": 0.9,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "llanta5": {
+   "base": [
+    0.023,
+    0.023,
+    0.025,
+    1.0
+   ],
+   "rug": 0.3,
+   "metal": 1.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "luz_calida": {
+   "base": [
+    1.0,
+    0.694,
+    0.352,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 6.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "luz_farola": {
+   "base": [
+    1.0,
+    0.631,
+    0.254,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 12.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "madera_clara": {
+   "base": [
+    0.552,
+    0.323,
+    0.15,
+    1.0
+   ],
+   "rug": 0.55,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "madera_oscura": {
+   "base": [
+    0.044,
+    0.019,
+    0.009,
+    1.0
+   ],
+   "rug": 0.45,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "marmol": {
+   "base": [
+    0.888,
+    0.871,
+    0.839,
+    1.0
+   ],
+   "rug": 0.15,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "material_0": {
+   "base": [
+    0.8,
+    0.8,
+    0.8,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.3,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": true
+  },
+  "metal_bronce": {
+   "base": [
+    0.254,
+    0.144,
+    0.048,
+    1.0
+   ],
+   "rug": 0.35,
+   "metal": 1.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "metal_negro": {
+   "base": [
+    0.007,
+    0.007,
+    0.007,
+    1.0
+   ],
+   "rug": 0.4,
+   "metal": 0.8,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "metal_poste": {
+   "base": [
+    0.013,
+    0.016,
+    0.019,
+    1.0
+   ],
+   "rug": 0.35,
+   "metal": 0.9,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "mueble_blanco": {
+   "base": [
+    0.855,
+    0.855,
+    0.823,
+    1.0
+   ],
+   "rug": 0.35,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "mueble_madera": {
+   "base": [
+    0.254,
+    0.102,
+    0.037,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "neon_cian": {
+   "base": [
+    0.051,
+    0.871,
+    1.0,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 10.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "neon_magenta": {
+   "base": [
+    1.0,
+    0.042,
+    0.631,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 10.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "pantalla_tela": {
+   "base": [
+    0.863,
+    0.761,
+    0.578,
+    1.0
+   ],
+   "rug": 0.9,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 1.5,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "pared": {
+   "base": [
+    0.694,
+    0.651,
+    0.571,
+    1.0
+   ],
+   "rug": 0.85,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "piedra": {
+   "base": [
+    0.159,
+    0.144,
+    0.125,
+    1.0
+   ],
+   "rug": 0.9,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "piedra_oscura": {
+   "base": [
+    0.045,
+    0.042,
+    0.038,
+    1.0
+   ],
+   "rug": 0.8,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "pintura_vial": {
+   "base": [
+    0.687,
+    0.644,
+    0.434,
+    1.0
+   ],
+   "rug": 0.2,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "piso_madera": {
+   "base": [
+    0.147,
+    0.068,
+    0.032,
+    1.0
+   ],
+   "rug": 0.45,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "rayo": {
+   "base": [
+    0.807,
+    0.871,
+    1.0,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 40.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "relampago_cielo": {
+   "base": [
+    0.212,
+    0.296,
+    0.565,
+    1.0
+   ],
+   "rug": 1.0,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 1.2,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "techo": {
+   "base": [
+    0.807,
+    0.776,
+    0.716,
+    1.0
+   ],
+   "rug": 0.9,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "tela_azul": {
+   "base": [
+    0.025,
+    0.068,
+    0.156,
+    1.0
+   ],
+   "rug": 0.95,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "tela_gris": {
+   "base": [
+    0.258,
+    0.258,
+    0.246,
+    1.0
+   ],
+   "rug": 0.95,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "tela_naranja": {
+   "base": [
+    0.552,
+    0.125,
+    0.023,
+    1.0
+   ],
+   "rug": 0.95,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "ventana_lejana": {
+   "base": [
+    1.0,
+    0.624,
+    0.195,
+    1.0
+   ],
+   "rug": 0.5,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 3.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "vereda_mojada": {
+   "base": [
+    0.042,
+    0.042,
+    0.045,
+    1.0
+   ],
+   "rug": 0.12,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "vidrio": {
+   "base": [
+    0.523,
+    0.692,
+    0.787,
+    1.0
+   ],
+   "rug": 0.02,
+   "metal": 0.0,
+   "alfa": 0.12,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "vidrio_ambar": {
+   "base": [
+    0.263,
+    0.073,
+    0.007,
+    1.0
+   ],
+   "rug": 0.05,
+   "metal": 0.0,
+   "alfa": 0.6,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "vidrio_negro": {
+   "base": [
+    0.002,
+    0.002,
+    0.002,
+    1.0
+   ],
+   "rug": 0.05,
+   "metal": 0.2,
+   "alfa": 1.0,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "vidrio_opalino": {
+   "base": [
+    1.0,
+    0.905,
+    0.745,
+    1.0
+   ],
+   "rug": 0.4,
+   "metal": 0.0,
+   "alfa": 1.0,
+   "emision": 5.0,
+   "transmision": 0.0,
+   "textura": false
+  },
+  "vidrio_verde": {
+   "base": [
+    0.02,
+    0.133,
+    0.033,
+    1.0
+   ],
+   "rug": 0.05,
+   "metal": 0.0,
+   "alfa": 0.6,
+   "emision": 0.0,
+   "transmision": 0.0,
+   "textura": false
+  }
+ },
+ "vacios_fx": [
+  "Colision_lluvia_camioneta",
+  "Colision_lluvia_piso",
+  "Colision_lluvia_techo_casa",
+  "FX_brasas",
+  "FX_fuego",
+  "FX_humo",
+  "FX_lluvia"
+ ],
+ "vacios_otros": [
+  "Ambiente"
+ ],
+ "triangulos": 978223
+}

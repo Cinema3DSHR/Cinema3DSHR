@@ -1,0 +1,128 @@
+{
+ "6_importacion": {
+  "segundos": 2.43,
+  "resultado": {
+   "fps": 30,
+   "rango_accion": [
+    0.0,
+    900.0
+   ],
+   "objetos": 281
+  }
+ },
+ "7_materiales_luces": {
+  "segundos": 0.0,
+  "resultado": {
+   "vidrios": [
+    "vidrio: alfa 0.12 → transmisión 1, IOR 1.45",
+    "vidrio_verde: alfa 0.60 → transmisión 1, IOR 1.5",
+    "vidrio_ambar: alfa 0.60 → transmisión 1, IOR 1.5"
+   ],
+   "luces": {
+    "Luz_colgante_0": [
+     0.0166,
+     54.0
+    ],
+    "Luz_colgante_1": [
+     0.0166,
+     54.0
+    ],
+    "Luz_colgante_2": [
+     0.0166,
+     54.0
+    ],
+    "Luz_farola_0": [
+     0.1656,
+     1080.0
+    ],
+    "Luz_farola_1": [
+     0.1656,
+     1080.0
+    ],
+    "Luz_farola_2": [
+     0.1656,
+     1080.0
+    ],
+    "Luz_farola_3": [
+     0.1656,
+     1080.0
+    ],
+    "Luz_fuego": [
+     0.003,
+     9.78
+    ],
+    "Luz_luna": [
+     0.0002,
+     0.07
+    ],
+    "Luz_neon_cocina": [
+     0.0129,
+     42.0
+    ],
+    "Luz_neon_frente": [
+     0.0055,
+     18.0
+    ],
+    "Luz_neon_hogar": [
+     0.0064,
+     21.0
+    ],
+    "Luz_neon_living": [
+     0.0101,
+     33.0
+    ],
+    "Luz_velador": [
+     0.0147,
+     48.0
+    ],
+    "Luz_ventilador": [
+     0.0239,
+     78.0
+    ],
+    "Relampago_luz": [
+     0.0,
+     0.0
+    ]
+   },
+   "claves_luz_reescaladas": 312
+  }
+ },
+ "8_efectos": {
+  "segundos": 0.29,
+  "resultado": {
+   "gotas": 9000,
+   "caja_x": [
+    -18.5,
+    13.5
+   ],
+   "caja_y": [
+    4.0,
+    26.0
+   ],
+   "caras_choque_camioneta": 958063,
+   "fuego": "volumen emisivo con ruido 4D",
+   "humo": "volumen principled",
+   "centro_fuego": [
+    -8.6,
+    3.58,
+    0.3
+   ],
+   "brasas": 45,
+   "relampago": "animación del GLB + emisión del rayo 60, sin sombra"
+  }
+ },
+ "9_cycles": {
+  "segundos": 0.01,
+  "resultado": {
+   "motor": "CYCLES",
+   "resolucion": "540x960",
+   "fps": 30,
+   "cuadros": 900,
+   "muestras": 6
+  }
+ },
+ "guardado": {
+  "segundos": 0.2,
+  "bytes": 37133306
+ }
+}

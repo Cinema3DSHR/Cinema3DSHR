@@ -1,0 +1,12 @@
+config_version=5
+
+[application]
+config/name="Prueba Godot a Blender - casa en tormenta"
+run/main_scene="res://escena/casa_tormenta.tscn"
+
+[display]
+window/size/viewport_width=540
+window/size/viewport_height=960
+
+[rendering]
+renderer/rendering_method="forward_plus"
