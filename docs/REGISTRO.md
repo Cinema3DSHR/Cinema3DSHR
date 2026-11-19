@@ -929,3 +929,20 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
 - Hecho: ruta nueva con el generador de la Aventura, simulación (0 solapamientos de autos, 0 salidas de camino, deslizamiento máx. 31° en montaña,
   llegada a los 308 s), dirección de cámaras, grabación 3552 cuadros (296 s) con el sonido original. Set en `producciones/p014_rally_convoy/`.
 - Entregado el video al dueño por el chat. No se hizo Blender ni render final; no se publicó nada.
+
+## 19/11/2026 — p014 «Rally Convoy» v001: ajustes, Blender, render final y entrega
+
+- Ajustes pedidos por el dueño: (1) pedales: se terminó el «pisar y soltar» (ley de gas/freno continua con gas de crucero que se aprende solo,
+  filtro de pedales, topes de velocidad del pelotón graduales y zona muerta en la corrección de posición); frenadas por auto en 120 s de ruta
+  abierta pasaron de 49–109 a 0–4 en los autos potentes. (2) cámara interior: sin pedazos del casco (cabeza del piloto oculta con la cámara interior
+  y carrocería oculta a la cámara en esos planos, luz suave en la cabina). (3) más tomas con el auto fantasma por delante de un auto elegido (en
+  especial en la montaña alta) y sin planos aéreos salvo el del puente. Autos de carrocería alta con menos agarre permitido (no se salían del camino
+  con el perfil original). Simulación completa: 0 solapamientos de autos y 0 salidas de camino durante el video (el tramo final después de la
+  estación de llegada no se usa).
+- Exportación a Blender (`exportar_blender.gd`): mundo, siete autos originales completos con su textura, ruedas y suspensión, cabinas 3D, pilotos con
+  huesos animados, peaje y cámara, a 30 cuadros por segundo; GLB de 261 MB + JSON (cortes, zoom, telemetría). Etapa de Blender (`blender/construir.py`
+  + `retoque_camara.py`): materiales, cielo y sol, árboles redondeados, bruma, humo de gomas por telemetría, desenfoque de movimiento, Cycles.
+- Producción: perfil de prueba 480×854 (`PERFIL_480V`, 21/21 pruebas). BLEND aprobado SHA-256 `d471350d…e30c` (363 803 158 bytes), Git LFS,
+  Release `blend-p014_rally_convoy-v001`, corrida `incorporar_blend.yml` 44576933015: 60 trabajos, 9360/9360 cuadros, 0 fallos,
+  13,1 s por cuadro de media (34,1 h de CPU). MP4 de 312,0 s en la Release. El sonido original del juego (grabado de la misma simulación) se montó
+  aparte y el MP4 con audio se entregó por el chat; no se pudo subir a la Release (`gh release upload` usa GraphQL, bloqueado en el entorno).
