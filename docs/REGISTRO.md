@@ -783,3 +783,31 @@ tocó, ni los flujos existentes ni «A la deriva».
   - verificar el fuego con un render;
   - el MP4 sale sin audio;
   - «descargar un .blend publicado» se probó con otro archivo de Release, porque todavía no hay ninguno.
+
+## 19/11/2026 — Flujo definitivo: creo → previa → correcciones → aprobada → la nube entrega el MP4
+
+Pedido del dueño: una sola aprobación (la del chat), sin formularios ni entornos protegidos de GitHub; al aprobar, la
+publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
+
+- **Nuevo:** `python -m estudio aprobar` (exige la previsualización entregada con la misma huella),
+  `python -m estudio publicar-escena preparar|validar|cerrar`, `estudio/version_escena.py` (manifiesto
+  `estudio.version_escena/1`), `estudio/blender/publicar_escena.py`, flujos `publicar_escena.yml` (publica y llama
+  solo a) `render_escena.yml`; `previa --audio` (mezcla en .m4a para el visor) y `previa.yml` la sube; visor con
+  audio sincronizado (el reloj es el del audio) y botón 💡 LUCES DE LA ESCENA.
+- **Cambiado (mínimo):** `montar.py --audio-intacto` y `--fps` (sin la opción hace lo mismo que antes);
+  `render_trozo.py` escribe también los campos de los informes de `render_rango.py`; `autofinisher/manifiesto.leer`
+  acepta las dos clases de manifiesto; `proteccion.verificar` reconoce la receta aprobada.
+- **Sin tocar:** `elevenlabs.py`, `cara_anime.py`, `expresiones_3d.py`, `stickman.py`, `procedural.py`,
+  `audio_escena.py`, `director.py`, `video30.yml`, A la deriva y sus recursos.
+- **Encontrado con la prueba real:** `director.guardar_blend` borraba las acciones de las formas de la cara
+  (expresiones y labios cuelgan de las shape keys, no de los objetos): el `.blend` reabierto tenía las caras quietas
+  (568 valores distintos). `publicar_escena` guarda por su cuenta. Además: un cuadro de corte (3408) donde el
+  marcador daba la toma siguiente y `render_rango.py` la anterior (los marcadores se rehacen desde esa tabla), y
+  materiales sueltos del FBX de un pelo con una textura inexistente (se borran los datos sin uso antes de empaquetar).
+- **Prueba local con E02 v3 (modo ensayo, sin publicar, sin render, sin Actions):** preparar 539 s (RAM máx.
+  1,72 GB; BLEND 45,6 MB autónomo, 44 voces y alineaciones en el zip); validar: 3998/3998 cuadros con la cámara
+  correcta y 2790 valores de cara iguales en 31 cuadros de control; `audio_escena.py` 524 s: WAV idéntico byte a byte
+  al de control (133,28 s, 48 kHz, estéreo); `render-trozo --sin-render` abre el BLEND en 0,84 s; `montar.py
+  --audio-intacto` con el WAV real y 3998 cuadros de prueba de ffmpeg (no es un render): desfase 0 muestras, volumen
+  −18,78 dB = −18,78 dB, MP4 3998 cuadros 30 fps 133,28 s. Un WAV con un byte cambiado se rechaza.
+- **No probado:** los flujos en Actions (no se ejecutaron), un render real desde el BLEND y la publicación de la Release.
