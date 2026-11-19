@@ -879,3 +879,23 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   - bajado en un repo temporal con `git lfs smudge`: idéntico byte a byte.
   - Conectividad, autenticación y permisos OK.
 - No se tocó la escena, no se subió el BLEND de p012, no se publicó nada ni se ejecutó ningún flujo.
+
+## 19/11/2026 — p013 «Mi hogar ideal» (Reel vertical 9:16, narradora invisible) — versión 1 de revisión
+
+- Fuentes en `producciones/p013_mi_hogar_ideal/`: `guion.json`, `disenio.py` (genera `layout.json`: casa, muebles, luces y
+  cámara cuadro a cuadro, con validador «la cámara no atraviesa nada»), `godot/` (proyecto que lo arma y exporta el GLB),
+  `blender/construir.py` (terminación artística) y `blender/exportar_previa.py`. Nada de esto sube BLEND, GLB ni videos.
+- **Godot (cerrado, no se vuelve):** casa minimalista de una planta (sala, comedor, cocina, principal, 2 dormitorios, baño,
+  pasillo), jardín, sendero, cerco con rejas y portones, calle, 99 árboles reales de la biblioteca, colinas en el horizonte.
+  Autos SOLO de Dream Racing con las ruedas del juego: camioneta Yaguareté + R2 Turbo rojo (el auto inicial) en la cochera,
+  GT en la calle. Accesorios armados con formas simples porque la biblioteca no trae piezas así (tomacorrientes,
+  interruptores, cortineros, portarrollo, toallero, jabonero, riel de cocina, ventilador de techo) + ventilador de mesa,
+  escobilla y olla arrocera de la biblioteca.
+- **Blender (`construir.py`):** cielo y sol animados (día → atardecer → noche), vidrio con refracción, pasto, copas de árboles,
+  autos aligerados (≈90 mil triángulos c/u), fuego de la chimenea con chispas, neblina baja en el jardín y bruma, luces
+  exteriores que se encienden al anochecer, Cycles con el perfil del estudio.
+- **Pendientes que dependen del dueño:** (1) la voz `9b3epFpN8VNQyCsbs3ER` no existe en la cuenta de ElevenLabs
+  (`voice_not_found`): hay que agregarla a «Mis voces» o enviar el audio; no se generó ni inventó otra voz. (2) La
+  resolución del Reel es 720×1280 (vertical, mismos píxeles que 1280×720): el perfil obligatorio del estudio dice 1280×720 y
+  `aprobar-blend` lo rechazaría; hace falta que el dueño confirme la excepción vertical antes de aprobar.
+- Sin audio todavía: los tiempos de las tomas son estimados. Nada publicado, ninguna Release, ningún Actions.

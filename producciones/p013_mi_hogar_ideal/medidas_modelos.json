@@ -1,0 +1,842 @@
+{
+ "sofa_corner_sofa_2": {
+  "w": 2.488,
+  "d": 1.896,
+  "h": 0.78,
+  "lib": "bscc0"
+ },
+ "sofa_couch_3": {
+  "w": 2.3,
+  "d": 1.597,
+  "h": 0.866,
+  "lib": "bscc0"
+ },
+ "armchair_armchair_10": {
+  "w": 0.773,
+  "d": 0.849,
+  "h": 0.865,
+  "lib": "bscc0"
+ },
+ "armchair_armchair_9": {
+  "w": 0.953,
+  "d": 0.833,
+  "h": 0.783,
+  "lib": "bscc0"
+ },
+ "shelf_bookcase_7": {
+  "w": 0.919,
+  "d": 0.365,
+  "h": 1.472,
+  "lib": "bscc0"
+ },
+ "prop_tv": {
+  "w": 0.775,
+  "d": 0.142,
+  "h": 0.508,
+  "lib": "bscc0"
+ },
+ "bush_decorative_plant": {
+  "w": 0.559,
+  "d": 0.602,
+  "h": 1.031,
+  "lib": "bscc0"
+ },
+ "bush_plant_3": {
+  "w": 0.818,
+  "d": 0.69,
+  "h": 1.171,
+  "lib": "bscc0"
+ },
+ "bush_plant_box": {
+  "w": 0.689,
+  "d": 0.277,
+  "h": 0.373,
+  "lib": "bscc0"
+ },
+ "bush_flower_box": {
+  "w": 0.55,
+  "d": 0.168,
+  "h": 0.194,
+  "lib": "bscc0"
+ },
+ "bush_little_plant": {
+  "w": 0.266,
+  "d": 0.266,
+  "h": 0.232,
+  "lib": "bscc0"
+ },
+ "bush_plant_2": {
+  "w": 0.609,
+  "d": 0.349,
+  "h": 0.315,
+  "lib": "bscc0"
+ },
+ "table_table_6": {
+  "w": 2.35,
+  "d": 1,
+  "h": 0.739,
+  "lib": "bscc0"
+ },
+ "table_oak_table": {
+  "w": 1.24,
+  "d": 1.24,
+  "h": 0.741,
+  "lib": "bscc0"
+ },
+ "chair_oak_chair": {
+  "w": 0.491,
+  "d": 0.612,
+  "h": 1.178,
+  "lib": "bscc0"
+ },
+ "chair_chair_12": {
+  "w": 0.547,
+  "d": 0.577,
+  "h": 0.754,
+  "lib": "bscc0"
+ },
+ "chair_osaka_chair": {
+  "w": 0.475,
+  "d": 0.525,
+  "h": 0.77,
+  "lib": "bscc0"
+ },
+ "chair_stool_5": {
+  "w": 0.53,
+  "d": 0.521,
+  "h": 0.98,
+  "lib": "bscc0"
+ },
+ "chair_stool_4": {
+  "w": 0.326,
+  "d": 0.311,
+  "h": 0.788,
+  "lib": "bscc0"
+ },
+ "cabinet_lower_cabinet": {
+  "w": 0.6,
+  "d": 0.612,
+  "h": 0.885,
+  "lib": "bscc0"
+ },
+ "cabinet_sink_cabinet": {
+  "w": 0.6,
+  "d": 0.612,
+  "h": 1.212,
+  "lib": "bscc0"
+ },
+ "cabinet_upper_cabinet_2": {
+  "w": 0.6,
+  "d": 0.41,
+  "h": 0.72,
+  "lib": "bscc0"
+ },
+ "cabinet_high_cabinet": {
+  "w": 0.6,
+  "d": 0.612,
+  "h": 2.17,
+  "lib": "bscc0"
+ },
+ "cabinet_vanity": {
+  "w": 0.904,
+  "d": 0.708,
+  "h": 0.933,
+  "lib": "bscc0"
+ },
+ "cabinet_cupboard": {
+  "w": 1.005,
+  "d": 0.39,
+  "h": 1.5,
+  "lib": "bscc0"
+ },
+ "cabinet_drawers_cabinet": {
+  "w": 0.6,
+  "d": 0.612,
+  "h": 0.885,
+  "lib": "bscc0"
+ },
+ "cabinet_lower_corner_cabinet": {
+  "w": 0.81,
+  "d": 0.823,
+  "h": 0.885,
+  "lib": "bscc0"
+ },
+ "cabinet_upper_corner_cabinet": {
+  "w": 0.81,
+  "d": 0.81,
+  "h": 0.72,
+  "lib": "bscc0"
+ },
+ "fridge_large_fridge": {
+  "w": 0.925,
+  "d": 0.806,
+  "h": 1.843,
+  "lib": "bscc0"
+ },
+ "stove_double_oven": {
+  "w": 0.6,
+  "d": 0.515,
+  "h": 1.089,
+  "lib": "bscc0"
+ },
+ "stove_range_hood": {
+  "w": 0.6,
+  "d": 0.318,
+  "h": 0.426,
+  "lib": "bscc0"
+ },
+ "bed_bed_6": {
+  "w": 2.022,
+  "d": 2.282,
+  "h": 1.142,
+  "lib": "bscc0"
+ },
+ "bed_bed_4": {
+  "w": 1.447,
+  "d": 2.137,
+  "h": 1.077,
+  "lib": "bscc0"
+ },
+ "bed_bed_5": {
+  "w": 1.98,
+  "d": 2.264,
+  "h": 0.765,
+  "lib": "bscc0"
+ },
+ "closet_wardrobe_3": {
+  "w": 2,
+  "d": 0.66,
+  "h": 2.364,
+  "lib": "bscc0"
+ },
+ "table_bedside_table_2": {
+  "w": 0.485,
+  "d": 0.481,
+  "h": 0.454,
+  "lib": "bscc0"
+ },
+ "table_desk_lamp_4": {
+  "w": 0.244,
+  "d": 0.244,
+  "h": 0.4,
+  "lib": "bscc0"
+ },
+ "table_desk_9": {
+  "w": 1.6,
+  "d": 0.8,
+  "h": 0.723,
+  "lib": "bscc0"
+ },
+ "toilet_toilet_unit": {
+  "w": 0.353,
+  "d": 0.692,
+  "h": 0.772,
+  "lib": "bscc0"
+ },
+ "sink_washbasin": {
+  "w": 0.564,
+  "d": 0.457,
+  "h": 0.931,
+  "lib": "bscc0"
+ },
+ "bath_shower_stall": {
+  "w": 0.931,
+  "d": 1.119,
+  "h": 2,
+  "lib": "bscc0"
+ },
+ "rock_stone_lantern": {
+  "w": 0.377,
+  "d": 0.326,
+  "h": 0.8,
+  "lib": "bscc0"
+ },
+ "rock_rock_2": {
+  "w": 0.69,
+  "d": 0.534,
+  "h": 0.307,
+  "lib": "bscc0"
+ },
+ "rock_rock_3": {
+  "w": 0.685,
+  "d": 0.423,
+  "h": 0.438,
+  "lib": "bscc0"
+ },
+ "trash_mailbox": {
+  "w": 0.159,
+  "d": 0.465,
+  "h": 0.816,
+  "lib": "bscc0"
+ },
+ "bench_bench_3": {
+  "w": 1.701,
+  "d": 0.459,
+  "h": 0.508,
+  "lib": "bscc0"
+ },
+ "bench_relax_chair": {
+  "w": 0.66,
+  "d": 1.9,
+  "h": 0.847,
+  "lib": "bscc0"
+ },
+ "bench_deck_chair_2": {
+  "w": 0.714,
+  "d": 1.255,
+  "h": 0.822,
+  "lib": "bscc0"
+ },
+ "shelf_vertical_shelves": {
+  "w": 0.44,
+  "d": 0.39,
+  "h": 1.85,
+  "lib": "bscc0"
+ },
+ "shelf_shelves_4": {
+  "w": 0.79,
+  "d": 0.394,
+  "h": 0.79,
+  "lib": "bscc0"
+ },
+ "car_concept_sedan_01": {
+  "w": 1.849,
+  "d": 4.559,
+  "h": 1.55,
+  "lib": "kator"
+ },
+ "tree_birch": {
+  "w": 3.94,
+  "d": 3.75,
+  "h": 7.5,
+  "lib": "trees"
+ },
+ "tree_fan_palm_tree": {
+  "w": 2.46,
+  "d": 2.57,
+  "h": 3,
+  "lib": "trees"
+ },
+ "sc_cypress": {
+  "w": 1.322,
+  "d": 1.342,
+  "h": 5.6,
+  "lib": "scopia"
+ },
+ "sc_hydrangea": {
+  "w": 0.798,
+  "d": 0.782,
+  "h": 0.649,
+  "lib": "scopia"
+ },
+ "bush_plant": {
+  "w": 0.967,
+  "d": 0.962,
+  "h": 0.853,
+  "lib": "contrib"
+ },
+ "bush_flowers": {
+  "w": 0.209,
+  "d": 0.159,
+  "h": 0.5,
+  "lib": "contrib"
+ },
+ "sofa_sofa_2": {
+  "w": 2.859,
+  "d": 1.001,
+  "h": 0.892,
+  "lib": "contrib"
+ },
+ "tree_lombardy_poplar": {
+  "w": 2.03,
+  "d": 1.92,
+  "h": 7.5,
+  "lib": "trees"
+ },
+ "tree_tree": {
+  "w": 6,
+  "d": 6.4,
+  "h": 8,
+  "lib": "trees"
+ },
+ "tree_weeping_willow": {
+  "w": 7,
+  "d": 6.83,
+  "h": 8,
+  "lib": "trees"
+ },
+ "tree_black_tupelo": {
+  "w": 6.66,
+  "d": 6.5,
+  "h": 10,
+  "lib": "trees"
+ },
+ "tree_palm_tree": {
+  "w": 5.3,
+  "d": 5.47,
+  "h": 9.5,
+  "lib": "trees"
+ },
+ "tree_sassafras": {
+  "w": 6.07,
+  "d": 5.92,
+  "h": 9.5,
+  "lib": "trees"
+ },
+ "tree_quaking_aspen": {
+  "w": 3.55,
+  "d": 3.69,
+  "h": 7,
+  "lib": "trees"
+ },
+ "sc_acacia": {
+  "w": 7.708,
+  "d": 6.457,
+  "h": 6.494,
+  "lib": "scopia"
+ },
+ "sc_pine": {
+  "w": 3.745,
+  "d": 3.789,
+  "h": 5.457,
+  "lib": "scopia"
+ },
+ "sc_palm_tree": {
+  "w": 5.738,
+  "d": 6.04,
+  "h": 12.0,
+  "lib": "scopia"
+ },
+ "sc_coconut_tree": {
+  "w": 7.772,
+  "d": 8.0,
+  "h": 11.0,
+  "lib": "scopia"
+ },
+ "fence_fence_grid": {
+  "w": 2,
+  "d": 0.05,
+  "h": 1.05,
+  "lib": "contrib"
+ },
+ "fence_fence_grid_gate": {
+  "w": 0.85,
+  "d": 0.05,
+  "h": 1.1,
+  "lib": "contrib"
+ },
+ "fence_fence_post": {
+  "w": 0.12,
+  "d": 0.12,
+  "h": 1,
+  "lib": "contrib"
+ },
+ "fence_fence_picket": {
+  "w": 0.85,
+  "d": 0.06,
+  "h": 1.25,
+  "lib": "contrib"
+ },
+ "fence_railing": {
+  "w": 1.627,
+  "d": 0.113,
+  "h": 0.62,
+  "lib": "contrib"
+ },
+ "fence_iron_railing": {
+  "w": 1.12,
+  "d": 0.136,
+  "h": 0.7,
+  "lib": "kator"
+ },
+ "fence_fence_4": {
+  "w": 1.796,
+  "d": 0.058,
+  "h": 1.049,
+  "lib": "bscc0"
+ },
+ "fence_balustrade_corner": {
+  "w": 0.544,
+  "d": 0.544,
+  "h": 0.925,
+  "lib": "contrib"
+ },
+ "gate_gate_2": {
+  "w": 0.981,
+  "d": 0.01,
+  "h": 2.346,
+  "lib": "contrib"
+ },
+ "gate_gate_3": {
+  "w": 1.905,
+  "d": 0.127,
+  "h": 2.1,
+  "lib": "contrib"
+ },
+ "gate_gate_4": {
+  "w": 1.22,
+  "d": 0.065,
+  "h": 1.1,
+  "lib": "contrib"
+ },
+ "streetlight_classic_lamppost": {
+  "w": 0.3,
+  "d": 0.3,
+  "h": 2.5,
+  "lib": "kator"
+ },
+ "streetlight_street_light": {
+  "w": 0.34,
+  "d": 2.45,
+  "h": 7.7,
+  "lib": "contrib"
+ },
+ "sidewalk_concrete_sidewalk": {
+  "w": 5.49,
+  "d": 0.962,
+  "h": 0.161,
+  "lib": "kator"
+ },
+ "car_concept_sedan_02": {
+  "w": 2.107,
+  "d": 4.398,
+  "h": 1.5,
+  "lib": "kator"
+ },
+ "car_vw_new_beetle": {
+  "w": 1.936,
+  "d": 4.091,
+  "h": 1.545,
+  "lib": "kator"
+ },
+ "car_concept_sedan_01_2": {
+  "w": 1.911,
+  "d": 4.711,
+  "h": 1.55,
+  "lib": "kator"
+ },
+ "sc_sports_car": {
+  "w": 2.102,
+  "d": 4.478,
+  "h": 1.28,
+  "lib": "scopia"
+ },
+ "sc_pickup": {
+  "w": 2.152,
+  "d": 5.243,
+  "h": 1.808,
+  "lib": "scopia"
+ },
+ "sc_dog_house": {
+  "w": 0.716,
+  "d": 0.9,
+  "h": 0.719,
+  "lib": "scopia"
+ },
+ "sc_garden_hut": {
+  "w": 1.71,
+  "d": 1.82,
+  "h": 1.98,
+  "lib": "scopia"
+ },
+ "cabinet_dresser": {
+  "w": 1.385,
+  "d": 0.455,
+  "h": 0.62,
+  "lib": "contrib"
+ },
+ "cabinet_dresser_2": {
+  "w": 1.174,
+  "d": 0.629,
+  "h": 0.876,
+  "lib": "contrib"
+ },
+ "cabinet_shoe_cabinet": {
+  "w": 0.717,
+  "d": 0.396,
+  "h": 1.023,
+  "lib": "contrib"
+ },
+ "cabinet_display_cabinet": {
+  "w": 0.84,
+  "d": 0.84,
+  "h": 1.798,
+  "lib": "contrib"
+ },
+ "cabinet_television_cabinet": {
+  "w": 1.354,
+  "d": 0.693,
+  "h": 1.6,
+  "lib": "bscc0"
+ },
+ "cabinet_chest": {
+  "w": 0.951,
+  "d": 0.419,
+  "h": 0.93,
+  "lib": "contrib"
+ },
+ "prop_monitor_lcd": {
+  "w": 0.664,
+  "d": 0.307,
+  "h": 0.568,
+  "lib": "contrib"
+ },
+ "stove_microwave": {
+  "w": 0.49,
+  "d": 0.353,
+  "h": 0.274,
+  "lib": "contrib"
+ },
+ "table_round_table": {
+  "w": 0.945,
+  "d": 0.945,
+  "h": 0.74,
+  "lib": "contrib"
+ },
+ "table_marble_table": {
+  "w": 1.2,
+  "d": 1.2,
+  "h": 0.7,
+  "lib": "contrib"
+ },
+ "armchair_armchair_3": {
+  "w": 1.012,
+  "d": 0.771,
+  "h": 0.75,
+  "lib": "contrib"
+ },
+ "armchair_armchair_7": {
+  "w": 0.85,
+  "d": 0.9,
+  "h": 1.12,
+  "lib": "contrib"
+ },
+ "bush_indoor_plant": {
+  "w": 0.725,
+  "d": 0.766,
+  "h": 0.679,
+  "lib": "bsccby"
+ },
+ "bush_spider_plant": {
+  "w": 0.666,
+  "d": 0.636,
+  "h": 0.342,
+  "lib": "bsccby"
+ },
+ "bush_decorative_plant_2": {
+  "w": 0.318,
+  "d": 0.322,
+  "h": 0.606,
+  "lib": "bsccby"
+ },
+ "prop_fireplace_2": {
+  "w": 1.707,
+  "d": 0.579,
+  "h": 1.277,
+  "lib": "contrib"
+ },
+ "prop_pergola": {
+  "w": 2.4,
+  "d": 2.556,
+  "h": 2.63,
+  "lib": "contrib"
+ },
+ "prop_awning": {
+  "w": 3.1,
+  "d": 1.694,
+  "h": 0.616,
+  "lib": "contrib"
+ },
+ "prop_garden_umbrella": {
+  "w": 2.567,
+  "d": 2.22,
+  "h": 2.5,
+  "lib": "contrib"
+ },
+ "bench_swinging_chair": {
+  "w": 1.5,
+  "d": 1.471,
+  "h": 1.824,
+  "lib": "contrib"
+ },
+ "prop_barbecue": {
+  "w": 0.392,
+  "d": 0.484,
+  "h": 0.509,
+  "lib": "contrib"
+ },
+ "prop_fountain": {
+  "w": 0.514,
+  "d": 0.514,
+  "h": 0.465,
+  "lib": "contrib"
+ },
+ "prop_umbrella_2": {
+  "w": 2.231,
+  "d": 2.227,
+  "h": 1.998,
+  "lib": "bscc0"
+ },
+ "bench_deck_chair": {
+  "w": 0.6,
+  "d": 1.046,
+  "h": 0.977,
+  "lib": "contrib"
+ },
+ "bench_painted_bench": {
+  "w": 1.426,
+  "d": 0.518,
+  "h": 0.8,
+  "lib": "kator"
+ },
+ "bath_bath": {
+  "w": 1.801,
+  "d": 0.701,
+  "h": 0.651,
+  "lib": "bsccby"
+ },
+ "stove_oven": {
+  "w": 0.6,
+  "d": 0.624,
+  "h": 0.566,
+  "lib": "contrib"
+ },
+ "stove_cooker": {
+  "w": 0.6,
+  "d": 0.616,
+  "h": 0.965,
+  "lib": "contrib"
+ },
+ "shelf_bookcase_5": {
+  "w": 2.234,
+  "d": 0.645,
+  "h": 2.106,
+  "lib": "contrib"
+ },
+ "shelf_bookcase_3": {
+  "w": 2.615,
+  "d": 0.553,
+  "h": 2.15,
+  "lib": "contrib"
+ },
+ "sofa_large_couch": {
+  "w": 2.367,
+  "d": 0.767,
+  "h": 0.75,
+  "lib": "contrib"
+ },
+ "table_desk_2": {
+  "w": 1.633,
+  "d": 0.697,
+  "h": 1.248,
+  "lib": "contrib"
+ },
+ "table_drop_leaf_table": {
+  "w": 2.6,
+  "d": 0.78,
+  "h": 0.72,
+  "lib": "contrib"
+ },
+ "chair_office_chair": {
+  "w": 0.626,
+  "d": 0.597,
+  "h": 0.873,
+  "lib": "contrib"
+ },
+ "chair_rocking_chair": {
+  "w": 0.65,
+  "d": 0.8,
+  "h": 1.09,
+  "lib": "contrib"
+ },
+ "table_desk_lamp_2": {
+  "w": 0.232,
+  "d": 0.738,
+  "h": 0.562,
+  "lib": "contrib"
+ },
+ "table_desk_lamp_3": {
+  "w": 0.16,
+  "d": 0.5,
+  "h": 0.47,
+  "lib": "contrib"
+ },
+ "prop_upright_piano": {
+  "w": 1.28,
+  "d": 0.554,
+  "h": 1.21,
+  "lib": "contrib"
+ },
+ "rock_rock": {
+  "w": 0.505,
+  "d": 0.337,
+  "h": 0.5,
+  "lib": "bscc0"
+ },
+ "crate_crate_2": {
+  "w": 0.6,
+  "d": 0.589,
+  "h": 0.594,
+  "lib": "bscc0"
+ },
+ "pickup": {
+  "w": 2.27,
+  "d": 6.05,
+  "h": 1.95,
+  "lib": "propio (Dream Racing)"
+ },
+ "prop_fountain_2": {
+  "w": 1.849,
+  "d": 1.849,
+  "h": 1.5,
+  "lib": "bsccby"
+ },
+ "sc_lavender_bush": {
+  "w": 0.818,
+  "d": 0.821,
+  "h": 0.647,
+  "lib": "scopia"
+ },
+ "streetlight_porch_column": {
+  "w": 0.332,
+  "d": 0.332,
+  "h": 2.5,
+  "lib": "kator"
+ },
+ "streetlight_porch_column_2": {
+  "w": 0.432,
+  "d": 0.432,
+  "h": 2.5,
+  "lib": "kator"
+ },
+ "hatch": {
+  "w": 1.98,
+  "d": 4.2,
+  "h": 1.42,
+  "lib": "propio (Dream Racing)"
+ },
+ "gt": {
+  "w": 1.96,
+  "d": 4.15,
+  "h": 1.3,
+  "lib": "propio (Dream Racing)"
+ },
+ "table_table_fan": {
+  "w": 0.271,
+  "d": 0.218,
+  "h": 0.401,
+  "lib": "bscc0"
+ },
+ "toilet_toilet_brush": {
+  "w": 0.096,
+  "d": 0.129,
+  "h": 0.386,
+  "lib": "bscc0"
+ },
+ "stove_rice_cooker": {
+  "w": 0.258,
+  "d": 0.225,
+  "h": 0.228,
+  "lib": "contrib"
+ }
+}

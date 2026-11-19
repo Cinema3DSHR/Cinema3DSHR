@@ -1,0 +1,80 @@
+{
+ "formato": "estudio.guion_narrado/1",
+ "produccion": "p013_mi_hogar_ideal",
+ "titulo": "Mi hogar ideal",
+ "narradora": {
+  "voice_id": "9b3epFpN8VNQyCsbs3ER",
+  "estado": "BLOQUEADA: ese id no existe en la cuenta de ElevenLabs (voice_not_found). Falta agregarla a «Mis voces» o enviar el audio. No se generó nada ni se inventó otra voz.",
+  "modelo": "eleven_multilingual_v2",
+  "ajustes": {
+   "stability": 0.42,
+   "similarity_boost": 0.8,
+   "style": 0.3,
+   "use_speaker_boost": true
+  }
+ },
+ "pausa_entre_frases_s": 0.9,
+ "velocidad_estimada_caracteres_por_s": 15.0,
+ "beats": [
+  {
+   "id": "b01_gancho",
+   "texto": "Hoy voy a diseñar mi hogar ideal desde cero. Mirá cómo va tomando forma."
+  },
+  {
+   "id": "b02_terreno",
+   "texto": "Arranco con un terreno vacío y una idea clara: una casa de una sola planta, luminosa y sin vueltas."
+  },
+  {
+   "id": "b03_fachada",
+   "texto": "Primero las paredes. Quiero ventanales enormes, que entre la luz por todos lados."
+  },
+  {
+   "id": "b04_sala",
+   "texto": "Empiezo por la sala. Un sillón grande, una alfombra clara, y la tele con un neón detrás para que tenga onda."
+  },
+  {
+   "id": "b05_pared",
+   "texto": "Mmm... esta pared quedó vacía. Le sumo un cuadro y una luz indirecta. Ahora sí."
+  },
+  {
+   "id": "b06_comedor",
+   "texto": "Al lado, el comedor: una mesa con seis sillas. Pero la corro un poquito hacia la ventana. Mucho mejor."
+  },
+  {
+   "id": "b07_cocina",
+   "texto": "La cocina tiene que ser grande. Pensé en una mesa en el medio... no, no me convence. Probemos una isla. ¡Esta queda muchísimo mejor!"
+  },
+  {
+   "id": "b08_principal",
+   "texto": "La habitación principal tiene que ser un refugio: cama enorme, mesitas de luz con velador y un ropero que ocupe toda la pared."
+  },
+  {
+   "id": "b09_visitas",
+   "texto": "Sumo dos habitaciones más. Una para visitas,"
+  },
+  {
+   "id": "b09b_estudio",
+   "texto": "y otra para mi estudio, simples y bien luminosas."
+  },
+  {
+   "id": "b10_bano",
+   "texto": "El baño, bien minimalista: blanco, madera clara y una ducha amplia."
+  },
+  {
+   "id": "b11_jardin",
+   "texto": "Salgo al jardín. Canteros con flores, un sendero iluminado y árboles para dar sombra."
+  },
+  {
+   "id": "b12_cochera",
+   "texto": "A un costado, la cochera, para que el auto también tenga su lugar."
+  },
+  {
+   "id": "b13_noche",
+   "texto": "Y cuando cae el sol, se enciende todo. Mirá cómo se ve de noche."
+  },
+  {
+   "id": "b14_cierre",
+   "texto": "¡Y así quedó mi hogar ideal! ¿Qué les parece? Contame qué cambiarías y qué querés que diseñemos en el próximo video."
+  }
+ ]
+}
