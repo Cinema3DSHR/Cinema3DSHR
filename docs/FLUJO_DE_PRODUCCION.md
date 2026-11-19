@@ -45,7 +45,7 @@ autorización de créditos.
 {
   "tipo": "escena", "id": "<produccion>-eNN", "produccion": "<produccion>", "numero": 1, "version": 1,
   "titulo": "…", "guion": "…", "duracion_s": 28,
-  "escenario": {"id": "mansion_moderna_noche", "generador": "mansion_moderna", "parametros": {…}},
+  "escenario": {"id": "nave_deriva_ampliada", "generador": "nave_deriva_ampliada", "parametros": {…}},
   "eventos": [{"accion": "abrir_porton", "inicio_s": 4.0, "duracion_f": 75}],      // acciones del escenario
   "vehiculos": [{"id": "auto", "modelo": "procedural:sedan", "color": [r,g,b],
                  "recorrido": [[x,y,z], {"ancla": "porton", "desp": [0,-0.5,0]}, …],

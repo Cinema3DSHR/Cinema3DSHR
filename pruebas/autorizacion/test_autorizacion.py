@@ -22,10 +22,10 @@ os.environ["CINE_CANDADO"] = "1"        # las pruebas de la regla corren con el 
 from estudio import autorizacion as AUT  # noqa: E402
 from estudio import manifiesto as MF  # noqa: E402
 
-ESCENA = "producciones/p009_duo_cero/escenas/e01/v1/escena.json"
+ESCENA = "producciones/p011_a_la_deriva/escenas/e02/v3/escena.json"   # (antes Dúo Cero e01, borrado el 19/11/2026)
 M = MF.leer(ESCENA)
 H = MF.huella(M)
-P, E, V = "p009_duo_cero", "e01", 1
+P, E, V = "p011_a_la_deriva", "e02", 3
 CFG = {"resolucion": "960x540", "fps": 30, "muestras": 6, "motor": "CYCLES", "dispositivo": "CPU"}
 DUENO = "webmaletin-art"
 _n = [0]
@@ -106,7 +106,7 @@ caso("9  la autorización queda vinculada a la versión exacta (n.º, fecha, cue
 # ---- 10. los comandos y scripts que renderizan se niegan sin registros (sin llegar a Blender)
 env = {k: v for k, v in os.environ.items() if k != "CINE_ISSUES"}
 for nombre, cmd in [
-        ("python -m estudio render", [sys.executable, "-m", "estudio", "render", ESCENA, "--toma", "t01_aerea"]),
+        ("python -m estudio render", [sys.executable, "-m", "estudio", "render", ESCENA, "--toma", "t01_vigilancia"]),
         ("python -m estudio fijas", [sys.executable, "-m", "estudio", "fijas", ESCENA])]:
     r = subprocess.run(cmd, capture_output=True, text=True, env=env, timeout=120)
     caso(f"10b {nombre} sin autorización → rechazado", r.returncode != 0 and "RENDER BLOQUEADO" in (r.stderr + r.stdout),

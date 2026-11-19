@@ -3,6 +3,9 @@
 Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GUIA_PARA_OTRO_CHAT.md` (todo lo necesario sin auditar). Leer primero `docs/REGISTRO.md` (estado) y `docs/FLUJO_DE_PRODUCCION.md` (cómo producir).
 
 ## Repositorios
+- **Desde el 19/11/2026 este repositorio está dedicado a «A la deriva» (`producciones/p011_a_la_deriva`)** más las
+  herramientas comunes y la prueba Godot → Blender (`pruebas/godot_blender`). Las demás producciones se borraron
+  (detalle y cómo recuperar: `docs/REGISTRO.md` → «Limpieza general»; estado previo en el commit `150fcea`).
 - **Cinema3DSHR** (este, público): todo el trabajo. Rama de la sesión indicada por el sistema.
 - **mixamo-respaldo** (privado): animaciones originales. **Sólo lectura** — nunca borrar, mover ni sobrescribir.
 - Operaci-n-Nexus-1 / Extraction-tactical: sólo para tomar recursos (armas, operador, audio). No auditarlos.

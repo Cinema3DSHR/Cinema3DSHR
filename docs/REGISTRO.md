@@ -662,3 +662,79 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
   sin faltantes. Preparación 1,5 min, 21,75 s por cuadro de media, 14 min de reloj de punta a punta (05:17 → 05:31 UTC).
   Publicado: release `prueba_godot_blender` (`casa_tormenta_540p.mp4`, `informe_render.json`). Visto: el fuego
   volumétrico sale tenue (se ven más las brasas que las llamas); para la próxima prueba hay que subirle la emisión.
+
+## 19/11/2026 — Limpieza general: el repositorio queda dedicado a «A la deriva»
+
+Pedido del dueño: dejar sólo «A la deriva» (p011), las herramientas comunes del pipeline, los flujos, la documentación y
+los registros. Rama `claude/inspiring-sagan-1ogr0n`. Sin renders, sin Actions, sin Releases nuevas ni borradas.
+
+**Copia de seguridad (estado previo completo):** el commit `150fcea` (padre del commit de esta limpieza; para recuperar
+un archivo: `git show 150fcea:<ruta>` o `git checkout 150fcea -- <ruta>`) y la rama `ccr-6d21fe8a-76t9c3`, que no se
+tocó. La etiqueta `respaldo-pre-limpieza-2026-11-19` no se pudo subir (la política de la sesión rechaza etiquetas con
+403); hubo además un `git bundle --all` verificado en la carpeta temporal de la sesión (efímero).
+
+**Borrado (172 archivos), con certeza de que era de otras producciones y que el código que queda no lo usa:**
+- `producciones/`: p000 mansión, p001 fútbol tiro libre, p002 la jefa, p003 fútbol 30 s, p004 mansión de día, p005 CQB,
+  p006 Tren Fantasma, p007 Al vacío, p008 Drift Sunset, p009 Dúo Cero, p010 Un sueño de a dos (descartada) y
+  `producciones/pruebas/` (fichas del render de prueba de la CQB).
+- `escenarios/` (mansion_moderna_noche, estadio_futbol11_noche).
+- Generadores de escenario exclusivos: `estudio/escenarios/{al_vacio,drift_sunset,duo_cero,estadio_futbol,mansion_cqb,
+  mansion_moderna,tren_fantasma}.py`.
+- Módulos de Blender que sólo usaban esas producciones (comprobado con el grafo de importaciones, también las que están
+  dentro de funciones): `estudio/blender/{auto_rampa_s03,batalla_s03,salto_tren,tren,via_ferrea,paisaje,vehiculos_dr,
+  ruedas,vidrios_dr,tiroteo}.py`.
+- Física de Dream Rally (`estudio/fisica_dr/`, `datos/fisica_dr/` con las simulaciones guardadas) y su documento
+  `docs/FISICA_DREAM_RALLY.md`.
+- 66 archivos de voces de `audio/biblioteca/` usados sólo por recetas de Dúo Cero, las muestras de voz de p010 y la voz
+  de prueba de la jefa, más sus 66 entradas de `catalogo/audio.json` (el registro de gasto `audio/ledger.jsonl` se
+  conserva entero).
+
+**Conservado a propósito:**
+- Todo `producciones/p011_a_la_deriva/` (recetas e01 v1–v2, e02 v1–v3, `entregado.json`, guiones, documento del dueño,
+  cámaras del director): sin tocar.
+- Herramientas comunes: `estudio/` (director, cámaras, personajes, humanos, stickman —lo usan los humanos de «A la
+  deriva»—, previa, trabajo, componentes, recursos, clips, manifiesto, protección, autorización, montaje, publicación,
+  audio procedural y ElevenLabs), `app/`, `visor/`, `catalogo/`, `config/`, `tools` locales.
+- Módulos nacidos en otras producciones que el código común importa (borrarlos rompe el pipeline o exige cambiarlo):
+  `blender/pelota.py` (lo importa `director`), `blender/armas.py` y `armas_stickman.py` (`personajes`/`stickman`),
+  `blender/efectos.py`, `blender/vehiculos.py`, `audio/{arcade,dream_rally,tren,radio}.py` y sus sonidos
+  `audio/biblioteca/{free_kick_swipe,dream_rally}/` (los llama `audio/procedural.py`), `catalogo/futbol.json` (lo leen
+  `director`, `personajes` y el buscador de animaciones). Candidatos a una poda posterior con un cambio dedicado.
+- Herramientas generales sin uso hoy: `blender/animar.py`, `blender/proyectar_textura.py`, `blender/pelo_realista.py`,
+  `blender/expresiones_3d.py`.
+- `pruebas/godot_blender/` («Casa moderna en tormenta»): es la base del pipeline Godot → Blender → Cycles.
+- `pruebas/` del sistema, de la app, de la autorización, del render por rangos y por bloques, del editor, de la nave y
+  de los personajes humanos; `pruebas/motor_002` y `pruebas/resolucion_001` como registro histórico (sus scripts ya
+  estaban deshabilitados; de ahí salió la configuración de Cycles).
+- Todos los flujos de `.github/workflows/`, los documentos históricos (`INFORME_ETAPA1`, `MIGRACION_ORGANIZACION`,
+  `docs/informes/`) y este registro.
+
+**Ambiguos, NO borrados (decidir):**
+- 45 audios de `audio/biblioteca/` que no nombra ninguna receta y no tienen etiqueta de producción. Por el texto,
+  parecen de fútbol, Drift Sunset, el tren y Al vacío, pero también hay ambientes y músicas que podrían ser de «A la
+  deriva»: música espacial, invernadero, timbres de consola.
+- Siete voces de Eva de «A la deriva» (etiqueta p011) que ninguna receta usa: versiones anteriores.
+- Roles de voz de Dúo Cero en `config/voces.json` y modelos de otras producciones en `estudio/blender_deps.py` y en
+  los catálogos: apuntan a recursos de mixamo-respaldo, que no se tocó (es de sólo lectura).
+- Valores por defecto obsoletos que no se cambiaron, porque la tarea del pipeline pide no tocar esos flujos sin
+  necesidad. Si se lanzan sin datos fallan solos, sin renderizar nada:
+  - `video30.yml`: escena de fútbol p003;
+  - `episodio.yml`: Dúo Cero;
+  - `pruebas/episodio/informe.py`;
+  - las pruebas de la app: etiquetas p005 y p009, que sólo son textos.
+
+**Ajustes para no romper referencias:**
+- `pruebas/autorizacion/test_autorizacion.py` ahora usa «A la deriva» e02 v3 (antes usaba Dúo Cero e01).
+- Ejemplos de escenario en `README.md`, `docs/ARQUITECTURA.md` y `docs/FLUJO_DE_PRODUCCION.md`.
+- `docs/GUIA_PARA_OTRO_CHAT.md` (§4, §4 bis y §6).
+
+**Verificación (sin render):**
+- Ningún archivo que queda importa un módulo borrado: lo comprobé con `git grep` y con el grafo de importaciones.
+- Importan los 53 módulos de `estudio` con el Python de Blender.
+- La línea de comandos `estudio` funciona.
+- Las 5 recetas de «A la deriva» validan, y sus huellas son **idénticas antes y después** de la limpieza.
+- `test_autorizacion`: 40/40.
+- `test_componentes`: 16/16, con mixamo-respaldo local actualizado (sólo descarga). Antes de actualizarlo daba 15/16
+  por falta de los recursos de «A la deriva»; con el estado previo, 14/16.
+- Los JSON de `catalogo/` y `config/` son válidos.
+- `test_trabajo` 19/19 y `test_caminata` 4/4: arman escenas en Blender sin renderizar.
