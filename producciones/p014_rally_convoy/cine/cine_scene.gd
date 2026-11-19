@@ -31,6 +31,7 @@ var args := {}
 var quality := 1.0
 var _fog_col := Color(0.72, 0.82, 0.93)
 var _last_inside := -1
+var export_mode := false # exportación a Blender: la cabina y las ruedas se dejan siempre completas (el plano decide qué se ve)
 
 func _arg(k: String, d: String = "") -> String:
 	return str(args.get(k, d))
@@ -236,11 +237,11 @@ func _step_visuals(dt: float, force := false) -> void:
 	cam.fov = dir.fov
 	adv_world.follow(cam.global_position, _fog_col)
 	var inside_k: int = dir.inside_car
-	if inside_k != _last_inside:
+	if inside_k != _last_inside and not export_mode:
 		for k in core.cars.size():
 			var on: bool = (k == inside_k)
 			core.cars[k].visual.set_inside(on)
-			cockpits[k].set_inside(on, true)
+			cockpits[k].set_inside(on, false) # false: con la cámara del piloto no se dibuja su cabeza ni el casco (no quedan retazos)
 		_last_inside = inside_k
 	if inside_k >= 0:
 		cockpits[inside_k].update_cabin(dt, core.cars[inside_k].snap, false, t_now)

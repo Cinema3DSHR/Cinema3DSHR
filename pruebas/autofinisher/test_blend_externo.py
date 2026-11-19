@@ -91,6 +91,7 @@ insp = BE.inspeccionar(bueno)
 caso("inspección no modifica el archivo", MD.sha256(bueno) == sha0 and bueno.stat().st_size == bytes0)
 caso("perfil vertical 720x1280 sólo si la producción lo declara", BE.perfil_de({"resolucion": "720x1280"})["resolucion"] == [720, 1280]
      and BE.perfil_de({"resolucion": "1280x720"}) is BE.PERFIL_720P and BE.perfil_de(None) is BE.PERFIL_720P)
+caso("perfil de prueba 480x854 sólo si la producción lo declara", BE.perfil_de({"resolucion": "480x854"})["resolucion"] == [480, 854] and BE.perfil_de({"resolucion": "480x854"})["muestras"] == 6)
 caso("perfil 720p aceptado", BE.problemas(insp, BE.PERFIL_720P, {"fps": 30, "duracion_s": 3, "resolucion": "1280x720"}) == [],
      str(BE.problemas(insp)))
 caso("cámara animada detectada", insp["camara"] == "Camara" and insp["camara_animada"])

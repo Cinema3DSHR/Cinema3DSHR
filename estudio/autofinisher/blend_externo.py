@@ -49,9 +49,15 @@ PERFIL_720P = {
 PERFIL_VERTICAL = {**PERFIL_720P, "resolucion": [720, 1280]}
 
 
+# Variante de PRUEBA vertical 480×854 (pedido del dueño, 19/11/2026, p014 «Rally Convoy»: medir el tiempo de render con una salida chica; todo lo demás idéntico).
+PERFIL_480V = {**PERFIL_720P, "resolucion": [480, 854]}
+
+
 def perfil_de(formato: dict | None) -> dict:
     """Perfil de producción que corresponde al formato declarado (por defecto, el 720p horizontal obligatorio)."""
     res = str((formato or {}).get("resolucion", "")).lower().replace(" ", "")
+    if res == "480x854":
+        return PERFIL_480V
     return PERFIL_VERTICAL if res == "720x1280" else PERFIL_720P
 
 

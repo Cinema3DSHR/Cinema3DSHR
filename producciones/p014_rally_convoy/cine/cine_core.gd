@@ -56,6 +56,10 @@ func build(with_visuals := true) -> void:
 		car.restart_history(0.0)
 		car.wall = float(track.half_width + track.shoulder) - 0.3 - 1.0
 		var drv := AIDriver.new(track.make_view(), car.phys, {"skill": 0.84, "lane": 0.0, "aggr": 0.2})
+		# agarre que la IA se permite usar: los de carrocería alta (camionetas, SUV) se descuelgan antes de lo que dice su perfil
+		var mu_k: float = [0.72, 0.80, 0.85, 1.0, 1.0, 1.0, 1.0][k]
+		drv.mu *= mu_k
+		drv.prof = AIDriver.speed_profile(drv.track, snappedf(drv.mu, 0.02))
 		drv.enabled = false
 		car.driver = drv
 		cars.append(car)
@@ -74,6 +78,7 @@ func build(with_visuals := true) -> void:
 	var sg := 0.0
 	for dr in drivers:
 		dr.line_free = true
+		dr.smooth_pedals = true
 		dr._locate()
 		sg += float(track.cum[mini(dr.idx, track.n - 1)])
 	pel.setup(track, cars, drivers, sg / float(drivers.size()))

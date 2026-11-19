@@ -36,19 +36,38 @@ func _initialize() -> void:
 	var max_slip := 0.0
 	var off_b := {}
 	var off_n := 0
+	var brk_prev := PackedByteArray()
+	brk_prev.resize(7)
+	var brk_edges := PackedInt32Array([0, 0, 0, 0, 0, 0, 0])
+	var thr_edges := PackedInt32Array([0, 0, 0, 0, 0, 0, 0])
+	var thr_prev := PackedByteArray()
+	thr_prev.resize(7)
 	var slip_b := {}
 	while core.sim_t < T:
 		core.step_to(core.sim_t + 0.05)
 		if core.sim_t >= next_sp:
 			next_sp += 0.5
 			sp_log.append(snappedf(core.pel.s_p, 0.1))
-		if core.sim_t > 100.0 and int(core.sim_t * 20.0) % 5 == 0:
-			var d3 = core.drivers[3]
-			var p3 = core.cars[3].phys
+		if core.sim_t > 95.0 and core.sim_t < 108.0 and int(core.sim_t * 20.0) % 2 == 0:
+			var d2 = core.drivers[2]
+			print("S2 t=%.2f v=%.1f vtgt_max=%.1f vprof=%.1f thr=%.2f brk=%.2f tff=%.2f steer=%.2f kap=%.4f" % [core.sim_t, core.pel.spd[2], d2.max_v, core.pel.v_free(2) if core.pel.has_method("v_free") else d2.prof["v"][d2.idx], d2.throttle, d2.brake, d2._tff, d2.steer, d2.prof["kap"][mini(d2.idx + 6, core.track.n - 1)]])
+		if core.sim_t > 113.0 and int(core.sim_t * 20.0) % 5 == 0:
+			var d3 = core.drivers[0]
+			var p3 = core.cars[0].phys
+			print("W0 t=%.2f y=%.3f vy=%.2f pitch=%.2f roll=%.2f contact=%s surf=%s fx=%s" % [core.sim_t, p3.py, p3.vy, p3.pitch, p3.roll, str([p3.wheels[0].contact, p3.wheels[1].contact, p3.wheels[2].contact, p3.wheels[3].contact]), str(core.cars[0].snap.wheel_fx[0]), str(core.cars[0].snap.wheel_fx[1])])
 			print("TR3 t=%.2f s=%.0f lat=%.2f lane_t=%.2f steer=%.2f v=%.0f vt_cap=%.0f slip=%.0f yawrate=%.2f unstick=%.1f caution=%.2f" % [core.sim_t, core.pel.s[3], d3.lat, d3.lane_t, d3.steer, p3.vLong * 3.6, d3.max_v * 3.6, rad_to_deg(atan2(p3.vLat, maxf(1.0, absf(p3.vLong)))), p3.yawRate, d3.unstick_t, d3.caution])
 		for a in core.cars.size():
 			var pa = core.cars[a].phys
 			var tr = core.cars[a].driver.track
+			if core.sim_t > 30.0:
+				var bnow := 1 if core.drivers[a].brake > 0.15 else 0
+				if bnow == 1 and brk_prev[a] == 0:
+					brk_edges[a] += 1
+				brk_prev[a] = bnow
+				var tnow := 1 if core.drivers[a].throttle > 0.6 else 0
+				if tnow != thr_prev[a]:
+					thr_edges[a] += 1
+				thr_prev[a] = tnow
 			var gix: int = mini(core.drivers[a].idx, core.track.n - 1)
 			if absf(core.drivers[a].lat) > float(core.track.hwa[gix]) + float(core.track.shl[gix]) + 0.3:
 				offroad += 1
@@ -99,6 +118,7 @@ func _initialize() -> void:
 	var jf := FileAccess.open("res://cine/telemetria.json", FileAccess.WRITE)
 	jf.store_string(JSON.stringify({"step": 0.5, "sp": sp_log, "t_end": snappedf(core.sim_t, 0.1)}))
 	jf.close()
+	print("PEDALES frenadas por auto: ", brk_edges, " · cambios de gas >60%%: ", thr_edges, " (en %.0f s)" % (core.sim_t - 30.0))
 	print("BUCKETS ", bucket)
 	print("OFFROAD ", off_b)
 	print("DERRAPES>34° ", slip_b.keys())

@@ -39,6 +39,8 @@ var t := 0.0
 var stats := {"max_spread": 0.0, "passes": 0, "min_gap": 1e9}
 var _tick := 0.0
 var _next_pass := 0.0
+var cap_f := PackedFloat64Array()
+var corr_f := PackedFloat64Array()
 var _passing := {} # {rank: [i_front, i_back]} pasadas en curso
 var _rng := RandomNumberGenerator.new()
 var kap_s := PackedFloat32Array() # curvatura con signo suavizada (+ izquierda)
@@ -54,6 +56,10 @@ func setup(p_track, p_cars: Array, p_drivers: Array, s_grid: float) -> void:
 		arr.resize(n)
 	lane_idx.resize(n)
 	rank.resize(n)
+	cap_f.resize(n)
+	corr_f.resize(n)
+	for i in n:
+		cap_f[i] = 8.0
 	_measure()
 	# orden inicial = orden de la parrilla (el que está más adelante en la ruta es el 0)
 	var order: Array = []
@@ -191,7 +197,7 @@ func update(dt: float, tt: float) -> void:
 			elif rank[i] == r + 1:
 				i_back = i
 		_next_pass = tt + 3.0 # si ahora no se puede (curva) se reintenta enseguida
-		if curvy[i_front] == 0 and curvy[i_back] == 0 and float(track.hwa[mini(drivers[i_front].idx, track.n - 1)]) >= 4.0:
+		if not curve_ahead(i_front, 280.0) and not curve_ahead(i_back, 280.0) and float(track.hwa[mini(drivers[i_front].idx, track.n - 1)]) >= 4.0:
 			_passing[r] = [i_front, i_back]
 			_next_pass = tt + PASS_EVERY + _rng.randf_range(-3.0, 4.0)
 			stats["passes"] = int(stats["passes"]) + 1
@@ -201,7 +207,8 @@ func update(dt: float, tt: float) -> void:
 		var a: int = pr[0]
 		var b: int = pr[1]
 		if curvy[a] == 1 or curvy[b] == 1:
-			pass # en curva la pasada espera (la fila no se desarma)
+			_passing.erase(r) # aparece una curva: la pasada se cancela y cada uno vuelve a su lugar (la fila no se desarma)
+			continue
 		if s[b] > s[a] + 6.0 and absf(lat[b] - lat[a]) > 0.0:
 			# ya pasó: intercambian rangos y carriles
 			rank[a] = r + 1
@@ -231,30 +238,58 @@ func update(dt: float, tt: float) -> void:
 		slot[i] = move_toward(slot[i], tgt, SLEW * h) if tt > go_t + 4.0 else slot[i] + (spd[i] - v_p) * h
 		var e: float = s[i] - (s_p + slot[i])
 		var gi: int = mini(d.idx, track.n - 1)
-		var cap := vp[gi] * 1.06 # un poco más rápido que el punto guía para alcanzar su lugar (el perfil de cada auto sigue mandando en las curvas)
-		if e > E_TOL:
-			cap = minf(cap, maxf(6.0, vp[gi] * (1.0 - clampf(0.05 * (e - E_TOL), 0.0, 0.75))))
+		# corrección por la posición en el grupo: zona muerta de ±4 m y filtro lento (1,5 s): sin vaivén de gas y freno
+		var e_eff := e - clampf(e, -4.0, 4.0)
+		var corr_t := clampf(-0.005 * e_eff, -0.22, 0.05)
+		corr_f[i] = lerpf(corr_f[i], corr_t, 1.0 - exp(-h / 1.5))
+		var cap := vp[gi] * (1.02 + corr_f[i])
 		d.pace = 1.0 # nunca por encima de lo que da su propio perfil: no hay curva que se tome pasado
-		# separación: ningún auto se acerca a otro
+		# separación: ningún auto se acerca a otro. El tope por separación entra de a poco (mezcla continua desde req+8 m hasta req)
+		var emergency := false
 		for j in n:
 			if j == i:
 				continue
 			var gap := s[j] - s[i]
-			if gap <= 0.0 or gap > 70.0:
+			if gap <= 0.0 or gap > 80.0:
 				continue
 			stats["min_gap"] = minf(float(stats["min_gap"]), gap if absf(lat[j] - lat[i]) < 2.6 else 1e9)
-			var req := 13.0 if (lane_idx[j] == lane_idx[i] or curvy[i] == 1 or absf(lat[j] - lat[i]) < 3.0) else 6.5
+			var req := (16.0 if curvy[i] == 1 else 13.0) if (lane_idx[j] == lane_idx[i] or curvy[i] == 1 or absf(lat[j] - lat[i]) < 3.0) else 6.5
 			req += 0.10 * maxf(0.0, spd[i] - 15.0)
-			req += pow(maxf(0.0, spd[i] - spd[j]), 2.0) / 9.0 # si se acerca rápido, frena con tiempo
-			if gap < req:
-				cap = minf(cap, maxf(4.0, spd[j] * 0.97 - 0.9 * (req - gap)))
-		d.max_v = cap
+			var vj := minf(spd[j], v_ahead(j)) # lo que el de adelante va a bajar en la próxima curva (no sólo lo que lleva ahora)
+			req += pow(maxf(0.0, spd[i] - vj), 2.0) / 7.0 # si se acerca rápido, frena con tiempo
+			var w := clampf((req + 8.0 - gap) / 8.0, 0.0, 1.0)
+			if w > 0.0:
+				var cap_safe := maxf(4.0, vj * 0.97 - 0.6 * maxf(0.0, req - gap))
+				cap = lerpf(cap, minf(cap, cap_safe), w * w * (3.0 - 2.0 * w))
+			if gap < 5.0 and absf(lat[j] - lat[i]) < 2.6:
+				emergency = true
+		# el tope se mueve suave (4 m/s² para bajar, 3 m/s² para subir); sólo una emergencia lo baja de golpe
+		if emergency or cap_f[i] < 1.0:
+			cap_f[i] = cap
+		else:
+			cap_f[i] = move_toward(cap_f[i], cap, (4.0 if cap < cap_f[i] else 3.0) * h)
+		d.max_v = cap_f[i]
 		# trazada: línea de carrera + posición en el carril (el carril se cierra en curva y en caminos angostos: fila india)
-		var lw := lane_width(i) * (0.0 if curvy[i] == 1 else 1.0)
+		# en curva la fila se cierra al centro, salvo que haya otro auto casi al lado: entonces cada uno mantiene su carril (nunca se cruzan)
+		var abreast := false
+		for j in n:
+			if j != i and absf(s[j] - s[i]) < 15.0 and lane_idx[j] != lane_idx[i]:
+				abreast = true
+		var lw := lane_width(i) * (0.0 if (curvy[i] == 1 and not abreast) else 1.0)
 		var tgt_lane := float(lane_idx[i]) * lw
 		lane_mix[i] = move_toward(lane_mix[i], tgt_lane, 1.2 * h)
 		var look := mini(track.n - 1, gi + int(spd[i] * 0.45 / 2.5))
 		d.lane_t = clampf(float(line_cache[look]) + lane_mix[i], -(float(track.hwa[gi]) - 1.8), float(track.hwa[gi]) - 1.8)
+
+## Velocidad que la IA de j va a querer llevar en los próximos ~60 m (perfil de curvas con su propio agarre)
+func v_ahead(j: int) -> float:
+	var d = drivers[j]
+	var N: int = track.n
+	var pv: PackedFloat32Array = d.prof["v"]
+	var vt := 1e9
+	for k in range(0, int(minf(spd[j] * 0.12 + 6.0, 40.0))):
+		vt = minf(vt, pv[(d.idx + k) % N])
+	return vt * (0.82 + 0.18 * d.skill)
 
 ## Límite de velocidad de la cinemática por ambiente (m/s). En montaña no hay tope: manda el perfil de la IA (frena para cada curva).
 func limit_at(i: int) -> float:

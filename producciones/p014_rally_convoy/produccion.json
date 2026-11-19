@@ -1,0 +1,19 @@
+{
+ "tipo": "produccion",
+ "id": "p014_rally_convoy",
+ "titulo": "Rally Convoy",
+ "clase": "cinematica",
+ "formato": {
+  "aspecto": "9:16",
+  "resolucion": "480x854",
+  "fps": 30,
+  "duracion_s": 312
+ },
+ "estado": "en_preparacion",
+ "audio": "sonido original del juego (motores, gomas), grabado desde la misma simulación de Godot",
+ "origen": {
+  "godot": "producciones/p014_rally_convoy/cine/ (copia del juego Dream Racing + parches)",
+  "blender": "blender/construir.py"
+ },
+ "nota_formato": "480x854 vertical de PRUEBA (medir tiempo de render), pedido del dueño 19/11/2026; PERFIL_480V en estudio/autofinisher/blend_externo.py"
+}

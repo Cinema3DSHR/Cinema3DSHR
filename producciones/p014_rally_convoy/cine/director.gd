@@ -142,7 +142,8 @@ func _make_plan() -> Array:
 	p.append({"t0": 8.6, "t1": T_toll_out - 1.5, "type": "ghost_hold", "car": 0, "s_off": 70.0})
 	p.append({"t0": T_toll_out - 1.5, "t1": T_toll_out + 3.5, "type": "chase", "car": 2})
 	# 2) resto del recorrido: se alternan los planos y los autos; hay planos especiales en el puente y en las curvas cerradas
-	var rot := ["ghost_back", "chase", "orbit", "side", "drone", "ground", "interior", "zoom", "front_pack", "hood", "ghost_run", "pack_wide", "bumper", "dolly"]
+	# (sin planos aéreos salvo el del puente: no gustaron) — se alternan seguimiento, fantasma, interior, lateral, a ras del suelo y zoom
+	var rot := ["ghost_close", "chase", "orbit", "ghost_back", "side", "ghost_close", "ground", "interior", "zoom", "ghost_hold", "front_pack", "hood", "ghost_close", "ghost_run", "dolly", "ghost_close", "bumper"]
 	var t := T_toll_out + 3.5
 	var idx := 0
 	var last_car := -1
@@ -170,13 +171,14 @@ func _make_plan() -> Array:
 			continue
 		# montaña: más cámara baja y interior para ver el trabajo de la dirección y de la suspensión
 		if t > _t_at_s(mount_s0):
-			if type in ["pack_wide", "front_pack", "bumper"]:
-				type = ["interior", "ground", "side", "zoom"][idx % 4]
-			dur = _rng.randf_range(3.6, 6.0)
+			# montaña: más planos con el auto fantasma por delante de los autos que suben (pedido del dueño), el resto cerca y bajo
+			var mrot := ["ghost_close", "interior", "ghost_close", "chase", "ghost_close", "side", "zoom", "ghost_close", "ground"]
+			type = mrot[idx % mrot.size()]
+			dur = _rng.randf_range(3.8, 6.2)
 		p.append({"t0": t, "t1": minf(t + dur, T_end), "type": type, "car": car})
 		t += dur
 	# 3) final: plano general y cierre
-	p.append({"t0": T_end - 3.0, "t1": T_end + 8.0, "type": "pack_wide", "car": 0})
+	p.append({"t0": T_end - 3.0, "t1": T_end + 8.0, "type": "ghost_back", "car": 0})
 	return p
 
 # ───────────────────────────── ejecución
@@ -242,6 +244,8 @@ func _ghost_init() -> void:
 			_ghost_s = lead_s + 55.0
 		"ghost_hold":
 			_ghost_s = float(core.toll_s) + 55.0 if sh.has("s_off") else lead_s + 90.0
+		"ghost_close":
+			_ghost_s = core.pel.s[int(sh.get("car", 0))] + 44.0
 		"ghost_run":
 			_ghost_s = lead_s + 45.0
 
@@ -331,6 +335,17 @@ func _eval(sh: Dictionary, dt: float) -> Dictionary:
 			_ghost_s = lerpf(_ghost_s, want, 1.0 - exp(-dt * 2.0))
 			var gp := route_pt(_ghost_s, 0.9 * sin(u * 0.5), 1.5 + 0.4 * sin(u * 0.8))
 			return {"pos": gp, "look": pack_center() + Vector3(0, 0.5, 0), "fov": 66.0, "smooth": 6.0}
+		"ghost_close": # el fantasma va por delante de un auto elegido: ese auto se le acerca despacio y al final lo pasa
+			var kk: int = k
+			var prog := clampf(u / maxf(d_s, 1.0), 0.0, 1.0)
+			var dist := lerpf(44.0, 11.0, prog * prog)
+			_ghost_s = core.pel.s[kk] + dist
+			var lat_c: float = core.pel.lat[kk]
+			var hw_g := hw_at(_ghost_s) - 0.4
+			var side_g := -1.0 if lat_c > 0.0 else 1.0 # del lado opuesto al auto: nunca en su camino
+			var gp3 := route_pt(_ghost_s, clampf(lat_c + side_g * 3.0, -hw_g, hw_g), 0.75 + 0.5 * prog)
+			var tgt_c := car_pos(kk) + Vector3(0, 0.55, 0)
+			return {"pos": gp3, "look": tgt_c, "fov": lerpf(58.0, 74.0, prog), "smooth": 7.0, "min_h": 0.35}
 		"ghost_hold": # el fantasma queda quieto en la ruta (a ras del suelo, en la banquina) y el pelotón lo pasa
 			var side := 1.0
 			var sf2: float = _ghost_s
