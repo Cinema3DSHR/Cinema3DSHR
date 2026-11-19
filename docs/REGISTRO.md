@@ -866,3 +866,16 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   funcione.
 - p012: el BLEND original sigue intacto (SHA-256 `3b36dda3…6b00`). Sin aprobación explícita de producción todavía:
   nada publicado ni ejecutado.
+
+## 19/11/2026 — Verificación del transporte por Git LFS (sin producción)
+
+- Repo `Cinema3DSHR/Cinema3DSHR`, rama `claude/inspiring-sagan-1ogr0n`.
+- `.claude/settings.json` (regla `Bash(git lfs *)`): lo creó el dueño en GitHub (commit `1e7b2b3`). Se llevó también a
+  la rama por defecto `ccr-6d21fe8a-76t9c3` (avance directo) para que lo lean las sesiones nuevas.
+- Git LFS 3.4.1, endpoint `https://github.com/Cinema3DSHR/Cinema3DSHR.git/info/lfs`. La autenticación la pone el
+  proxy del entorno.
+- Prueba segura:
+  - un objeto de prueba de 58 bytes subido con `git lfs push --object-id` (sin commit, no queda en el historial);
+  - bajado en un repo temporal con `git lfs smudge`: idéntico byte a byte.
+  - Conectividad, autenticación y permisos OK.
+- No se tocó la escena, no se subió el BLEND de p012, no se publicó nada ni se ejecutó ningún flujo.

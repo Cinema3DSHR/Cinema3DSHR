@@ -128,8 +128,9 @@ corra solo (ver «Configuración técnica requerida» abajo).
 | Requisito | Para qué | Estado |
 |---|---|---|
 | Hosts `lfs.github.com` y `github-cloud.s3.amazonaws.com` en la red del entorno | subir el BLEND a Git LFS | **listo** (19/11/2026) |
-| Permiso de la sesión para `git lfs …` (regla `Bash(git lfs *)`) | que la subida no la frene el control de permisos | **falta**: Claude no puede darse permisos a sí mismo; lo agrega el dueño una vez |
-| `incorporar_blend.yml` y `render_desde_blend.yml` en la rama por defecto | poder lanzar los flujos | ver `docs/REGISTRO.md` |
+| Permiso de la sesión para `git lfs …` (regla `Bash(git lfs *)`) | que la subida no la frene el control de permisos | **listo**: `.claude/settings.json` creado por el dueño (commit `1e7b2b3`), también en la rama por defecto |
+| `incorporar_blend.yml` y `render_desde_blend.yml` en la rama por defecto | poder lanzar los flujos | **listo** (activos en GitHub) |
+| Prueba de transferencia LFS | confirmar subida y bajada | **hecha** (19/11/2026): objeto de prueba de 58 B subido y bajado idéntico, sin commit |
 
 ## 7. Configuración obligatoria del render
 
