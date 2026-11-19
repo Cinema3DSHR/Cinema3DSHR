@@ -19,6 +19,10 @@ producciones: no proponer otros flujos ni volver a preguntar qué modalidad usar
 - **Render obligatorio:** 1280×720 a 30 fps, Cycles en CPU, 6 muestras, adaptativo 0,05, OpenImageDenoise, 6 rebotes,
   Light Tree, semilla fija y hasta 60 trabajos. Nunca 1920×1080.
 - **Al dueño no se le piden operaciones técnicas:** ni subir archivos, ni crear Releases, ni transferencias.
+- **AUTORIZACIÓN:** «APROBADA» = autorización completa de producción de esa versión: registro, LFS, verificación,
+  Release, Actions, reparto, render a 720p/30, montaje y entrega, sin volver a preguntar nada
+  (`docs/METODOLOGIA.md` §6 bis). Si el entorno bloquea un permiso técnico: no esquivarlo, no pedir otra aprobación,
+  decir exactamente qué permiso falta y detenerse ahí.
 
 ## Repositorios
 - **Desde el 19/11/2026 este repositorio está dedicado a «A la deriva» (`producciones/p011_a_la_deriva`)** más las

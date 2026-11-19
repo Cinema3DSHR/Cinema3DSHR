@@ -97,6 +97,40 @@ revisada. No hay una segunda aprobación en GitHub. Pasos:
 
 Después de la aprobación nunca se reconstruye la escena ni se corre el AutoFinisher para producir algo distinto.
 
+## 6 bis. Sistema de autorización (dueño, 19/11/2026, permanente)
+
+**Una aprobación visual = autorización completa de producción.** Cuando el dueño dice «APROBADA» para una escena, esa
+frase autoriza, sin volver a preguntar, toda la producción de ESA versión:
+
+1. registrar la versión y su hash;
+2. transferir el BLEND por Git LFS;
+3. verificar la integridad;
+4. publicar la Release;
+5. ejecutar GitHub Actions;
+6. repartir los trabajos;
+7. renderizar en Cycles a 1280×720 y 30 fps;
+8. montar y verificar el MP4;
+9. entregarle el resultado.
+
+No se pide aprobación por separado para la subida, la transferencia, la publicación, Actions ni el render.
+
+Si el entorno bloquea una operación por un permiso técnico:
+
+- no se esquiva;
+- no se le pide al dueño que vuelva a aprobar la escena;
+- se le dice exactamente qué permiso falta y se detiene el proceso en ese punto.
+
+Es responsabilidad de Claude dejar resuelta ANTES la configuración necesaria para que, después de la aprobación, todo
+corra solo (ver «Configuración técnica requerida» abajo).
+
+### Configuración técnica requerida (estado)
+
+| Requisito | Para qué | Estado |
+|---|---|---|
+| Hosts `lfs.github.com` y `github-cloud.s3.amazonaws.com` en la red del entorno | subir el BLEND a Git LFS | **listo** (19/11/2026) |
+| Permiso de la sesión para `git lfs …` (regla `Bash(git lfs *)`) | que la subida no la frene el control de permisos | **falta**: Claude no puede darse permisos a sí mismo; lo agrega el dueño una vez |
+| `incorporar_blend.yml` y `render_desde_blend.yml` en la rama por defecto | poder lanzar los flujos | ver `docs/REGISTRO.md` |
+
 ## 7. Configuración obligatoria del render
 
 | | |
