@@ -2,6 +2,24 @@
 
 Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GUIA_PARA_OTRO_CHAT.md` (todo lo necesario sin auditar). Leer primero `docs/REGISTRO.md` (estado) y `docs/FLUJO_DE_PRODUCCION.md` (cómo producir).
 
+## METODOLOGÍA ÚNICA Y PERMANENTE (dueño, 19/11/2026) — `docs/METODOLOGIA.md`
+**Godot → Blender → GLB de revisión → aprobación → render final.** Es la única metodología autorizada para todas las
+producciones: no proponer otros flujos ni volver a preguntar qué modalidad usar, hasta que el dueño diga lo contrario.
+- **Godot:** estructura, animaciones, conexiones y cámaras. Se exporta a GLB.
+- **Blender:** luces, materiales, humo, niebla, efectos y Cycles. Lo visual se corrige en Blender; a Godot se vuelve
+  sólo por problemas de construcción o de animación, y eso es una versión nueva.
+- **Revisión:** al dueño se le manda el GLB exportado desde Blender, el JSON con la línea de tiempo y las cámaras, y
+  fotos fijas sólo de lo que el GLB no muestra. NUNCA el BLEND, NUNCA videos de muestra ni renders intermedios.
+- **«aprobada» / «está bien» / «renderizá»:** autoriza la producción de ESA versión.
+  1. SHA-256 del BLEND exacto del GLB revisado. Si cambió, detenerse y avisar.
+  2. `aprobar-blend`.
+  3. Git LFS (`producciones/<p>/blend/`).
+  4. `incorporar_blend.yml`: verifica, publica la Release y dispara `render_desde_blend.yml`.
+  No hay otra aprobación en GitHub y nunca se reconstruye.
+- **Render obligatorio:** 1280×720 a 30 fps, Cycles en CPU, 6 muestras, adaptativo 0,05, OpenImageDenoise, 6 rebotes,
+  Light Tree, semilla fija y hasta 60 trabajos. Nunca 1920×1080.
+- **Al dueño no se le piden operaciones técnicas:** ni subir archivos, ni crear Releases, ni transferencias.
+
 ## Repositorios
 - **Desde el 19/11/2026 este repositorio está dedicado a «A la deriva» (`producciones/p011_a_la_deriva`)** más las
   herramientas comunes y la prueba Godot → Blender (`pruebas/godot_blender`). Las demás producciones se borraron
@@ -68,8 +86,10 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
   original `pruebas/godot_blender/` no se toca.
 - **Modalidad 2 — BLEND externo aprobado** (docs/CONSTRUIR_Y_RENDERIZAR.md §5 bis): lo que el dueño aprueba en Blender
   es exactamente lo que se renderiza. `python -m estudio.autofinisher aprobar-blend` registra el SHA-256 en
-  `producciones/<p>/versiones/v<NNN>.aprobacion.json` (sin tocar el `.blend`) → `incorporar_blend.yml` baja el
-  archivo, verifica el hash, lo publica byte a byte y llama al render con ajustes bloqueados. Nunca reconstruir ni
+  `producciones/<p>/versiones/v<NNN>.aprobacion.json` (sin tocar el `.blend`) → el BLEND viaja por Git LFS a
+  `producciones/<p>/blend/<p>_v<NNN>.blend` (en el historial queda sólo el puntero; regla 5 respetada) →
+  `incorporar_blend.yml` lo baja de LFS, verifica el hash, lo publica byte a byte y llama al render con ajustes
+  bloqueados. Nunca reconstruir ni
   «arreglar» un BLEND aprobado: si no cumple el perfil 720p, se rechaza y se avisa.
 
 ## Revisión rápida en el navegador (visor HTML)

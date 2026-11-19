@@ -150,11 +150,15 @@ Pasos:
    - Escribe `producciones/<p>/versiones/v<NNN>.aprobacion.json` con el SHA-256, los bytes, el perfil, la inspección y
      la frase del dueño. Un registro no se sobrescribe.
    - Se hace commit del registro (es texto). El `.blend` nunca va a Git.
-2. **El archivo tiene que estar donde la nube lo pueda bajar** (entrada `origen` del flujo):
-   - `release:<tag>/<archivo>`: el `.blend` subido como archivo de una Release de entrada (p. ej. `entrada-<p>-v<NNN>`);
-   - `url:<https://…>`: cualquier enlace directo de descarga.
-
-   El camino no importa: el flujo compara el SHA-256 con el del registro y se detiene si no es idéntico.
+2. **Transporte (lo hace Claude, nunca el dueño): Git LFS.**
+   - El `.blend` aprobado se copia a `producciones/<p>/blend/<p>_v<NNN>.blend` y se hace commit y push. Por
+     `.gitattributes`, en el historial queda sólo el puntero LFS y el archivo va al almacenamiento LFS de GitHub
+     (regla 5 respetada).
+   - Hacen falta los hosts `lfs.github.com` y `github-cloud.s3.amazonaws.com` en la red del entorno: agregados el
+     19/11/2026.
+   - Por defecto `incorporar_blend.yml` lo toma de ahí (entrada `origen` vacía). Otras entradas posibles, sólo si el
+     dueño lo pide: `lfs:<ruta>`, `release:<tag>/<archivo>`, `url:<https://…>`.
+   - Sea cual sea el camino, el flujo compara el SHA-256 con el del registro y se detiene si no es idéntico.
 3. **`incorporar_blend.yml`** (entradas `aprobacion`, `origen`, `publicar`, `renderizar`, `trabajos`):
    1. Lee el registro.
    2. Se niega si la Release `blend-<p>-v<NNN>` ya existe.

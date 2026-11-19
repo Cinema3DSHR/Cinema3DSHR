@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       aprobacion: {description: "Registro de aprobación del repo (producciones/<p>/versiones/v<NNN>.aprobacion.json)", required: true}
-      origen: {description: "De dónde bajar el .blend: release:<tag>/<archivo> o url:<https://…>", required: true}
+      origen: {description: "De dónde bajar el .blend: vacío = Git LFS en producciones/<p>/blend/<id>.blend (lo normal); o lfs:<ruta>, release:<tag>/<archivo>, url:<https://…>", required: false, default: ""}
       publicar: {description: "Publicar la versión en su Release (false = sólo artefacto para revisar)", required: false, default: "true"}
       renderizar: {description: "Llamar al render apenas se publica (requiere publicar=true)", required: false, default: "true"}
       trabajos: {description: "Trabajos de render (máx. 60)", required: false, default: "60"}
@@ -78,7 +78,17 @@ jobs:
         run: |
           set -e
           mkdir -p entrada
+          if [ -z "$ORIGEN" ]; then      # lo normal: el BLEND aprobado viajó por Git LFS al lado del registro
+            ORIGEN="lfs:$(dirname "$(dirname "$APROB")")/blend/${{ steps.reg.outputs.id }}.blend"
+          fi
+          echo "origen: $ORIGEN"
           case "$ORIGEN" in
+            lfs:*)
+              RUTA="${ORIGEN#lfs:}"
+              git lfs install --local >/dev/null
+              git lfs pull --include "$RUTA"
+              head -c 200 "$RUTA" | grep -q "git-lfs.github.com/spec" && { echo "::error::$RUTA sigue siendo un puntero LFS: el objeto no está en el almacenamiento"; exit 1; }
+              cp "$RUTA" entrada/aprobado.blend ;;
             release:*)
               R="${ORIGEN#release:}"; TAGE="${R%%/*}"; ARCH="${R#*/}"
               gh release download "$TAGE" --repo "$REPO" -p "$ARCH" -D entrada

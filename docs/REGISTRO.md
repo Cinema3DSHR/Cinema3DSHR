@@ -846,3 +846,23 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   render.
 - **Falta definir:** cómo llega el `.blend` a la nube (Release de entrada subida a mano o un enlace directo). Desde la
   sesión no hay una herramienta para subir archivos a una Release.
+
+## 19/11/2026 — Metodología única y permanente (dueño) + transporte del BLEND aprobado por Git LFS
+
+- El dueño fijó la metodología definitiva para todas las producciones: `docs/METODOLOGIA.md` (resumen al principio de
+  `CLAUDE.md`).
+  - Godot construye la estructura, las animaciones y las cámaras.
+  - Blender hace la terminación artística: lo visual se corrige ahí, sin volver a Godot.
+  - El dueño revisa sólo el GLB exportado desde Blender, más el JSON y fotos fijas de lo que el GLB no muestra.
+    Nunca el BLEND, nunca videos de muestra.
+  - Con «aprobada» se renderiza el BLEND exacto, verificado por SHA-256.
+  - Render 1280×720 a 30 fps, Cycles CPU, 6 muestras, hasta 60 trabajos.
+- Transporte del BLEND a la nube sin intervención del dueño: Git LFS en `producciones/<p>/blend/` (`.gitattributes`);
+  `incorporar_blend.yml` lo toma de ahí por defecto.
+- Red del entorno: el proxy bloqueaba `lfs.github.com`. Con aprobación del dueño se agregaron `lfs.github.com` y
+  `github-cloud.s3.amazonaws.com` a los hosts permitidos del entorno Default.
+- **Pendiente:** la primera subida real a LFS no se pudo probar. El control de permisos de la sesión bloqueó la prueba
+  de subida con un objeto chico. Hace falta que el dueño permita `git lfs push` en esta sesión para que el paso 6
+  funcione.
+- p012: el BLEND original sigue intacto (SHA-256 `3b36dda3…6b00`). Sin aprobación explícita de producción todavía:
+  nada publicado ni ejecutado.

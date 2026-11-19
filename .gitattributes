@@ -1,0 +1,2 @@
+# BLEND aprobados que viajan a la nube para el render (docs/METODOLOGIA.md §6): en Git queda sólo el puntero LFS
+producciones/*/blend/*.blend filter=lfs diff=lfs merge=lfs -text
