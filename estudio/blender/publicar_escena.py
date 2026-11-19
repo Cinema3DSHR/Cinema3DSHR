@@ -174,9 +174,15 @@ def preparar(ruta_escena: str, salida: str, ensayo: bool = False) -> dict:
     s.frame_set(1)
     s.camera = res["tomas"][0]["camara"]
     with crono.etapa("empaquetar"):
+        # datos que ninguna cosa de la escena usa (p. ej. los materiales que trae el FBX de un pelo, cuyas mallas se
+        # borran al importarlo): no se ven en el render y algunos apuntan a texturas que no existen
+        huerfanos = bpy.data.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
         emp = AP.empaquetar()
     if not emp["autonomo"]:
-        raise SystemExit(f"El BLEND no queda autónomo, hay recursos afuera: {emp['externos'][:10]}")
+        usos = {n.split(":", 1)[1]: [u.name for u in bpy.data.user_map(subset=[bpy.data.images[n.split(":", 1)[1]]])
+                                     [bpy.data.images[n.split(":", 1)[1]]]]
+                for n in emp["externos"] if n.startswith("imagen:") and n.split(":", 1)[1] in bpy.data.images}
+        raise SystemExit(f"El BLEND no queda autónomo, hay recursos afuera: {emp['externos'][:10]} (los usan: {usos})")
     with crono.etapa("guardar_blend"):
         D.guardar_blend(out / nb["blend"])
     shutil.copy(ruta_escena, out / nb["escena"])
@@ -206,6 +212,7 @@ def preparar(ruta_escena: str, salida: str, ensayo: bool = False) -> dict:
         "control": {"objetos_con_formas": formas, "caderas": {k: list(v) for k, v in caderas.items()},
                     "cuadros": control},
         "dependencias_externas": emp["externos"], "empaquetados": len(emp["empaquetados"]),
+        "datos_sin_uso_eliminados": huerfanos,
         "versiones": {"blender": bpy.app.version_string, "commit": _commit()},
         "tiempos": {"etapas": crono.etapas, "total_s": crono.total(), "ram_max_mb": MD.ram_max_mb()},
     }
