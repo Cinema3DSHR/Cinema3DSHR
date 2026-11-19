@@ -1,0 +1,97 @@
+{
+ "formato": "estudio.audio_narracion/1",
+ "voz": "Yuli - Warm, Natural (9b3epFpN8VNQyCsbs3ER)",
+ "tomas": {
+  "b01_gancho": {
+   "archivo": "voz_1c6c275a1dfb539f.mp3",
+   "dur_s": 4.21,
+   "empieza_s": 0.15,
+   "termina_s": 4.36
+  },
+  "b02_terreno": {
+   "archivo": "voz_7830635e3dd088a4.mp3",
+   "dur_s": 6.27,
+   "empieza_s": 5.85,
+   "termina_s": 12.12
+  },
+  "b03_fachada": {
+   "archivo": "voz_7fcb6e00539d3521.mp3",
+   "dur_s": 5.28,
+   "empieza_s": 13.35,
+   "termina_s": 18.63
+  },
+  "b04_sala": {
+   "archivo": "voz_8d57b4e18bcfed37.mp3",
+   "dur_s": 6.82,
+   "empieza_s": 19.65,
+   "termina_s": 26.47
+  },
+  "b05_pared": {
+   "archivo": "voz_49d1e7d9749a0883.mp3",
+   "dur_s": 5.46,
+   "empieza_s": 27.75,
+   "termina_s": 33.21
+  },
+  "b06_comedor": {
+   "archivo": "voz_2d7b6676efd25125.mp3",
+   "dur_s": 6.09,
+   "empieza_s": 33.92,
+   "termina_s": 40.01
+  },
+  "b07_cocina": {
+   "archivo": "voz_81937d7045c7ff4a.mp3",
+   "dur_s": 8.54,
+   "empieza_s": 41.62,
+   "termina_s": 50.16
+  },
+  "b08_principal": {
+   "archivo": "voz_5c2a3d88324439f2.mp3",
+   "dur_s": 7.42,
+   "empieza_s": 51.32,
+   "termina_s": 58.74
+  },
+  "b09_visitas": {
+   "archivo": "voz_a61d7da668159e16.mp3",
+   "dur_s": 3.29,
+   "empieza_s": 60.62,
+   "termina_s": 63.91
+  },
+  "b09b_estudio": {
+   "archivo": "voz_760a8776cb1e3d76.mp3",
+   "dur_s": 3.19,
+   "empieza_s": 64.45,
+   "termina_s": 67.64
+  },
+  "b10_bano": {
+   "archivo": "voz_70fecb0a0062489d.mp3",
+   "dur_s": 4.86,
+   "empieza_s": 68.62,
+   "termina_s": 73.48
+  },
+  "b11_jardin": {
+   "archivo": "voz_7b6fa14b6de5c4d1.mp3",
+   "dur_s": 5.02,
+   "empieza_s": 73.99,
+   "termina_s": 79.01
+  },
+  "b12_cochera": {
+   "archivo": "voz_8e549e484399c809.mp3",
+   "dur_s": 4.08,
+   "empieza_s": 80.56,
+   "termina_s": 84.64
+  },
+  "b13_noche": {
+   "archivo": "voz_0db52722349c4142.mp3",
+   "dur_s": 3.89,
+   "empieza_s": 85.86,
+   "termina_s": 89.75
+  },
+  "b14_cierre": {
+   "archivo": "voz_324909d489eb6957.mp3",
+   "dur_s": 7.05,
+   "empieza_s": 91.03,
+   "termina_s": 98.08
+  }
+ },
+ "nota": "cada clip entra 0,15 s después del inicio de su toma y termina antes que ella; sin música, sin acelerar ni normalizar"
+}

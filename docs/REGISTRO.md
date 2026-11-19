@@ -899,3 +899,15 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   resolución del Reel es 720×1280 (vertical, mismos píxeles que 1280×720): el perfil obligatorio del estudio dice 1280×720 y
   `aprobar-blend` lo rechazaría; hace falta que el dueño confirme la excepción vertical antes de aprobar.
 - Sin audio todavía: los tiempos de las tomas son estimados. Nada publicado, ninguna Release, ningún Actions.
+
+## 19/11/2026 — p013 «Mi hogar ideal» v001 APROBADA por el dueño → producción
+
+- Frase del dueño: «la escena esta Aprobada.» + indicó la voz «Yuli - Warm, Natural» (`9b3epFpN8VNQyCsbs3ER`) y el formato vertical.
+- Voz: estaba en la biblioteca compartida de ElevenLabs (no en «Mis voces»); se agregó a la cuenta (gratis) y se generaron 15
+  clips, uno por toma (1290 caracteres de 20 479 disponibles; presupuesto respetado). Todos duran menos que su toma, así que
+  el video aprobado NO cambia: cada clip entra 0,15 s después del inicio de su toma (`audio/narracion_v001.m4a`, sin música,
+  sin acelerar ni normalizar).
+- Formato: se agregó `PERFIL_VERTICAL` (720×1280, todo lo demás igual al perfil obligatorio) a `blend_externo.py`; sólo se
+  elige si la producción declara `720x1280`. Prueba `test_blend_externo.py`: 20/20.
+- BLEND aprobado: SHA-256 `dced75ce…c435`, 33 880 174 bytes (el mismo del que se exportó el GLB revisado; sin cambios).
+  Registro: `producciones/p013_mi_hogar_ideal/versiones/v001.aprobacion.json`. Transporte por Git LFS.

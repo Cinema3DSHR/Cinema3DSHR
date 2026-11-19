@@ -1,0 +1,12 @@
+{
+  "tipo": "produccion",
+  "id": "p013_mi_hogar_ideal",
+  "titulo": "Mi hogar ideal",
+  "clase": "reel",
+  "formato": {"aspecto": "9:16", "resolucion": "720x1280", "fps": 30, "duracion_s": 99.5},
+  "estado": "aprobada_v001",
+  "audio": "narradora invisible: voz «Yuli - Warm, Natural» (ElevenLabs 9b3epFpN8VNQyCsbs3ER), un clip por toma; sin música",
+  "origen": {"godot": "godot/ (escena/principal.tscn, herramientas/principal.gd) + disenio.py -> layout.json",
+             "blender": "blender/construir.py (terminación) + blender/exportar_previa.py (GLB de revisión)"},
+  "nota_formato": "Vertical 9:16 a 720x1280 (mismos píxeles que 1280x720), confirmado por el dueño el 19/11/2026; PERFIL_VERTICAL en estudio/autofinisher/blend_externo.py"
+}

@@ -192,8 +192,9 @@ def superficies():
         elif n in ("piedra", "hormigon", "hormigon_piso", "vereda", "piso_piedra"):
             b.inputs["Roughness"].default_value = 0.88
         elif n == "piso_madera":
-            b.inputs["Roughness"].default_value = 0.42
-            b.inputs["Coat Weight"].default_value = 0.25
+            b.inputs["Base Color"].default_value = (0.2, 0.115, 0.06, 1)
+            b.inputs["Roughness"].default_value = 0.5
+            b.inputs["Coat Weight"].default_value = 0.12
             b.inputs["Coat Roughness"].default_value = 0.15
         elif n in ("acero", "marco"):
             b.inputs["Metallic"].default_value = 1.0 if n == "acero" else 0.6
@@ -282,9 +283,9 @@ def material_hojas():
     nt.links.new(tc.outputs["Object"], rr.inputs["Vector"])
     rampa = nt.nodes.new("ShaderNodeValToRGB")
     rampa.color_ramp.elements[0].position = 0.35
-    rampa.color_ramp.elements[0].color = (0.55, 0.65, 0.4, 1)
+    rampa.color_ramp.elements[0].color = (0.16, 0.26, 0.09, 1)
     rampa.color_ramp.elements[1].position = 0.72
-    rampa.color_ramp.elements[1].color = (1.25, 1.2, 0.85, 1)
+    rampa.color_ramp.elements[1].color = (0.45, 0.5, 0.18, 1)
     nt.links.new(rr.outputs["Fac"], rampa.inputs["Fac"])
     mul = nt.nodes.new("ShaderNodeMix")
     mul.data_type = "RGBA"
@@ -425,8 +426,8 @@ def cielo_y_sol():
     nt.links.new(sky.outputs["Color"], fondo.inputs["Color"])
     nt.links.new(fondo.outputs[0], out.inputs["Surface"])
     # curva solar: (segundo, elevación, intensidad del fondo, densidad de neblina)
-    curva = [(0.0, 48.0, 1.0, 0.0006), (60.0, 38.0, 1.0, 0.0006), (74.0, 24.0, 1.0, 0.0012), (80.0, 12.0, 0.9, 0.0018),
-             (85.0, 4.0, 0.8, 0.0026), (88.5, -3.0, 0.7, 0.0045), (91.0, -9.0, 0.55, 0.006), (99.5, -14.0, 0.5, 0.007)]
+    curva = [(0.0, 48.0, 0.5, 0.0006), (60.0, 38.0, 0.5, 0.0006), (74.0, 24.0, 0.5, 0.0012), (80.0, 12.0, 0.5, 0.0018),
+             (85.0, 4.0, 0.6, 0.0026), (88.5, -3.0, 0.7, 0.0045), (91.0, -9.0, 0.55, 0.006), (99.5, -14.0, 0.5, 0.007)]
     sol = bpy.data.objects.get("Luz_sol")
     if sol is None:
         d = bpy.data.lights.new("Luz_sol", "SUN")
@@ -447,7 +448,7 @@ def cielo_y_sol():
         # intensidad y color: dorado al bajar, se apaga bajo el horizonte
         calidez = max(0.0, min(1.0, (48.0 - el) / 44.0))
         sol.data.color = (1.0, 0.93 - 0.35 * calidez, 0.82 - 0.55 * calidez)
-        sol.data.energy = 0.0 if el <= -1.0 else (4.2 * (0.45 + 0.55 * min(1.0, el / 25.0)) if el > 0 else 0.6)
+        sol.data.energy = 0.0 if el <= -1.0 else (3.0 * (0.45 + 0.55 * min(1.0, el / 25.0)) if el > 0 else 0.6)
         sol.data.keyframe_insert("color", frame=f(t))
         sol.data.keyframe_insert("energy", frame=f(t))
     # luna: azul suave que aparece con el anochecer
@@ -624,7 +625,7 @@ def bruma(col):
     nt.links.new(pv.outputs[0], out.inputs["Volume"])
     sock = pv.inputs["Density"]
     for t, d in BRUMA:
-        sock.default_value = d * 0.35
+        sock.default_value = d * 0.15
         sock.keyframe_insert("default_value", frame=f(t))
     c.data.materials.append(m)
     return c.name
@@ -708,7 +709,9 @@ def cycles(s):
     s.render.use_persistent_data = True
     s.view_settings.view_transform = "AgX"
     s.view_settings.look = "AgX - Medium High Contrast"
-    s.view_settings.exposure = 0.0
+    for t, ex in ((0.0, -0.9), (74.0, -0.9), (82.0, -0.4), (88.0, 0.0), (99.5, 0.0)):   # el día entra más claro que la noche
+        s.view_settings.exposure = ex
+        s.view_settings.keyframe_insert("exposure", frame=f(t))
     c = s.cycles
     c.device = "CPU"
     c.samples = 6

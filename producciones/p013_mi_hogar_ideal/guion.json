@@ -4,7 +4,7 @@
  "titulo": "Mi hogar ideal",
  "narradora": {
   "voice_id": "9b3epFpN8VNQyCsbs3ER",
-  "estado": "BLOQUEADA: ese id no existe en la cuenta de ElevenLabs (voice_not_found). Falta agregarla a «Mis voces» o enviar el audio. No se generó nada ni se inventó otra voz.",
+  "estado": "LISTA: voz «Yuli - Warm, Natural» agregada a Mis voces el 19/11/2026 (indicada por el dueño); 15 clips generados (1290 caracteres), todos más cortos que su toma.",
   "modelo": "eleven_multilingual_v2",
   "ajustes": {
    "stability": 0.42,

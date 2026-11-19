@@ -44,6 +44,15 @@ PERFIL_720P = {
     "arbol_de_luces": True,
     "semilla_animada": False,
 }
+# Variante vertical 9:16 (Reels/Shorts), autorizada por el dueño el 19/11/2026 para p013: misma cantidad de píxeles que
+# 1280×720 (720×1280) y todo lo demás idéntico. Sólo se elige si la producción declara «720x1280» en su formato.
+PERFIL_VERTICAL = {**PERFIL_720P, "resolucion": [720, 1280]}
+
+
+def perfil_de(formato: dict | None) -> dict:
+    """Perfil de producción que corresponde al formato declarado (por defecto, el 720p horizontal obligatorio)."""
+    res = str((formato or {}).get("resolucion", "")).lower().replace(" ", "")
+    return PERFIL_VERTICAL if res == "720x1280" else PERFIL_720P
 
 
 # ── inspección de sólo lectura (bpy) ─────────────────────────────────────────────────────────────────────────────
@@ -162,7 +171,7 @@ def registro(produccion: str, version: int, blend: str | Path, insp: dict, nota:
             "fecha_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "regla": "se renderiza exactamente este archivo (mismo SHA-256), sin reconstruir ni modificar nada",
         },
-        "perfil_render": PERFIL_720P,
+        "perfil_render": perfil_de(formato),
         "formato_produccion": formato or {},
         "inspeccion": {k: v for k, v in insp.items() if k not in ("empaquetados",)} | {"empaquetados": len(insp["empaquetados"])},
     }
@@ -241,7 +250,7 @@ def aprobar(blend: str, raiz_produccion: str, version: int, nota: str) -> dict:
     if destino.exists():
         raise FileExistsError(f"{destino} ya existe: una aprobación no se sobrescribe (otra versión = otro número)")
     insp = inspeccionar(blend)
-    err = problemas(insp, PERFIL_720P, prod_json.get("formato"))
+    err = problemas(insp, perfil_de(prod_json.get("formato")), prod_json.get("formato"))
     if err:
         raise SystemExit("El .blend no se puede aprobar para render tal cual:\n  - " + "\n  - ".join(err))
     reg = registro(produccion, version, blend, insp, nota, prod_json.get("formato"))
@@ -267,7 +276,7 @@ def incorporar(blend: str, ruta_registro_aprobacion: str, salida: str) -> dict:
     if out.exists() and any(out.iterdir()):
         raise FileExistsError(f"{out} ya existe y tiene archivos: una versión no se sobrescribe")
     insp = inspeccionar(blend)
-    err = problemas(insp, PERFIL_720P, reg.get("formato_produccion"))
+    err = problemas(insp, perfil_de(reg.get("formato_produccion")), reg.get("formato_produccion"))
     if err:
         raise SystemExit("INCORPORACIÓN DETENIDA: " + "; ".join(err))
     out.mkdir(parents=True, exist_ok=True)
