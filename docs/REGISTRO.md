@@ -911,3 +911,12 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   elige si la producción declara `720x1280`. Prueba `test_blend_externo.py`: 20/20.
 - BLEND aprobado: SHA-256 `dced75ce…c435`, 33 880 174 bytes (el mismo del que se exportó el GLB revisado; sin cambios).
   Registro: `producciones/p013_mi_hogar_ideal/versiones/v001.aprobacion.json`. Transporte por Git LFS.
+
+## 19/11/2026 — p013 «Mi hogar ideal» v001: render final entregado
+
+- Corrida `incorporar_blend.yml` 44530912559: hash del BLEND verificado, Release `blend-p013_mi_hogar_ideal-v001` publicada,
+  60 trabajos de render (0 fallos, 0 reintentos), 2985/2985 cuadros, 720×1280 a 30 fps, 99,5 s.
+  MP4 sin audio en la Release: `p013_mi_hogar_ideal_v001_final.mp4` (44 MB) + informe.
+- Montaje con voz: `ffmpeg` copia el video (sin recodificar) y suma `audio/narracion_v001.m4a` (clips de la voz Yuli en el
+  inicio de cada toma + 0,15 s; sin música, sin acelerar, sin normalizar). Se entregó al dueño por el chat. No se pudo subir
+  a la Release: `gh release upload` usa GraphQL y el entorno lo bloquea (permiso técnico que falta; no se esquivó).
