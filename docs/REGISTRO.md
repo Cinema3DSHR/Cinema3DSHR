@@ -653,3 +653,7 @@ Probado headless + capturas con Xvfb. **No probado en un teléfono.**
 - Previa liviana: captura en tiempo real del visor de Godot (no es Cycles), 8 MB, más un GLB liviano de 2 MB.
 - GLB, .blend, previa y proyecto comprimido se mandaron por el chat (no van a Git). No se hizo ningún render ni se usó
   Actions.
+- Render ordenado por el dueño en el chat («renderizala con 60 trabajos a 720p»): flujo nuevo
+  `render_prueba_godot_blender.yml`. Arma todo desde cero en un trabajo (Kodiak de Rally-Sim-movile main → Godot → GLB
+  → Blender), reparte los 900 cuadros en 60 trabajos a 720x1280, 6 muestras (`blender/render_trozo.py`), y monta y
+  publica el MP4 en la release `prueba_godot_blender`.
