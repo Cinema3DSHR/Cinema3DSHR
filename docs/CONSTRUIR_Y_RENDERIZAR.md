@@ -119,6 +119,61 @@ informe registra la recuperación.
 La construcción mide: instalación, recursos (MB y s), Godot → GLB, cada etapa del AutoFinisher con su RAM máxima,
 tamaños del GLB y del `.blend`, y el total hasta publicar.
 
+## 5 bis. Modalidad 2 — incorporar un BLEND ya preparado y aprobado (`incorporar_blend.yml`)
+
+Para cuando la escena se terminó a mano en Blender y el dueño aprobó **ese archivo**. Regla: lo que el dueño aprueba
+visualmente en Blender es exactamente lo que se renderiza. No se instala Godot, no corre el AutoFinisher, no se
+reconstruye ni se modifica nada: la identidad del archivo es su **SHA-256**.
+
+Las dos modalidades conviven:
+
+| | Modalidad 1 (AutoFinisher) | Modalidad 2 (BLEND externo) |
+|---|---|---|
+| Origen del `.blend` | Godot → GLB → AutoFinisher en la nube | el archivo aprobado, byte a byte |
+| Flujo de publicación | `construir_produccion.yml` | `incorporar_blend.yml` |
+| Manifiesto | `estudio.version_blend/1` | el mismo formato, con `origen: blend_externo` y `ajustes_bloqueados: true` |
+| Render | `render_desde_blend.yml` (a mano) | `render_desde_blend.yml`, llamado solo al publicar |
+| Cambiar resolución o muestras al renderizar | se puede (el informe lo dice) | **no**: se renderiza con lo aprobado |
+
+Pasos:
+
+1. **Aprobación (en la sesión, cuando el dueño dice «aprobada»).**
+   ```bash
+   $PY -m estudio.autofinisher aprobar-blend --blend X.blend --produccion producciones/<p> --version N --nota "<frase del dueño>"
+   ```
+   - Abre el `.blend` en **sólo lectura** (nunca guarda ni empaqueta) y lo rechaza si:
+     - no es autónomo (textura, sonido, fuente o biblioteca externos);
+     - no tiene cámara activa;
+     - su rango de cuadros no da la duración de `produccion.json`;
+     - su configuración no es el perfil de producción `PERFIL_720P`: Cycles CPU, 1280×720 al 100 %, 30 fps,
+       6 muestras, adaptativo 0,05, OpenImageDenoise, 6 rebotes, Light Tree y semilla fija.
+   - Escribe `producciones/<p>/versiones/v<NNN>.aprobacion.json` con el SHA-256, los bytes, el perfil, la inspección y
+     la frase del dueño. Un registro no se sobrescribe.
+   - Se hace commit del registro (es texto). El `.blend` nunca va a Git.
+2. **El archivo tiene que estar donde la nube lo pueda bajar** (entrada `origen` del flujo):
+   - `release:<tag>/<archivo>`: el `.blend` subido como archivo de una Release de entrada (p. ej. `entrada-<p>-v<NNN>`);
+   - `url:<https://…>`: cualquier enlace directo de descarga.
+
+   El camino no importa: el flujo compara el SHA-256 con el del registro y se detiene si no es idéntico.
+3. **`incorporar_blend.yml`** (entradas `aprobacion`, `origen`, `publicar`, `renderizar`, `trabajos`):
+   1. Lee el registro.
+   2. Se niega si la Release `blend-<p>-v<NNN>` ya existe.
+   3. Baja el archivo y verifica tamaño y SHA-256 contra el registro.
+   4. `incorporar`: vuelve a inspeccionar, copia byte a byte, arma el manifiesto y el informe y verifica la copia.
+   5. `validar`: lo mismo que antes de cada render.
+   6. Publica la Release con el `.blend`, `manifest.json`, `informe_preparacion.json` y `aprobacion.json`.
+   7. Llama a `render_desde_blend.yml` con 60 trabajos. El MP4 `<id>_final.mp4` y su informe se suman a la misma
+      Release.
+4. **Render.** Cada trabajo verifica el SHA-256 del `.blend` contra el manifiesto antes de abrirlo. Con
+   `ajustes_bloqueados`, el reparto rechaza cualquier resolución o cantidad de muestras distinta de la aprobada. Nunca
+   se rellenan cuadros.
+
+La frase del dueño queda en el registro: no hay una segunda aprobación en GitHub.
+
+Prueba sin render: `/opt/tools/blendenv/bin/python pruebas/autofinisher/test_blend_externo.py` (19 casos: archivo
+intacto, copia idéntica, validación, render por trozos sin render y los rechazos: otro archivo, un byte cambiado,
+1920×1080, 12 muestras, textura externa, aprobación repetida, versión existente).
+
 ## 6. Estado
 
 Los dos flujos están **preparados y no se ejecutaron nunca**: todavía no hay ninguna versión publicada, ningún

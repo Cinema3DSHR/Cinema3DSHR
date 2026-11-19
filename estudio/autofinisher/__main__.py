@@ -5,6 +5,10 @@ Con el Python de Blender (bpy):
   validar           --blend X.blend --manifiesto manifest.json
   render-trozo      --blend --manifiesto (--desde A --hasta B | --cuadros LISTA) --ancho --alto --muestras --salida
                     [--reintentos 1] [--sin-render]
+  aprobar-blend     --blend X.blend --produccion DIR --version N --nota "frase del dueño"
+                    MODALIDAD 2: registra la aprobación de un .blend ya preparado (SHA-256, perfil 720p); no lo toca
+  incorporar        --blend X.blend --aprobacion REG.json --salida DIR
+                    MODALIDAD 2: comprueba hash y perfil, arma la versión (copia byte a byte + manifiesto) sin Godot
 Con Python común (sin bpy):
   receta            --receta R.json                         valida la receta y muestra los valores completos
   verificar-blend   --manifiesto M --blend X.blend          tamaño y SHA-256 contra el manifiesto
@@ -41,6 +45,10 @@ def main(argv=None):
     for a in ("--ancho", "--alto", "--muestras"):
         p.add_argument(a, type=int, required=True)
     p.add_argument("--reintentos", type=int, default=1); p.add_argument("--sin-render", action="store_true")
+    p = sub.add_parser("aprobar-blend"); p.add_argument("--blend", required=True); p.add_argument("--produccion", required=True)
+    p.add_argument("--version", type=int, required=True); p.add_argument("--nota", required=True)
+    p = sub.add_parser("incorporar"); p.add_argument("--blend", required=True); p.add_argument("--aprobacion", required=True)
+    p.add_argument("--salida", required=True)
     p = sub.add_parser("receta"); p.add_argument("--receta", required=True)
     p = sub.add_parser("verificar-blend"); p.add_argument("--manifiesto", required=True); p.add_argument("--blend", required=True)
     p = sub.add_parser("reparto"); p.add_argument("--total", type=int, required=True); p.add_argument("--trabajos", type=int, required=True)
@@ -77,6 +85,12 @@ def main(argv=None):
         r = renderizar(a.blend, a.manifiesto, cuadros, a.ancho, a.alto, a.muestras, a.salida, a.reintentos, a.sin_render)
         _imprimir({k: r[k] for k in ("version", "cantidad", "procesados", "renderizados", "fallos", "reintentos", "media_s", "total_s", "ram_max_mb")})
         return 1 if r["fallos"] else 0
+    elif a.cmd == "aprobar-blend":
+        from estudio.autofinisher.blend_externo import aprobar
+        _imprimir(aprobar(a.blend, a.produccion, a.version, a.nota))
+    elif a.cmd == "incorporar":
+        from estudio.autofinisher.blend_externo import incorporar
+        _imprimir(incorporar(a.blend, a.aprobacion, a.salida))
     elif a.cmd == "receta":
         from estudio.autofinisher import receta as RC
         _imprimir(RC.leer(a.receta))

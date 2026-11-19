@@ -20,6 +20,20 @@ on:
       release_destino: {description: "Tag de la Release donde publicar el video (no se sobrescribe un archivo existente)", required: true}
       cuadros: {description: "RECUPERACIÓN: sólo estos cuadros (p. ej. 12,40-45); vacío = todos", required: false, default: ""}
       corrida_previa: {description: "RECUPERACIÓN: número de la corrida anterior cuyos cuadros se suman", required: false, default: ""}
+  # llamado por «Incorporar BLEND aprobado» (incorporar_blend.yml) apenas publica la versión: mismas entradas
+  workflow_call:
+    inputs:
+      produccion: {type: string, required: true}
+      version: {type: string, required: true}
+      ancho: {type: string, required: false, default: ""}
+      alto: {type: string, required: false, default: ""}
+      fps: {type: string, required: false, default: ""}
+      muestras: {type: string, required: false, default: ""}
+      trabajos: {type: string, required: false, default: "60"}
+      nombre_mp4: {type: string, required: true}
+      release_destino: {type: string, required: true}
+      cuadros: {type: string, required: false, default: ""}
+      corrida_previa: {type: string, required: false, default: ""}
 
 permissions:
   contents: write
@@ -81,6 +95,9 @@ jobs:
           assert fps == r["fps"], f"fps {fps} ≠ {r['fps']} del manifiesto: la animación está hecha a {r['fps']} fps"
           ancho = int(os.environ["IN_ANCHO"] or r["resolucion"][0]); alto = int(os.environ["IN_ALTO"] or r["resolucion"][1])
           muestras = int(os.environ["IN_MUESTRAS"] or r["muestras"]); total = r["cuadros"]
+          if m.get("ajustes_bloqueados"):    # BLEND externo aprobado: se renderiza con lo aprobado, sin cambios
+              assert [ancho, alto] == list(r["resolucion"]) and muestras == r["muestras"], \
+                  f"versión {m['id']} con ajustes bloqueados (origen {m.get('origen')}): resolución {r['resolucion']} y {r['muestras']} muestras aprobadas; no se aceptan {ancho}x{alto} / {muestras}"
           lista = os.environ["IN_CUADROS"].strip()
           t = RP.repartir_lista(RP.parse_lista(lista, total), int(os.environ["IN_TRABAJOS"])) if lista \
               else RP.repartir(total, int(os.environ["IN_TRABAJOS"]))

@@ -816,3 +816,33 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   ella el sol de 2732 lux quemaba la imagen). Visor publicado en el artifact (versión 4).
 - **No probado:** los flujos en Actions (no se ejecutaron), un render real desde el BLEND, la publicación de la Release
   y el visor en un teléfono real.
+
+## 19/11/2026 — Pipeline: modalidad 2, incorporar un BLEND aprobado (sin render, sin Release, sin Actions)
+
+- Pedido del dueño: el `p012_v1.blend` que revisó es el que se renderiza; el pipeline no admitía un BLEND externo.
+- Nuevo `estudio/autofinisher/blend_externo.py` y comandos `aprobar-blend` / `incorporar`:
+  - inspección del `.blend` en sólo lectura (nunca guarda ni empaqueta);
+  - perfil obligatorio `PERFIL_720P`: 1280×720, 30 fps, Cycles CPU, 6 muestras, adaptativo 0,05, OIDN, 6 rebotes,
+    Light Tree y semilla fija;
+  - registro de aprobación con el SHA-256;
+  - versión publicable = copia byte a byte + manifiesto `estudio.version_blend/1` con `origen: blend_externo` y
+    `ajustes_bloqueados`.
+- Flujo nuevo `incorporar_blend.yml`: baja el archivo (Release de entrada o URL), verifica el hash contra el registro,
+  lo incorpora, lo valida, lo publica en `blend-<p>-v<NNN>` y llama a `render_desde_blend.yml`.
+- Cambios en `render_desde_blend.yml`:
+  - acepta `workflow_call`, con las mismas entradas;
+  - con `ajustes_bloqueados`, rechaza resolución o muestras distintas.
+- Documentación: `docs/CONSTRUIR_Y_RENDERIZAR.md` §5 bis y `CLAUDE.md`.
+- Verificado sin render:
+  - `test_blend_externo.py` 19/19;
+  - las pruebas anteriores siguen bien (`test_general.py` 13/13, `test_autofinisher.py` 32/32);
+  - con el archivo real `p012_v1.blend` (SHA-256 `3b36dda3…6b00`, 12 851 935 bytes), en una carpeta temporal:
+    - aprobación, incorporación (copia idéntica) y `validar` OK (34 texturas empaquetadas);
+    - `render-trozo --sin-render` del tramo 886–900;
+    - reparto en 60 trabajos de 15 cuadros;
+    - rechazo de 1920×1080 y de 12 muestras;
+    - rechazo de un archivo con un byte cambiado.
+- **No hecho (a pedido del dueño):** el registro de aprobación real de p012 en el repo, la Release, el flujo y el
+  render.
+- **Falta definir:** cómo llega el `.blend` a la nube (Release de entrada subida a mano o un enlace directo). Desde la
+  sesión no hay una herramienta para subir archivos a una Release.

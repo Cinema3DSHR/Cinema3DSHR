@@ -66,6 +66,11 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
   verifica el hash, no rellena cuadros faltantes (recuperación explícita con `cuadros` + `corrida_previa`).
 - Efectos: sólo los que pide la receta, deterministas por cuadro (`estudio/autofinisher/recetas_efectos/`). La prueba
   original `pruebas/godot_blender/` no se toca.
+- **Modalidad 2 — BLEND externo aprobado** (docs/CONSTRUIR_Y_RENDERIZAR.md §5 bis): lo que el dueño aprueba en Blender
+  es exactamente lo que se renderiza. `python -m estudio.autofinisher aprobar-blend` registra el SHA-256 en
+  `producciones/<p>/versiones/v<NNN>.aprobacion.json` (sin tocar el `.blend`) → `incorporar_blend.yml` baja el
+  archivo, verifica el hash, lo publica byte a byte y llama al render con ajustes bloqueados. Nunca reconstruir ni
+  «arreglar» un BLEND aprobado: si no cumple el perfil 720p, se rechaza y se avisa.
 
 ## Revisión rápida en el navegador (visor HTML)
 El dueño revisa con `visor/visor_escena.html` y manda por el chat un texto `VISOR DE ESCENA …` con un JSON
