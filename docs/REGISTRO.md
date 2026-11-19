@@ -810,4 +810,9 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   al de control (133,28 s, 48 kHz, estéreo); `render-trozo --sin-render` abre el BLEND en 0,84 s; `montar.py
   --audio-intacto` con el WAV real y 3998 cuadros de prueba de ffmpeg (no es un render): desfase 0 muestras, volumen
   −18,78 dB = −18,78 dB, MP4 3998 cuadros 30 fps 133,28 s. Un WAV con un byte cambiado se rechaza.
-- **No probado:** los flujos en Actions (no se ejecutaron), un render real desde el BLEND y la publicación de la Release.
+- **Previsualización con audio de E02 v3:** `previa --audio` → GLB 29,5 MB (14 mallas de cara con formas animadas:
+  los labios se ven), JSON y M4A 2,2 MB (AAC 48 kHz, 133,28 s). Visor probado en Chromium como Pixel 7 con los tres
+  archivos: carga sin errores, ▶ avanza con el reloj del audio, 💡 LUCES DE LA ESCENA con exposición tipo cámara (sin
+  ella el sol de 2732 lux quemaba la imagen). Visor publicado en el artifact (versión 4).
+- **No probado:** los flujos en Actions (no se ejecutaron), un render real desde el BLEND, la publicación de la Release
+  y el visor en un teléfono real.

@@ -106,8 +106,8 @@ input[type=range].fino { width: 150px; accent-color: var(--acento); }
         <h1>Abrí el GLB de la escena</h1>
         <p>Claude te pasa la escena como un archivo <b>.glb</b> liviano (y a veces un <b>.json</b> con las tomas). Se ve con las animaciones y las cámaras de rodaje, sin render.</p>
         <ol>
-          <li>Tocá <b>ABRIR ESCENA</b> y elegí el .glb (si vino un .json, elegí los dos juntos).</li>
-          <li>▶ para ver el montaje. Pasá a <b>LIBRE</b> para recorrer la escena: arrastrá para mirar, la cruceta para moverte.</li>
+          <li>Tocá <b>ABRIR ESCENA</b> y elegí juntos los archivos que te pasó Claude: el <b>.glb</b>, el <b>.json</b> y, si vino, el audio <b>.m4a</b> (mantené apretado para elegir varios).</li>
+          <li>▶ para ver el montaje con su sonido (voces, música y ambiente en sincronía; 🔊 lo silencia). <b>💡 LUCES DE LA ESCENA</b> muestra la iluminación aproximada. Pasá a <b>LIBRE</b> para recorrer la escena: arrastrá para mirar, la cruceta para moverte.</li>
           <li><b>➕ CÁMARA NUEVA</b> agrega una cámara donde estás mirando; <b>✏️ EDITAR</b> cambia una cámara de la película (más alta, otro lente…). Todo lo que movés queda anotado solo.</li>
           <li>Al final, <b>📋 COPIAR PARA CLAUDE</b> y lo pegás en el chat.</li>
         </ol>
@@ -437,7 +437,7 @@ function montar(g, datos, nombre) {
   E.d = d; E.nombre = nombre;
   E.fps = d.fps || 30;
   E.lucesArchivo = []; E.luces = false; $("luces").classList.remove("activo"); amb.intensity = 0.95; sol.visible = true;
-  rend.physicallyCorrectLights = false;
+  rend.physicallyCorrectLights = false; rend.toneMapping = THREE.NoToneMapping; rend.toneMappingExposure = 1;
   raiz.traverse((o) => {                                   // sin las luces del archivo ni sombras (💡 las prende)
     if (o.isLight) { o.visible = false; E.lucesArchivo.push(o); }
     if (o.isMesh) { o.castShadow = o.receiveShadow = false; o.frustumCulled = false; }
@@ -646,8 +646,15 @@ $("luces").onclick = () => {
   if (!E.escena) return;
   E.luces = !E.luces; $("luces").classList.toggle("activo", E.luces);
   for (const l of E.lucesArchivo) l.visible = E.luces;
-  amb.intensity = E.luces ? 0.08 : 0.95; sol.visible = !E.luces;
+  // Blender exporta en unidades físicas (lux, candelas): una exposición tipo cámara conserva las proporciones entre
+  // luces; referencia = el sol de la escena o, si no hay, la puntual más fuerte a ~2 m
+  const dirs = E.lucesArchivo.filter((l) => l.isDirectionalLight).map((l) => l.intensity);
+  const pts = E.lucesArchivo.filter((l) => !l.isDirectionalLight).map((l) => l.intensity / 4);
+  const ref = Math.max(1e-3, ...(dirs.length ? dirs : pts.length ? pts : [1]));
   rend.physicallyCorrectLights = E.luces;
+  rend.toneMapping = E.luces ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
+  rend.toneMappingExposure = E.luces ? 1.6 / ref : 1;
+  amb.intensity = E.luces ? 0.12 * ref / 1.6 : 0.95; sol.visible = !E.luces;
   E.escena.traverse((o) => { if (o.isMesh && o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { m.needsUpdate = true; }); });
   aviso(E.luces ? "Luces de la escena (aproximadas; el render final las calcula con Cycles)." : "Luz pareja del visor.");
 };
