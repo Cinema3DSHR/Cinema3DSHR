@@ -1,0 +1,83 @@
+{
+ "formato": "estudio.aprobacion_blend/1",
+ "produccion": "p012_cls63_plataforma",
+ "version": 1,
+ "id": "p012_cls63_plataforma_v001",
+ "release": "blend-p012_cls63_plataforma-v001",
+ "blend": {
+  "sha256": "3b36dda3cb27e9c5598cc0209152c860d2b70c6cd2f1600811e3481efc776b00",
+  "bytes": 12851935,
+  "nombre_original": "p012_v1.blend"
+ },
+ "aprobacion": {
+  "nota_del_dueno": "Aprobada",
+  "fecha_utc": "2026-11-19T09:07:57Z",
+  "regla": "se renderiza exactamente este archivo (mismo SHA-256), sin reconstruir ni modificar nada"
+ },
+ "perfil_render": {
+  "motor": "CYCLES",
+  "dispositivo": "CPU",
+  "resolucion": [
+   1280,
+   720
+  ],
+  "porcentaje": 100,
+  "fps": 30,
+  "fps_base": 1.0,
+  "muestras": 6,
+  "muestreo_adaptativo": true,
+  "umbral_adaptativo": 0.05,
+  "denoise": true,
+  "denoiser": "OPENIMAGEDENOISE",
+  "rebotes": 6,
+  "arbol_de_luces": true,
+  "semilla_animada": false
+ },
+ "formato_produccion": {
+  "aspecto": "16:9",
+  "resolucion": "1280x720",
+  "fps": 30,
+  "duracion_s": 30
+ },
+ "inspeccion": {
+  "archivo": "p012_v1.blend",
+  "blender_guardado": "5.3.31",
+  "blender_lector": "5.3.0",
+  "escena": "Scene",
+  "render": {
+   "motor": "CYCLES",
+   "dispositivo": "CPU",
+   "resolucion": [
+    1280,
+    720
+   ],
+   "porcentaje": 100,
+   "fps": 30,
+   "fps_base": 1.0,
+   "muestras": 6,
+   "muestreo_adaptativo": true,
+   "umbral_adaptativo": 0.05,
+   "denoise": true,
+   "denoiser": "OPENIMAGEDENOISE",
+   "rebotes": 6,
+   "arbol_de_luces": true,
+   "semilla": 4242,
+   "semilla_animada": false,
+   "cuadro_inicial": 0,
+   "cuadro_final": 899
+  },
+  "camara": "Camara",
+  "camara_animada": true,
+  "objetos": 80,
+  "objetos_animados": 20,
+  "acciones": [
+   "toma"
+  ],
+  "materiales": 53,
+  "luces": 6,
+  "externos": [],
+  "autonomo": true,
+  "empaquetados": 34
+ },
+ "titulo": "CLS 63 en plataforma"
+}
