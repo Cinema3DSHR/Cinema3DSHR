@@ -4,19 +4,14 @@ Uso interno de construir.py y retoque_cabina.py. Necesita los datos del JSON de 
 import bpy
 
 
-def _cuerpos(raiz, imgs_auto):
-    """Mallas de carrocería (con la textura original del auto) y vidrios de un auto."""
-    out = []
-    for o in raiz.children_recursive:
-        if o.type != "MESH":
-            continue
-        for m in o.data.materials:
-            if not m or not m.use_nodes:
-                continue
-            if m.name == "vidrio_auto" or any(n.type == "TEX_IMAGE" and n.image and n.image.name.split(".")[0] in imgs_auto for n in m.node_tree.nodes):
-                out.append(o)
-                break
-    return out
+def _cuerpos(raiz, k):
+    """Todas las mallas del auto salvo las de su cabina (interior y pilotos): carrocería, vidrios, ruedas y suspensión."""
+    cab = bpy.data.objects.get(f"Cabina_{k}")
+    prohibidas = set()
+    if cab is not None:
+        prohibidas.add(cab.name)
+        prohibidas.update(o.name for o in cab.children_recursive)
+    return [o for o in raiz.children_recursive if o.type == "MESH" and o.name not in prohibidas]
 
 
 def cabinas(D, s):
@@ -42,7 +37,7 @@ def cabinas(D, s):
             tramos.append((ini, n - 1))
         if not tramos:
             continue
-        cuerpos = _cuerpos(raiz, imgs_auto)
+        cuerpos = _cuerpos(raiz, k)
         for o in cuerpos:
             o.visible_camera = True
             o.visible_shadow = True
@@ -67,7 +62,7 @@ def cabinas(D, s):
         for (a0, a1) in tramos:
             ld.energy = 0.0
             ld.keyframe_insert("energy", frame=max(a0 - 1, 0))
-            ld.energy = 90.0
+            ld.energy = 240.0
             ld.keyframe_insert("energy", frame=a0)
             ld.keyframe_insert("energy", frame=a1)
             ld.energy = 0.0
