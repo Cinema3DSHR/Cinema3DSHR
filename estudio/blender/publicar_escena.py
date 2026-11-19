@@ -173,9 +173,22 @@ def preparar(ruta_escena: str, salida: str, ensayo: bool = False) -> dict:
             control[str(f)] = _medir(s, formas, caderas)
     s.frame_set(1)
     s.camera = res["tomas"][0]["camara"]
+    # cámaras por marcadores = la MISMA tabla que usaba render_rango.py (toma_de). En un corte donde dos tomas se pisan
+    # un cuadro, el render de siempre usaba la anterior; los marcadores del director la siguiente: se rehacen.
+    for mk in [mk for mk in s.timeline_markers if mk.camera]:
+        s.timeline_markers.remove(mk)
+    for tr in tramos:
+        mk = s.timeline_markers.new(tr["toma"], frame=tr["desde"])
+        mk.camera = bpy.data.objects[tr["camara"]]
     with crono.etapa("empaquetar"):
-        # datos que ninguna cosa de la escena usa (p. ej. los materiales que trae el FBX de un pelo, cuyas mallas se
-        # borran al importarlo): no se ven en el render y algunos apuntan a texturas que no existen
+        # el prototipo oculto de cada biblioteca de clips guarda TODOS sus clips como pistas NLA «estacionadas» (lo
+        # mismo que limpia director.guardar_blend); después, se borran los datos que nada de la escena usa (p. ej. los
+        # materiales que trae el FBX de un pelo, cuyas mallas se borran al importarlo y apuntan a texturas que no
+        # existen). OJO: no se usa director.guardar_blend: sólo mira las acciones de los OBJETOS y borraba las de las
+        # formas de la cara (expresiones y labios), que cuelgan de las shape keys.
+        for o in bpy.data.objects:
+            if any(c.name.startswith("BIBLIOTECA_") for c in o.users_collection) and o.animation_data:
+                o.animation_data_clear()
         huerfanos = bpy.data.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)
         emp = AP.empaquetar()
     if not emp["autonomo"]:
@@ -184,7 +197,7 @@ def preparar(ruta_escena: str, salida: str, ensayo: bool = False) -> dict:
                 for n in emp["externos"] if n.startswith("imagen:") and n.split(":", 1)[1] in bpy.data.images}
         raise SystemExit(f"El BLEND no queda autónomo, hay recursos afuera: {emp['externos'][:10]} (los usan: {usos})")
     with crono.etapa("guardar_blend"):
-        D.guardar_blend(out / nb["blend"])
+        bpy.ops.wm.save_as_mainfile(filepath=str((out / nb["blend"]).resolve()), compress=True)
     shutil.copy(ruta_escena, out / nb["escena"])
     voces, archivos = _voces(m)
     with zipfile.ZipFile(out / nb["voces"], "w", zipfile.ZIP_STORED) as z:
