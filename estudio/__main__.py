@@ -8,7 +8,12 @@ Comandos principales
   cerrar <escena.json> --tomas DIR              audio, montaje, MP4/OGV, portada, GLB del visor, .blend, info.json
   escenario <escenario.json>                    publica un escenario suelto: GLB del visor + portada
   nueva-version <produccion> <escena> [--motivo TEXTO]
-  previa <escena.json> [--salida DIR]           GLB + línea de tiempo para el EDITOR 3D (misma escena que el render)
+  previa <escena.json> [--salida DIR] [--audio] GLB + línea de tiempo para el visor (misma escena que el render);
+                                                --audio: también la mezcla de la escena en .m4a liviano
+  aprobar <escena.json> [--nota TEXTO]          el dueño la aprobó en el chat: congela la versión (bloqueada)
+  publicar-escena preparar <escena.json> --salida DIR [--ensayo]   BLEND autónomo + controles (bpy)
+  publicar-escena validar --salida DIR          el BLEND reabierto reproduce cámara, bocas y caderas (bpy)
+  publicar-escena cerrar --salida DIR --wav W   suma el WAV de audio_escena.py (idéntico al de control)
   direccion <produccion>                        resumen de cámaras, marcadores y notas que mandó el director
   aplicar-direccion <produccion> <escena> --camaras camera_001,…   versión nueva con esas cámaras del director
   catalogo --releases R.json --issues I.json [--infos DIR] --salida catalogo.json
@@ -202,7 +207,39 @@ def cmd_previa(a):
     eid = m["id"].split("-")[-1]
     out = Path(a.salida)
     tam = PV.exportar(res, m, out / f"{eid}_v{m['version']}_previa.glb", out / f"{eid}_v{m['version']}_previa.json")
+    if a.audio and m.get("sonido", {}).get("generador") == "procedural":
+        # la mezcla de la escena con la MISMA construcción (procedural.generar, como audio_escena.py), comprimida para el
+        # teléfono: AAC 128 kbit/s, mismos tiempos y volumen (sin normalizar). Nunca gasta créditos de ElevenLabs.
+        import subprocess
+        import tempfile
+        from estudio.audio import procedural
+        with tempfile.TemporaryDirectory() as tmp:
+            pistas = D.exportar_pistas(res, Path(tmp) / "pistas.json")
+            wav = procedural.generar(m, pistas, Path(tmp) / "audio.wav")
+            m4a = out / f"{eid}_v{m['version']}_previa.m4a"
+            subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", "-i", str(wav), "-c:a", "aac",
+                            "-b:a", "128k", "-ar", "48000", "-movflags", "+faststart", str(m4a)], check=True)
+        tam["audio_bytes"] = m4a.stat().st_size
     print("PREVIA", json.dumps(tam))
+
+
+def cmd_aprobar(a):
+    """El dueño dijo en el chat que la versión está aprobada: se congela (estado, bloqueada, huella en el historial)."""
+    from estudio import version_escena as VE
+    print(json.dumps(VE.aprobar(Path(a.escena), a.nota), indent=1, ensure_ascii=False))
+
+
+def cmd_publicar_escena(a):
+    """Versión aprobada → BLEND + WAV + manifiesto (ver estudio/version_escena.py)."""
+    if a.accion == "cerrar":
+        from estudio import version_escena as VE
+        VE.cerrar(a.salida, a.wav)
+        return 0
+    from estudio.blender import publicar_escena as PE
+    if a.accion == "preparar":
+        PE.preparar(a.escena, a.salida, a.ensayo)
+    else:
+        PE.validar(a.salida)
 
 
 def cmd_componentes(a):
@@ -364,7 +401,14 @@ def main(argv=None):
     p = sub.add_parser("nueva-version"); p.add_argument("produccion"); p.add_argument("escena")
     p.add_argument("--motivo", default=""); p.set_defaults(f=cmd_nueva_version)
     p = sub.add_parser("previa"); p.add_argument("escena"); p.add_argument("--salida", default="salida/previa")
+    p.add_argument("--audio", action="store_true", help="también la mezcla de la escena (.m4a) para el visor")
     p.set_defaults(f=cmd_previa)
+    p = sub.add_parser("aprobar"); p.add_argument("escena"); p.add_argument("--nota", default="")
+    p.set_defaults(f=cmd_aprobar)
+    p = sub.add_parser("publicar-escena"); p.add_argument("accion", choices=["preparar", "validar", "cerrar"])
+    p.add_argument("escena", nargs="?"); p.add_argument("--salida", required=True); p.add_argument("--wav")
+    p.add_argument("--ensayo", action="store_true", help="prueba local: no exige aprobación; NO se publica")
+    p.set_defaults(f=cmd_publicar_escena)
     p = sub.add_parser("componentes"); p.add_argument("escena"); p.set_defaults(f=cmd_componentes)
     p = sub.add_parser("clips"); p.add_argument("accion", choices=["buscar", "ficha"]); p.add_argument("texto", nargs="*")
     p.add_argument("--funcion", help="caminar, sentarse, hablar, levantarse…"); p.add_argument("--neutros", action="store_true",

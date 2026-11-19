@@ -85,7 +85,7 @@ jobs:
         if: ${{ steps.plan.outputs.rally != '' }}
         with: {repository: webmaletin-art/Rally-Sim-movile, ref: "${{ vars.RALLY_REF }}", path: recursos/rally, sparse-checkout: "${{ steps.plan.outputs.rally }}", sparse-checkout-cone-mode: false}
       - name: Exportar la previsualización (misma escena que el render)
-        run: python -m estudio previa "${{ inputs.escena }}" --salida previa_out 2>&1 | grep -vE "INFO:|CUEW|FBX version|User property" | tail -20; ls -la previa_out
+        run: python -m estudio previa "${{ inputs.escena }}" --salida previa_out --audio 2>&1 | grep -vE "INFO:|CUEW|FBX version|User property" | tail -20; ls -la previa_out
       - name: Publicar en la release de la producción
         env:
           GH_TOKEN: ${{ github.token }}
@@ -96,6 +96,8 @@ jobs:
           R=${{ github.repository }}
           gh release view "$P" --repo "$R" >/dev/null 2>&1 || gh release create "$P" --repo "$R" --latest=false --title "$P" --notes "Entregables de la producción $P."
           gh release upload "$P" "previa_out/${E}_v${V}_previa.glb" "previa_out/${E}_v${V}_previa.json" --repo "$R" --clobber
+          # la mezcla de la escena para el visor (si la escena tiene sonido)
+          [ -f "previa_out/${E}_v${V}_previa.m4a" ] && gh release upload "$P" "previa_out/${E}_v${V}_previa.m4a" --repo "$R" --clobber || true
           # la app reproduce OGV: si la versión tiene MP4 publicado y no OGV, se completa
           if gh release view "$P" --repo "$R" --json assets -q '.assets[].name' | grep -qx "${E}_v${V}_revision.mp4" && \
              ! gh release view "$P" --repo "$R" --json assets -q '.assets[].name' | grep -qx "${E}_v${V}_revision.ogv"; then

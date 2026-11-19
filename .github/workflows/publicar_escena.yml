@@ -1,0 +1,138 @@
+name: Publicar escena aprobada (BLEND + WAV + manifiesto → Release → render automático)
+
+# Etapas 4 y 5 del flujo definitivo (docs/FLUJO_DEFINITIVO.md). Lo lanza Claude cuando el dueño dice EN EL CHAT que
+# la versión está aprobada: esa frase es la autorización de la publicación y del render de ESA versión. No hay otra
+# aprobación en GitHub. Sólo publica una escena aprobada y bloqueada cuya huella es la que se aprobó.
+#   1. construye la escena UNA vez (director.construir: personajes, cámaras, labios desde las alineaciones)
+#   2. BLEND autónomo y empaquetado + muestras de control; lo reabre y comprueba que reproduce la escena
+#   3. WAV definitivo con pruebas/video_30s/audio_escena.py (sin cambios): idéntico al de la construcción del BLEND
+#   4. Release escena-<produccion>-<escena>-v<NNN> con BLEND, WAV, voces/alineaciones, receta y manifiesto
+#   5. dispara solo el render (render_escena.yml): reparte, renderiza desde el BLEND, monta con audio intacto, entrega
+# Si una verificación falla, se detiene y no publica (la Release se arma como borrador y se publica al final).
+on:
+  workflow_dispatch:
+    inputs:
+      escena: {description: "Ruta del escena.json APROBADO (producciones/<p>/escenas/<e>/v<k>/escena.json)", required: true}
+      trabajos: {description: "Trabajos de render en paralelo (máx. 60; GitHub encola los que sobren)", required: false, default: "60"}
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: publicar-${{ inputs.escena }}
+  cancel-in-progress: false
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  REPO: ${{ github.repository }}
+  ESCENA: ${{ inputs.escena }}
+  CINE_MIXAMO_DIR: ${{ github.workspace }}/recursos/mixamo-respaldo
+  CINE_NEXUS_DIR: ${{ github.workspace }}/recursos/nexus/fuente
+  CINE_EXTRACTION_DIR: ${{ github.workspace }}/recursos/extraction/public
+  CINE_SH3D_DIR: ${{ github.workspace }}/recursos/nexus/game/assets/sh3d
+  CINE_RALLY_DIR: ${{ github.workspace }}/recursos/rally
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      tag: ${{ steps.plan.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13", cache: pip, cache-dependency-path: requirements-produccion.txt}
+      - name: ¿Versión aprobada, bloqueada y con la huella aprobada? ¿Release nueva?
+        id: plan
+        run: |
+          set -e
+          python3 - <<'PY'
+          import os, sys
+          sys.path.insert(0, ".")
+          from estudio import manifiesto as ME, version_escena as VE
+          m = ME.leer(os.environ["ESCENA"])
+          err = ME.validar(m) + VE.errores_aprobacion(m)
+          if err:
+              print("::error::NO SE PUBLICA: " + " · ".join(err)); sys.exit(1)
+          deps = ME.dependencias(m)
+          def lista(f, pre=""): return "\n".join(pre + d.split(":", 1)[1] for d in deps if d.startswith(f + ":"))
+          nexus = "\n".join(x for x in (lista("nexus", "fuente/"), lista("sh3d", "game/assets/sh3d/")) if x)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"tag={VE.tag_release(m)}\nhuella={ME.huella(m)}\n")
+              for k, v in (("mixamo", lista("mixamo")), ("nexus", nexus), ("extraction", lista("extraction", "public/")), ("rally", lista("rally"))):
+                  f.write(f"{k}<<EOF\n{v}\nEOF\n")
+          print(f"{m['id']} v{m['version']} aprobada, huella {ME.huella(m)} → {VE.tag_release(m)}")
+          PY
+          TAG=$(grep '^tag=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2)
+          if gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1; then
+            echo "::error::La Release $TAG ya existe: una versión publicada no se vuelve a publicar (cambios = versión nueva)"; exit 1
+          fi
+      - name: Acceso a los recursos privados
+        env:
+          TOKEN: ${{ secrets.ASSETS_TOKEN }}
+        run: |
+          [ -n "$TOKEN" ] || { echo "::error::Falta el secreto ASSETS_TOKEN"; exit 1; }
+          B64=$(printf 'x-access-token:%s' "$TOKEN" | base64 -w0); echo "::add-mask::$B64"
+          cd "$RUNNER_TEMP"
+          git -c http.extraheader="AUTHORIZATION: basic $B64" ls-remote https://github.com/webmaletin-art/mixamo-respaldo.git HEAD | grep -q HEAD || { echo "::error::ASSETS_TOKEN no puede leer mixamo-respaldo"; exit 1; }
+      - name: Blender (bpy) y FFmpeg
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 ffmpeg fonts-dejavu-core >/dev/null
+          pip install -q -r requirements-produccion.txt
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.mixamo != '' }}
+        with: {repository: webmaletin-art/mixamo-respaldo, ref: "${{ vars.MIXAMO_REF || 'ccr-6d21fe8a-76t9c3' }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/mixamo-respaldo, sparse-checkout: "${{ steps.plan.outputs.mixamo }}", sparse-checkout-cone-mode: false}
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.nexus != '' }}
+        with: {repository: webmaletin-art/Operaci-n-Nexus-1, ref: "${{ vars.NEXUS_REF }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/nexus, sparse-checkout: "${{ steps.plan.outputs.nexus }}", sparse-checkout-cone-mode: false}
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.extraction != '' }}
+        with: {repository: webmaletin-art/Extraction-tactical, ref: "${{ vars.EXTRACTION_REF }}", token: "${{ secrets.ASSETS_TOKEN }}", path: recursos/extraction, sparse-checkout: "${{ steps.plan.outputs.extraction }}", sparse-checkout-cone-mode: false}
+      - uses: actions/checkout@v4
+        if: ${{ steps.plan.outputs.rally != '' }}
+        with: {repository: webmaletin-art/Rally-Sim-movile, ref: "${{ vars.RALLY_REF }}", path: recursos/rally, sparse-checkout: "${{ steps.plan.outputs.rally }}", sparse-checkout-cone-mode: false}
+      - name: BLEND autónomo y muestras de control (una sola construcción de la escena)
+        run: |
+          set -o pipefail
+          python -m estudio publicar-escena preparar "$ESCENA" --salida version 2>&1 | grep -vE "INFO:|CUEW|FBX version|User property|^$" | tail -40
+      - name: El BLEND reabierto reproduce la escena (cámaras, bocas, caderas, rango, fps, autonomía)
+        run: |
+          set -o pipefail
+          python -m estudio publicar-escena validar --salida version 2>&1 | grep -vE "INFO:|CUEW|^$" | tail -40
+      - name: WAV definitivo con audio_escena.py (tiene que ser idéntico al de la construcción del BLEND)
+        run: |
+          set -o pipefail
+          python -I pruebas/video_30s/audio_escena.py "$ESCENA" audio_out 2>&1 | grep -E "^AUDIO|Traceback|Error" || true
+          test -f audio_out/audio.wav
+          python -m estudio publicar-escena cerrar --salida version --wav audio_out/audio.wav
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with: {name: version-preparada, path: "version/manifest.json\nversion/_control/validacion_blend.json", retention-days: 30}
+      - name: Publicar la Release (borrador → archivos → verificación → publicada)
+        run: |
+          set -e
+          TAG="${{ steps.plan.outputs.tag }}"
+          cd version
+          ARCH=$(python3 -c "import json; m=json.load(open('manifest.json')); print(' '.join(m['archivos'][k]['nombre'] for k in ('blend','wav','voces','escena')))")
+          gh release create "$TAG" --repo "$REPO" --draft --latest=false --title "$TAG" --notes "Versión APROBADA por el dueño en el chat (huella ${{ steps.plan.outputs.huella }}). BLEND autónomo + WAV de audio_escena.py + voces y alineaciones + receta + manifest.json con SHA-256. El render se dispara solo; el MP4 final se suma a esta Release."
+          gh release upload "$TAG" --repo "$REPO" $ARCH manifest.json
+          # lo subido es lo del manifiesto (nombre y tamaño de cada archivo)
+          gh release view "$TAG" --repo "$REPO" --json assets -q '.assets[] | "\(.name) \(.size)"' > subidos.txt
+          python3 - <<'PY'
+          import json, sys
+          m = json.load(open("manifest.json"))
+          sub = dict(l.split() for l in open("subidos.txt") if l.strip())
+          mal = [a["nombre"] for k, a in m["archivos"].items() if sub.get(a["nombre"]) != str(a["bytes"])]
+          if mal or "manifest.json" not in sub:
+              print("::error::La Release no tiene exactamente los archivos del manifiesto:", mal); sys.exit(1)
+          print("Release completa:", sorted(sub))
+          PY
+          gh release edit "$TAG" --repo "$REPO" --draft=false --latest=false
+
+  render:
+    needs: publicar
+    uses: ./.github/workflows/render_escena.yml
+    with:
+      tag: ${{ needs.publicar.outputs.tag }}
+      trabajos: ${{ inputs.trabajos }}

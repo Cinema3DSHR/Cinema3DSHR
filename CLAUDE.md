@@ -23,6 +23,16 @@ Hablar con el dueño en español rioplatense. Un chat nuevo empieza por `docs/GU
    funciona sin haberlo probado.
 8. Registrar cada avance en `docs/REGISTRO.md`.
 
+## FLUJO DEFINITIVO (19/11/2026, `docs/FLUJO_DEFINITIVO.md`): creo → previa → correcciones → aprobada → la nube entrega
+- Crear la escena → `python -m estudio previa <escena.json> --salida <scratchpad>/previa --audio` → mandar GLB + JSON +
+  M4A por el chat y registrar la entrega. Correcciones = versión nueva + previa nueva. Nada de render en la revisión.
+- Cuando el dueño dice que está **aprobada**: `python -m estudio aprobar <escena.json> --nota "<su frase>"`, commit +
+  push y lanzar `publicar_escena.yml` (entrada `escena`). Esa frase es la autorización: el flujo publica BLEND + WAV
+  (`audio_escena.py`) + voces/alineaciones + manifiesto y dispara solo `render_escena.yml` hasta el MP4 final. No pedir
+  otra aprobación ni usar entornos protegidos de GitHub. Si una verificación falla: contarle al dueño cuál.
+- Nunca: publicar sin aprobación, reconstruir una versión aprobada, tocar el sistema de voces/labios, normalizar o
+  correr el audio final.
+
 ## Render: lo ordena el dueño en el chat (candado QUITADO el 18/11/2026)
 - El dueño pidió sacar el candado de la app: `config/candado_render.json` → `"activo": false`. Con eso, cuando el dueño
   dice en el chat «renderizá …», Claude lanza el render (`render.yml`, `video30.yml`, `episodio.yml` o los comandos) sin

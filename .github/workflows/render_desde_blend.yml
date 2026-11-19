@@ -118,6 +118,7 @@ jobs:
           python3 -m estudio.autofinisher verificar-blend --manifiesto escena/manifest.json --blend "escena/${{ needs.planificar.outputs.blend }}"
       - name: Renderizar cuadros ${{ matrix.trozo.desde }}–${{ matrix.trozo.hasta }}
         run: |
+          set -o pipefail      # el código de salida es el de Blender, no el del filtro
           R=0
           if [ -n "${{ matrix.trozo.cuadros }}" ]; then SEL="--cuadros ${{ matrix.trozo.cuadros }}"; else SEL="--desde ${{ matrix.trozo.desde }} --hasta ${{ matrix.trozo.hasta }}"; fi
           python -m estudio.autofinisher render-trozo --blend "escena/${{ needs.planificar.outputs.blend }}" --manifiesto escena/manifest.json \

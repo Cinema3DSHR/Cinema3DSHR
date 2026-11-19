@@ -13,7 +13,9 @@
 """
 from __future__ import annotations
 
+import datetime
 import json
+import os
 import time
 from pathlib import Path
 
@@ -25,6 +27,8 @@ from estudio.autofinisher import manifiesto as MF, medicion as MD, reparto as RP
 def renderizar(blend: str, ruta_manifiesto: str, cuadros: list[int], ancho: int, alto: int, muestras: int,
                salida: str, reintentos: int = 1, sin_render: bool = False) -> dict:
     t0 = time.time()
+    inicio_utc = datetime.datetime.now(datetime.timezone.utc)
+    cpu0 = sum(os.times()[:2])
     m = MF.leer(ruta_manifiesto)
     ok, motivo = MF.verificar_blend(m, blend)
     if not ok:
@@ -81,5 +85,23 @@ def renderizar(blend: str, ruta_manifiesto: str, cuadros: list[int], ancho: int,
            "media_s": round(sum(tiempos) / len(tiempos), 2) if tiempos else None,
            "max_s": max(tiempos) if tiempos else None, "total_s": round(time.time() - t0, 2),
            "ram_max_mb": MD.ram_max_mb(), "blender": bpy.app.version_string, "entorno": MD.entorno()}
+    # mismos campos que los informes de pruebas/video_30s/render_rango.py: así montar.py los lee sin cambios
+    c = s.cycles
+    def toma(n):
+        return next((t["toma"] for t in m.get("tomas", []) if t["desde"] <= n <= t["hasta"]), "")
+    inf.update({
+        "desde": min(cuadros), "hasta": max(cuadros), "fotogramas_renderizados": inf["renderizados"],
+        "inicio_utc": inicio_utc.isoformat(), "fin_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "segundos_total_proceso": inf["total_s"], "construccion_escena_s": round(hash_s + abrir_s, 2),
+        "render_s": round(sum(tiempos), 2), "cpu_proceso_s": round(sum(os.times()[:2]) - cpu0, 1),
+        "ram_pico_mb": inf["ram_max_mb"], "nucleos": os.cpu_count(), "cpu_modelo": inf["entorno"].get("cpu", ""),
+        "huella_receta": m.get("huella", m["id"]),
+        "config_cycles": {"motor": s.render.engine, "dispositivo": c.device, "muestras": c.samples,
+                          "muestreo_adaptativo": c.use_adaptive_sampling, "umbral_adaptativo": round(c.adaptive_threshold, 4),
+                          "denoiser": c.denoiser, "rebotes_max": c.max_bounces, "arbol_de_luces": c.use_light_tree,
+                          "semilla": c.seed, "semilla_animada": c.use_animated_seed,
+                          "resolucion": f"{ancho}x{alto}", "fps": s.render.fps, "blender": bpy.app.version_string},
+        "fotogramas": [{"fotograma": n, "toma": toma(n), "segundos": v["s"]} for n, v in sorted(por_cuadro.items())],
+    })
     (out / f"informe_{cuadros[0]:04d}.json").write_text(json.dumps(inf, indent=1, ensure_ascii=False))
     return inf

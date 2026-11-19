@@ -103,7 +103,13 @@ def verificar_blend(m: dict, ruta_blend: str | Path) -> tuple[bool, str]:
 
 
 def leer(ruta: str | Path) -> dict:
+    """Manifiesto de una versión: el del AutoFinisher o el de una escena aprobada del estudio
+    (`estudio.version_escena/1`, estudio/version_escena.py). Los dos traen archivos.blend y render con el mismo
+    significado, así que el render por trozos y la verificación del BLEND sirven para ambos."""
     m = json.loads(Path(ruta).read_text())
+    if m.get("formato") == "estudio.version_escena/1":
+        from estudio import version_escena as VE
+        return VE.leer(ruta)
     e = errores(m)
     if e:
         raise ValueError(f"manifiesto {ruta} inválido: " + "; ".join(e))
