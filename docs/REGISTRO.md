@@ -946,3 +946,10 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
   Release `blend-p014_rally_convoy-v001`, corrida `incorporar_blend.yml` 44576933015: 60 trabajos, 9360/9360 cuadros, 0 fallos,
   13,1 s por cuadro de media (34,1 h de CPU). MP4 de 312,0 s en la Release. El sonido original del juego (grabado de la misma simulación) se montó
   aparte y el MP4 con audio se entregó por el chat; no se pudo subir a la Release (`gh release upload` usa GraphQL, bloqueado en el entorno).
+
+## 20/11/2026 — p015 «A la deriva: FRACTURA» (experimento, sin aprobación previa por pedido del dueño)
+- 180 s · 720×1280 · 30 fps · 5400 cuadros. 9 escenas (ojo, corredor, cero g, detonación, espejos, colapso, oscuro, reconstrucción, final) y transiciones por geometría y cámara.
+- BLEND `p015_fractura_v001` (SHA-256 `44037c42…2557`) por Git LFS → `incorporar_blend.yml` (corrida 44709823893): 59 de 60 trabajos bien; el de los cuadros 1351–1440 (explosión) pasó las 2 h y se canceló.
+- Recuperación con `render_desde_blend.yml` (corrida 44748847228, `cuadros=1351-1440`, 45 trabajos, `corrida_previa=44709823893`): montaje OK, MP4 de 5400 cuadros verificado.
+- Música original (`blender/musica.py`, numpy) mezclada con ffmpeg sobre el video (`-c:v copy`); el audio se midió pero no se escuchó. Entregado por el chat (la subida del MP4 con música a la Release sigue bloqueada por GraphQL).
+- Detalle técnico y límites: `producciones/p015_fractura/README.md`.
