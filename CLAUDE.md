@@ -44,6 +44,7 @@ producciones: no proponer otros flujos ni volver a preguntar qué modalidad usar
    `pruebas/revision/revision_ui.gd`, sin render). `fijas` es un render: sólo si el dueño lo pide. No decir que algo
    funciona sin haberlo probado.
 8. Registrar cada avance en `docs/REGISTRO.md`.
+9. **Cámaras de seguimiento (regla del dueño, 20/11/2026, p016):** una cámara que sigue a un auto o personaje tiene que moverse en forma CONTINUA, sin saltos ni vibraciones. Prohibido sumarle ruido al azar distinto en cada cuadro (en p016 `micro()` movía la cámara lateral a saltos) y dejar claves cada 2 cuadros en tomas de seguimiento: se animan con curvas suaves (ruido de baja frecuencia o seno) y una clave por cuadro. La vibración sólo se permite como golpe breve con decaimiento (onda de choque). **Antes de renderizar:** para cada toma de seguimiento calcular la posición de la cámara cuadro a cuadro y verificar que la aceleración no tenga picos, y mirar una tira de cuadros consecutivos; si hay salto, corregir antes de lanzar. Además, ninguna toma debe quedar tapada por una puerta o un objeto que ocupe todo el plano.
 
 ## FLUJO DEFINITIVO (19/11/2026, `docs/FLUJO_DEFINITIVO.md`): creo → previa → correcciones → aprobada → la nube entrega
 - Crear la escena → `python -m estudio previa <escena.json> --salida <scratchpad>/previa --audio` → mandar GLB + JSON +
