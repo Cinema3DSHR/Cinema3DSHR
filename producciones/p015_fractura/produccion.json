@@ -1,0 +1,19 @@
+{
+ "tipo": "produccion",
+ "id": "p015_fractura",
+ "titulo": "A la deriva: FRACTURA",
+ "clase": "cortometraje_experimental",
+ "formato": {
+  "aspecto": "9:16",
+  "resolucion": "720x1280",
+  "fps": 30,
+  "duracion_s": 180
+ },
+ "estado": "en_preparacion",
+ "audio": "banda sonora original sintetizada con numpy (blender/musica.py), sin muestras ni música ajena; se mezcla con ffmpeg sobre el MP4 de Cycles",
+ "origen": {
+  "godot": "godot/ (previsualización de la línea de tiempo, cortes y cámaras)",
+  "blender": "blender/construir.py (geometría procedural, simulaciones balísticas por fragmento, volúmenes, cámaras, compositor)"
+ },
+ "nota": "Experimento pedido por el dueño 20/11/2026: «quiero el video renderizado con música sin aprobar nada, es un experimento con vos»."
+}

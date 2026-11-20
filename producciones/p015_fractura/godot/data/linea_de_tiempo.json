@@ -1,0 +1,375 @@
+{
+ "formato": "fractura.linea_de_tiempo/1",
+ "fps": 30,
+ "cuadros": 5400,
+ "escenas": [
+  {
+   "id": "s0",
+   "nombre": "Ojo",
+   "desde": 0,
+   "hasta": 180,
+   "desplazamiento": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s1",
+   "nombre": "Corredor",
+   "desde": 180,
+   "hasta": 660,
+   "desplazamiento": [
+    0.0,
+    1000.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s2",
+   "nombre": "Cero_g",
+   "desde": 660,
+   "hasta": 1200,
+   "desplazamiento": [
+    0.0,
+    2000.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s3",
+   "nombre": "Detonacion",
+   "desde": 1200,
+   "hasta": 1920,
+   "desplazamiento": [
+    0.0,
+    3000.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s4",
+   "nombre": "Espejos",
+   "desde": 1920,
+   "hasta": 2400,
+   "desplazamiento": [
+    0.0,
+    4000.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s5",
+   "nombre": "Colapso",
+   "desde": 2400,
+   "hasta": 3000,
+   "desplazamiento": [
+    0.0,
+    5000.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s6",
+   "nombre": "Oscuro",
+   "desde": 3000,
+   "hasta": 3750,
+   "desplazamiento": [
+    0.0,
+    6000.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s7",
+   "nombre": "Reconstruccion",
+   "desde": 3750,
+   "hasta": 4500,
+   "desplazamiento": [
+    0.0,
+    7000.0,
+    0.0
+   ]
+  },
+  {
+   "id": "s8",
+   "nombre": "Final",
+   "desde": 4500,
+   "hasta": 5400,
+   "desplazamiento": [
+    0.0,
+    8000.0,
+    0.0
+   ]
+  }
+ ],
+ "transiciones": [
+  {
+   "id": "B",
+   "tipo": "pupila del ojo",
+   "desde": "s0",
+   "hasta": "s1",
+   "cuadros": [
+    150,
+    179
+   ]
+  },
+  {
+   "id": "F",
+   "tipo": "onda de choque contra la lente",
+   "desde": "s1",
+   "hasta": "s2",
+   "cuadros": [
+    628,
+    659
+   ]
+  },
+  {
+   "id": "E",
+   "tipo": "partícula luminosa que crece",
+   "desde": "s2",
+   "hasta": "s3",
+   "cuadros": [
+    1000,
+    1199
+   ]
+  },
+  {
+   "id": "A",
+   "tipo": "zoom al interior de la explosión",
+   "desde": "s3",
+   "hasta": "s4",
+   "cuadros": [
+    1740,
+    1919
+   ]
+  },
+  {
+   "id": "C",
+   "tipo": "espejo que estalla",
+   "desde": "s4",
+   "hasta": "s4",
+   "cuadros": [
+    2262,
+    2330
+   ]
+  },
+  {
+   "id": "D",
+   "tipo": "esquirla de cristal gigante",
+   "desde": "s4",
+   "hasta": "s5",
+   "cuadros": [
+    2330,
+    2399
+   ]
+  },
+  {
+   "id": "G1",
+   "tipo": "ventana de luz que estalla",
+   "desde": "s5",
+   "hasta": "s6",
+   "cuadros": [
+    2900,
+    2999
+   ]
+  },
+  {
+   "id": "H",
+   "tipo": "anillo de luz hasta la lente",
+   "desde": "s6",
+   "hasta": "s7",
+   "cuadros": [
+    3640,
+    3749
+   ]
+  },
+  {
+   "id": "I",
+   "tipo": "ascenso al cielo en blanco",
+   "desde": "s7",
+   "hasta": "s8",
+   "cuadros": [
+    4400,
+    4499
+   ]
+  },
+  {
+   "id": "G",
+   "tipo": "esfera de espejos que se rompe en 320 fragmentos",
+   "desde": "s8",
+   "hasta": "s8",
+   "cuadros": [
+    4800,
+    4999
+   ]
+  }
+ ],
+ "eventos": [
+  {
+   "cuadro": 0,
+   "tipo": "latido",
+   "intensidad": 0.6
+  },
+  {
+   "cuadro": 150,
+   "tipo": "subida",
+   "intensidad": 0.8
+  },
+  {
+   "cuadro": 180,
+   "tipo": "impacto",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 420,
+   "tipo": "estruendo",
+   "intensidad": 0.7
+  },
+  {
+   "cuadro": 640,
+   "tipo": "onda",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 660,
+   "tipo": "silencio",
+   "intensidad": 0.0
+  },
+  {
+   "cuadro": 900,
+   "tipo": "particula",
+   "intensidad": 0.4
+  },
+  {
+   "cuadro": 1180,
+   "tipo": "subida",
+   "intensidad": 0.9
+  },
+  {
+   "cuadro": 1200,
+   "tipo": "impacto",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 1290,
+   "tipo": "explosion",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 1450,
+   "tipo": "camara_lenta",
+   "intensidad": 0.8
+  },
+  {
+   "cuadro": 1560,
+   "tipo": "congelado",
+   "intensidad": 0.6
+  },
+  {
+   "cuadro": 1680,
+   "tipo": "retroceso",
+   "intensidad": 0.8
+  },
+  {
+   "cuadro": 1900,
+   "tipo": "subida",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 1920,
+   "tipo": "impacto",
+   "intensidad": 0.9
+  },
+  {
+   "cuadro": 2250,
+   "tipo": "espejo",
+   "intensidad": 0.8
+  },
+  {
+   "cuadro": 2400,
+   "tipo": "cristal",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 2560,
+   "tipo": "colapso",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 2800,
+   "tipo": "camara_lenta",
+   "intensidad": 0.7
+  },
+  {
+   "cuadro": 2990,
+   "tipo": "subida",
+   "intensidad": 0.8
+  },
+  {
+   "cuadro": 3000,
+   "tipo": "silencio",
+   "intensidad": 0.0
+  },
+  {
+   "cuadro": 3300,
+   "tipo": "polvo",
+   "intensidad": 0.3
+  },
+  {
+   "cuadro": 3600,
+   "tipo": "latido",
+   "intensidad": 0.5
+  },
+  {
+   "cuadro": 3740,
+   "tipo": "subida",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 3750,
+   "tipo": "impacto",
+   "intensidad": 0.9
+  },
+  {
+   "cuadro": 4000,
+   "tipo": "reversa",
+   "intensidad": 0.8
+  },
+  {
+   "cuadro": 4300,
+   "tipo": "reconstruye",
+   "intensidad": 0.8
+  },
+  {
+   "cuadro": 4490,
+   "tipo": "subida",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 4500,
+   "tipo": "impacto",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 4650,
+   "tipo": "montaje",
+   "intensidad": 0.9
+  },
+  {
+   "cuadro": 5000,
+   "tipo": "montaje",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 5200,
+   "tipo": "rotura",
+   "intensidad": 1.0
+  },
+  {
+   "cuadro": 5300,
+   "tipo": "silencio",
+   "intensidad": 0.0
+  }
+ ]
+}

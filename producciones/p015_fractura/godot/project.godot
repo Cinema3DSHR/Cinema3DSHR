@@ -1,0 +1,14 @@
+; p015 «FRACTURA» · previsualización en Godot de la línea de tiempo (escenas, cortes, transiciones y eventos). No renderiza el corto: eso lo hace Blender (Cycles).
+config_version=5
+
+[application]
+config/name="FRACTURA previz"
+run/main_scene="res://previz.tscn"
+config/features=PackedStringArray("4.7", "GL Compatibility")
+
+[display]
+window/size/viewport_width=360
+window/size/viewport_height=640
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
