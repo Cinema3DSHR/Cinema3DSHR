@@ -152,7 +152,7 @@ def construir(ctx, i, f0, f1):
     vF = ctx.dir.velos["cam_s5_f"]
     vF.rampa(2950, 2975, 0.0, 1.0, (1.0, 0.85, 0.6), 8.0)
     vF.rampa(2975, 2999, 1.0, 1.0, (0.0, 0.0, 0.0), 0.0)
-    ctx.amb.append((f0 - 1, (0.006, 0.007, 0.01), 0.5))
+    ctx.amb.append((f0 - 1, (0.05, 0.06, 0.09), 1.6))
     ctx.escena_activa(col, f0, f1)
 
 
