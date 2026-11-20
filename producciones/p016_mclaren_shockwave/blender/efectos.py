@@ -172,18 +172,18 @@ def mat_vidriera():
     rota = oi.outputs["Alpha"]
     tr = nt.nodes.new("ShaderNodeBsdfTransparent")
     dif = nt.nodes.new("ShaderNodeBsdfDiffuse")
-    dif.inputs["Color"].default_value = (0.22, 0.32, 0.46, 1)
+    dif.inputs["Color"].default_value = (0.10, 0.17, 0.26, 1)
     gl = nt.nodes.new("ShaderNodeBsdfGlossy")
     gl.inputs["Color"].default_value = (0.9, 0.95, 1.0, 1)
     gl.inputs["Roughness"].default_value = 0.08
     fr = nt.nodes.new("ShaderNodeFresnel")
     fr.inputs["IOR"].default_value = 1.45
     mg = nt.nodes.new("ShaderNodeMixShader")
-    nt.links.new(M("ADD", fr.outputs[0], 0.12), mg.inputs["Fac"])
+    nt.links.new(M("ADD", fr.outputs[0], 0.55), mg.inputs["Fac"])
     nt.links.new(dif.outputs[0], mg.inputs[1])
     nt.links.new(gl.outputs[0], mg.inputs[2])
     mz = nt.nodes.new("ShaderNodeMixShader")
-    nt.links.new(M("ADD", 0.1, M("MULTIPLY", rota, 0.72)), mz.inputs["Fac"])
+    nt.links.new(M("ADD", 0.08, M("MULTIPLY", rota, 0.5)), mz.inputs["Fac"])
     nt.links.new(tr.outputs[0], mz.inputs[1])
     nt.links.new(mg.outputs[0], mz.inputs[2])
     lw = nt.nodes.new("ShaderNodeLayerWeight")
@@ -196,6 +196,32 @@ def mat_vidriera():
     nt.links.new(em.outputs[0], ad.inputs[1])
     nt.links.new(ad.outputs[0], out.inputs["Surface"])
     return m
+
+
+def chips_vidrio(col, nombre, centro, ancho, alto, n, r, mat):
+    """Esquirlas pequeñas (triángulos finos) que saltan con más violencia que los fragmentos grandes."""
+    objs = []
+    for i in range(n):
+        s = r.uniform(0.10, 0.34)
+        a0 = r.uniform(0, 6.28)
+        verts = []
+        for k in range(3):
+            a = a0 + k * 2.1 + r.uniform(-0.3, 0.3)
+            ra = s * r.uniform(0.5, 1.0)
+            verts.append((0, math.cos(a) * ra, math.sin(a) * ra))
+        for k in range(3):
+            verts.append((0.008, verts[k][1], verts[k][2]))
+        caras = [(0, 2, 1), (3, 4, 5), (0, 1, 4, 3), (1, 2, 5, 4), (2, 0, 3, 5)]
+        me = bpy.data.meshes.new(f"{nombre}_c{i}")
+        me.from_pydata(verts, [], caras)
+        me.update()
+        me.materials.append(mat)
+        o = bpy.data.objects.new(f"{nombre}_c{i}", me)
+        col.objects.link(o)
+        o.location = Vector((centro[0], centro[1] + r.uniform(-ancho / 2, ancho / 2), centro[2] + r.uniform(-alto / 2, alto / 2)))
+        o.rotation_mode = "QUATERNION"
+        objs.append(o)
+    return objs
 
 
 def claves_color_constante(o, f_rotura):
@@ -270,6 +296,15 @@ def vidrieras(ctx, col, tcar, f_de_t):
                 V0.append(v)
                 W0.append([r.gauss(0, 3.0), r.gauss(0, 3.0), r.gauss(0, 3.0)])
                 T0.append(tb + r.uniform(0.0, 0.08))
+            ch = chips_vidrio(col, f"vid_{n_panel}", centro, ancho, alto, 6, r, vid)
+            for o in ch:
+                p = np.array(o.location)
+                v = np.array([-sx * r.uniform(3.0, 14.0), r.uniform(-3.0, 9.0), r.uniform(-0.5, 8.0)])
+                obj.append(o)
+                P0.append(p)
+                V0.append(v)
+                W0.append([r.gauss(0, 6.0), r.gauss(0, 6.0), r.gauss(0, 6.0)])
+                T0.append(tb + r.uniform(0.0, 0.12))
             n_panel += 1
         y += ancho
     P0, V0, W0, T0 = np.array(P0), np.array(V0), np.array(W0), np.array(T0)
@@ -302,15 +337,15 @@ def hojas(ctx, col, tcar, f_de_t):
     ya = [a for a in ctx.arboles if ciudad.HERO_Y0 + 20 < a["pos"].y < ciudad.HERO_Y1 - 5]
     for a in ya:
         tb = t_rotura(tcar, a["pos"].y, a["pos"].x) + 0.05
-        for k in range(9):
+        for k in range(16):
             o = bpy.data.objects.new(f"hoja_{len(objs)}", me.copy() if False else me)
             col.objects.link(o)
             o.data.materials.clear() if False else None
             o.active_material = m1 if rp.random() < 0.7 else m2
-            s_ = rp.uniform(1.8, 3.2)
+            s_ = rp.uniform(2.4, 4.6)
             o.scale = (s_, s_, s_)
             o.rotation_mode = "QUATERNION"
-            c = a["pos"] + Vector((rp.uniform(-1.6, 1.6), rp.uniform(-1.6, 1.6), rp.uniform(4.2, 6.4)))
+            c = a["pos"] + Vector((rp.uniform(-2.2, 2.2), rp.uniform(-2.2, 2.2), rp.uniform(0.45, 0.95) * a["alto"]))
             objs.append(o)
             P0.append(np.array(c))
             sx = a["sx"]
@@ -353,11 +388,11 @@ def piedras(ctx, col, tcar, f_de_t):
     mp = mat("piedra", (0.1, 0.095, 0.09), rug=0.8)
     ma = mat("asfalto_trozo", (0.025, 0.025, 0.027), rug=0.7)
     objs, P0, V0, W0, T0 = [], [], [], [], []
-    for k in range(360):
+    for k in range(520):
         ts_ = rp.uniform(17.4, 21.6)
         tsp = ctx.y_coche_t(ts_)
         lado = rp.choice((-0.86, 0.86))
-        tam = rp.uniform(0.018, 0.07) if rp.random() < 0.7 else rp.uniform(0.07, 0.16)
+        tam = rp.uniform(0.03, 0.10) if rp.random() < 0.65 else rp.uniform(0.10, 0.22)
         o = caja(f"piedra_{k}", (0, 0, 0), (tam, tam * rp.uniform(0.6, 1.3), tam * rp.uniform(0.5, 1.0)), col, mp if rp.random() < 0.6 else ma)
         o.rotation_mode = "QUATERNION"
         objs.append(o)
@@ -439,9 +474,9 @@ def polvo(ctx, col, tcar, f_de_t, ctx_vid):
     for y in np.arange(ciudad.HERO_Y0 + 5, ciudad.HERO_Y1, 11.0):
         for sx in (-1, 1):
             tb = t_rotura(tcar, y, sx * ciudad.X_VIDRIO) + 0.1
-            puff(f"polvo_f_{int(y)}_{sx}", (sx * (ciudad.X_VIDRIO - 1.5), y, 2.0), 2.0, 8.5, tb, 5.0, (-sx * 1.5, 1.8, 0.5), (0.45, 0.4, 0.34), 0.85)
+            puff(f"polvo_f_{int(y)}_{sx}", (sx * (ciudad.X_VIDRIO - 1.5), y, 2.0), 2.5, 11.0, tb, 5.5, (-sx * 1.5, 1.8, 0.5), (0.5, 0.45, 0.38), 1.1)
             if rp.random() < 0.5:
-                puff(f"humo_f_{int(y)}_{sx}", (sx * (ciudad.X_VIDRIO - 1.0), y + rp.uniform(-3, 3), 4.0), 1.5, 7.0, tb + 0.1, 6.0, (-sx * 1.0, 1.2, 1.1), (0.12, 0.11, 0.1), 0.7)
+                puff(f"humo_f_{int(y)}_{sx}", (sx * (ciudad.X_VIDRIO - 1.0), y + rp.uniform(-3, 3), 4.0), 2.0, 9.0, tb + 0.1, 6.5, (-sx * 1.0, 1.2, 1.1), (0.14, 0.13, 0.12), 0.9)
     # rastro del coche: polvo levantado detrás de las ruedas y la turbulencia
     for t_ in np.arange(17.3, 24.6, 0.12):
         y_ = ctx.y_coche_t(float(t_))

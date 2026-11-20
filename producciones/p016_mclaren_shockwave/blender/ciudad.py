@@ -6,6 +6,8 @@ from mathutils import Vector
 import lib
 from lib import *
 import guion
+import sh3d
+import interiores
 
 ANCHO_CALZADA = 24.0       # x ∈ [−12, 12]
 X_VIDRIO = 17.0            # plano de las vidrieras (±)
@@ -154,6 +156,8 @@ def mat_interior():
 
 def construir(ctx):
     col = coleccion("Ciudad")
+    col_int = coleccion("Interiores_SweetHome")
+    col_arb = coleccion("Arboles_SweetHome")
     r = random.Random(16)
     asf = mat_asfalto()
     acera = mat("acera", (0.16, 0.155, 0.15), rug=0.45)
@@ -183,8 +187,12 @@ def construir(ctx):
             h = r.choice((46, 58, 72, 90, 110, 130)) + r.uniform(-6, 6)
             prof = r.uniform(26, 40)
             xin = sx * (X_VIDRIO + 1.6)
-            # zócalo interior resplandeciente (detrás de los vidrios) y torre sobre voladizo
-            caja(f"zocalo_{k}_{sx}", (sx * (X_VIDRIO + 1.6 + prof / 2), y + paso / 2, H_PLANTA / 2), (prof, paso - 0.4, H_PLANTA), col, inter)
+            # zócalo: en la zona cercana lleva un interior real (restaurante, supermercado o tienda de muebles con muebles de Sweet Home 3D); lejos, un resplandor cálido
+            if CIUDAD_Y0 + 60 <= y < 150.0:
+                rng_i = random.Random(1000 + k * 2 + (1 if sx > 0 else 0))
+                interiores.TIPOS[(k + (1 if sx > 0 else 0)) % 3](col_int, y, sx, paso, rng_i)
+            else:
+                caja(f"zocalo_{k}_{sx}", (sx * (X_VIDRIO + 1.6 + prof / 2), y + paso / 2, H_PLANTA / 2), (prof, paso - 0.4, H_PLANTA), col, inter)
             caja(f"torre_{k}_{sx}", (sx * (X_VIDRIO + 0.2 + (prof + 1.4) / 2), y + paso / 2, H_PLANTA + h / 2), (prof + 1.4, paso - 0.4, h), col, fach)
             caja(f"voladizo_{k}_{sx}", (sx * (X_VIDRIO - 0.6), y + paso / 2, H_PLANTA + 0.25), (2.4, paso, 0.5), col, hormigon)
         y += paso
@@ -198,23 +206,22 @@ def construir(ctx):
     for sx in (-1, 1):
         caja(f"travesano_b_{sx}", (sx * X_VIDRIO, (HERO_Y0 + HERO_Y1) / 2, 0.1), (0.2, HERO_Y1 - HERO_Y0, 0.2), col, metal)
         caja(f"travesano_a_{sx}", (sx * X_VIDRIO, (HERO_Y0 + HERO_Y1) / 2, H_PLANTA - 0.1), (0.2, HERO_Y1 - HERO_Y0, 0.2), col, metal)
-    # ───── árboles y canteros
-    hoja = mat_ruido("follaje", (0.02, 0.07, 0.015), (0.16, 0.26, 0.05), 3.0, rug=0.7, bump=0.5)
-    tronco = mat("tronco", (0.06, 0.04, 0.025), rug=0.9)
+    # ───── árboles REALES de Sweet Home 3D (con copas densas) sobre canteros
+    tipos = ["tree_tree"]          # el único árbol de Sweet Home con copa densa y hojas con forma
+    for i_, tp in enumerate(tipos):
+        sh3d.preparar_arbol(tp, semilla=i_ + 1, copias=6)
     ctx.arboles = []
     for sx in (-1, 1):
         yy = CIUDAD_Y0 + 7.0
         while yy < CIUDAD_Y1:
-            c = Vector((sx * 14.3, yy + r.uniform(-1.5, 1.5), 0.0))
-            tr = cilindro(f"tronco_{sx}_{int(yy)}", c + Vector((0, 0, 1.9)), 0.2, 3.8, col, tronco, seg=10)
-            copa = []
-            for j in range(7):
-                s_ = r.uniform(1.3, 2.6)
-                ang = r.uniform(0, 6.28)
-                rad = r.uniform(0.4, 2.2)
-                o = esfera(f"copa_{sx}_{int(yy)}_{j}", c + Vector((math.cos(ang) * rad, math.sin(ang) * rad, 5.4 + r.uniform(-0.6, 2.6))), s_, col, hoja, 14, 9, esc=(1, 1, 0.8))
-                copa.append(o)
-            ctx.arboles.append({"pos": c, "sx": sx, "tronco": tr, "copa": copa})
-            caja(f"cantero_{sx}_{int(yy)}", c + Vector((0, 0, 0.25)), (1.6, 6.0, 0.4), col, hormigon)
-            yy += 14.0
+            c = Vector((sx * 14.3, yy + r.uniform(-1.5, 1.5), 0.28))
+            tp = r.choice(tipos)
+            esc = r.uniform(1.1, 1.65)
+            raiz = sh3d.poner(tp, col_arb, c, frente=(0, -1), escala=esc, nombre=f"arb_{sx}_{int(yy)}")
+            hijos = sh3d.ULTIMOS
+            alto = sh3d._BIB[tp]["dim"].z * esc
+            copa = [o for o in hijos if o.type == "MESH" and any(s_ in o.name.lower() for s_ in ("leav", "foil"))]
+            ctx.arboles.append({"pos": c, "sx": sx, "alto": alto, "copa": copa, "raiz": raiz})
+            caja(f"cantero_{sx}_{int(yy)}", c + Vector((0, 0, 0.0)), (1.8, 2.4, 0.3), col, hormigon)
+            yy += 14.0 if yy < 300 else 28.0
     return col

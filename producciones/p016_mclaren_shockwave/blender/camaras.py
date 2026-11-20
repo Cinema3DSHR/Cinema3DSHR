@@ -60,10 +60,16 @@ def construir(ctx):
     # ───── 3. cámara lenta: seguimiento lateral por el costado derecho; el fondo (vidrieras) estalla
     cC = Camara("cam_C_lateral_slow", col, 20.0)
     cC.seguir(ctx.centro)
-    pos_C = lambda f: cp(f) + Vector((lerp(-7.4, -6.0, (f - 700) / 180.0), lerp(1.2, 0.2, (f - 700) / 180.0), 1.15)) + micro(f, 0.006)
+    def pos_C(f):
+        """Tres cuartos trasero y abierto (nada de plano tapado por una puerta): la cámara va detrás-a la derecha del coche y se abre hacia el costado,
+        con la avenida y las fachadas que estallan al fondo."""
+        u = (f - 700) / 180.0
+        a = math.radians(lerp(28, 62, suave(u)))
+        d = lerp(11.0, 9.5, u)
+        return cp(f) + Vector((-math.sin(a) * d, math.cos(a) * d, lerp(1.1, 1.6, u))) + micro(f, 0.006)
     reg.append((700, 880, pos_C))
     cC.claves(700, 880, pos_C, None,
-              flente=lambda f: 20.0, fdof=lambda f: (7.0, 4.5), paso=2)
+              flente=lambda f: 24.0, fdof=lambda f: (10.0, 5.6), paso=2)
     # ───── 4. por delante del coche, mirando hacia atrás: la fachada destruida queda detrás del auto
     cD = Camara("cam_D_frontal_slow", col, 22.0)
     cD.seguir(ctx.centro)

@@ -67,7 +67,7 @@ def encender_luces(coche):
     raiz = coche["raiz"]
     for sx in (-1, 1):
         sp = bpy.data.lights.new(f"faro_{sx}", "SPOT")
-        sp.energy = 6000.0
+        sp.energy = 2200.0
         sp.spot_size = math.radians(70)
         sp.spot_blend = 0.6
         sp.color = (1.0, 0.93, 0.82)

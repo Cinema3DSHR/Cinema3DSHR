@@ -7,6 +7,7 @@ import bpy
 from mathutils import Vector, Matrix, Euler
 
 GLB = os.environ.get("MCLAREN_GLB", "/home/user/Cinema3DSHR/producciones/p016_mclaren_shockwave/modelo/mclaren_f1_original.glb")
+RUEDA_IZQ = os.environ.get("RUEDA_IZQ", "rotar")      # «rotar» = misma rueda girada 180° (por defecto) · «espejo» = copia espejada
 RADIO = 0.345            # radio del neumático
 Z_SUELO = -0.64          # z del punto más bajo de las ruedas en el modelo
 OCULTAS = ("[LM]",)
@@ -33,6 +34,30 @@ def _textura_placa(ruta, texto="3D SHR", ancho=1024, alto=300):
     d.text((x0, (alto - th) / 2 - bb[1]), texto, font=fuente, fill=(15, 15, 15))
     d.text((34, alto - 80), "UK", font=fuente.font_variant(size=46) if hasattr(fuente, "font_variant") else fuente, fill=(255, 255, 255))
     im.save(ruta)
+    return ruta
+
+
+def _textura_parabrisas(ruta, texto="Cinema3DSHR"):
+    """Reemplaza el rótulo «McLaren» de la franja del parabrisas (misma caja, mismo estilo gris itálico sobre fondo oscuro)."""
+    from PIL import Image, ImageDraw, ImageFont
+    base = Image.new("RGBA", (512, 512), (24, 24, 24, 255))
+    capa = Image.new("RGBA", (400, 100), (0, 0, 0, 0))
+    fuente = None
+    for f in ("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf"):
+        if os.path.exists(f):
+            fuente = ImageFont.truetype(f, 64)
+            break
+    d = ImageDraw.Draw(capa)
+    d.text((10, 10), texto, font=fuente or ImageFont.load_default(), fill=(138, 138, 138, 255))
+    bb = capa.getbbox()
+    capa = capa.crop(bb)
+    # itálica: cizalla horizontal
+    w, h = capa.size
+    capa = capa.transform((w + int(h * 0.3), h), Image.AFFINE, (1, 0.3, -h * 0.3, 0, 1, 0), resample=Image.BICUBIC)
+    # misma caja que el «McLaren» original: x 123–396, y 258–282
+    capa = capa.resize((273, 24), Image.LANCZOS)
+    base.alpha_composite(capa, (123, 258))
+    base.convert("RGB").save(ruta)
     return ruta
 
 
@@ -103,9 +128,20 @@ def cargar(col, ruta_placa="/tmp/placa_3dshr.png"):
         w2.parent = pv2
         w2.location = (0, 0, 0)
         w2.rotation_mode = "XYZ"          # el importador de glTF deja los objetos en cuaterniones
-        w2.rotation_euler = Euler((0, 0, math.pi), "XYZ")
+        if RUEDA_IZQ == "espejo":
+            w2.rotation_euler = Euler((0, 0, 0), "XYZ")
+            w2.scale = (-1, 1, 1)
+        else:
+            w2.rotation_euler = Euler((0, 0, math.pi), "XYZ")
         res["pivotes"][izq] = pv2
         res["ruedas"][izq] = w2
+    # ───── pegatina del parabrisas: «Cinema3DSHR»
+    mp_ = bpy.data.materials["mclaren"]
+    im_p = bpy.data.images.load(_textura_parabrisas("/tmp/parabrisas_cinema3dshr.png"))
+    im_p.pack()
+    for n_ in mp_.node_tree.nodes:
+        if n_.type == "TEX_IMAGE":
+            n_.image = im_p
     # ───── matrícula trasera: el modelo ya trae el rectángulo con UV 0..1 → se le pone la textura «3D SHR»
     _textura_placa(ruta_placa)
     img = bpy.data.images.load(ruta_placa)
