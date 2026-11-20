@@ -953,3 +953,9 @@ publicación y el render son automáticos. Detalle: `docs/FLUJO_DEFINITIVO.md`.
 - Recuperación con `render_desde_blend.yml` (corrida 44748847228, `cuadros=1351-1440`, 45 trabajos, `corrida_previa=44709823893`): montaje OK, MP4 de 5400 cuadros verificado.
 - Música original (`blender/musica.py`, numpy) mezclada con ffmpeg sobre el video (`-c:v copy`); el audio se midió pero no se escuchó. Entregado por el chat (la subida del MP4 con música a la Release sigue bloqueada por GraphQL).
 - Detalle técnico y límites: `producciones/p015_fractura/README.md`.
+
+## 20/11/2026 — p016 «Dream Racing — McLaren F1: SHOCKWAVE»
+- GLB del dueño sin deformar (versión F1; piezas [LM] y «(2)» ocultas). Ruedas izquierdas = las del derecho copiadas y GIRADAS 180° (opción A; el dueño no confirmó la B espejada). Matrículas «3D SHR»; parabrisas «Cinema3DSHR».
+- Avenida con interiores de Sweet Home (restaurante, supermercado, muebles; orientación verificada midiendo el respaldo), árboles reales `tree_tree` densificados, física de vidrios/hojas/piedras por Python+numpy horneada a claves.
+- BLEND `p016_mclaren_shockwave_v001` (SHA-256 `38e0d82e…727e`) por LFS → `incorporar_blend.yml` (corrida 44770581752, 63 trabajos OK) → MP4 de 1800 cuadros. Audio V12 sintetizado (`blender/audio.py`) mezclado con ffmpeg; no se escuchó, sólo se midió.
+- Pendiente de revisar con el dueño: la toma lateral 0:05–0:11 tapa el plano con la puerta; al final un fragmento queda pegado a la lente (~0:57).
