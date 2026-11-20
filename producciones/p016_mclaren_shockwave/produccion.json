@@ -1,0 +1,10 @@
+{
+ "tipo": "produccion",
+ "id": "p016_mclaren_shockwave",
+ "titulo": "Dream Racing — McLaren F1: SHOCKWAVE",
+ "clase": "cinematica",
+ "formato": {"aspecto": "9:16", "resolucion": "720x1280", "fps": 30, "duracion_s": 60},
+ "estado": "en_revision_del_dueno",
+ "audio": "audio original sintetizado (V12 con Doppler, rodadura, aire, onda y vidrios sincronizados): blender/audio.py",
+ "origen": {"modelo": "modelo/mclaren_f1_original.glb (GLB del dueño, sin deformar)", "blender": "blender/construir.py"}
+}
