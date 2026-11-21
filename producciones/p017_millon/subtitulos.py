@@ -49,10 +49,10 @@ WrapStyle: 2
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Sub,DejaVu Sans,40,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,2,40,40,170,1
-Style: Titulo,DejaVu Sans,50,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,5,2,5,40,40,40,1
-Style: Gran,DejaVu Sans,62,&H0000E5FF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,6,2,5,40,40,40,1
+Style: Titulo,DejaVu Sans,36,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,5,2,5,40,40,40,1
+Style: Gran,DejaVu Sans,50,&H0000E5FF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,6,2,5,40,40,40,1
 Style: Panel,DejaVu Sans,30,&H0000E5FF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,7,20,20,20,1
-Style: Aviso,DejaVu Sans,22,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,110,1
+Style: Aviso,DejaVu Sans,19,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,110,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -79,7 +79,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     ev.append(f"Dialogue: 1,{t_ass(60.4)},{t_ass(66.6)},Gran,,0,0,0,,¿VOS QUÉ\\NHARÍAS?")
     for yy, nom in ((10, "EL PRUDENTE"), (330, "EL IMPULSIVO"), (650, "EL GENEROSO")):
         ev.append(f"Dialogue: 2,{t_ass(55.4)},{t_ass(66.6)},Panel,,0,0,0,,{{\\pos(20,{yy})}}{nom}")
-    ev.append(f"Dialogue: 0,{t_ass(27.0)},{t_ass(44.0)},Aviso,,0,0,0,,Valores ficticios: escenario hipotético, no precios de mercado.")
+    ev.append(f"Dialogue: 0,{t_ass(27.0)},{t_ass(44.0)},Aviso,,0,0,0,,Valores ficticios: escenario hipotético,\\Nno precios de mercado.")
     ev.append(f"Dialogue: 0,{t_ass(9.6)},{t_ass(13.0)},Gran,,0,0,0,,EL PRUDENTE")
     ev.append(f"Dialogue: 0,{t_ass(18.4)},{t_ass(22.5)},Gran,,0,0,0,,EL IMPULSIVO")
     ev.append(f"Dialogue: 0,{t_ass(48.1)},{t_ass(52.0)},Gran,,0,0,0,,EL GENEROSO")
