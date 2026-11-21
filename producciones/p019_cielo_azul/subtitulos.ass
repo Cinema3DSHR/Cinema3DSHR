@@ -6,10 +6,10 @@ WrapStyle: 2
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Sub,DejaVu Sans,38,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,2,40,40,160,1
+Style: Sub,DejaVu Sans,38,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,2,40,40,118,1
 Style: Gran,DejaVu Sans,54,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,6,2,5,30,30,40,1
 Style: Tit,DejaVu Sans,46,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,5,2,8,30,30,140,1
-Style: Aviso,DejaVu Sans,22,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,100,1
+Style: Aviso,DejaVu Sans,22,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,40,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text

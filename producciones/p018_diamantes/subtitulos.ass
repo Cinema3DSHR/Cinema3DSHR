@@ -6,16 +6,17 @@ WrapStyle: 2
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Sub,DejaVu Sans,38,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,2,40,40,160,1
+Style: Sub,DejaVu Sans,38,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,2,40,40,118,1
 Style: Gran,DejaVu Sans,54,&H00FFF0B0,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,6,2,5,30,30,40,1
 Style: Tit,DejaVu Sans,46,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,5,2,8,30,30,140,1
-Style: Aviso,DejaVu Sans,22,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,100,1
+Style: SubTop,DejaVu Sans,38,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,8,40,40,50,1
+Style: Aviso,DejaVu Sans,22,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,40,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
-Dialogue: 0,0:00:03.30,0:00:06.31,Sub,,0,0,0,,Urano y Neptuno son\Ngigantes helados: mundos
-Dialogue: 0,0:00:06.26,0:00:09.53,Sub,,0,0,0,,enormes y muy fríos por\Nfuera, con atmósferas de
-Dialogue: 0,0:00:09.48,0:00:11.24,Sub,,0,0,0,,hidrógeno, helio y metano.
+Dialogue: 0,0:00:03.30,0:00:06.31,SubTop,,0,0,0,,Urano y Neptuno son\Ngigantes helados: mundos
+Dialogue: 0,0:00:06.26,0:00:09.53,SubTop,,0,0,0,,enormes y muy fríos por\Nfuera, con atmósferas de
+Dialogue: 0,0:00:09.48,0:00:11.24,SubTop,,0,0,0,,hidrógeno, helio y metano.
 Dialogue: 0,0:00:11.55,0:00:14.04,Sub,,0,0,0,,Si pudiéramos descender,\Nla presión y la
 Dialogue: 0,0:00:13.99,0:00:16.84,Sub,,0,0,0,,temperatura crecerían sin\Nparar, hasta valores
 Dialogue: 0,0:00:16.79,0:00:19.99,Sub,,0,0,0,,extremos: más de un millón\Nde veces la presión de la
