@@ -1,0 +1,23 @@
+{
+ "formato": "estudio.guion_narrado/1",
+ "produccion": "p017_millon",
+ "titulo": "¿Qué harías si apareciera un millón de dólares en tu cuenta?",
+ "narradora": {"voice_id": "9b3epFpN8VNQyCsbs3ER", "modelo": "eleven_multilingual_v2",
+               "ajustes": {"stability": 0.45, "similarity_boost": 0.8, "style": 0.35, "use_speaker_boost": true}},
+ "aviso_pantalla": "Valores ficticios: escenario hipotético, no precios de mercado.",
+ "beats": [
+  {"id": "b01_gancho", "texto": "¿Qué harías si mañana despertaras con un millón de dólares en tu cuenta?"},
+  {"id": "b02_saldo", "texto": "Un aviso del banco. Un número. Un millón de dólares."},
+  {"id": "b03_prudente", "texto": "El primero decide no dejarse llevar por la emoción. Compra lo necesario, reserva una parte e intenta hacer que ese dinero dure muchos años."},
+  {"id": "b04_impulsivo", "texto": "El segundo quiere disfrutarlo todo. Compra una casa espectacular, un auto de lujo, una piscina, tecnología y todo lo que siempre soñó."},
+  {"id": "b05_auto", "texto": "Un superdeportivo: doscientos cincuenta mil dólares."},
+  {"id": "b06_casa", "texto": "La casa de sus sueños: cuatrocientos mil."},
+  {"id": "b07_piscina", "texto": "Piscina y jardín: sesenta mil."},
+  {"id": "b08_tele", "texto": "Una pantalla gigante y todo el equipamiento: veinte mil."},
+  {"id": "b09_resto", "texto": "Y el resto, en fiestas y lujos: doscientos setenta mil."},
+  {"id": "b10_cero", "texto": "Pero cuando mira su cuenta, descubre que el millón desapareció."},
+  {"id": "b11_generoso", "texto": "El tercero decide compartirlo. Ayuda a su familia, apoya proyectos y guarda una parte para construir un futuro."},
+  {"id": "b12_cierre", "texto": "Un millón de dólares puede cambiar tu vida. Pero todo depende de lo que hagas con él."},
+  {"id": "b13_pregunta", "texto": "¿Vos qué harías?"}
+ ]
+}

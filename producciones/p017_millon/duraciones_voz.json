@@ -1,0 +1,54 @@
+{
+ "b01_gancho": {
+  "archivo": "voz_109278368a676255.mp3",
+  "dur_s": 3.76
+ },
+ "b02_saldo": {
+  "archivo": "voz_14205ffcad69909e.mp3",
+  "dur_s": 3.24
+ },
+ "b03_prudente": {
+  "archivo": "voz_c69540d6eb70d051.mp3",
+  "dur_s": 8.44
+ },
+ "b04_impulsivo": {
+  "archivo": "voz_5ace64ae4174e4ab.mp3",
+  "dur_s": 8.07
+ },
+ "b05_auto": {
+  "archivo": "voz_41b355d004917684.mp3",
+  "dur_s": 2.93
+ },
+ "b06_casa": {
+  "archivo": "voz_712b1f204199ca7d.mp3",
+  "dur_s": 2.4
+ },
+ "b07_piscina": {
+  "archivo": "voz_8bfdc4911357585b.mp3",
+  "dur_s": 2.12
+ },
+ "b08_tele": {
+  "archivo": "voz_bd39ed3e2742a3c8.mp3",
+  "dur_s": 3.47
+ },
+ "b09_resto": {
+  "archivo": "voz_64620c93f65a2342.mp3",
+  "dur_s": 3.71
+ },
+ "b10_cero": {
+  "archivo": "voz_80ea19317dfd1ca3.mp3",
+  "dur_s": 3.71
+ },
+ "b11_generoso": {
+  "archivo": "voz_92df126e9267b9fe.mp3",
+  "dur_s": 6.95
+ },
+ "b12_cierre": {
+  "archivo": "voz_1a5ad5fd3321abbc.mp3",
+  "dur_s": 4.68
+ },
+ "b13_pregunta": {
+  "archivo": "voz_3c6d8114d805c14e.mp3",
+  "dur_s": 1.33
+ }
+}

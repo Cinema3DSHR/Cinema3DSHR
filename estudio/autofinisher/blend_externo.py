@@ -53,11 +53,17 @@ PERFIL_VERTICAL = {**PERFIL_720P, "resolucion": [720, 1280]}
 PERFIL_480V = {**PERFIL_720P, "resolucion": [480, 854]}
 
 
+# Perfil vertical 540×960 (orden del dueño 21/11/2026: «Temporada piloto», tres videos virales); todo lo demás idéntico.
+PERFIL_540V = {**PERFIL_720P, "resolucion": [540, 960]}
+
+
 def perfil_de(formato: dict | None) -> dict:
     """Perfil de producción que corresponde al formato declarado (por defecto, el 720p horizontal obligatorio)."""
     res = str((formato or {}).get("resolucion", "")).lower().replace(" ", "")
     if res == "480x854":
         return PERFIL_480V
+    if res == "540x960":
+        return PERFIL_540V
     return PERFIL_VERTICAL if res == "720x1280" else PERFIL_720P
 
 

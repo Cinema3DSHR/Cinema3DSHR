@@ -1,0 +1,58 @@
+{
+ "inicial": 1000000,
+ "gastos": [
+  [
+   "Superdeportivo",
+   250000
+  ],
+  [
+   "Casa",
+   400000
+  ],
+  [
+   "Piscina y jardín",
+   60000
+  ],
+  [
+   "Televisor y equipamiento",
+   20000
+  ],
+  [
+   "Otros gastos",
+   270000
+  ]
+ ],
+ "tabla": [
+  [
+   "Saldo inicial",
+   0,
+   1000000
+  ],
+  [
+   "Superdeportivo",
+   250000,
+   750000
+  ],
+  [
+   "Casa",
+   400000,
+   350000
+  ],
+  [
+   "Piscina y jardín",
+   60000,
+   290000
+  ],
+  [
+   "Televisor y equipamiento",
+   20000,
+   270000
+  ],
+  [
+   "Otros gastos",
+   270000,
+   0
+  ]
+ ],
+ "aviso": "Valores ficticios de un escenario hipotético, no precios de mercado."
+}
