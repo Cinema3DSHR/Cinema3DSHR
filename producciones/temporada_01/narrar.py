@@ -12,7 +12,18 @@ from estudio.audio import elevenlabs as EL  # noqa: E402
 g = Path(sys.argv[1])
 guion = json.load(open(g))
 nar = guion["narradora"]
-evs = [{"tipo": "voz", "texto": b["texto"], "voice_id": nar["voice_id"], "modelo": nar["modelo"], "ajustes": nar["ajustes"]} for b in guion["beats"]]
+def _ev(b):
+    """Cada beat puede traer su propia voz: «rol» (config/voces.json) o «voice_id» (+ «ajustes»); si no, la narradora del guion."""
+    e = {"tipo": "voz", "texto": b["texto"], "modelo": b.get("modelo", nar["modelo"]), "ajustes": b.get("ajustes", nar["ajustes"])}
+    if b.get("rol"):
+        e["rol"] = b["rol"]
+        e.pop("ajustes", None) if "ajustes" not in b else None
+    else:
+        e["voice_id"] = b.get("voice_id", nar["voice_id"])
+    return e
+
+
+evs = [_ev(b) for b in guion["beats"]]
 print("caracteres:", sum(len(e["texto"]) for e in evs))
 if "--gastar" not in sys.argv:
     sys.exit(0)
