@@ -126,7 +126,18 @@ def hud(ctx, cam, col, f0, f1, f_compra):
 
 def finca(ctx, O, col, rng):
     pasto = mat_ruido("pasto_finca", (0.05, 0.14, 0.03), (0.1, 0.25, 0.06), 12.0, rug=0.9, bump=0.5)
-    caja("pasto", O + Vector((0, 15, -0.05)), (140, 120, 0.1), col, pasto)
+    px, py = 24.0, 6.0                       # pileta (centro, relativo a O): hueco rectangular de 9 × 4,4 m
+    hx, hy = 4.5, 2.2
+    x0, x1, y0, y1 = -70.0, 70.0, -45.0, 75.0
+    caja("pasto_izq", O + Vector(((x0 + px - hx) / 2, (y0 + y1) / 2, -0.05)), (px - hx - x0, y1 - y0, 0.1), col, pasto)
+    caja("pasto_der", O + Vector(((px + hx + x1) / 2, (y0 + y1) / 2, -0.05)), (x1 - px - hx, y1 - y0, 0.1), col, pasto)
+    caja("pasto_sur", O + Vector((px, (y0 + py - hy) / 2, -0.05)), (2 * hx, py - hy - y0, 0.1), col, pasto)
+    caja("pasto_norte", O + Vector((px, (py + hy + y1) / 2, -0.05)), (2 * hx, y1 - py - hy, 0.1), col, pasto)
+    piedra = mat("borde_piedra", (0.55, 0.53, 0.5), rug=0.5)
+    for nm, c, d in (("bpi", (px - hx + 0.25, py, 0.0), (0.5, 2 * hy, 0.1)), ("bpd", (px + hx - 0.25, py, 0.0), (0.5, 2 * hy, 0.1)),
+                     ("bps", (px, py - hy + 0.25, 0.0), (2 * hx, 0.5, 0.1)), ("bpn", (px, py + hy - 0.25, 0.0), (2 * hx, 0.5, 0.1))):
+        caja(nm, O + Vector(c), d, col, piedra)
+    caja("tierra_pileta", O + Vector((px, py, -2.6)), (2 * hx + 1.0, 2 * hy + 1.0, 0.2), col, mat("tierra_pileta", (0.15, 0.1, 0.07), rug=0.9))
     asfalto = mat("asfalto_acc", (0.07, 0.07, 0.08), rug=0.6)
     caja("acceso", O + Vector((-3.0, -18.0, 0.02)), (5.0, 40.0, 0.04), col, asfalto)
     caja("plaza", O + Vector((-3.0, -2.0, 0.02)), (10.0, 8.0, 0.04), col, mat("plaza_adoq", (0.4, 0.38, 0.34), rug=0.5))
@@ -135,8 +146,8 @@ def finca(ctx, O, col, rng):
     caja("piso_alto", O + Vector((6.0, 7.0, 4.3)), (12.0, 6.0, 1.0), col, mat("volumen_alto", (0.12, 0.12, 0.14), metal=0.5, rug=0.3))
     # pileta de Sweet Home con agua, reposeras y sombrillas, a la derecha de la mansión
     pos_p = O + Vector((24.0, 6.0, 0))
-    sh3d.poner("swimming_pool", col, pos_p, frente=(0, -1))
-    agua(col, "agua_pileta", pos_p + Vector((0, 0, 0.0)), 7.6, 2.9, 0.0)
+    # pileta HUNDIDA: el modelo (2,13 m de alto, agua a 1,96 m) se baja para que el borde asome 8 cm sobre el pasto y el agua quede 9 cm por debajo
+    sh3d.poner("swimming_pool", col, pos_p + Vector((0, 0, 0.08 - 2.13)), frente=(0, -1))
     for k in range(4):
         sh3d.poner("bench_pool_lounge", col, pos_p + Vector((-3.0 + k * 2.0, -3.0, 0)), frente=(0, 1))      # miran hacia la pileta (+Y)
     for k in range(2):

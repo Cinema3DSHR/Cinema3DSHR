@@ -19,9 +19,9 @@ def construir(ctx, i, f0, f1):
     od.fin()
     cab = s0["cabeza"]
     mano = s0["mano"]
-    c1 = Camara("cam_s8_a", col, 32.0)
+    c1 = Camara("cam_s8_a", col, 24.0)
     c1.seguir(cab)
-    c1.claves(f0, f0 + 60, lambda f: O + Vector((1.40 - 0.05 * (f - f0) / 60.0, 0.30, 1.62)), None, fdof=lambda f: (1.9, 2.8), paso=1)
+    c1.claves(f0, f0 + 60, lambda f: O + Vector((1.30 - 0.05 * (f - f0) / 60.0, 3.95, 1.55)), None, fdof=lambda f: (1.9, 2.8), paso=1)
     c2 = Camara("cam_s8_b", col, 28.0)
     c2.seguir(s0['pecho'])
     c2.claves(f0 + 60, f1, lambda f: O + Vector((lerp(0.9, 0.55, suave((f - f0 - 60) / (f1 - f0 - 60))), lerp(3.9, 3.7, suave((f - f0 - 60) / (f1 - f0 - 60))), 1.45)), None, fdof=lambda f: (1.4, 2.4), paso=1)
