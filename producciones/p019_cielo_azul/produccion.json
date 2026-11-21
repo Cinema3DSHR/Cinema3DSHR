@@ -1,0 +1,11 @@
+{
+ "tipo": "produccion",
+ "id": "p019_cielo_azul",
+ "titulo": "Temporada piloto · Video 3 — ¿Por qué el cielo es azul?",
+ "clase": "video_corto",
+ "formato": {"aspecto": "9:16", "resolucion": "540x960", "fps": 30, "duracion_s": 60.0},
+ "estado": "en_render",
+ "audio": "narración ElevenLabs (voz Yuli) + música y efectos originales sintetizados: audio.py; subtítulos ASS: subtitulos.ass; montaje: montaje.sh",
+ "origen": {"blender": "blender/construir.py", "guion": "guion.json"},
+ "ciencia": "Dispersión de Rayleigh: la luz de onda corta (azul) se dispersa mucho más que la de onda larga (roja) al chocar con moléculas del aire; el violeta se dispersa aún más pero el Sol emite menos y el ojo lo percibe peor; al atardecer la luz recorre más atmósfera; sin atmósfera el cielo es negro. Cielo del Blender: modelo físico de dispersión (Sky Texture). Aviso en pantalla: «Representación científica, no filmación real.»"
+}

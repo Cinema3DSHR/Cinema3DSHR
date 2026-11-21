@@ -1,0 +1,44 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 540
+PlayResY: 960
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Sub,DejaVu Sans,38,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,2,40,40,160,1
+Style: Gran,DejaVu Sans,54,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,6,2,5,30,30,40,1
+Style: Tit,DejaVu Sans,46,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,5,2,8,30,30,140,1
+Style: Aviso,DejaVu Sans,22,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,100,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:03.00,0:00:05.73,Sub,,0,0,0,,La luz del Sol parece\Nblanca, pero en realidad
+Dialogue: 0,0:00:05.68,0:00:07.96,Sub,,0,0,0,,mezcla todos los colores\Ndel arcoíris.
+Dialogue: 0,0:00:08.40,0:00:11.32,Sub,,0,0,0,,Al entrar en la atmósfera,\Nla luz choca con las
+Dialogue: 0,0:00:11.27,0:00:14.42,Sub,,0,0,0,,moléculas del aire, como\Nel nitrógeno y el oxígeno,
+Dialogue: 0,0:00:14.37,0:00:16.57,Sub,,0,0,0,,y se dispersa en todas\Ndirecciones.
+Dialogue: 0,0:00:17.03,0:00:20.57,Sub,,0,0,0,,Pero no todos los colores\Nse dispersan igual: la luz
+Dialogue: 0,0:00:20.52,0:00:23.92,Sub,,0,0,0,,azul, de onda más corta,\Nse dispersa mucho más que
+Dialogue: 0,0:00:23.87,0:00:24.45,Sub,,0,0,0,,la roja.
+Dialogue: 0,0:00:24.90,0:00:28.24,Sub,,0,0,0,,Por eso, mires hacia donde\Nmires, te llega luz azul
+Dialogue: 0,0:00:28.19,0:00:29.50,Sub,,0,0,0,,desde todo el cielo.
+Dialogue: 0,0:00:29.95,0:00:33.60,Sub,,0,0,0,,¿Y el violeta? Se dispersa\Naún más, pero el Sol emite
+Dialogue: 0,0:00:33.55,0:00:36.66,Sub,,0,0,0,,menos luz violeta y\Nnuestros ojos la perciben
+Dialogue: 0,0:00:36.61,0:00:38.86,Sub,,0,0,0,,peor, así que predomina el\Nazul.
+Dialogue: 0,0:00:39.30,0:00:41.33,Sub,,0,0,0,,Al amanecer y al\Natardecer, la luz
+Dialogue: 0,0:00:41.28,0:00:44.33,Sub,,0,0,0,,atraviesa mucho más aire.\NEl azul se dispersa por el
+Dialogue: 0,0:00:44.28,0:00:46.48,Sub,,0,0,0,,camino y llegan los rojos\Ny naranjas.
+Dialogue: 0,0:00:46.90,0:00:49.79,Sub,,0,0,0,,Y en el espacio, sin\Natmósfera que disperse la
+Dialogue: 0,0:00:49.74,0:00:51.36,Sub,,0,0,0,,luz, el cielo se ve negro.
+Dialogue: 0,0:00:51.80,0:00:55.06,Sub,,0,0,0,,Así que el azul del cielo\Nes luz del Sol, dispersada
+Dialogue: 0,0:00:55.01,0:00:55.79,Sub,,0,0,0,,por el aire.
+Dialogue: 1,0:00:00.10,0:00:02.90,Gran,,0,0,0,,¿POR QUÉ EL\NCIELO ES AZUL?
+Dialogue: 0,0:00:03.60,0:00:08.20,Tit,,0,0,0,,LUZ BLANCA =\NTODOS LOS COLORES
+Dialogue: 0,0:00:09.00,0:00:13.00,Tit,,0,0,0,,EL AIRE DISPERSA\NLA LUZ
+Dialogue: 0,0:00:17.40,0:00:24.40,Tit,,0,0,0,,AZUL: SE DISPERSA MUCHO\NROJO: SE DISPERSA POCO
+Dialogue: 1,0:00:25.00,0:00:29.00,Gran,,0,0,0,,AZUL EN\NTODO EL CIELO
+Dialogue: 1,0:00:39.50,0:00:46.50,Gran,,0,0,0,,MÁS AIRE EN\NEL CAMINO →\NSE PIERDE EL AZUL
+Dialogue: 1,0:00:47.00,0:00:51.50,Gran,,0,0,0,,SIN ATMÓSFERA:\NCIELO NEGRO
+Dialogue: 1,0:00:52.00,0:00:59.80,Gran,,0,0,0,,EL CIELO ES AZUL\NPORQUE EL AIRE\NDISPERSA LA LUZ\NDEL SOL
+Dialogue: 0,0:00:03.00,0:01:00.00,Aviso,,0,0,0,,Representación científica, no filmación real.

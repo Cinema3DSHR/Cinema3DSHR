@@ -1,0 +1,38 @@
+{
+ "b01_gancho": {
+  "archivo": "voz_d139033bf4ab1169.mp3",
+  "dur_s": 1.52
+ },
+ "b02_luz": {
+  "archivo": "voz_1896288d7b2c4418.mp3",
+  "dur_s": 4.91
+ },
+ "b03_atmosfera": {
+  "archivo": "voz_a3cedd53a3ad3741.mp3",
+  "dur_s": 8.12
+ },
+ "b04_ondas": {
+  "archivo": "voz_7c5ff516bf3c63a7.mp3",
+  "dur_s": 7.37
+ },
+ "b05_cielo": {
+  "archivo": "voz_803fcd9aa220b8ea.mp3",
+  "dur_s": 4.55
+ },
+ "b06_violeta": {
+  "archivo": "voz_36a04b3aeab70183.mp3",
+  "dur_s": 8.86
+ },
+ "b07_atardecer": {
+  "archivo": "voz_e4631b63b2c0c7e7.mp3",
+  "dur_s": 7.13
+ },
+ "b08_espacio": {
+  "archivo": "voz_11d85a48fd2d6d8e.mp3",
+  "dur_s": 4.41
+ },
+ "b09_cierre": {
+  "archivo": "voz_a5e3cadcdb5abc95.mp3",
+  "dur_s": 3.94
+ }
+}

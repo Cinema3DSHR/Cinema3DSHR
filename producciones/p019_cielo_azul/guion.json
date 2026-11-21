@@ -1,0 +1,19 @@
+{
+ "formato": "estudio.guion_narrado/1",
+ "produccion": "p019_cielo_azul",
+ "titulo": "¿Por qué el cielo es azul?",
+ "narradora": {"voice_id": "9b3epFpN8VNQyCsbs3ER", "modelo": "eleven_multilingual_v2",
+               "ajustes": {"stability": 0.45, "similarity_boost": 0.8, "style": 0.35, "use_speaker_boost": true}},
+ "aviso_pantalla": "Representación científica, no filmación real.",
+ "beats": [
+  {"id": "b01_gancho", "texto": "¿Por qué el cielo es azul?"},
+  {"id": "b02_luz", "texto": "La luz del Sol parece blanca, pero en realidad mezcla todos los colores del arcoíris."},
+  {"id": "b03_atmosfera", "texto": "Al entrar en la atmósfera, la luz choca con las moléculas del aire, como el nitrógeno y el oxígeno, y se dispersa en todas direcciones."},
+  {"id": "b04_ondas", "texto": "Pero no todos los colores se dispersan igual: la luz azul, de onda más corta, se dispersa mucho más que la roja."},
+  {"id": "b05_cielo", "texto": "Por eso, mires hacia donde mires, te llega luz azul desde todo el cielo."},
+  {"id": "b06_violeta", "texto": "¿Y el violeta? Se dispersa aún más, pero el Sol emite menos luz violeta y nuestros ojos la perciben peor, así que predomina el azul."},
+  {"id": "b07_atardecer", "texto": "Al amanecer y al atardecer, la luz atraviesa mucho más aire. El azul se dispersa por el camino y llegan los rojos y naranjas."},
+  {"id": "b08_espacio", "texto": "Y en el espacio, sin atmósfera que disperse la luz, el cielo se ve negro."},
+  {"id": "b09_cierre", "texto": "Así que el azul del cielo es luz del Sol, dispersada por el aire."}
+ ]
+}
