@@ -1,0 +1,46 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 540
+PlayResY: 960
+WrapStyle: 2
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Sub,DejaVu Sans,38,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,4,1,2,40,40,160,1
+Style: Gran,DejaVu Sans,54,&H00FFF0B0,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,6,2,5,30,30,40,1
+Style: Tit,DejaVu Sans,46,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,1,0,0,0,100,100,0,0,1,5,2,8,30,30,140,1
+Style: Aviso,DejaVu Sans,22,&H00D8D8D8,&H000000FF,&H00000000,&H80000000,0,1,0,0,100,100,0,0,1,2,0,2,30,30,100,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:03.30,0:00:06.31,Sub,,0,0,0,,Urano y Neptuno son\Ngigantes helados: mundos
+Dialogue: 0,0:00:06.26,0:00:09.53,Sub,,0,0,0,,enormes y muy fríos por\Nfuera, con atmósferas de
+Dialogue: 0,0:00:09.48,0:00:11.24,Sub,,0,0,0,,hidrógeno, helio y metano.
+Dialogue: 0,0:00:11.55,0:00:14.04,Sub,,0,0,0,,Si pudiéramos descender,\Nla presión y la
+Dialogue: 0,0:00:13.99,0:00:16.84,Sub,,0,0,0,,temperatura crecerían sin\Nparar, hasta valores
+Dialogue: 0,0:00:16.79,0:00:19.99,Sub,,0,0,0,,extremos: más de un millón\Nde veces la presión de la
+Dialogue: 0,0:00:19.94,0:00:21.24,Sub,,0,0,0,,superficie terrestre.
+Dialogue: 0,0:00:21.55,0:00:24.31,Sub,,0,0,0,,Allí, según los\Ncientíficos, el metano
+Dialogue: 0,0:00:24.26,0:00:27.50,Sub,,0,0,0,,podría romperse. El\Nhidrógeno se separa y los
+Dialogue: 0,0:00:27.45,0:00:30.27,Sub,,0,0,0,,átomos de carbono se\Naprietan entre sí.
+Dialogue: 0,0:00:30.60,0:00:33.84,Sub,,0,0,0,,Bajo esa presión, el\Ncarbono podría ordenarse
+Dialogue: 0,0:00:33.79,0:00:35.51,Sub,,0,0,0,,en cristales: diamantes.
+Dialogue: 0,0:00:35.80,0:00:38.63,Sub,,0,0,0,,Y esos diamantes, más\Ndensos que lo que los
+Dialogue: 0,0:00:38.58,0:00:41.41,Sub,,0,0,0,,rodea, podrían hundirse\Nlentamente hacia el
+Dialogue: 0,0:00:41.36,0:00:43.87,Sub,,0,0,0,,interior del planeta, como\Nuna lluvia.
+Dialogue: 0,0:00:44.20,0:00:47.24,Sub,,0,0,0,,¿Cómo lo sabemos? En\Nlaboratorio, con láseres
+Dialogue: 0,0:00:47.19,0:00:50.17,Sub,,0,0,0,,potentes y rayos X, se\Nrecrearon condiciones
+Dialogue: 0,0:00:50.12,0:00:53.23,Sub,,0,0,0,,parecidas y aparecieron\Ndiminutos diamantes de
+Dialogue: 0,0:00:53.18,0:00:54.73,Sub,,0,0,0,,apenas unos nanómetros.
+Dialogue: 0,0:00:55.00,0:00:58.29,Sub,,0,0,0,,Pero ojo: nadie ha visto\Nesta lluvia directamente.
+Dialogue: 0,0:00:58.24,0:01:00.32,Sub,,0,0,0,,Es una hipótesis\Nrespaldada por
+Dialogue: 0,0:01:00.27,0:01:02.23,Sub,,0,0,0,,experimentos, no una\Ncerteza.
+Dialogue: 1,0:00:00.15,0:00:03.20,Gran,,0,0,0,,¿LLUEVEN\NDIAMANTES\NEN OTROS\NPLANETAS?
+Dialogue: 0,0:00:30.70,0:00:35.70,Tit,,0,0,0,,CARBONO + PRESIÓN\N= DIAMANTE
+Dialogue: 0,0:00:44.40,0:00:49.50,Tit,,0,0,0,,LABORATORIO\NLÁSER + RAYOS X
+Dialogue: 0,0:00:50.50,0:00:54.90,Tit,,0,0,0,,DIAMANTES DE UNOS\NNANÓMETROS
+Dialogue: 1,0:00:55.10,0:01:02.40,Gran,,0,0,0,,HIPÓTESIS\NRESPALDADA POR\NEXPERIMENTOS
+Dialogue: 1,0:01:02.60,0:01:06.00,Gran,,0,0,0,,¿TE IMAGINÁS UNA\NLLUVIA DE\NDIAMANTES?
+Dialogue: 0,0:00:03.40,0:01:06.00,Aviso,,0,0,0,,Representación científica, no filmación real.
+Dialogue: 0,0:00:22.00,0:00:25.40,Tit,,0,0,0,,METANO (CH₄)\N+ PRESIÓN EXTREMA
+Dialogue: 0,0:00:26.40,0:00:30.40,Tit,,0,0,0,,EL HIDRÓGENO SE SEPARA\NEL CARBONO SE ORDENA

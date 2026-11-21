@@ -1,0 +1,38 @@
+{
+ "b01_gancho": {
+  "archivo": "voz_7c923bada33a35fb.mp3",
+  "dur_s": 2.95
+ },
+ "b02_gigantes": {
+  "archivo": "voz_88aa36dffebf1f09.mp3",
+  "dur_s": 7.89
+ },
+ "b03_presion": {
+  "archivo": "voz_d16cf713631aba9f.mp3",
+  "dur_s": 9.64
+ },
+ "b04_metano": {
+  "archivo": "voz_4481bb6163fa4749.mp3",
+  "dur_s": 8.67
+ },
+ "b05_cristales": {
+  "archivo": "voz_bce5d25c864b67f6.mp3",
+  "dur_s": 4.86
+ },
+ "b06_lluvia": {
+  "archivo": "voz_4cabd8c584413368.mp3",
+  "dur_s": 8.02
+ },
+ "b07_laboratorio": {
+  "archivo": "voz_54bb2938968e2d71.mp3",
+  "dur_s": 10.48
+ },
+ "b08_cautela": {
+  "archivo": "voz_d09785d00e53bdc2.mp3",
+  "dur_s": 7.18
+ },
+ "b09_pregunta": {
+  "archivo": "voz_702d638892790b78.mp3",
+  "dur_s": 2.12
+ }
+}

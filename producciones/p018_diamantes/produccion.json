@@ -1,0 +1,11 @@
+{
+ "tipo": "produccion",
+ "id": "p018_diamantes",
+ "titulo": "Temporada piloto · Video 2 — ¿Sabías que podría llover diamantes en otros planetas?",
+ "clase": "video_corto",
+ "formato": {"aspecto": "9:16", "resolucion": "540x960", "fps": 30, "duracion_s": 66.0},
+ "estado": "en_render",
+ "audio": "narración ElevenLabs (voz Yuli) + música y efectos originales sintetizados: audio.py; subtítulos ASS: subtitulos.ass; montaje: montaje.sh",
+ "origen": {"blender": "blender/construir.py", "guion": "guion.json"},
+ "ciencia": "Hipótesis respaldada por experimentos (SLAC 2017, Nature Astronomy; European XFEL 2024): nanodiamantes obtenidos en laboratorio a partir de hidrocarburos bajo presión extrema; nadie ha observado la lluvia en los planetas. Aviso en pantalla: «Representación científica, no filmación real.»"
+}

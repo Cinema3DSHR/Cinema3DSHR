@@ -1,0 +1,19 @@
+{
+ "formato": "estudio.guion_narrado/1",
+ "produccion": "p018_diamantes",
+ "titulo": "¿Sabías que podría llover diamantes en otros planetas?",
+ "narradora": {"voice_id": "9b3epFpN8VNQyCsbs3ER", "modelo": "eleven_multilingual_v2",
+               "ajustes": {"stability": 0.45, "similarity_boost": 0.8, "style": 0.35, "use_speaker_boost": true}},
+ "aviso_pantalla": "Representación científica, no filmación real.",
+ "beats": [
+  {"id": "b01_gancho", "texto": "¿Sabías que en otros planetas podría llover diamantes?"},
+  {"id": "b02_gigantes", "texto": "Urano y Neptuno son gigantes helados: mundos enormes y muy fríos por fuera, con atmósferas de hidrógeno, helio y metano."},
+  {"id": "b03_presion", "texto": "Si pudiéramos descender, la presión y la temperatura crecerían sin parar, hasta valores extremos: más de un millón de veces la presión de la superficie terrestre."},
+  {"id": "b04_metano", "texto": "Allí, según los científicos, el metano podría romperse. El hidrógeno se separa y los átomos de carbono se aprietan entre sí."},
+  {"id": "b05_cristales", "texto": "Bajo esa presión, el carbono podría ordenarse en cristales: diamantes."},
+  {"id": "b06_lluvia", "texto": "Y esos diamantes, más densos que lo que los rodea, podrían hundirse lentamente hacia el interior del planeta, como una lluvia."},
+  {"id": "b07_laboratorio", "texto": "¿Cómo lo sabemos? En laboratorio, con láseres potentes y rayos X, se recrearon condiciones parecidas y aparecieron diminutos diamantes de apenas unos nanómetros."},
+  {"id": "b08_cautela", "texto": "Pero ojo: nadie ha visto esta lluvia directamente. Es una hipótesis respaldada por experimentos, no una certeza."},
+  {"id": "b09_pregunta", "texto": "¿Te imaginás una lluvia de diamantes?"}
+ ]
+}
