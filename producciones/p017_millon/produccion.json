@@ -1,0 +1,10 @@
+{
+ "tipo": "produccion",
+ "id": "p017_millon",
+ "titulo": "Temporada piloto · Video 1 — ¿Qué harías si apareciera un millón de dólares en tu cuenta?",
+ "clase": "video_corto",
+ "formato": {"aspecto": "9:16", "resolucion": "540x960", "fps": 30, "duracion_s": 55.4, "duracion_final_s": 66.7, "nota_duracion": "Blender renderiza 1662 cuadros (55,4 s); el cierre de 11,3 s (tres paneles) se arma en el montaje con ffmpeg a partir de esas tomas"},
+ "estado": "en_render",
+ "audio": "narración ElevenLabs (voz Yuli) + música original y efectos sintetizados: audio.py; subtítulos ASS: subtitulos.py; montaje: montaje.sh",
+ "origen": {"blender": "blender/construir.py", "guion": "guion.json", "cuentas": "cuentas.json"}
+}
