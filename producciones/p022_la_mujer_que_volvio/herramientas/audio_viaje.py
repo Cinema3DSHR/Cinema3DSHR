@@ -13,7 +13,7 @@ n = int(DUR * SR)
 rng = np.random.default_rng(1101)
 t = np.arange(n) / SR
 mez = np.zeros((n, 2))
-PERIODO_LIMPIA = 1.5                                  # s por barrido de ida y vuelta (la animación de Godot usa el mismo)
+PERIODO_LIMPIA = 1.4                                  # s por barrido de ida y vuelta (la animación de Godot usa el mismo)
 
 
 def lp(x, fc):                                        # pasabajos por FFT
@@ -85,16 +85,26 @@ for i, f in enumerate(melodia * 3):
 mus_amp = np.minimum(t / 5, 1) * (0.55 + 0.45 * (t / DUR)) * np.minimum((DUR - t) / 2.5, 1)
 mez += mus * mus_amp[:, None] * 0.75
 
-# 7) VOZ de Gabriel (líneas 1–5 del accidente), por encima de todo
+# 7) VOZ de Gabriel (líneas 1–5 del accidente): se mezcla aparte, se normaliza a −3 dBFS de pico y el resto (lluvia, ruta, motor, música) BAJA mientras habla
 vo = json.load(open(Path(__file__).parents[1] / "audio_cap1" / "voces.json"))
+voz = np.zeros((n, 2))
 ta = 3.0
 for l in [x for x in vo if x["bloque"] == "accidente"][:5]:
     x = P._decodificar(RAIZ / l["mp3"])
-    P._poner(mez, x, ta, 1.0, 0.0)
+    P._poner(voz, x, ta, 1.0, 0.0)
     ta += l["dur_s"] + 0.9
-# ducking: la música baja un poco mientras habla la voz (ya está mezclada más baja); sin normalizar el pico más allá de 0 dBFS
+voz *= 0.85 / (np.abs(voz).max() + 1e-9)
+env = np.convolve(np.abs(voz[:, 0]), np.ones(int(0.12 * SR)) / int(0.12 * SR), mode="same")
+env = np.minimum(env / 0.06, 1.0)
+env = np.convolve(env, np.ones(int(0.25 * SR)) / int(0.25 * SR), mode="same")        # ataque/relajo suaves del ducking
+mez *= 0.55
+mez *= (1.0 - 0.85 * env)[:, None]                                                   # el fondo baja ~7 dB con la voz
+habla = env > 0.5
+fondo = np.sqrt((mez[habla] ** 2).mean()); lavoz = np.sqrt((voz[habla] ** 2).mean())
+print("voz sobre el fondo mientras habla: +%.1f dB" % (20 * np.log10(lavoz / fondo)))
+mez += voz
 pico = np.abs(mez).max()
-mez *= min(1.0, 0.92 / pico)
+mez *= min(1.0, 0.92 / pico) if pico > 0.92 else 1.0
 print("PICO", round(float(np.abs(mez).max()), 3), "fin de la voz", round(ta, 1), "s")
 pcm = (np.clip(mez, -1, 1) * 32767).astype("<i2")
 with wave.open(sys.argv[1], "wb") as w_:
