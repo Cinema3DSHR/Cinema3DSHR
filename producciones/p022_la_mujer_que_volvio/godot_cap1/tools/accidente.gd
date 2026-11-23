@@ -11,6 +11,8 @@ const T_SKID := 8.6                    # empieza a despistar
 const T_IMPACTO := 10.3
 const T_ROLL_FIN := 13.4
 const T_REPOSO := 14.6
+const CARRIL := -2.0                   # el auto va por el carril derecho (desplazamiento lateral; positivo = izquierda)
+const CHARCOS_S := [66.0, 101.0, 137.0, 172.0]   # metros de ruta donde hay charcos grandes
 const PISO := -0.50                    # piso de la cabina respecto del centro del auto
 const Y0 := 0.75                       # altura del centro del auto sobre el asfalto
 const MEDIO_ANCHO := 4.0
@@ -57,7 +59,7 @@ func _suave(a: float, b: float, x: float) -> float:
 # ───────── trayectoria del auto (se integra una sola vez) ─────────
 func _simular() -> void:
 	var dt := 1.0 / FPS
-	var pos := centro(30.0)
+	var pos := centro(30.0) + Vector3(-1.0, 0, 0) * CARRIL * -1.0
 	var s := 30.0
 	var yaw := 0.0
 	var vel := V0
@@ -70,8 +72,8 @@ func _simular() -> void:
 		var hop := 0.0
 		if t < T_SKID:
 			s += V0 * dt
-			pos = centro(s)
 			yaw = rumbo(s)
+			pos = centro(s) + Vector3(-cos(yaw), 0, sin(yaw)) * CARRIL
 			vel = V0
 			if t + dt >= T_SKID:                               # fotograma de arranque del derrape: guarda la recta tangente
 				P_SKID = pos; YAW_SKID = yaw
@@ -207,6 +209,8 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 	da_car = Au.crear(); da_car.name = "AutoDestruido"; carro.add_child(da_car); limp_da = Au.limpiaparabrisas(da_car)
 	await process_frame
 	Da.destruir(da_car, 0.65)
+	for rn in [["Rueda_FL", -0.73, -1.2], ["Rueda_FR", 0.73, -1.2], ["Rueda_RL", -0.74, 1.34], ["Rueda_RR", 0.74, 1.34]]:
+		var em := Node3D.new(); em.name = rn[0]; em.position = Vector3(rn[1], -0.75, rn[2]); carro.add_child(em)
 	# luces
 	for lado in [-1.0, 1.0]:
 		var sp := SpotLight3D.new(); sp.name = "Faro_" + ("L" if lado < 0 else "R"); sp.position = Vector3(lado * 0.52, -0.02, -1.95); sp.rotation_degrees = Vector3(-5.0, 0, 0)
@@ -335,6 +339,7 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 		"resolucion": [540, 960], "animacion": "escena", "actores": [{"id": "gabriel", "nodo": "gabriel", "modelo": "aiden"}, {"id": "elena", "nodo": "elena", "modelo": "kate"}], "tomas": cj,
 		"eventos": {"derrape_s": T_SKID, "impacto_s": T_IMPACTO, "vuelco_fin_s": T_ROLL_FIN, "reposo_s": T_REPOSO, "relampagos_s": [5.1, 11.6, 19.7], "balizas_desde_s": T_REPOSO,
 			"punto_impacto": [P_IMP.x, P_IMP.y, P_IMP.z], "auto_intacto": "AutoIntacto", "auto_destruido": "AutoDestruido", "se_cambia_en_s": T_IMPACTO},
+		"charcos": CHARCOS_S.map(func(ss): var pp := centro(ss) + Vector3(-cos(rumbo(ss)), 0, sin(rumbo(ss))) * CARRIL; return {"s": ss, "x": pp.x, "z": pp.z, "yaw": rumbo(ss), "t_paso_s": (ss - 30.0) / V0}),
 		"limpiaparabrisas": {"periodo_s": 1.4, "barrido_rad": 1.65}, "velocidad_ms": V0,
 		"efectos_blender": ["lluvia real", "charcos con reflejos", "agua que levanta el auto al pisar charcos", "gotas en el parabrisas", "niebla", "relámpagos", "barniz negro brillante", "conos volumétricos de los faros", "chispas y vidrios al chocar", "polvo y barro", "humo del motor", "balizas"],
 		"tiempo": {"pelicula": "t = (cuadro − 1) / fps"}}
@@ -354,8 +359,9 @@ func _punto(p) -> Vector3:
 
 func _tomas() -> Array:
 	return [
-		{"id": "t1", "camara": "C1_exterior_seguimiento", "t0": 0.0, "t1": 5.0, "modo": "rel", "off": [-2.7, 0.15, -6.5], "off_fin": [-2.2, 0.35, -4.6], "mira": [0.0, 0.1, -1.2], "fov": 40.0},
-		{"id": "t2", "camara": "C2_interior_hombro", "t0": 5.0, "t1": 8.4, "modo": "rel", "off": [0.52, 0.52, 1.15], "off_fin": [0.46, 0.50, 0.95], "mira": [0.25, 0.22, -0.7], "fov": 58.0},
+		{"id": "t1", "camara": "C1_exterior_seguimiento", "t0": 0.0, "t1": 3.4, "modo": "rel", "off": [-2.7, 0.15, -6.5], "off_fin": [-2.3, 0.30, -5.0], "mira": [0.0, 0.1, -1.2], "fov": 40.0},
+		{"id": "t1b", "camara": "C1b_trasera_rocio", "t0": 3.4, "t1": 5.4, "modo": "rel", "off": [2.4, 0.05, 6.6], "off_fin": [1.7, 0.18, 4.9], "mira": [0.5, -0.45, 1.6], "fov": 42.0},
+		{"id": "t2", "camara": "C2_interior_hombro", "t0": 5.4, "t1": 8.4, "modo": "rel", "off": [0.52, 0.52, 1.15], "off_fin": [0.46, 0.50, 0.95], "mira": [0.25, 0.22, -0.7], "fov": 58.0},
 		{"id": "t3", "camara": "C3_lateral_curva", "t0": 8.4, "t1": 9.6, "modo": "fija", "pos": [6.0, 1.2, -160.0], "mira_seg": 0.9, "fov": 36.0},
 		{"id": "t4", "camara": "C4_primera_persona", "t0": 9.6, "t1": 11.8, "modo": "pov", "fov": 70.0},
 		{"id": "t5", "camara": "C5_rocas_vuelco", "t0": 11.8, "t1": 15.0, "modo": "fija", "pos": "IMP_LADO", "mira_seg": 0.8, "fov": 38.0},
@@ -385,9 +391,9 @@ func _poner_camara(tm: Dictionary, c: Camera3D, g: int, t: float, cp: Dictionary
 			cm[key] = prev
 			c.look_at(prev, Vector3.UP)
 		"pov":
-			var cabeza: Vector3 = G.raiz.global_transform * Vector3(0.0, 0.98, 0.08)                     # ojos de Gabriel
+			var cabeza: Vector3 = G.raiz.global_transform * Vector3(0.0, 0.98, 0.24)                     # ojos de Gabriel
 			c.global_position = cabeza
-			var fw: Vector3 = (carro.global_transform.basis * Vector3(0, -0.05, -1)).normalized()
+			var fw: Vector3 = (carro.global_transform.basis * Vector3(0, 0.03, -1)).normalized()
 			var arriba: Vector3 = carro.global_transform.basis * Vector3.UP
 			c.look_at(cabeza + fw, arriba)
 

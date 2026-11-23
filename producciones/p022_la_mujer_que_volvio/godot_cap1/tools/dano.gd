@@ -90,10 +90,10 @@ static func destruir(auto: Node3D, nivel := 1.0) -> void:
 			Basis.from_euler(Vector3(0, deg_to_rad(-28.0 * nivel * lado), deg_to_rad(14.0 * nivel * lado))), Vector3(0.05 * lado, 0.05, 0.22) * nivel)
 	# faro roto + cristales
 	var fr := auto.find_child("headlightRglass", true, false) as Node3D
-	if fr: fr.visible = nivel < 0.5
+	if fr and nivel >= 0.5: fr.get_parent().remove_child(fr); fr.queue_free()
 	for nm in ["glassLF", "glassLR", "glassRR"]:
 		var g := auto.find_child(nm, true, false) as Node3D
-		if g: g.visible = nivel < 0.5
+		if g and nivel >= 0.5: g.get_parent().remove_child(g); g.queue_free()
 	var pb := auto.find_child("glassF", true, false) as MeshInstance3D
 	if pb and nivel > 0.5:
 		pb.material_override = _vidrio_roto()
