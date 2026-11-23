@@ -277,8 +277,37 @@ def escena_5() -> dict:
 
 ESCENAS = {"s1": escena_1, "s2": escena_2, "s3": escena_3, "s4": escena_4, "s5": escena_5}
 
+# ── REENCUADRE VERTICAL (9:16, 540×960): el encuadre original era horizontal; en vertical el campo horizontal es mucho más angosto,
+#    así que las tomas de dos personajes y las generales se alejan o cambian de lado. (escena, toma) → campos que cambian.
+REENCUADRE = {
+    ("s1", "t01"): {"pos": [13.6, 2.1, -2.0], "pos_fin": [13.8, 2.0, -2.3], "mira": [15.4, 0.85, -4.7], "fov": 62},
+    ("s2", "t01"): {"pos": [-1.2, 2.0, -2.4], "pos_fin": [-1.3, 2.0, -2.7], "mira": [-1.4, 0.95, -6.0], "fov": 60},
+    ("s2", "t02"): {"pos": [-1.2, 1.45, -6.2], "mira": [-1.4, 1.5, -4.6], "fov": 38},
+    ("s2", "t04"): {"pos": [0.0, 1.6, 1.4], "mira": [0.0, 1.1, -1.2], "fov": 62},
+    ("s3", "t01"): {"pos": [-0.8, 2.0, 5.5], "mira": [-4.4, 1.2, 5.5], "fov": 62},
+    ("s3", "t05"): {"pos": [0.6, 2.3, 7.9], "pos_fin": [0.3, 2.2, 7.6], "mira": [-3.4, 1.1, 5.5], "fov": 66},
+    ("s4", "t01"): {"pos": [3.0, 1.9, 1.9], "pos_fin": [3.0, 1.9, 2.1], "mira": [3.0, 1.15, 5.4], "fov": 60},
+    ("s4", "t04"): {"pos": [3.0, 1.8, 8.6], "pos_fin": [3.0, 1.8, 8.3], "mira": [3.0, 1.4, 5.4], "fov": 64},
+}
+
+
+def reencuadrar(esc: dict, clave: str) -> None:
+    for tm in esc["tomas"]:
+        for k, v in REENCUADRE.get((clave, tm["id"]), {}).items():
+            tm[k] = v
+    if clave == "s2":      # los dos salen corriendo: la toma del pasillo empieza cuando Kate arranca
+        v = esc["voces"]
+        for tm in esc["tomas"]:
+            if tm["id"] == "t03":
+                tm["t1"] = 17.6
+            if tm["id"] == "t04":
+                tm["t0"] = 17.6
+
+
 if __name__ == "__main__":
     out = {"global": {"fundido_cuadros": 8, "resolucion": [540, 960]}, "escenas": {k: f() for k, f in ESCENAS.items()}}
+    for k_, e_ in out["escenas"].items():
+        reencuadrar(e_, k_)
     json.dump(out, open(GODOT / "data" / "storyboard_e03.json", "w"), indent=1, ensure_ascii=False)
     for k, e in out["escenas"].items():
         print(k, "dur", e["dur"], "tomas", len(e["tomas"]), "voces", len(e["voces"]))
