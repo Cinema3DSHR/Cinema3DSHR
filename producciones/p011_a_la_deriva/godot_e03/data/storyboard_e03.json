@@ -681,6 +681,7 @@
     }
    },
    "props": {},
+   "diag": [],
    "miradas": [
     {
      "actor": "aiden",
@@ -697,7 +698,6 @@
      "alto": 1.5
     }
    ],
-   "diag": [],
    "tomas": [
     {
      "id": "t01",
@@ -1357,6 +1357,7 @@
     }
    },
    "props": {},
+   "diag": [],
    "miradas": [
     {
      "actor": "kate",
@@ -1383,7 +1384,6 @@
      "alto": 1.55
     }
    ],
-   "diag": [],
    "tomas": [
     {
      "id": "t01",

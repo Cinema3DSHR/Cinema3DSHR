@@ -48,15 +48,30 @@ def _region(sc, body, keep, off, nombre, mat, zmin=None, zmax=None):
     dup=body.copy(); dup.data=body.data.copy(); dup.name=nombre; sc.collection.objects.link(dup); dup.shape_key_clear()
     bm=bmesh.new(); bm.from_mesh(dup.data); dl=bm.verts.layers.deform.active
     mw=dup.matrix_world
+    bm.normal_update()
+    normales={v:v.normal.copy() for v in bm.verts}          # normales del cuerpo ENTERO: los bordes recortados no las pierden
     borrar=[]
     for v in bm.verts:
         d=v[dl]
         if not d: borrar.append(v); continue
         mejor=max(d.items(), key=lambda kv: kv[1])[0]
         z=(mw@v.co).z
-        if mejor not in k or (zmin is not None and z<zmin) or (zmax is not None and z>zmax): borrar.append(v)
-    bmesh.ops.delete(bm,geom=borrar,context='VERTS'); bm.normal_update()
-    for v in bm.verts: v.co+=v.normal*off
+        if mejor not in k or (zmin is not None and z<zmin): borrar.append(v)
+    bmesh.ops.delete(bm,geom=borrar,context='VERTS')
+    if zmax is not None:
+        # corte limpio: plano horizontal (nada de bordes dentados por vértice)
+        pco=mw.inverted()@Vector((0,0,zmax)); pno=mw.inverted().to_3x3()@Vector((0,0,1))
+        geom=list(bm.verts)+list(bm.edges)+list(bm.faces)
+        res=bmesh.ops.bisect_plane(bm,geom=geom,plane_co=pco,plane_no=pno,clear_outer=True)
+        for v in bm.verts:
+            if v not in normales: normales[v]=Vector((0,0,0))
+    for v in list(bm.verts):
+        n=normales.get(v)
+        if n is None or n.length<1e-6:
+            # vértice nuevo del corte: normal del vecino más cercano
+            vec=[normales[e.other_vert(v)] for e in v.link_edges if e.other_vert(v) in normales and normales[e.other_vert(v)].length>1e-6]
+            n=(sum(vec,Vector())/len(vec)).normalized() if vec else Vector((0,0,0))
+        v.co+=n*off
     bm.to_mesh(dup.data); bm.free()
     dup.data.materials.clear(); dup.data.materials.append(mat)
     for p in dup.data.polygons: p.use_smooth=True

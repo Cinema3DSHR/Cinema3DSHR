@@ -127,6 +127,11 @@ def escena_2() -> dict:
                       ], "clip_final": "idle"},
         },
         "props": {},
+        "diag": [
+            {"n": "aiden_cara", "t": t[1] + 0.5, "sigue": "aiden", "hueso": "Head", "off": [0.0, 0.02, 0.5], "fov": 24},
+            {"n": "aiden_cara2", "t": t[4] + 1.5, "sigue": "aiden", "hueso": "Head", "off": [0.0, 0.02, 0.5], "fov": 24},
+            {"n": "aiden_manos", "t": t[1] + 0.5, "sigue": "aiden", "hueso": "R_Hand", "off": [0.0, 0.15, 0.5], "fov": 34},
+        ],
         "miradas": [
             {"actor": "aiden", "t0": t[0] + 3.5, "t1": t[1] + 2.0, "a": "kate", "alto": 1.45},
             {"actor": "kate", "t0": t[1], "t1": t[3] - 0.5, "a": "aiden", "alto": 1.5},
@@ -213,6 +218,11 @@ def escena_4() -> dict:
                       ], "clip_final": "idle"},
         },
         "props": {},
+        "diag": [
+            {"n": "kate_cara", "t": t[1] + 0.8, "sigue": "kate", "hueso": "Head", "off": [0.3, 0.02, 0.5], "fov": 24},
+            {"n": "aiden_cara", "t": t[2] + 1.0, "sigue": "aiden", "hueso": "Head", "off": [0.0, 0.02, 0.5], "fov": 24},
+            {"n": "kate_manos", "t": t[3] + 0.3, "sigue": "kate", "hueso": "L_Hand", "off": [0.0, 0.1, 0.5], "fov": 34},
+        ],
         "miradas": [
             {"actor": "kate", "t0": 0.0, "t1": dur, "a": "aiden", "alto": 1.6},
             {"actor": "aiden", "t0": t[0] + 1.0, "t1": t[1] + 1.0, "a": [3.0, 0.4, 5.9]},

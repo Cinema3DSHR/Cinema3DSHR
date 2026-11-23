@@ -20,5 +20,10 @@ for pb in dst.pose.bones:
     pb.rotation_mode='QUATERNION'; pb.location=(0,0,0); pb.rotation_quaternion=(1,0,0,0); pb.scale=(1,1,1)
 bpy.context.view_layer.update()
 piezas=TF.construir(dst,body,'EM3D_Base_',H); print('TRAJE',len(piezas))
+KEEP={'V_Open','V_Explosive','V_Dental_Lip','V_Tight_O','V_Tight','V_Wide','V_Affricate','Brow_Raise_Inner_Left','Brow_Raise_Inner_Right','Brow_Drop_Left','Brow_Drop_Right','Brow_Raise_Left','Brow_Raise_Right','Eye_Wide_L','Eye_Wide_R','Mouth_Lips_Part','Mouth_Lips_Tight','Mouth_Frown','Mouth_Smile','Cheek_Raise_L','Cheek_Raise_R','Eye_Squint_L','Eye_Squint_R','Eye_Blink_L','Eye_Blink_R'}
+for ob in bpy.data.objects:
+    if ob.type=='MESH' and ob.data.shape_keys:
+        for kb in list(ob.data.shape_keys.key_blocks)[1:]:
+            if kb.name not in KEEP: ob.shape_key_remove(kb)
 bpy.ops.export_scene.gltf(filepath=f'/home/user/cap3/pers/{nombre}.glb',export_format='GLB',export_morph=True,export_animations=True,export_animation_mode='ACTIONS',export_skins=True,export_apply=False,export_yup=True,export_image_format='AUTO')
 print('EXPORTADO',nombre,os.path.getsize(f'/home/user/cap3/pers/{nombre}.glb'))
