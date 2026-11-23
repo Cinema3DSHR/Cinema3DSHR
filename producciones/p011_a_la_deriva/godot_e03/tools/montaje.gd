@@ -516,8 +516,8 @@ func _camaras_y_salida(clave: String, salida: String, caps: Array) -> void:
 		var c := Camera3D.new()
 		c.name = tm["camara"]
 		c.fov = float(tm.get("fov", 50))
-		c.near = 0.05
-		c.far = 500.0
+		c.near = 0.1
+		c.far = 200.0
 		esc.add_child(c)
 		camn[tm["id"]] = c
 		var tp := anim.add_track(Animation.TYPE_POSITION_3D); anim.track_set_path(tp, _ruta(c))

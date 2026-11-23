@@ -116,7 +116,7 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
     z_bota=rodilla_z*0.58                               # botas hasta media pantorrilla
     def mono(n): return n.startswith(('Hip','Pelvis','Waist','Spine','L_Thigh','R_Thigh','L_Calf','R_Calf','L_Knee','R_Knee','L_Upperarm','R_Upperarm','L_Forearm','R_Forearm','L_Clavicle','R_Clavicle','L_Elbow','R_Elbow','L_Ribs','R_Ribs','L_Breast','R_Breast','NeckTwist','Neck','Head','JawRoot','Tongue','L_Eye','R_Eye','UpperJaw'))
     pie=lambda n: n.startswith(('L_Calf','R_Calf','L_Foot','R_Foot','L_Toe','R_Toe','L_BigToe','R_BigToe','L_PinkyToe','R_PinkyToe','L_RingToe','R_RingToe','L_MidToe','R_MidToe','L_IndexToe','R_IndexToe'))
-    piezas=[_region(sc,body,lambda n: mono(n) and not n.startswith(('L_Foot','R_Foot','L_Toe','R_Toe')),0.007*S,'TRAJE_MONO',tela,zmin=z_bota-0.03,zmax=W('NeckTwist01').z+0.025*S)]
+    piezas=[_region(sc,body,lambda n: mono(n) and not n.startswith(('L_Foot','R_Foot','L_Toe','R_Toe')),0.012*S,'TRAJE_MONO',tela,zmin=z_bota-0.03,zmax=W('NeckTwist01').z+0.025*S)]
     zank=0.115*S                                     # sobre el empeine: ahí termina la «zapatilla» y empieza la caña
     caña=_region(sc,body,lambda n: True,0.016*S,'TRAJE_BOTAS',bota,zmin=zank-0.035*S,zmax=z_bota)
     piezas.append(caña)
@@ -140,7 +140,7 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
         c=sum(pts,Vector())/len(pts)
         for v in bmh.verts:
             d=v.co-c; d.z*=0.5
-            v.co=v.co+d.normalized()*0.014*S
+            v.co=v.co+d.normalized()*0.010*S
             if v.co.z<zbase+0.02*S: v.co.z=zbase-0.012*S
         me=bpy.data.meshes.new(f'PIE_{lado}'); bmh.to_mesh(me); bmh.free()
         o=bpy.data.objects.new(f'TRAJE_PIE_{lado}',me); sc.collection.objects.link(o)
