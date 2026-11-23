@@ -106,7 +106,7 @@ func _materiales(ac, d: Dictionary) -> void:
 				nuevo = StandardMaterial3D.new(); nuevo.albedo_color = Color(0.03, 0.032, 0.04); nuevo.roughness = 0.45; nuevo.metallic = 0.15; nuevo.cull_mode = BaseMaterial3D.CULL_DISABLED
 			elif nm.begins_with("EM3D_Skin") or nm.begins_with("EM3D_Nails"):
 				nuevo = (mat as StandardMaterial3D).duplicate()
-				nuevo.albedo_color = Color(nuevo.albedo_color.r * 0.8, nuevo.albedo_color.g * 0.76, nuevo.albedo_color.b * 0.74)
+				nuevo.albedo_color = Color(nuevo.albedo_color.r * 0.72, nuevo.albedo_color.g * 0.68, nuevo.albedo_color.b * 0.66)
 			elif nm.begins_with("Hair") or nm.begins_with("Slicked") or nm.begins_with("Female_Flat") or nm.begins_with("Scalp") or nm.begins_with("Eyebrows") or nm.begins_with("EM3D_Eyelash"):
 				nuevo = (mat as StandardMaterial3D).duplicate()
 				nuevo.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
@@ -116,7 +116,7 @@ func _materiales(ac, d: Dictionary) -> void:
 						var cu: Array = d["cuero"]
 						nuevo.albedo_color = Color(cu[0], cu[1], cu[2])      # cuero cabelludo del color del pelo (pelo largo cubre todo)
 					else:
-						nuevo.albedo_color = Color(nuevo.albedo_color.r * 0.8, nuevo.albedo_color.g * 0.76, nuevo.albedo_color.b * 0.74)
+						nuevo.albedo_color = Color(nuevo.albedo_color.r * 0.72, nuevo.albedo_color.g * 0.68, nuevo.albedo_color.b * 0.66)
 			if nuevo != null:
 				mi.set_surface_override_material(s, nuevo)
 

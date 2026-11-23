@@ -127,8 +127,8 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
     if ring:
         cx=sum(p.x for p in ring)/len(ring); cy=sum(p.y for p in ring)/len(ring)
         R=sum((Vector((p.x,p.y,0))-Vector((cx,cy,0))).length for p in ring)/len(ring)
-        co=_toro(sc,'COLLAR',R+0.006*S,0.0165*S,tela,esc=(1,1,1))
-        _al_hueso(arm,co,P+'NeckTwist01',Matrix.Translation(Vector((cx,cy,zc-0.006*S))))
+        co=_toro(sc,'COLLAR',R+0.001*S,0.0105*S,tela,esc=(1,1,1))
+        _al_hueso(arm,co,P+'NeckTwist01',Matrix.Translation(Vector((cx,cy,zc-0.012*S))))
         piezas.append(co)
     # PIE: envolvente convexa de cada pie (dedos juntos en una sola punta redondeada, suela gruesa) con pesos tomados del vértice más cercano del cuerpo
     from mathutils import kdtree
@@ -166,6 +166,7 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
                 vg.add([v.index],g.weight,'REPLACE')
         md=o.modifiers.new('Armature','ARMATURE'); md.object=arm
         piezas.append(o)
+    ocultar_pies_cuerpo(body,S,zank)
     zf=zbase-0.012*S
     for lado in ('L','R'):
         pie_h=W(f'{lado}_Foot'); toe=W(f'{lado}_ToeBase','tail')
@@ -190,3 +191,9 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
     em=_caja(sc,'EMBLEMA',(0.038*S,0.004*S,0.038*S),Matrix.Translation(c),luz,bisel=0.004)
     _al_hueso(arm,em,P+'Spine02',Matrix.Translation(c)); piezas.append(em)
     return piezas
+
+def ocultar_pies_cuerpo(body, S, zank):
+    """Los pies del cuerpo quedan dentro de las botas: se borran para que ningún dedo asome."""
+    bm=bmesh.new(); bm.from_mesh(body.data); mw=body.matrix_world
+    borrar=[v for v in bm.verts if (mw@v.co).z<zank-0.01*S]
+    bmesh.ops.delete(bm,geom=borrar,context='VERTS'); bm.to_mesh(body.data); bm.free()
