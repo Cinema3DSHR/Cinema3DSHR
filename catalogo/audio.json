@@ -154,6 +154,826 @@
    "voice_id": "5egO01tkUjEzu7xSSE8M",
    "texto": "[tired, broken, low] Hay noches que nunca terminan...",
    "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_f0cd1b40ddce0fc4",
+   "nombre": "[tired, broken, low] Aunque pasen los años, siguen ahí.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_f0cd1b40ddce0fc4.mp3",
+   "duracion_s": 2.85,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Aunque pasen los años, siguen ahí.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_fe80bf52151964e3",
+   "nombre": "[tired, broken, low] Aquella noche llovía como si el mundo estuviera intentando ",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_fe80bf52151964e3.mp3",
+   "duracion_s": 4.05,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Aquella noche llovía como si el mundo estuviera intentando borrar algo.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_e2d425a498821a28",
+   "nombre": "[tired, broken, low] Íbamos juntos.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_e2d425a498821a28.mp3",
+   "duracion_s": 1.65,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Íbamos juntos.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_5574e3693e5cfe36",
+   "nombre": "[tired, broken, low] No recuerdo exactamente qué pasó primero... si fue el ruido",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_5574e3693e5cfe36.mp3",
+   "duracion_s": 7.16,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] No recuerdo exactamente qué pasó primero... si fue el ruido de los neumáticos o el golpe contra las rocas.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_8a5ecb3e0f1c2533",
+   "nombre": "[tired, broken, low] Después, todo quedó en silencio.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_8a5ecb3e0f1c2533.mp3",
+   "duracion_s": 3.32,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Después, todo quedó en silencio.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_7cce1ea0227a09b5",
+   "nombre": "[tired, broken, low] Cuando pude salir del automóvil, ella ya no estaba.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_7cce1ea0227a09b5.mp3",
+   "duracion_s": 4.05,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Cuando pude salir del automóvil, ella ya no estaba.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_281e98553c543387",
+   "nombre": "[tired, broken, low] La busqué entre los árboles.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_281e98553c543387.mp3",
+   "duracion_s": 2.12,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] La busqué entre los árboles.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_ff9cebb3acc091c4",
+   "nombre": "[tired, broken, low] Entre las rocas.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_ff9cebb3acc091c4.mp3",
+   "duracion_s": 1.57,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Entre las rocas.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_f8c9c5f07562fda8",
+   "nombre": "[tired, broken, low] Bajé hasta donde pude.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_f8c9c5f07562fda8.mp3",
+   "duracion_s": 1.88,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Bajé hasta donde pude.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_da6fd18bfe4359e8",
+   "nombre": "[hoarse, anguished] Grité su nombre hasta quedarme sin voz.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_da6fd18bfe4359e8.mp3",
+   "duracion_s": 2.51,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[hoarse, anguished] Grité su nombre hasta quedarme sin voz.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_8a78d57369b473aa",
+   "nombre": "[tired, broken, low] Pero nunca la encontré.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_8a78d57369b473aa.mp3",
+   "duracion_s": 1.8,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Pero nunca la encontré.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_3354af93847b43ef",
+   "nombre": "[tired, broken, low] Durante años creí que había muerto aquella noche.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_3354af93847b43ef.mp3",
+   "duracion_s": 2.69,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "accidente"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Durante años creí que había muerto aquella noche.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_1c773c7a22b7423e",
+   "nombre": "[bitter, quiet, weary] Después de aquella noche, ya no fui el mismo.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_1c773c7a22b7423e.mp3",
+   "duracion_s": 4.05,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Después de aquella noche, ya no fui el mismo.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_2cf11b17b87f3526",
+   "nombre": "[bitter, quiet, weary] Intenté seguir adelante.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_2cf11b17b87f3526.mp3",
+   "duracion_s": 1.96,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Intenté seguir adelante.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_451e2034872d3f21",
+   "nombre": "[bitter, quiet, weary] Pero algo dentro de mí se había roto.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_451e2034872d3f21.mp3",
+   "duracion_s": 2.19,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Pero algo dentro de mí se había roto.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_8420499148e982b0",
+   "nombre": "[bitter, quiet, weary] Empecé a beber.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_8420499148e982b0.mp3",
+   "duracion_s": 1.07,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Empecé a beber.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_52620721616873d5",
+   "nombre": "[bitter, quiet, weary] A trabajar.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_52620721616873d5.mp3",
+   "duracion_s": 2.35,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] A trabajar.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_e638f76686bf8063",
+   "nombre": "[bitter, quiet, weary] A aceptar trabajos que antes habría rechazado.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_e638f76686bf8063.mp3",
+   "duracion_s": 3.16,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] A aceptar trabajos que antes habría rechazado.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_d911e54f5a68690b",
+   "nombre": "[bitter, quiet, weary] Terminé trabajando para gobiernos... haciendo cosas que n",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_d911e54f5a68690b.mp3",
+   "duracion_s": 4.91,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Terminé trabajando para gobiernos... haciendo cosas que no puedo contar.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_e092ef0ea4d0b6b5",
+   "nombre": "[bitter, quiet, weary] Aprendí a mentir.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_e092ef0ea4d0b6b5.mp3",
+   "duracion_s": 1.49,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Aprendí a mentir.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_c4b8b4b2e2f138a9",
+   "nombre": "[bitter, quiet, weary] A obedecer.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_c4b8b4b2e2f138a9.mp3",
+   "duracion_s": 2.35,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] A obedecer.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_58b53913407a8070",
+   "nombre": "[bitter, quiet, weary] A hacer cosas que todavía no puedo perdonarme.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_58b53913407a8070.mp3",
+   "duracion_s": 3.24,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] A hacer cosas que todavía no puedo perdonarme.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_0e69f1adf86764ad",
+   "nombre": "[bitter, quiet, weary] Pensé que, si mantenía la cabeza ocupada, algún día dejar",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_0e69f1adf86764ad.mp3",
+   "duracion_s": 5.8,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Pensé que, si mantenía la cabeza ocupada, algún día dejaría de recordarla.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_9b9aa404a146fa56",
+   "nombre": "[bitter, quiet, weary] Pero hay recuerdos que no se pueden enterrar.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_9b9aa404a146fa56.mp3",
+   "duracion_s": 2.85,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "despues"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[bitter, quiet, weary] Pero hay recuerdos que no se pueden enterrar.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_a0877661d470e250",
+   "nombre": "[exhausted, hurt, low] Y entonces... volvió.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_a0877661d470e250.mp3",
+   "duracion_s": 3.0,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Y entonces... volvió.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_1ca8ac73acde5d6f",
+   "nombre": "[exhausted, hurt, low] La mujer que había buscado durante años.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_1ca8ac73acde5d6f.mp3",
+   "duracion_s": 2.59,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] La mujer que había buscado durante años.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_13461194418fd754",
+   "nombre": "[exhausted, hurt, low] La mujer que creí muerta.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_13461194418fd754.mp3",
+   "duracion_s": 2.04,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] La mujer que creí muerta.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_26c1dcc2b8df8ea2",
+   "nombre": "[stunned, whisper] Estaba viva.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_26c1dcc2b8df8ea2.mp3",
+   "duracion_s": 2.04,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[stunned, whisper] Estaba viva.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_0a250bb48c412f2c",
+   "nombre": "[exhausted, hurt, low] Pero no era la misma.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_0a250bb48c412f2c.mp3",
+   "duracion_s": 1.57,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Pero no era la misma.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_4676f57151bc0a3b",
+   "nombre": "[exhausted, hurt, low] Me miró como si yo fuera un desconocido.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_4676f57151bc0a3b.mp3",
+   "duracion_s": 2.27,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Me miró como si yo fuera un desconocido.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_6d130db0f2bdb2c3",
+   "nombre": "[exhausted, hurt, low] Como si nunca hubiera existido nada entre nosotros.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_6d130db0f2bdb2c3.mp3",
+   "duracion_s": 3.0,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Como si nunca hubiera existido nada entre nosotros.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_0c0c66267bb0581f",
+   "nombre": "[exhausted, hurt, low] Y después... me disparó.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_0c0c66267bb0581f.mp3",
+   "duracion_s": 2.69,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Y después... me disparó.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_30a9c3b0dad7a76e",
+   "nombre": "[desperate] ¿Por qué?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_30a9c3b0dad7a76e.mp3",
+   "duracion_s": 0.68,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[desperate] ¿Por qué?",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_e603b0d3150fa1a0",
+   "nombre": "[exhausted, hurt, low] ¿Por qué quería matarme?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_e603b0d3150fa1a0.mp3",
+   "duracion_s": 1.65,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] ¿Por qué quería matarme?",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_036ec04e0b22658f",
+   "nombre": "[exhausted, hurt, low] Nos amábamos.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_036ec04e0b22658f.mp3",
+   "duracion_s": 1.23,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Nos amábamos.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_92a0851993a67d5f",
+   "nombre": "[exhausted, hurt, low] Éramos inseparables.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_92a0851993a67d5f.mp3",
+   "duracion_s": 1.65,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Éramos inseparables.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_50641a6f7c9599ff",
+   "nombre": "[exhausted, hurt, low] Yo habría dado mi vida por ella.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_50641a6f7c9599ff.mp3",
+   "duracion_s": 2.12,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Yo habría dado mi vida por ella.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_d37a977737b14120",
+   "nombre": "[exhausted, hurt, low] Y ahora ni siquiera sé si recuerda quién soy.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_d37a977737b14120.mp3",
+   "duracion_s": 3.16,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] Y ahora ni siquiera sé si recuerda quién soy.",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_73dc9d99eab369fd",
+   "nombre": "[voice cracking] ¿Qué te pasó, Elena?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_73dc9d99eab369fd.mp3",
+   "duracion_s": 2.51,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[voice cracking] ¿Qué te pasó, Elena?",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_3b2dffc23667909f",
+   "nombre": "[exhausted, hurt, low] ¿Qué demonios te hicieron?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_3b2dffc23667909f.mp3",
+   "duracion_s": 1.8,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] ¿Qué demonios te hicieron?",
+   "rol": "gabriel_noir"
+  },
+  {
+   "id": "voz_d9470b61ea3cfb7b",
+   "nombre": "[exhausted, hurt, low] ¿O simplemente... ya no recuerdas quién fui para vos?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_d9470b61ea3cfb7b.mp3",
+   "duracion_s": 4.83,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "casa"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[exhausted, hurt, low] ¿O simplemente... ya no recuerdas quién fui para vos?",
+   "rol": "gabriel_noir"
   }
  ],
  "fuentes_existentes_para_importar": [

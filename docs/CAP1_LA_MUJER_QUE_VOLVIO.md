@@ -27,3 +27,9 @@ Se resuelven en la **etapa Blender** (los materiales procedurales no viajan en e
 - **Mesa de la casa (inmersiva, con tomas de detalle):** botella y copa con vino real (líquido con refracción y menisco), **otra botella tumbada** con el líquido derramado sobre la mesa (se le cayó; charco que gotea al borde), y **un cigarro real prendido en el cenicero con ceniza real** (brasa que late, ceniza que se curva y cae, hilo de humo). No hace falta que beba en escena: se da a entender.
 - En el monólogo se pregunta por qué ella, si ese día murió en el accidente. Nivel de realismo y acabado: producción AAA.
 - Voz: muestra enviada; `producciones/p022_la_mujer_que_volvio/herramientas/voces_cap1.py` (42 líneas, 2.354 créditos estimados).
+
+## Contexto narrativo (dueño, 23/11/2026) — tenerlo en cuenta en todo el capítulo
+Tras el choque Gabriel busca a Elena desesperado; **se le apaga la visión y queda desmayado**: ahí pierde el rastro. **Pasa 1 año** y recién después ocurre lo del disparo y lo demás (se cuenta en otros capítulos). Por eso en el accidente: la búsqueda termina con visión que se cierra (viñeta, desenfoque, latidos que se apagan) y caída, y el corte a negro es ese desmayo. La narración dice «durante años creí que había muerto»; no contradecir con el «1 año» (el capítulo siguiente aclara los tiempos).
+
+## Estado (23/11/2026)
+- Voz de Gabriel **generada**: 42 líneas, 111,9 s, 2.354 créditos (`audio_cap1/voces.json`; mp3 en `audio/biblioteca/`, ledger actualizado). Accidente 37 s de voz, recuerdos 36 s, casa 38 s.

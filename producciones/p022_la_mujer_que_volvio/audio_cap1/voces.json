@@ -1,0 +1,296 @@
+[
+ {
+  "bloque": "accidente",
+  "texto": "Hay noches que nunca terminan...",
+  "mp3": "audio/biblioteca/voz_9598f5cbdbedb29c.mp3",
+  "alineacion": "audio/biblioteca/voz_9598f5cbdbedb29c.alin.json",
+  "dur_s": 2.038
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Aunque pasen los años, siguen ahí.",
+  "mp3": "audio/biblioteca/voz_f0cd1b40ddce0fc4.mp3",
+  "alineacion": "audio/biblioteca/voz_f0cd1b40ddce0fc4.alin.json",
+  "dur_s": 2.847
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Aquella noche llovía como si el mundo estuviera intentando borrar algo.",
+  "mp3": "audio/biblioteca/voz_fe80bf52151964e3.mp3",
+  "alineacion": "audio/biblioteca/voz_fe80bf52151964e3.alin.json",
+  "dur_s": 4.049
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Íbamos juntos.",
+  "mp3": "audio/biblioteca/voz_e2d425a498821a28.mp3",
+  "alineacion": "audio/biblioteca/voz_e2d425a498821a28.alin.json",
+  "dur_s": 1.646
+ },
+ {
+  "bloque": "accidente",
+  "texto": "No recuerdo exactamente qué pasó primero... si fue el ruido de los neumáticos o el golpe contra las rocas.",
+  "mp3": "audio/biblioteca/voz_5574e3693e5cfe36.mp3",
+  "alineacion": "audio/biblioteca/voz_5574e3693e5cfe36.alin.json",
+  "dur_s": 7.158
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Después, todo quedó en silencio.",
+  "mp3": "audio/biblioteca/voz_8a5ecb3e0f1c2533.mp3",
+  "alineacion": "audio/biblioteca/voz_8a5ecb3e0f1c2533.alin.json",
+  "dur_s": 3.318
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Cuando pude salir del automóvil, ella ya no estaba.",
+  "mp3": "audio/biblioteca/voz_7cce1ea0227a09b5.mp3",
+  "alineacion": "audio/biblioteca/voz_7cce1ea0227a09b5.alin.json",
+  "dur_s": 4.049
+ },
+ {
+  "bloque": "accidente",
+  "texto": "La busqué entre los árboles.",
+  "mp3": "audio/biblioteca/voz_281e98553c543387.mp3",
+  "alineacion": "audio/biblioteca/voz_281e98553c543387.alin.json",
+  "dur_s": 2.116
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Entre las rocas.",
+  "mp3": "audio/biblioteca/voz_ff9cebb3acc091c4.mp3",
+  "alineacion": "audio/biblioteca/voz_ff9cebb3acc091c4.alin.json",
+  "dur_s": 1.567
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Bajé hasta donde pude.",
+  "mp3": "audio/biblioteca/voz_f8c9c5f07562fda8.mp3",
+  "alineacion": "audio/biblioteca/voz_f8c9c5f07562fda8.alin.json",
+  "dur_s": 1.881
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Grité su nombre hasta quedarme sin voz.",
+  "mp3": "audio/biblioteca/voz_da6fd18bfe4359e8.mp3",
+  "alineacion": "audio/biblioteca/voz_da6fd18bfe4359e8.alin.json",
+  "dur_s": 2.508
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Pero nunca la encontré.",
+  "mp3": "audio/biblioteca/voz_8a78d57369b473aa.mp3",
+  "alineacion": "audio/biblioteca/voz_8a78d57369b473aa.alin.json",
+  "dur_s": 1.802
+ },
+ {
+  "bloque": "accidente",
+  "texto": "Durante años creí que había muerto aquella noche.",
+  "mp3": "audio/biblioteca/voz_3354af93847b43ef.mp3",
+  "alineacion": "audio/biblioteca/voz_3354af93847b43ef.alin.json",
+  "dur_s": 2.691
+ },
+ {
+  "bloque": "despues",
+  "texto": "Después de aquella noche, ya no fui el mismo.",
+  "mp3": "audio/biblioteca/voz_1c773c7a22b7423e.mp3",
+  "alineacion": "audio/biblioteca/voz_1c773c7a22b7423e.alin.json",
+  "dur_s": 4.049
+ },
+ {
+  "bloque": "despues",
+  "texto": "Intenté seguir adelante.",
+  "mp3": "audio/biblioteca/voz_2cf11b17b87f3526.mp3",
+  "alineacion": "audio/biblioteca/voz_2cf11b17b87f3526.alin.json",
+  "dur_s": 1.959
+ },
+ {
+  "bloque": "despues",
+  "texto": "Pero algo dentro de mí se había roto.",
+  "mp3": "audio/biblioteca/voz_451e2034872d3f21.mp3",
+  "alineacion": "audio/biblioteca/voz_451e2034872d3f21.alin.json",
+  "dur_s": 2.194
+ },
+ {
+  "bloque": "despues",
+  "texto": "Empecé a beber.",
+  "mp3": "audio/biblioteca/voz_8420499148e982b0.mp3",
+  "alineacion": "audio/biblioteca/voz_8420499148e982b0.alin.json",
+  "dur_s": 1.071
+ },
+ {
+  "bloque": "despues",
+  "texto": "A trabajar.",
+  "mp3": "audio/biblioteca/voz_52620721616873d5.mp3",
+  "alineacion": "audio/biblioteca/voz_52620721616873d5.alin.json",
+  "dur_s": 2.351
+ },
+ {
+  "bloque": "despues",
+  "texto": "A aceptar trabajos que antes habría rechazado.",
+  "mp3": "audio/biblioteca/voz_e638f76686bf8063.mp3",
+  "alineacion": "audio/biblioteca/voz_e638f76686bf8063.alin.json",
+  "dur_s": 3.161
+ },
+ {
+  "bloque": "despues",
+  "texto": "Terminé trabajando para gobiernos... haciendo cosas que no puedo contar.",
+  "mp3": "audio/biblioteca/voz_d911e54f5a68690b.mp3",
+  "alineacion": "audio/biblioteca/voz_d911e54f5a68690b.alin.json",
+  "dur_s": 4.911
+ },
+ {
+  "bloque": "despues",
+  "texto": "Aprendí a mentir.",
+  "mp3": "audio/biblioteca/voz_e092ef0ea4d0b6b5.mp3",
+  "alineacion": "audio/biblioteca/voz_e092ef0ea4d0b6b5.alin.json",
+  "dur_s": 1.489
+ },
+ {
+  "bloque": "despues",
+  "texto": "A obedecer.",
+  "mp3": "audio/biblioteca/voz_c4b8b4b2e2f138a9.mp3",
+  "alineacion": "audio/biblioteca/voz_c4b8b4b2e2f138a9.alin.json",
+  "dur_s": 2.351
+ },
+ {
+  "bloque": "despues",
+  "texto": "A hacer cosas que todavía no puedo perdonarme.",
+  "mp3": "audio/biblioteca/voz_58b53913407a8070.mp3",
+  "alineacion": "audio/biblioteca/voz_58b53913407a8070.alin.json",
+  "dur_s": 3.239
+ },
+ {
+  "bloque": "despues",
+  "texto": "Pensé que, si mantenía la cabeza ocupada, algún día dejaría de recordarla.",
+  "mp3": "audio/biblioteca/voz_0e69f1adf86764ad.mp3",
+  "alineacion": "audio/biblioteca/voz_0e69f1adf86764ad.alin.json",
+  "dur_s": 5.799
+ },
+ {
+  "bloque": "despues",
+  "texto": "Pero hay recuerdos que no se pueden enterrar.",
+  "mp3": "audio/biblioteca/voz_9b9aa404a146fa56.mp3",
+  "alineacion": "audio/biblioteca/voz_9b9aa404a146fa56.alin.json",
+  "dur_s": 2.847
+ },
+ {
+  "bloque": "casa",
+  "texto": "Y entonces... volvió.",
+  "mp3": "audio/biblioteca/voz_a0877661d470e250.mp3",
+  "alineacion": "audio/biblioteca/voz_a0877661d470e250.alin.json",
+  "dur_s": 3.004
+ },
+ {
+  "bloque": "casa",
+  "texto": "La mujer que había buscado durante años.",
+  "mp3": "audio/biblioteca/voz_1ca8ac73acde5d6f.mp3",
+  "alineacion": "audio/biblioteca/voz_1ca8ac73acde5d6f.alin.json",
+  "dur_s": 2.586
+ },
+ {
+  "bloque": "casa",
+  "texto": "La mujer que creí muerta.",
+  "mp3": "audio/biblioteca/voz_13461194418fd754.mp3",
+  "alineacion": "audio/biblioteca/voz_13461194418fd754.alin.json",
+  "dur_s": 2.038
+ },
+ {
+  "bloque": "casa",
+  "texto": "Estaba viva.",
+  "mp3": "audio/biblioteca/voz_26c1dcc2b8df8ea2.mp3",
+  "alineacion": "audio/biblioteca/voz_26c1dcc2b8df8ea2.alin.json",
+  "dur_s": 2.038
+ },
+ {
+  "bloque": "casa",
+  "texto": "Pero no era la misma.",
+  "mp3": "audio/biblioteca/voz_0a250bb48c412f2c.mp3",
+  "alineacion": "audio/biblioteca/voz_0a250bb48c412f2c.alin.json",
+  "dur_s": 1.567
+ },
+ {
+  "bloque": "casa",
+  "texto": "Me miró como si yo fuera un desconocido.",
+  "mp3": "audio/biblioteca/voz_4676f57151bc0a3b.mp3",
+  "alineacion": "audio/biblioteca/voz_4676f57151bc0a3b.alin.json",
+  "dur_s": 2.273
+ },
+ {
+  "bloque": "casa",
+  "texto": "Como si nunca hubiera existido nada entre nosotros.",
+  "mp3": "audio/biblioteca/voz_6d130db0f2bdb2c3.mp3",
+  "alineacion": "audio/biblioteca/voz_6d130db0f2bdb2c3.alin.json",
+  "dur_s": 3.004
+ },
+ {
+  "bloque": "casa",
+  "texto": "Y después... me disparó.",
+  "mp3": "audio/biblioteca/voz_0c0c66267bb0581f.mp3",
+  "alineacion": "audio/biblioteca/voz_0c0c66267bb0581f.alin.json",
+  "dur_s": 2.691
+ },
+ {
+  "bloque": "casa",
+  "texto": "¿Por qué?",
+  "mp3": "audio/biblioteca/voz_30a9c3b0dad7a76e.mp3",
+  "alineacion": "audio/biblioteca/voz_30a9c3b0dad7a76e.alin.json",
+  "dur_s": 0.679
+ },
+ {
+  "bloque": "casa",
+  "texto": "¿Por qué quería matarme?",
+  "mp3": "audio/biblioteca/voz_e603b0d3150fa1a0.mp3",
+  "alineacion": "audio/biblioteca/voz_e603b0d3150fa1a0.alin.json",
+  "dur_s": 1.646
+ },
+ {
+  "bloque": "casa",
+  "texto": "Nos amábamos.",
+  "mp3": "audio/biblioteca/voz_036ec04e0b22658f.mp3",
+  "alineacion": "audio/biblioteca/voz_036ec04e0b22658f.alin.json",
+  "dur_s": 1.228
+ },
+ {
+  "bloque": "casa",
+  "texto": "Éramos inseparables.",
+  "mp3": "audio/biblioteca/voz_92a0851993a67d5f.mp3",
+  "alineacion": "audio/biblioteca/voz_92a0851993a67d5f.alin.json",
+  "dur_s": 1.646
+ },
+ {
+  "bloque": "casa",
+  "texto": "Yo habría dado mi vida por ella.",
+  "mp3": "audio/biblioteca/voz_50641a6f7c9599ff.mp3",
+  "alineacion": "audio/biblioteca/voz_50641a6f7c9599ff.alin.json",
+  "dur_s": 2.116
+ },
+ {
+  "bloque": "casa",
+  "texto": "Y ahora ni siquiera sé si recuerda quién soy.",
+  "mp3": "audio/biblioteca/voz_d37a977737b14120.mp3",
+  "alineacion": "audio/biblioteca/voz_d37a977737b14120.alin.json",
+  "dur_s": 3.161
+ },
+ {
+  "bloque": "casa",
+  "texto": "¿Qué te pasó, Elena?",
+  "mp3": "audio/biblioteca/voz_73dc9d99eab369fd.mp3",
+  "alineacion": "audio/biblioteca/voz_73dc9d99eab369fd.alin.json",
+  "dur_s": 2.508
+ },
+ {
+  "bloque": "casa",
+  "texto": "¿Qué demonios te hicieron?",
+  "mp3": "audio/biblioteca/voz_3b2dffc23667909f.mp3",
+  "alineacion": "audio/biblioteca/voz_3b2dffc23667909f.alin.json",
+  "dur_s": 1.802
+ },
+ {
+  "bloque": "casa",
+  "texto": "¿O simplemente... ya no recuerdas quién fui para vos?",
+  "mp3": "audio/biblioteca/voz_d9470b61ea3cfb7b.mp3",
+  "alineacion": "audio/biblioteca/voz_d9470b61ea3cfb7b.alin.json",
+  "dur_s": 4.833
+ }
+]

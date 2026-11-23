@@ -1005,3 +1005,5 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 **23/11/2026 (cont.)** Cap. 1 «La mujer que volvió de la muerte»: el dueño subió el auto (`hustler.glb`, negro, 58 piezas sueltas, sin daño); plan en `docs/CAP1_LA_MUJER_QUE_VOLVIO.md`, guion en `producciones/p022_la_mujer_que_volvio/herramientas/guion_cap1.py`. Formato 540×960 vertical confirmado.
 
 **23/11/2026 (aclaración del dueño):** en el cap. 1 NO se muestra el disparo; Gabriel ya está herido en la casa y el disparo se cuenta en otro capítulo. La sangre real (suelo, rostro, manos) se mantiene en el accidente. Plan actualizado.
+
+**23/11/2026:** voz de Gabriel del cap. 1 generada (42 líneas, 111,9 s, 2.354 créditos; ledger actualizado). Contexto: tras buscar a Elena se desmaya y pierde el rastro; pasa 1 año y luego el disparo (otros capítulos).
