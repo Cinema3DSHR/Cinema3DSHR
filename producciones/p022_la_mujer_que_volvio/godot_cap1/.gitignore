@@ -1,3 +1,6 @@
 .godot/
 assets/*.glb
 *.import
+assets/*.png
+assets/*.glb
+assets/*.import
