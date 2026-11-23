@@ -1003,3 +1003,5 @@ A pedido del dueño (videos ya en YouTube): `git rm` de 269 audios (recuperables
 Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa con tormenta), Gabriel=Aiden y Elena=Kate con ropa nueva, narración con ElevenLabs voz `5egO01tkUjEzu7xSSE8M` (agregada a `config/voces.json` como `gabriel_noir`), escenas del accidente en 1.ª persona (respiración y latidos), Godot arma todo → Blender agrega efectos → render VERTICAL 540×960 («520p» = 540p). Narración total ≈ 1.475 caracteres (≈1.500 créditos, dentro del tope). **Falta el auto «proporcionado»**: el dueño lo sube. Sin gastar nada todavía.
 
 **23/11/2026 (cont.)** Cap. 1 «La mujer que volvió de la muerte»: el dueño subió el auto (`hustler.glb`, negro, 58 piezas sueltas, sin daño); plan en `docs/CAP1_LA_MUJER_QUE_VOLVIO.md`, guion en `producciones/p022_la_mujer_que_volvio/herramientas/guion_cap1.py`. Formato 540×960 vertical confirmado.
+
+**23/11/2026 (aclaración del dueño):** en el cap. 1 NO se muestra el disparo; Gabriel ya está herido en la casa y el disparo se cuenta en otro capítulo. La sangre real (suelo, rostro, manos) se mantiene en el accidente. Plan actualizado.
