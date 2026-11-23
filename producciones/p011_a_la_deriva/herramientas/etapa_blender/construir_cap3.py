@@ -7,7 +7,7 @@ from mathutils import Vector, Matrix
 A = sys.argv[sys.argv.index('--') + 1:]
 SALIDA = A[0]
 ESC = (A[1] if len(A) > 1 else 's1,s2,s3,s4,s5').split(',')
-DIR = '/home/user/cap3/e03/'
+DIR = '/home/user/cap3/e03v/'
 FPS = 30
 
 bpy.ops.wm.read_factory_settings(use_empty=True)

@@ -1,0 +1,42 @@
+{
+ "tipo": "produccion",
+ "id": "p021_a_la_deriva_cap3",
+ "titulo": "A la deriva · Cap. 3 «Protocolo de cierre» (vertical 9:16)",
+ "clase": "secuencia",
+ "formato": {
+  "aspecto": "9:16",
+  "resolucion": "540x960",
+  "fps": 30,
+  "duracion_s": 177.46666666666667
+ },
+ "estado": "en_render",
+ "origen": {
+  "godot": "producciones/p011_a_la_deriva/godot_e03",
+  "storyboard": "producciones/p011_a_la_deriva/herramientas/storyboard_e03.py",
+  "blender": "producciones/p011_a_la_deriva/herramientas/etapa_blender/construir_cap3.py",
+  "audio": "producciones/p011_a_la_deriva/audio_e03/voces.json"
+ },
+ "escenas_en_el_blend": {
+  "s1": [
+   1,
+   1231
+  ],
+  "s2": [
+   1232,
+   2161
+  ],
+  "s3": [
+   2162,
+   3515
+  ],
+  "s4": [
+   3516,
+   4638
+  ],
+  "s5": [
+   4639,
+   5324
+  ]
+ },
+ "nota": "Versión VERTICAL (540×960) del cap. 3, para Shorts/Reels/TikTok. Reemplaza al render horizontal p020 (error de formato). Misma animación, voces y sonido; cámaras reencuadradas."
+}

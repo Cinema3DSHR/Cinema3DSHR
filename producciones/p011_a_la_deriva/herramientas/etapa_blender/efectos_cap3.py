@@ -7,7 +7,7 @@ def gb(x, y, z):            # Godot (x, y, z) → Blender (x, −z, y)
 
 # ── perfil de render OBLIGATORIO (docs/METODOLOGIA.md) a 540p horizontal
 r = sc.render
-r.engine = 'CYCLES'; r.resolution_x = 960; r.resolution_y = 540; r.resolution_percentage = 100
+r.engine = 'CYCLES'; r.resolution_x = 540; r.resolution_y = 960; r.resolution_percentage = 100
 r.fps = 30; r.fps_base = 1.0; r.use_motion_blur = False; r.film_transparent = False
 cy = sc.cycles
 cy.device = 'CPU'; cy.samples = 6; cy.use_adaptive_sampling = True; cy.adaptive_threshold = 0.05
@@ -72,7 +72,7 @@ for m in bpy.data.materials:
     for nd in list(nt.nodes):
         if nd.type == 'TEX_IMAGE' and nd.image and ('suelo' in nd.image.name.lower()):
             mx = nt.nodes.new('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.blend_type = 'MULTIPLY'
-            mx.inputs[0].default_value = 1.0; mx.inputs[7].default_value = (4.2, 4.2, 4.6, 1)
+            mx.inputs[0].default_value = 1.0; mx.inputs[7].default_value = (1.4, 1.6, 2.6, 1)
             p.inputs['Metallic'].default_value = 0.0; p.inputs['Roughness'].default_value = 0.5
             nt.links.new(nd.outputs['Color'], mx.inputs[6]); nt.links.new(mx.outputs[2], p.inputs['Base Color'])
 
@@ -89,7 +89,7 @@ def material_holograma():
     ola_c = nt.nodes.new('ShaderNodeMapRange'); ola_c.inputs[1].default_value = 0.0; ola_c.inputs[2].default_value = 1.0; ola_c.inputs[3].default_value = 0.55; ola_c.inputs[4].default_value = 1.0
     parp = nt.nodes.new('ShaderNodeValue'); parp.name = 'parpadeo'; parp.label = 'parpadeo'; parp.outputs[0].default_value = 1.0
     mul1 = nt.nodes.new('ShaderNodeMath'); mul1.operation = 'MULTIPLY'
-    mul2 = nt.nodes.new('ShaderNodeMath'); mul2.operation = 'MULTIPLY'; mul2.inputs[1].default_value = 0.8
+    mul2 = nt.nodes.new('ShaderNodeMath'); mul2.operation = 'MULTIPLY'; mul2.inputs[1].default_value = 0.35
     add = nt.nodes.new('ShaderNodeMath'); add.operation = 'ADD'
     fac = nt.nodes.new('ShaderNodeMath'); fac.operation = 'MULTIPLY'; fac.inputs[1].default_value = 0.78
     em.inputs['Color'].default_value = (0.04, 0.34, 1.0, 1)
@@ -128,3 +128,30 @@ for o in bpy.data.objects:
         if p is not None and p.inputs['Alpha'].default_value < 0.02: continue          # interior de ojos y boca: invisibles
         slot.material = holo
 print('LUCES', len(col_luz.objects), 'HOLO', holo.name)
+
+# ── geometría de la nave: Godot dejó algunas caras con el giro invertido (el piso quedaba oscuro en Cycles). Cada cara se orienta
+#    hacia afuera del centro de su pieza (las piezas de la nave son cajas, cilindros y planos: convexas) y se descartan las normales importadas.
+import bmesh
+col_nave = bpy.data.collections.get('Nave')
+volteadas = 0; tocados = 0
+if col_nave:
+    for o in list(col_nave.all_objects):
+        if o.type != 'MESH' or o.data.shape_keys or any(md.type == 'ARMATURE' for md in o.modifiers): continue
+        me = o.data
+        if me.get('orientada'): continue
+        bm = bmesh.new(); bm.from_mesh(me)
+        if len(bm.faces) < 6:
+            bm.free(); continue
+        c = sum((v.co for v in bm.verts), Vector()) / len(bm.verts)
+        malas = [f for f in bm.faces if f.normal.dot(f.calc_center_median() - c) < -1e-5]
+        if malas:
+            bmesh.ops.reverse_faces(bm, faces=malas)
+            bm.to_mesh(me); volteadas += len(malas); tocados += 1
+            me['orientada'] = 1
+            try:
+                with bpy.context.temp_override(object=o, active_object=o, selected_objects=[o]):
+                    bpy.ops.mesh.customdata_custom_splitnormals_clear()
+            except Exception:
+                pass
+        bm.free()
+print('NORMALES', tocados, 'piezas', volteadas, 'caras')
