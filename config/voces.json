@@ -147,6 +147,14 @@
     "stability": 0.5
    },
    "modelo": "eleven_v3"
+  },
+  "gabriel_noir": {
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "nombre": "Gabriel — voz masculina grave, triste y cansada (la indicó el dueño para «La mujer que volvió de la muerte»; no sustituir)",
+   "ajustes": {
+    "stability": 0.4
+   },
+   "modelo": "eleven_v3"
   }
  }
 }

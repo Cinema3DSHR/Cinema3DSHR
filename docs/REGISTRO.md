@@ -998,3 +998,6 @@ Verificaciones previas al render: cámaras sin picos de aceleración (2.ª difer
 
 ## 23/11/2026 — Limpieza de audios viejos
 A pedido del dueño (videos ya en YouTube): `git rm` de 269 audios (recuperables en `2e07f26`), catálogo de audio podado a 10 entradas, conservados 6 audios de ambiente/música/efectos del cap. 1–2 y el `ledger`. Siguiente: borrar medios de las Releases con `borrar_medios.yml`.
+
+## 23/11/2026 — Serie nueva: «La mujer que volvió de la muerte» (cap. 1) — arranque
+Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa con tormenta), Gabriel=Aiden y Elena=Kate con ropa nueva, narración con ElevenLabs voz `5egO01tkUjEzu7xSSE8M` (agregada a `config/voces.json` como `gabriel_noir`), escenas del accidente en 1.ª persona (respiración y latidos), Godot arma todo → Blender agrega efectos → render VERTICAL 540×960 («520p» = 540p). Narración total ≈ 1.475 caracteres (≈1.500 créditos, dentro del tope). **Falta el auto «proporcionado»**: el dueño lo sube. Sin gastar nada todavía.
