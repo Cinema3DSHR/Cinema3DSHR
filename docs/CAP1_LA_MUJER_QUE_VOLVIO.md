@@ -14,3 +14,9 @@ Metodología única: Godot arma todo → Blender (luces, lluvia, niebla, humo, r
 4. **Final (3:40–4:00):** cámara que se aleja, relámpago, negro y título.
 5. **Sonido:** música original (piano/cuerdas), lluvia, viento, truenos, derrape, impacto, latidos, respiración; voz siempre por encima. Subtítulos discretos.
 Capas 2.5D (fondos, niebla, montañas) donde convenga; geometría 3D para auto, personajes y casa.
+
+## Sangre y disparo (pedido del dueño, 23/11/2026)
+Se resuelven en la **etapa Blender** (los materiales procedurales no viajan en el GLB; Godot sólo deja los puntos de anclaje y las cámaras).
+- **Sangre en el suelo (accidente):** charcos y gotas como decals/mallas finas sobre el asfalto con material propio (rojo oscuro, brillo húmedo, coat transparente, bordes irregulares por ruido), mezclados con la lluvia (la lluvia los diluye y arrastra hilos hacia el borde); gotas sobre piedras y sobre el auto.
+- **Rostro y manos:** máscaras de sangre por región (frente, ceja, labio, nariz, nudillos, palmas, uñas) que se mezclan sobre el material de piel de Aiden (ya hay piel real con subsuperficie), con sangre fresca que corre y se oscurece/seca según la toma; aparecen después del choque (continuidad: antes del golpe, limpias).
+- **Disparo (casa, recuerdo del ataque):** fogonazo con luz puntual de 2–3 cuadros, humo de pólvora, casquillo que sale, golpe en el hombro de Gabriel con la camisa que se desgarra y salpicadura (partículas/líquido Mantaflow), mancha que se extiende en la tela y gotas en el suelo; cámara casi en una toma lenta rápida (30 fps, fotograma a fotograma). Violencia moderada y de tono dramático, sin recrearse.
