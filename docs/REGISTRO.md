@@ -990,3 +990,8 @@ Verificaciones previas al render: cámaras sin picos de aceleración (2.ª difer
 ## 23/11/2026 · Cap. 3 — sonido de ambiente (mismo que los cap. 1 y 2)
 - El primer montaje sólo llevaba voces. Ahora (`herramientas/audio_cap3.py`): ambiente procedural «nave_interior» a 0,35 en todo el capítulo + música y efectos YA generados en la biblioteca para los cap. 1 y 2 (partitura de espacio, partitura del jardín, motivo de piano, invernadero hidropónico en bucle, chime y ping), pasos en cada caminata/corrida y una alerta suave en la escena 2. Sin generar ni gastar créditos nuevos. El video no se volvió a renderizar: sólo se rehízo el audio del MP4.
 - `montaje.gd` tiene un modo `plan` (`-- sN prefijo plan`) que vuelca qué hace cada actor y cuándo (lo usa el diseño de sonido).
+
+## 23/11/2026 · Cap. 3 — rehecho en VERTICAL 540×960 (corrige un error de formato)
+- Error mío: el primer render (p020, 960×540 horizontal) ignoró que la serie es 9:16 (540×960; `produccion.json` de p011 ya lo decía). El dueño publica en Shorts/Reels/TikTok.
+- Se reutilizó todo menos las cámaras: reencuadre vertical (`REENCUADRE` en `storyboard_e03.py`: 8 tomas), GLB nuevos desde Godot a 540×960, BLEND nuevo, producción `p021_a_la_deriva_cap3` v001 (SHA-256 `6d1f18a861d249c075ead8230e33c5e38ffe6ae90e6f283258fb69bcd63f3838`), render 60 trabajos OK (5.324 cuadros) y el mismo audio (`audio_cap3.py`: ambiente nave_interior, música y efectos de los cap. 1 y 2, pasos, alerta, voces). Sin gasto de ElevenLabs.
+- El render horizontal p020 queda en su Release pero no sirve para publicar.
