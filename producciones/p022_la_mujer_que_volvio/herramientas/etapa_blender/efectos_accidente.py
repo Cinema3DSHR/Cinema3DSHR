@@ -277,7 +277,18 @@ for i, p in enumerate(pos_arboles):
     o.location = (p.x, p.y, 0.0); o.rotation_euler = (0, 0, rng_a.uniform(0, 6.28)); s_ = rng_a.uniform(0.8, 1.25); o.scale = (s_, s_, s_)
 R = AR.rocas_reales()
 col_roc = bpy.data.collections.new('Rocas'); sc.collection.children.link(col_roc)
+# zonas prohibidas para las rocas: por donde pasan las cámaras y Gabriel (para no taparlos)
+_zonas = []
+for _f in range(1, TOTAL + 1, 12):
+    sc.frame_set(_f)
+    _zonas.append(sc.camera.matrix_world.translation.copy())
+for _sg in EV['ruta_gabriel']:
+    for _u in (0.0, 0.5, 1.0):
+        _zonas.append(gb((_sg['p0'][0] + (_sg['p1'][0] - _sg['p0'][0]) * _u, 0, _sg['p0'][1] + (_sg['p1'][1] - _sg['p0'][1]) * _u)))
+def _libre(p, esc_):
+    return all((Vector((p.x, p.y, 0)) - Vector((z.x, z.y, 0))).length > esc_ * 1.0 + 2.6 for z in _zonas)
 def poner_roca(p, esc_, rot):
+    if not _libre(p, esc_): return
     o = bpy.data.objects.new('Roca', R[rng_a.randrange(3)].data); col_roc.objects.link(o)
     o.location = (p.x, p.y, esc_ * 0.12); o.rotation_euler = rot; o.scale = (esc_, esc_ * rng_a.uniform(0.7, 1.1), esc_ * rng_a.uniform(0.6, 1.0))
     for m in R[0].modifiers:
@@ -333,8 +344,25 @@ def sangre_en(material, mascara_fn, factor_max=1.0):
     nt = material.node_tree; bs = next(n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED')
     ent = bs.inputs['Base Color']
     origen = ent.links[0].from_socket if ent.links else None; val = tuple(ent.default_value)
-    tc = nt.nodes.new('ShaderNodeTexCoord'); sx = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Generated'], sx.inputs[0])
-    ru = nt.nodes.new('ShaderNodeTexNoise'); ru.inputs['Scale'].default_value = 22.0; ru.inputs['Detail'].default_value = 7.0; nt.links.new(tc.outputs['Generated'], ru.inputs['Vector'])
+    tc = nt.nodes.new('ShaderNodeTexCoord'); sx = nt.nodes.new('ShaderNodeSeparateXYZ')
+    caja = None
+    if material.name == 'EM3D_Skin_Head':                       # caja real de la piel de la cabeza (en reposo) para normalizar las coordenadas
+        for ob in bpy.data.objects:
+            if ob.type == 'MESH' and any(sl.material == material for sl in ob.material_slots):
+                idx = [i for i, sl in enumerate(ob.material_slots) if sl.material == material][0]
+                vs = {v for pl in ob.data.polygons if pl.material_index == idx for v in pl.vertices}
+                if vs:
+                    cs = [ob.data.vertices[v].co for v in vs]
+                    lo = Vector((min(c.x for c in cs), min(c.y for c in cs), min(c.z for c in cs))); hi = Vector((max(c.x for c in cs), max(c.y for c in cs), max(c.z for c in cs)))
+                    caja = (lo, hi); break
+    if caja:
+        mpn = nt.nodes.new('ShaderNodeMapping'); lo, hi = caja; sz = hi - lo
+        mpn.inputs['Location'].default_value = (-lo.x / sz.x, -lo.y / sz.y, -lo.z / sz.z); mpn.inputs['Scale'].default_value = (1 / sz.x, 1 / sz.y, 1 / sz.z)
+        nt.links.new(tc.outputs['Object'], mpn.inputs[0]); nt.links.new(mpn.outputs[0], sx.inputs[0]); fuente = mpn.outputs[0]
+        print('caja de la cabeza', [round(v, 3) for v in lo], [round(v, 3) for v in hi])
+    else:
+        nt.links.new(tc.outputs['Generated'], sx.inputs[0]); fuente = tc.outputs['Generated']
+    ru = nt.nodes.new('ShaderNodeTexNoise'); ru.inputs['Scale'].default_value = 22.0; ru.inputs['Detail'].default_value = 7.0; nt.links.new(fuente, ru.inputs['Vector'])
     m_ = mascara_fn(nt, sx, ru)
     cant = nt.nodes.new('ShaderNodeValue'); cant.outputs[0].default_value = 0.0
     d_ = cant.outputs[0].driver_add('default_value') if False else None
@@ -349,13 +377,10 @@ def sangre_en(material, mascara_fn, factor_max=1.0):
     # brillo húmedo donde hay sangre
     rg = nt.nodes.new('ShaderNodeMix'); rg.data_type = 'FLOAT'; rg.inputs['A'].default_value = bs.inputs['Roughness'].default_value; rg.inputs['B'].default_value = 0.08
     nt.links.new(cl.outputs[0], rg.inputs['Factor']); nt.links.new(rg.outputs['Result'], bs.inputs['Roughness'])
-def mascara_cara(nt, sx, ru):          # frente, sien izquierda y mejilla: tira que baja + goteo irregular
-    z = sx.outputs['Z']
-    zr = nt.nodes.new('ShaderNodeMapRange'); zr.inputs['From Min'].default_value = 0.90; zr.inputs['From Max'].default_value = 0.985; nt.links.new(z, zr.inputs['Value'])
-    xr = nt.nodes.new('ShaderNodeMapRange'); xr.inputs['From Min'].default_value = 0.62; xr.inputs['From Max'].default_value = 0.46; nt.links.new(sx.outputs['X'], xr.inputs['Value'])
-    prod = nt.nodes.new('ShaderNodeMath'); prod.operation = 'MULTIPLY'; nt.links.new(zr.outputs[0], prod.inputs[0]); nt.links.new(xr.outputs[0], prod.inputs[1])
-    mm = nt.nodes.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; nt.links.new(prod.outputs[0], mm.inputs[0]); nt.links.new(ru.outputs['Fac'], mm.inputs[1])
-    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.12; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
+def mascara_cara(nt, sx, ru):          # frente, sienes y mejillas con goteo irregular (simétrica: se ve de cualquier lado)
+    zr = nt.nodes.new('ShaderNodeMapRange'); zr.inputs['From Min'].default_value = 0.35; zr.inputs['From Max'].default_value = 0.90; nt.links.new(sx.outputs['Y'], zr.inputs['Value'])      # el eje vertical de esta malla es Y
+    mm = nt.nodes.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; nt.links.new(zr.outputs[0], mm.inputs[0]); nt.links.new(ru.outputs['Fac'], mm.inputs[1])
+    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.20; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
 def mascara_manos(nt, sx, ru):         # manos y antebrazos (zona baja a los costados del cuerpo)
     zr = nt.nodes.new('ShaderNodeMapRange'); zr.inputs['From Min'].default_value = 0.52; zr.inputs['From Max'].default_value = 0.40; nt.links.new(sx.outputs['Z'], zr.inputs['Value'])
     mm = nt.nodes.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; nt.links.new(zr.outputs[0], mm.inputs[0]); nt.links.new(ru.outputs['Fac'], mm.inputs[1])
@@ -372,9 +397,10 @@ def mat_sangre_suelo():
     tc = nt.nodes.new('ShaderNodeTexCoord'); ru = nt.nodes.new('ShaderNodeTexNoise'); ru.inputs['Scale'].default_value = 2.8; ru.inputs['Detail'].default_value = 8.0; nt.links.new(tc.outputs['Generated'], ru.inputs['Vector'])
     gr = nt.nodes.new('ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'
     mp = nt.nodes.new('ShaderNodeMapping'); mp.inputs['Location'].default_value = (-0.5, -0.5, -0.5); nt.links.new(tc.outputs['Generated'], mp.inputs[0]); nt.links.new(mp.outputs[0], gr.inputs[0])
-    inv = nt.nodes.new('ShaderNodeMath'); inv.operation = 'SUBTRACT'; inv.inputs[0].default_value = 1.0; nt.links.new(gr.outputs['Fac'], inv.inputs[1])
-    mul = nt.nodes.new('ShaderNodeMath'); mul.operation = 'MULTIPLY'; nt.links.new(inv.outputs[0], mul.inputs[0]); nt.links.new(ru.outputs['Fac'], mul.inputs[1])
-    mr = nt.nodes.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 0.05; mr.inputs['From Max'].default_value = 0.24; nt.links.new(mul.outputs[0], mr.inputs['Value'])
+    inv = nt.nodes.new('ShaderNodeMapRange'); inv.inputs['From Min'].default_value = 0.5; inv.inputs['From Max'].default_value = 0.95; nt.links.new(gr.outputs['Fac'], inv.inputs['Value'])
+    nz = nt.nodes.new('ShaderNodeMapRange'); nz.inputs['To Min'].default_value = 0.35; nz.inputs['To Max'].default_value = 1.15; nt.links.new(ru.outputs['Fac'], nz.inputs['Value'])
+    mul = nt.nodes.new('ShaderNodeMath'); mul.operation = 'MULTIPLY'; nt.links.new(inv.outputs[0], mul.inputs[0]); nt.links.new(nz.outputs[0], mul.inputs[1])
+    mr = nt.nodes.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 0.10; mr.inputs['From Max'].default_value = 0.30; nt.links.new(mul.outputs[0], mr.inputs['Value'])
     bs.inputs['Base Color'].default_value = (0.11, 0.0, 0.004, 1); bs.inputs['Roughness'].default_value = 0.04
     nt.links.new(mr.outputs[0], mx.inputs['Fac']); nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(bs.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0]); return m
 M_SANGRE = mat_sangre_suelo()
