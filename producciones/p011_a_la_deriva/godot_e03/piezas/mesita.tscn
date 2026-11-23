@@ -18,14 +18,14 @@ emission_energy_multiplier = 2.2
 [sub_resource type="BoxMesh" id="BoxMesh_6dxp8"]
 size = Vector3(0.4, 0.012, 0.005)
 
-[node name="mesita" type="Node3D" unique_id=54599686]
+[node name="mesita" type="Node3D" unique_id=1989539492]
 
-[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=1992349794]
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=1851825273]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27, 0)
 material_override = SubResource("StandardMaterial3D_fhgej")
 mesh = SubResource("BoxMesh_onmrh")
 
-[node name="Luz" type="MeshInstance3D" parent="." unique_id=800935344]
+[node name="Luz" type="MeshInstance3D" parent="." unique_id=1393852609]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.226)
 material_override = SubResource("StandardMaterial3D_1uq07")
 mesh = SubResource("BoxMesh_6dxp8")

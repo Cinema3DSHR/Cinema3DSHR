@@ -43,29 +43,29 @@ size = Vector3(0.9, 0.03, 0.01)
 [sub_resource type="BoxMesh" id="BoxMesh_3pgf7"]
 size = Vector3(0.9, 0.02, 0.01)
 
-[node name="expendedora" type="Node3D" unique_id=846834012]
+[node name="expendedora" type="Node3D" unique_id=420879503]
 
-[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=1962382041]
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=1122516707]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 material_override = SubResource("StandardMaterial3D_mr7fc")
 mesh = SubResource("BoxMesh_v84o7")
 
-[node name="Frente" type="MeshInstance3D" parent="." unique_id=951273920]
+[node name="Frente" type="MeshInstance3D" parent="." unique_id=1671776055]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.06, -0.392)
 material_override = SubResource("StandardMaterial3D_liqc5")
 mesh = SubResource("QuadMesh_b1i23")
 
-[node name="Bandeja" type="MeshInstance3D" parent="." unique_id=948685634]
+[node name="Bandeja" type="MeshInstance3D" parent="." unique_id=1831803559]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.28, -0.4)
 material_override = SubResource("StandardMaterial3D_pbp41")
 mesh = SubResource("BoxMesh_4k11y")
 
-[node name="LuzSuperior" type="MeshInstance3D" parent="." unique_id=1397013583]
+[node name="LuzSuperior" type="MeshInstance3D" parent="." unique_id=1927848203]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.88, -0.395)
 material_override = SubResource("StandardMaterial3D_64iqe")
 mesh = SubResource("BoxMesh_lgg18")
 
-[node name="LuzBase" type="MeshInstance3D" parent="." unique_id=85381091]
+[node name="LuzBase" type="MeshInstance3D" parent="." unique_id=1173871914]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -0.395)
 material_override = SubResource("StandardMaterial3D_64iqe")
 mesh = SubResource("BoxMesh_3pgf7")

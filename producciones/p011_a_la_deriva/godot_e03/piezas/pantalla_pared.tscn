@@ -32,18 +32,18 @@ emission_texture = ExtResource("1_86i1m")
 [sub_resource type="QuadMesh" id="QuadMesh_wrytb"]
 size = Vector2(1.6, 0.9)
 
-[node name="pantalla_pared" type="Node3D" unique_id=2038420338]
+[node name="pantalla_pared" type="Node3D" unique_id=874059905]
 
-[node name="Marco" type="MeshInstance3D" parent="." unique_id=1960106885]
+[node name="Marco" type="MeshInstance3D" parent="." unique_id=647696715]
 material_override = SubResource("StandardMaterial3D_kenb0")
 mesh = SubResource("BoxMesh_8jdr0")
 
-[node name="Filete" type="MeshInstance3D" parent="." unique_id=1503693290]
+[node name="Filete" type="MeshInstance3D" parent="." unique_id=1744224781]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.52, -0.03)
 material_override = SubResource("StandardMaterial3D_cg2ij")
 mesh = SubResource("BoxMesh_gdkf7")
 
-[node name="Pantalla" type="MeshInstance3D" parent="." unique_id=1154909192]
+[node name="Pantalla" type="MeshInstance3D" parent="." unique_id=1432110761]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.037)
 material_override = SubResource("StandardMaterial3D_m60vo")
 mesh = SubResource("QuadMesh_wrytb")

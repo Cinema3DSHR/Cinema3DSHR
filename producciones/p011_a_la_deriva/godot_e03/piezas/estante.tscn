@@ -362,189 +362,189 @@ bottom_radius = 0.05
 height = 0.19044527
 radial_segments = 16
 
-[node name="estante" type="Node3D" unique_id=229134974]
+[node name="estante" type="Node3D" unique_id=1948787597]
 
-[node name="Montante" type="MeshInstance3D" parent="." unique_id=568747650]
+[node name="Montante" type="MeshInstance3D" parent="." unique_id=920572976]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 1, 0)
 material_override = SubResource("StandardMaterial3D_vpcad")
 mesh = SubResource("BoxMesh_symnc")
 
-[node name="@MeshInstance3D@10" type="MeshInstance3D" parent="." unique_id=1415651177]
+[node name="@MeshInstance3D@10" type="MeshInstance3D" parent="." unique_id=48008474]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 1, 0)
 material_override = SubResource("StandardMaterial3D_vpcad")
 mesh = SubResource("BoxMesh_ojc5v")
 
-[node name="Repisa0" type="MeshInstance3D" parent="." unique_id=1191290275]
+[node name="Repisa0" type="MeshInstance3D" parent="." unique_id=1899096143]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 material_override = SubResource("StandardMaterial3D_vpcad")
 mesh = SubResource("BoxMesh_w7vl5")
 
-[node name="Frasco0_0" type="MeshInstance3D" parent="." unique_id=259321201]
+[node name="Frasco0_0" type="MeshInstance3D" parent="." unique_id=1461985292]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 0.36864656, 0)
 material_override = SubResource("StandardMaterial3D_oo1rp")
 mesh = SubResource("CylinderMesh_420w2")
 
-[node name="Frasco0_1" type="MeshInstance3D" parent="." unique_id=1918680494]
+[node name="Frasco0_1" type="MeshInstance3D" parent="." unique_id=1881218379]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 0.38620114, 0)
 material_override = SubResource("StandardMaterial3D_02jlo")
 mesh = SubResource("CylinderMesh_j0vh3")
 
-[node name="Frasco0_2" type="MeshInstance3D" parent="." unique_id=1152788156]
+[node name="Frasco0_2" type="MeshInstance3D" parent="." unique_id=498916573]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.3695661, 0)
 material_override = SubResource("StandardMaterial3D_wfm2r")
 mesh = SubResource("CylinderMesh_es637")
 
-[node name="Frasco0_3" type="MeshInstance3D" parent="." unique_id=222719747]
+[node name="Frasco0_3" type="MeshInstance3D" parent="." unique_id=1491876078]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.34557495, 0)
 material_override = SubResource("StandardMaterial3D_2we1k")
 mesh = SubResource("CylinderMesh_tv76h")
 
-[node name="Frasco0_4" type="MeshInstance3D" parent="." unique_id=451888337]
+[node name="Frasco0_4" type="MeshInstance3D" parent="." unique_id=444492610]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.35516152, 0)
 material_override = SubResource("StandardMaterial3D_7s1l7")
 mesh = SubResource("CylinderMesh_ey00u")
 
-[node name="Frasco0_5" type="MeshInstance3D" parent="." unique_id=1155756980]
+[node name="Frasco0_5" type="MeshInstance3D" parent="." unique_id=1082260414]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 0.37083125, 0)
 material_override = SubResource("StandardMaterial3D_sfca1")
 mesh = SubResource("CylinderMesh_ps61o")
 
-[node name="Repisa1" type="MeshInstance3D" parent="." unique_id=468510182]
+[node name="Repisa1" type="MeshInstance3D" parent="." unique_id=1858373284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.67, 0)
 material_override = SubResource("StandardMaterial3D_vpcad")
 mesh = SubResource("BoxMesh_comlv")
 
-[node name="Frasco1_0" type="MeshInstance3D" parent="." unique_id=1640528098]
+[node name="Frasco1_0" type="MeshInstance3D" parent="." unique_id=146887892]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 0.7626468, 0)
 material_override = SubResource("StandardMaterial3D_s5jgo")
 mesh = SubResource("CylinderMesh_oxrqw")
 
-[node name="Frasco1_1" type="MeshInstance3D" parent="." unique_id=1378476311]
+[node name="Frasco1_1" type="MeshInstance3D" parent="." unique_id=666472573]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 0.7868157, 0)
 material_override = SubResource("StandardMaterial3D_nce8v")
 mesh = SubResource("CylinderMesh_wcbkb")
 
-[node name="Frasco1_2" type="MeshInstance3D" parent="." unique_id=1628566638]
+[node name="Frasco1_2" type="MeshInstance3D" parent="." unique_id=349634361]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.78197163, 0)
 material_override = SubResource("StandardMaterial3D_pkrmx")
 mesh = SubResource("CylinderMesh_qc0ny")
 
-[node name="Frasco1_3" type="MeshInstance3D" parent="." unique_id=1861538665]
+[node name="Frasco1_3" type="MeshInstance3D" parent="." unique_id=996987808]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.79314387, 0)
 material_override = SubResource("StandardMaterial3D_r2jk3")
 mesh = SubResource("CylinderMesh_d4t51")
 
-[node name="Frasco1_4" type="MeshInstance3D" parent="." unique_id=552977246]
+[node name="Frasco1_4" type="MeshInstance3D" parent="." unique_id=284091431]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 0.81366754, 0)
 material_override = SubResource("StandardMaterial3D_1y2h7")
 mesh = SubResource("CylinderMesh_2r7nv")
 
-[node name="Frasco1_5" type="MeshInstance3D" parent="." unique_id=59771528]
+[node name="Frasco1_5" type="MeshInstance3D" parent="." unique_id=201650788]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 0.7788915, 0)
 material_override = SubResource("StandardMaterial3D_apk70")
 mesh = SubResource("CylinderMesh_p7gsp")
 
-[node name="Repisa2" type="MeshInstance3D" parent="." unique_id=180113449]
+[node name="Repisa2" type="MeshInstance3D" parent="." unique_id=70405857]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09, 0)
 material_override = SubResource("StandardMaterial3D_vpcad")
 mesh = SubResource("BoxMesh_0yqhs")
 
-[node name="Frasco2_0" type="MeshInstance3D" parent="." unique_id=1823432118]
+[node name="Frasco2_0" type="MeshInstance3D" parent="." unique_id=362915320]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 1.1851635, 0)
 material_override = SubResource("StandardMaterial3D_wvhj5")
 mesh = SubResource("CylinderMesh_p5mjj")
 
-[node name="Frasco2_1" type="MeshInstance3D" parent="." unique_id=1823579876]
+[node name="Frasco2_1" type="MeshInstance3D" parent="." unique_id=1208114766]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 1.2227597, 0)
 material_override = SubResource("StandardMaterial3D_ntl8o")
 mesh = SubResource("CylinderMesh_ynecu")
 
-[node name="Frasco2_2" type="MeshInstance3D" parent="." unique_id=1452576033]
+[node name="Frasco2_2" type="MeshInstance3D" parent="." unique_id=1363075705]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1.2186997, 0)
 material_override = SubResource("StandardMaterial3D_jan0l")
 mesh = SubResource("CylinderMesh_s747l")
 
-[node name="Frasco2_3" type="MeshInstance3D" parent="." unique_id=1858207023]
+[node name="Frasco2_3" type="MeshInstance3D" parent="." unique_id=1400193078]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 1.2039455, 0)
 material_override = SubResource("StandardMaterial3D_tep4b")
 mesh = SubResource("CylinderMesh_pqmsg")
 
-[node name="Frasco2_4" type="MeshInstance3D" parent="." unique_id=56263054]
+[node name="Frasco2_4" type="MeshInstance3D" parent="." unique_id=1949227465]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 1.19925, 0)
 material_override = SubResource("StandardMaterial3D_enfga")
 mesh = SubResource("CylinderMesh_jm7ma")
 
-[node name="Frasco2_5" type="MeshInstance3D" parent="." unique_id=1158476457]
+[node name="Frasco2_5" type="MeshInstance3D" parent="." unique_id=787629114]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 1.2172302, 0)
 material_override = SubResource("StandardMaterial3D_31qfr")
 mesh = SubResource("CylinderMesh_124qa")
 
-[node name="Repisa3" type="MeshInstance3D" parent="." unique_id=2034414750]
+[node name="Repisa3" type="MeshInstance3D" parent="." unique_id=202786331]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.51, 0)
 material_override = SubResource("StandardMaterial3D_vpcad")
 mesh = SubResource("BoxMesh_tv8po")
 
-[node name="Frasco3_0" type="MeshInstance3D" parent="." unique_id=2145794257]
+[node name="Frasco3_0" type="MeshInstance3D" parent="." unique_id=1272424949]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 1.6400582, 0)
 material_override = SubResource("StandardMaterial3D_ve82u")
 mesh = SubResource("CylinderMesh_0wp1u")
 
-[node name="Frasco3_1" type="MeshInstance3D" parent="." unique_id=713981150]
+[node name="Frasco3_1" type="MeshInstance3D" parent="." unique_id=1726966631]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 1.6485118, 0)
 material_override = SubResource("StandardMaterial3D_aym11")
 mesh = SubResource("CylinderMesh_1jo7s")
 
-[node name="Frasco3_2" type="MeshInstance3D" parent="." unique_id=1654870223]
+[node name="Frasco3_2" type="MeshInstance3D" parent="." unique_id=2014715113]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1.6351134, 0)
 material_override = SubResource("StandardMaterial3D_62xf1")
 mesh = SubResource("CylinderMesh_ngow0")
 
-[node name="Frasco3_3" type="MeshInstance3D" parent="." unique_id=1149677594]
+[node name="Frasco3_3" type="MeshInstance3D" parent="." unique_id=1608346412]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 1.640464, 0)
 material_override = SubResource("StandardMaterial3D_rlt0r")
 mesh = SubResource("CylinderMesh_8ehn5")
 
-[node name="Frasco3_4" type="MeshInstance3D" parent="." unique_id=369467687]
+[node name="Frasco3_4" type="MeshInstance3D" parent="." unique_id=1173614934]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 1.6251808, 0)
 material_override = SubResource("StandardMaterial3D_ricv6")
 mesh = SubResource("CylinderMesh_tp3ni")
 
-[node name="Frasco3_5" type="MeshInstance3D" parent="." unique_id=836751352]
+[node name="Frasco3_5" type="MeshInstance3D" parent="." unique_id=97925427]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 1.6463633, 0)
 material_override = SubResource("StandardMaterial3D_aun02")
 mesh = SubResource("CylinderMesh_o2epq")
 
-[node name="Repisa4" type="MeshInstance3D" parent="." unique_id=1242590940]
+[node name="Repisa4" type="MeshInstance3D" parent="." unique_id=1282608331]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93, 0)
 material_override = SubResource("StandardMaterial3D_vpcad")
 mesh = SubResource("BoxMesh_i42f7")
 
-[node name="Frasco4_0" type="MeshInstance3D" parent="." unique_id=538192854]
+[node name="Frasco4_0" type="MeshInstance3D" parent="." unique_id=540051133]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.46, 2.0187938, 0)
 material_override = SubResource("StandardMaterial3D_duypw")
 mesh = SubResource("CylinderMesh_wk80h")
 
-[node name="Frasco4_1" type="MeshInstance3D" parent="." unique_id=350458550]
+[node name="Frasco4_1" type="MeshInstance3D" parent="." unique_id=353607876]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.28, 2.0437975, 0)
 material_override = SubResource("StandardMaterial3D_ex7c2")
 mesh = SubResource("CylinderMesh_mrgbt")
 
-[node name="Frasco4_2" type="MeshInstance3D" parent="." unique_id=330306164]
+[node name="Frasco4_2" type="MeshInstance3D" parent="." unique_id=1390009100]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 2.0519688, 0)
 material_override = SubResource("StandardMaterial3D_1gnm3")
 mesh = SubResource("CylinderMesh_yvrph")
 
-[node name="Frasco4_3" type="MeshInstance3D" parent="." unique_id=562359841]
+[node name="Frasco4_3" type="MeshInstance3D" parent="." unique_id=407560952]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 2.0498867, 0)
 material_override = SubResource("StandardMaterial3D_4patp")
 mesh = SubResource("CylinderMesh_3ktu5")
 
-[node name="Frasco4_4" type="MeshInstance3D" parent="." unique_id=1249997691]
+[node name="Frasco4_4" type="MeshInstance3D" parent="." unique_id=637547445]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26, 2.055886, 0)
 material_override = SubResource("StandardMaterial3D_2ms1x")
 mesh = SubResource("CylinderMesh_l7ybp")
 
-[node name="Frasco4_5" type="MeshInstance3D" parent="." unique_id=254098261]
+[node name="Frasco4_5" type="MeshInstance3D" parent="." unique_id=524592367]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 2.0402226, 0)
 material_override = SubResource("StandardMaterial3D_o3jvx")
 mesh = SubResource("CylinderMesh_fhstf")

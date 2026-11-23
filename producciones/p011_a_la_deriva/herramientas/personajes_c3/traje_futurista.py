@@ -114,11 +114,11 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
     tela,bota,suela,luz=mat_tela(),mat_bota(),mat_suela(),mat_luz()
     rodilla_z=(W('L_Calf').z+W('R_Calf').z)/2
     z_bota=rodilla_z*0.58                               # botas hasta media pantorrilla
-    def mono(n): return n.startswith(('Hip','Pelvis','Waist','Spine','L_Thigh','R_Thigh','L_Calf','R_Calf','L_Knee','R_Knee','L_Upperarm','R_Upperarm','L_Forearm','R_Forearm','L_Clavicle','R_Clavicle','L_Elbow','R_Elbow','L_Ribs','R_Ribs','L_Breast','R_Breast','NeckTwist'))
+    def mono(n): return n.startswith(('Hip','Pelvis','Waist','Spine','L_Thigh','R_Thigh','L_Calf','R_Calf','L_Knee','R_Knee','L_Upperarm','R_Upperarm','L_Forearm','R_Forearm','L_Clavicle','R_Clavicle','L_Elbow','R_Elbow','L_Ribs','R_Ribs','L_Breast','R_Breast','NeckTwist','Neck','Head','JawRoot','Tongue','L_Eye','R_Eye','UpperJaw'))
     pie=lambda n: n.startswith(('L_Calf','R_Calf','L_Foot','R_Foot','L_Toe','R_Toe','L_BigToe','R_BigToe','L_PinkyToe','R_PinkyToe','L_RingToe','R_RingToe','L_MidToe','R_MidToe','L_IndexToe','R_IndexToe'))
-    piezas=[_region(sc,body,lambda n: mono(n) and not n.startswith(('L_Foot','R_Foot','L_Toe','R_Toe')),0.007*S,'TRAJE_MONO',tela,zmin=z_bota-0.03)]
+    piezas=[_region(sc,body,lambda n: mono(n) and not n.startswith(('L_Foot','R_Foot','L_Toe','R_Toe')),0.007*S,'TRAJE_MONO',tela,zmin=z_bota-0.03,zmax=W('NeckTwist01').z+0.025*S)]
     zank=0.115*S                                     # sobre el empeine: ahí termina la «zapatilla» y empieza la caña
-    caña=_region(sc,body,lambda n: True,0.016*S,'TRAJE_BOTAS',bota,zmin=zank-0.01,zmax=z_bota)
+    caña=_region(sc,body,lambda n: True,0.016*S,'TRAJE_BOTAS',bota,zmin=zank-0.035*S,zmax=z_bota)
     piezas.append(caña)
     # PIE: envolvente convexa de cada pie (dedos juntos en una sola punta redondeada, suela gruesa) con pesos tomados del vértice más cercano del cuerpo
     from mathutils import kdtree
@@ -132,9 +132,10 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
         pts=[]
         for v in body.data.vertices:
             w=mw_b@v.co
-            if w.z<zank+0.02*S and w.x*sg>0.005: pts.append(w.copy())
+            if w.z<zank+0.045*S and w.x*sg>0.005: pts.append(w.copy())
         for w in pts: bmh.verts.new(w)
         bmesh.ops.convex_hull(bmh,input=list(bmh.verts),use_existing_faces=False)
+        bmesh.ops.recalc_face_normals(bmh,faces=list(bmh.faces))
         # engordar: hacia fuera del centro del pie + suela más baja
         c=sum(pts,Vector())/len(pts)
         for v in bmh.verts:

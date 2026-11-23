@@ -285,8 +285,8 @@ func armar_nave() -> void:
 		inst(cd, "mesa_comedor", "Mesa%d" % k, Vector3(mx, 0, -5.6), Vector3(mx, 0, -3))
 		for j in 3:
 			var sx := mx - 0.8 + j * 0.8
-			inst(cd, "silla_comedor", "Silla%d_N%d" % [k, j], Vector3(sx, 0, -6.5), Vector3(mx, 0, -5.6))
-			inst(cd, "silla_comedor", "Silla%d_S%d" % [k, j], Vector3(sx, 0, -4.7), Vector3(mx, 0, -5.6))
+			inst(cd, "silla_comedor", "Silla%d_N%d" % [k, j], Vector3(sx, 0, -6.7), Vector3(mx, 0, -5.6))
+			inst(cd, "silla_comedor", "Silla%d_S%d" % [k, j], Vector3(sx, 0, -4.5), Vector3(mx, 0, -5.6))
 	for i in 3:
 		inst(cd, "expendedora", "Expendedora%d" % i, Vector3(-4.5, 0, -3.1 - i * 1.1), Vector3(0, 0, -3.1 - i * 1.1))
 	for i in 2:
@@ -371,7 +371,10 @@ func armar_nave() -> void:
 	for i in 6:
 		planta(bo, "enredadera", "EnredaderaTecho%d" % i, Vector3(-3.5 + i * 2.6, ALTO - 0.2, 6.0 + (i % 2) * 0.9), i * 60.0, 1.0, 0.15 * i, true)
 		L.cil(bo, "CableEnredadera%d" % i, Vector3(-3.5 + i * 2.6, ALTO - 0.1, 6.0 + (i % 2) * 0.9), 0.004, 0.2, L.mat(Color(0.1, 0.1, 0.12)), Vector3.ZERO, 6)
-	inst(bo, "pantalla_pared", "PantallaBotanico", Vector3(-5.85, 1.9, 5.5), Vector3(0, 1.9, 5.5), 1.3).get_node("Pantalla").material_override = L.mat_tex(A + "botanico.png")
+	# consola del módulo (con la pantalla de registros) y proyector del holograma de EVA
+	inst(bo, "consola_mando", "ConsolaBotanico", Vector3(-5.3, 0, 5.5), Vector3(0, 0, 5.5), 0.9)
+	inst(bo, "silla_comando", "SillaConsolaBotanico", Vector3(-4.2, 0, 7.6), Vector3(-5.3, 0, 6.6)) if false else null
+	inst(bo, "holoproyector", "ProyectorBotanico", Vector3(-2.4, 0, 5.5), Vector3(-6, 0, 5.5), 0.8)
 	luces_techo(bo, -5, 11, 2.5, 11, Color(0.92, 1.0, 0.94), 4, 2, 2.2, 9.5)
 	L.luz(bo, "LuzCultivo", Vector3(3, 2.6, 8.0), Color(0.8, 0.55, 1.0), 1.4, 9.0)
 	decorar(bo, -6, 12, 1.6, 12, 1, 3.0)

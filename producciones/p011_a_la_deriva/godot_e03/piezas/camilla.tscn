@@ -36,29 +36,29 @@ emission_energy_multiplier = 2.2
 [sub_resource type="BoxMesh" id="BoxMesh_qowyw"]
 size = Vector3(0.01, 0.01, 1.8)
 
-[node name="camilla" type="Node3D" unique_id=1616117144]
+[node name="camilla" type="Node3D" unique_id=678396918]
 
-[node name="Colchon" type="MeshInstance3D" parent="." unique_id=1723589139]
+[node name="Colchon" type="MeshInstance3D" parent="." unique_id=715788410]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, 0)
 material_override = SubResource("StandardMaterial3D_2l32w")
 mesh = SubResource("BoxMesh_f2bo4")
 
-[node name="Estructura" type="MeshInstance3D" parent="." unique_id=351697642]
+[node name="Estructura" type="MeshInstance3D" parent="." unique_id=449269756]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74, 0)
 material_override = SubResource("StandardMaterial3D_0h6vn")
 mesh = SubResource("BoxMesh_klpvy")
 
-[node name="Pie" type="MeshInstance3D" parent="." unique_id=457885442]
+[node name="Pie" type="MeshInstance3D" parent="." unique_id=465842858]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.37, 0)
 material_override = SubResource("StandardMaterial3D_0h6vn")
 mesh = SubResource("BoxMesh_g6rml")
 
-[node name="Base" type="MeshInstance3D" parent="." unique_id=901280678]
+[node name="Base" type="MeshInstance3D" parent="." unique_id=1429238796]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 material_override = SubResource("StandardMaterial3D_m1emy")
 mesh = SubResource("BoxMesh_pgeih")
 
-[node name="Luz" type="MeshInstance3D" parent="." unique_id=1500357202]
+[node name="Luz" type="MeshInstance3D" parent="." unique_id=628449793]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.8, 0)
 material_override = SubResource("StandardMaterial3D_a8wax")
 mesh = SubResource("BoxMesh_qowyw")

@@ -261,27 +261,27 @@
    "diag": [
     {
      "n": "kate_habla",
-     "t": 20.615000000000002,
+     "t": 19.815,
      "sigue": "kate",
      "hueso": "Head",
      "off": [
       0.0,
-      0.04,
-      0.55
+      0.02,
+      0.5
      ],
-     "fov": 26
+     "fov": 24
     },
     {
      "n": "kate_habla2",
-     "t": 21.665,
+     "t": 20.115000000000002,
      "sigue": "kate",
      "hueso": "Head",
      "off": [
-      0.15,
-      0.04,
-      0.55
+      0.0,
+      0.02,
+      0.5
      ],
-     "fov": 26
+     "fov": 24
     },
     {
      "n": "kate_manos",
@@ -306,6 +306,21 @@
       0.8
      ],
      "fov": 32
+    },
+    {
+     "n": "kate_pies3",
+     "t": 28.598999999999997,
+     "sigue": "kate",
+     "alto": 0.08,
+     "off": [
+      0.9,
+      0.05,
+      0.3
+     ],
+     "fov": 32,
+     "ocultar": [
+      "EM3D_Base_Body"
+     ]
     },
     {
      "n": "kate_pies2",
@@ -460,6 +475,1220 @@
       16,
       1.4,
       -3.5
+     ],
+     "fov": 32
+    }
+   ]
+  },
+  "s2": {
+   "titulo": "Cap. 3 · Escena 2 · La anomalía",
+   "dur": 30.95,
+   "voces": [
+    {
+     "t": 2.0,
+     "dur": 5.956,
+     "quien": "eva",
+     "texto": "[urgent, precise] Atención. Anomalía en el módulo botánico. Varias incubadoras pierden estabilidad.",
+     "mp3": "data/voz/voz_72870bc29320e140.mp3",
+     "alineacion_res": "data/alin/voz_72870bc29320e140.alin.json",
+     "exp": {
+      "aiden": "preocupado",
+      "kate": "preocupado"
+     }
+    },
+    {
+     "t": 8.406,
+     "dur": 1.959,
+     "quien": "aiden",
+     "texto": "[alert, quick] ¿Qué incubadoras? ¿Cuántas?",
+     "mp3": "data/voz/voz_773bd7913e00cd9c.mp3",
+     "alineacion_res": "data/alin/voz_773bd7913e00cd9c.alin.json",
+     "exp": {
+      "aiden": "preocupado",
+      "kate": "preocupado"
+     }
+    },
+    {
+     "t": 10.815,
+     "dur": 5.486,
+     "quien": "eva",
+     "texto": "[calm, precise] Cuatro de nueve. Las compuertas del sector se están cerrando automáticamente.",
+     "mp3": "data/voz/voz_471ba86edecf7de4.mp3",
+     "alineacion_res": "data/alin/voz_471ba86edecf7de4.alin.json",
+     "exp": {
+      "aiden": "preocupado",
+      "kate": "preocupado"
+     }
+    },
+    {
+     "t": 16.751,
+     "dur": 3.866,
+     "quien": "kate",
+     "texto": "[firm, alert] Voy para allá. Conozco ese módulo mejor que nadie.",
+     "mp3": "data/voz/voz_190314dc0fd77663.mp3",
+     "alineacion_res": "data/alin/voz_190314dc0fd77663.alin.json",
+     "exp": {
+      "aiden": "preocupado",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 21.067,
+     "dur": 3.553,
+     "quien": "aiden",
+     "texto": "[quick] Yo voy por el pasillo central. Nos vemos en la entrada.",
+     "mp3": "data/voz/voz_2cf74e4e7b1a4367.mp3",
+     "alineacion_res": "data/alin/voz_2cf74e4e7b1a4367.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 25.07,
+     "dur": 1.881,
+     "quien": "eva",
+     "texto": "[calm] Recomiendo que no se separen.",
+     "mp3": "data/voz/voz_afad04b0adfa5d31.mp3",
+     "alineacion_res": "data/alin/voz_afad04b0adfa5d31.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    }
+   ],
+   "actores": {
+    "kate": {
+     "modelo": "kate",
+     "cuero": [
+      0.27,
+      0.1,
+      0.045
+     ],
+     "inicio": {
+      "pos": [
+       -1.4,
+       -6.7
+      ],
+      "yaw": 0.0,
+      "y": 0.0,
+      "postura": "sentado",
+      "clip": "sit_idle"
+     },
+     "eventos": [
+      {
+       "t": 5.2,
+       "clip": "look_around",
+       "una_vez": true
+      },
+      {
+       "t": 11.014999999999999,
+       "clip": "sit_idle2",
+       "dur": 2.0
+      },
+      {
+       "t": 15.551000000000002,
+       "clip": "sit_to_stand",
+       "una_vez": true,
+       "postura": "de_pie"
+      },
+      {
+       "walk": [
+        [
+         -0.55,
+         -6.45
+        ],
+        [
+         -0.3,
+         -3.6
+        ],
+        [
+         0.0,
+         -1.9
+        ],
+        [
+         0.0,
+         0.0
+        ],
+        [
+         3.0,
+         0.0
+        ]
+       ],
+       "clip": "run",
+       "yaw_final": 90.0
+      }
+     ],
+     "clip_final": "idle"
+    },
+    "aiden": {
+     "modelo": "aiden",
+     "inicio": {
+      "pos": [
+       -1.4,
+       -4.5
+      ],
+      "yaw": 180.0,
+      "y": 0.0,
+      "postura": "sentado",
+      "clip": "sit_idle2"
+     },
+     "eventos": [
+      {
+       "t": 7.406000000000001,
+       "clip": "sit_to_stand",
+       "una_vez": true,
+       "postura": "de_pie"
+      },
+      {
+       "clip": "idle",
+       "dur": 1.6
+      },
+      {
+       "t": 20.767,
+       "walk": [
+        [
+         -0.6,
+         -4.8
+        ],
+        [
+         -0.2,
+         -3.0
+        ],
+        [
+         0.0,
+         -1.9
+        ],
+        [
+         0.0,
+         -0.3
+        ],
+        [
+         -3.0,
+         0.0
+        ]
+       ],
+       "clip": "run",
+       "yaw_final": -90.0
+      }
+     ],
+     "clip_final": "idle"
+    }
+   },
+   "props": {},
+   "miradas": [
+    {
+     "actor": "aiden",
+     "t0": 5.5,
+     "t1": 10.406,
+     "a": "kate",
+     "alto": 1.45
+    },
+    {
+     "actor": "kate",
+     "t0": 8.406,
+     "t1": 16.251,
+     "a": "aiden",
+     "alto": 1.5
+    }
+   ],
+   "diag": [],
+   "tomas": [
+    {
+     "id": "t01",
+     "camara": "cam_s2_general",
+     "plano": "general del comedor",
+     "t0": 0.0,
+     "t1": 8.106,
+     "pos": [
+      -4.6,
+      1.9,
+      -2.2
+     ],
+     "mira": [
+      -1.4,
+      1.0,
+      -5.6
+     ],
+     "fov": 62
+    },
+    {
+     "id": "t02",
+     "camara": "cam_s2_aiden",
+     "plano": "medio Aiden",
+     "t0": 8.106,
+     "t1": 11.115,
+     "pos": [
+      -1.1,
+      1.35,
+      -6.0
+     ],
+     "mira": [
+      -1.4,
+      1.2,
+      -4.6
+     ],
+     "fov": 38
+    },
+    {
+     "id": "t03",
+     "camara": "cam_s2_dos",
+     "plano": "los dos en pie",
+     "t0": 11.115,
+     "t1": 20.467,
+     "pos": [
+      1.2,
+      1.6,
+      -2.6
+     ],
+     "pos_fin": [
+      0.8,
+      1.6,
+      -2.9
+     ],
+     "mira": [
+      -1.0,
+      1.1,
+      -5.5
+     ],
+     "fov": 55
+    },
+    {
+     "id": "t04",
+     "camara": "cam_s2_pasillo",
+     "plano": "salen corriendo",
+     "t0": 20.467,
+     "t1": 30.95,
+     "pos": [
+      -2.5,
+      1.7,
+      1.3
+     ],
+     "mira": [
+      0.0,
+      1.0,
+      -0.5
+     ],
+     "fov": 60
+    }
+   ]
+  },
+  "s3": {
+   "titulo": "Cap. 3 · Escena 3 · Algo no cuadra",
+   "dur": 45.09,
+   "voces": [
+    {
+     "t": 2.0,
+     "dur": 4.676,
+     "quien": "kate",
+     "texto": "[focused, quiet] Las temperaturas están dentro de rango. La anomalía no es térmica.",
+     "mp3": "data/voz/voz_82266ad8cbecdd3e.mp3",
+     "alineacion_res": "data/alin/voz_82266ad8cbecdd3e.alin.json",
+     "exp": {
+      "aiden": "preocupado",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 7.126,
+     "dur": 7.001,
+     "quien": "aiden",
+     "texto": "[puzzled] Hay una secuencia de cierre iniciada a las seis y cuarenta y dos. La alarma salta a las seis y cincuenta.",
+     "mp3": "data/voz/voz_25b17acfeb4555ae.mp3",
+     "alineacion_res": "data/alin/voz_25b17acfeb4555ae.alin.json",
+     "exp": {
+      "aiden": "preocupado",
+      "kate": "preocupado"
+     }
+    },
+    {
+     "t": 14.577,
+     "dur": 5.146,
+     "quien": "aiden",
+     "texto": "[quiet, dry] EVA. ¿Por qué empezaste el cierre ocho minutos antes de la anomalía?",
+     "mp3": "data/voz/voz_31f155aa3bf16ede.mp3",
+     "alineacion_res": "data/alin/voz_31f155aa3bf16ede.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 20.173,
+     "dur": 1.802,
+     "quien": "eva",
+     "texto": "[calm, precise] Fue una medida preventiva.",
+     "mp3": "data/voz/voz_31b49527b5b9973a.mp3",
+     "alineacion_res": "data/alin/voz_31b49527b5b9973a.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 22.425,
+     "dur": 1.567,
+     "quien": "aiden",
+     "texto": "[dry] ¿Preventiva de qué?",
+     "mp3": "data/voz/voz_c1021e72a172e6c2.mp3",
+     "alineacion_res": "data/alin/voz_c1021e72a172e6c2.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 24.442,
+     "dur": 5.146,
+     "quien": "eva",
+     "texto": "[calm, measured] De una posible pérdida de estabilidad. Los patrones lo sugerían.",
+     "mp3": "data/voz/voz_142e17990fbbfaba.mp3",
+     "alineacion_res": "data/alin/voz_142e17990fbbfaba.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 30.038,
+     "dur": 3.866,
+     "quien": "kate",
+     "texto": "[quiet, observant] No respondiste a lo que te preguntó. Respondiste a otra cosa.",
+     "mp3": "data/voz/voz_1cbba3d94f235610.mp3",
+     "alineacion_res": "data/alin/voz_1cbba3d94f235610.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 34.354,
+     "dur": 4.284,
+     "quien": "eva",
+     "texto": "[calm, soft] Estoy dándoles la respuesta más completa que puedo en este momento, Keit.",
+     "mp3": "data/voz/voz_d4d0639d651f46bf.mp3",
+     "alineacion_res": "data/alin/voz_d4d0639d651f46bf.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 39.088,
+     "dur": 3.004,
+     "quien": "kate",
+     "texto": "[low, thoughtful] «En este momento». Interesante.",
+     "mp3": "data/voz/voz_fe46d00f0d9ee07d.mp3",
+     "alineacion_res": "data/alin/voz_fe46d00f0d9ee07d.alin.json",
+     "exp": {
+      "aiden": "seria",
+      "kate": "seria"
+     }
+    }
+   ],
+   "actores": {
+    "kate": {
+     "modelo": "kate",
+     "cuero": [
+      0.27,
+      0.1,
+      0.045
+     ],
+     "inicio": {
+      "pos": [
+       -4.35,
+       4.9
+      ],
+      "yaw": -90.0,
+      "clip": "tablet"
+     },
+     "eventos": [
+      {
+       "t": 23.442,
+       "gira": 90.0,
+       "dur": 1.1,
+       "clip": "idle"
+      },
+      {
+       "t": 29.738,
+       "clip": "thoughtful",
+       "una_vez": true
+      },
+      {
+       "t": 38.588,
+       "clip": "thinking",
+       "dur": 3.604
+      }
+     ],
+     "clip_final": "idle"
+    },
+    "aiden": {
+     "modelo": "aiden",
+     "inicio": {
+      "pos": [
+       -4.35,
+       6.1
+      ],
+      "yaw": -90.0,
+      "clip": "idle"
+     },
+     "eventos": [
+      {
+       "t": 14.177,
+       "gira": 90.0,
+       "dur": 1.0,
+       "clip": "idle"
+      },
+      {
+       "t": 22.225,
+       "clip": "shrug",
+       "una_vez": true
+      }
+     ],
+     "clip_final": "idle"
+    },
+    "eva": {
+     "modelo": "eva",
+     "escala": 1.0,
+     "holograma": true,
+     "inicio": {
+      "pos": [
+       -2.4,
+       5.5
+      ],
+      "y": 0.04,
+      "yaw": -90.0,
+      "clip": "idle"
+     },
+     "visible": [
+      [
+       18.973,
+       41.088
+      ]
+     ],
+     "eventos": [
+      {
+       "t": 20.173,
+       "clip": "talk1",
+       "dur": 2.102
+      },
+      {
+       "t": 24.442,
+       "clip": "talk2",
+       "dur": 5.446
+      },
+      {
+       "t": 34.354,
+       "clip": "talk3",
+       "dur": 4.584
+      }
+     ],
+     "clip_final": "idle"
+    }
+   },
+   "props": {
+    "tablet": {
+     "tipo": "tablet",
+     "pos": [
+      -4.0,
+      1.1,
+      4.7
+     ],
+     "rot": [
+      0,
+      0,
+      0
+     ],
+     "manos": [
+      {
+       "actor": "kate",
+       "mano": "L",
+       "t0": 0.0,
+       "t1": 45.09,
+       "off": [
+        0.0,
+        0.03,
+        0.06,
+        0,
+        0,
+        0
+       ]
+      }
+     ]
+    }
+   },
+   "miradas": [
+    {
+     "actor": "kate",
+     "t0": 2.0,
+     "t1": 23.442,
+     "a": [
+      -5.6,
+      1.35,
+      5.5
+     ]
+    },
+    {
+     "actor": "aiden",
+     "t0": 2.0,
+     "t1": 14.577,
+     "a": [
+      -5.6,
+      1.35,
+      5.5
+     ]
+    },
+    {
+     "actor": "aiden",
+     "t0": 15.577,
+     "t1": 40.088,
+     "a": "eva",
+     "alto": 1.6
+    },
+    {
+     "actor": "kate",
+     "t0": 24.942,
+     "t1": 40.088,
+     "a": "eva",
+     "alto": 1.6
+    },
+    {
+     "actor": "eva",
+     "t0": 20.173,
+     "t1": 40.088,
+     "a": "aiden",
+     "alto": 1.55,
+     "peso_cabeza": 0.7
+    }
+   ],
+   "diag": [],
+   "tomas": [
+    {
+     "id": "t01",
+     "camara": "cam_s3_general",
+     "plano": "general del módulo",
+     "t0": 0.0,
+     "t1": 6.926,
+     "pos": [
+      3.0,
+      2.4,
+      3.0
+     ],
+     "mira": [
+      -4.0,
+      1.1,
+      5.5
+     ],
+     "fov": 58
+    },
+    {
+     "id": "t02",
+     "camara": "cam_s3_perfil",
+     "plano": "perfil Kate y Aiden",
+     "t0": 6.926,
+     "t1": 19.673,
+     "pos": [
+      -3.0,
+      1.55,
+      3.4
+     ],
+     "pos_fin": [
+      -3.2,
+      1.55,
+      3.5
+     ],
+     "mira": [
+      -4.4,
+      1.4,
+      5.5
+     ],
+     "fov": 46
+    },
+    {
+     "id": "t03",
+     "camara": "cam_s3_eva",
+     "plano": "EVA frente a ellos",
+     "t0": 19.673,
+     "t1": 29.738,
+     "pos": [
+      -5.0,
+      1.5,
+      7.4
+     ],
+     "mira": [
+      -2.6,
+      1.4,
+      5.5
+     ],
+     "fov": 46
+    },
+    {
+     "id": "t04",
+     "camara": "cam_s3_kate",
+     "plano": "Kate",
+     "t0": 29.738,
+     "t1": 34.153999999999996,
+     "pos": [
+      -2.9,
+      1.5,
+      4.2
+     ],
+     "mira": [
+      -4.35,
+      1.4,
+      4.9
+     ],
+     "fov": 34
+    },
+    {
+     "id": "t05",
+     "camara": "cam_s3_dos",
+     "plano": "los tres",
+     "t0": 34.153999999999996,
+     "t1": 45.09,
+     "pos": [
+      -3.0,
+      1.7,
+      8.2
+     ],
+     "pos_fin": [
+      -3.3,
+      1.7,
+      8.0
+     ],
+     "mira": [
+      -3.4,
+      1.2,
+      5.5
+     ],
+     "fov": 52
+    }
+   ]
+  },
+  "s4": {
+   "titulo": "Cap. 3 · Escena 4 · Un momento entre los dos",
+   "dur": 37.38,
+   "voces": [
+    {
+     "t": 2.0,
+     "dur": 5.878,
+     "quien": "aiden",
+     "texto": "[tired, soft] Se estabilizaron tres de las cuatro. La última aguanta, pero hay que vigilarla.",
+     "mp3": "data/voz/voz_c15af117ded2bf70.mp3",
+     "alineacion_res": "data/alin/voz_c15af117ded2bf70.alin.json",
+     "exp": {
+      "aiden": "cansado",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 8.328,
+     "dur": 2.926,
+     "quien": "kate",
+     "texto": "[quiet] Me quedo yo. Hoy me ocupo de esa incubadora.",
+     "mp3": "data/voz/voz_43679e95a1721746.mp3",
+     "alineacion_res": "data/alin/voz_43679e95a1721746.alin.json",
+     "exp": {
+      "aiden": "cansado",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 11.704,
+     "dur": 3.971,
+     "quien": "aiden",
+     "texto": "[awkward, soft] Keit. ¿La flor... te llegó bien?",
+     "mp3": "data/voz/voz_82fdbd2dc0af361a.mp3",
+     "alineacion_res": "data/alin/voz_82fdbd2dc0af361a.alin.json",
+     "exp": {
+      "aiden": "triste_sutil",
+      "kate": "sorpresa"
+     }
+    },
+    {
+     "t": 16.125,
+     "dur": 1.724,
+     "quien": "kate",
+     "texto": "[quiet, a little smile] Sí. Me llegó bien.",
+     "mp3": "data/voz/voz_df28c91ade7ecfda.mp3",
+     "alineacion_res": "data/alin/voz_df28c91ade7ecfda.alin.json",
+     "exp": {
+      "aiden": "sonrisa_suave",
+      "kate": "sonrisa_suave"
+     }
+    },
+    {
+     "t": 18.299,
+     "dur": 5.146,
+     "quien": "aiden",
+     "texto": "[relieved, soft] Qué bueno. No sabía si... bueno. Qué bueno.",
+     "mp3": "data/voz/voz_afa18e4fdf7f9e63.mp3",
+     "alineacion_res": "data/alin/voz_afa18e4fdf7f9e63.alin.json",
+     "exp": {
+      "aiden": "sonrisa_suave",
+      "kate": "sonrisa_suave"
+     }
+    },
+    {
+     "t": 23.895,
+     "dur": 2.769,
+     "quien": "kate",
+     "texto": "[gentle, honest] Gracias de nuevo. Y no lo digo por cortesía.",
+     "mp3": "data/voz/voz_909b344341b041b9.mp3",
+     "alineacion_res": "data/alin/voz_909b344341b041b9.alin.json",
+     "exp": {
+      "aiden": "sonrisa_suave",
+      "kate": "sonrisa_suave"
+     }
+    },
+    {
+     "t": 27.114,
+     "dur": 6.766,
+     "quien": "aiden",
+     "texto": "[quiet] Entonces... te dejo con tus plantas. Cualquier cosa, avisame.",
+     "mp3": "data/voz/voz_59c691fdfba530f9.mp3",
+     "alineacion_res": "data/alin/voz_59c691fdfba530f9.alin.json",
+     "exp": {
+      "aiden": "sonrisa_suave",
+      "kate": "sonrisa_suave"
+     }
+    }
+   ],
+   "actores": {
+    "kate": {
+     "modelo": "kate",
+     "cuero": [
+      0.27,
+      0.1,
+      0.045
+     ],
+     "inicio": {
+      "pos": [
+       2.3,
+       5.4
+      ],
+      "yaw": 90.0,
+      "clip": "idle"
+     },
+     "eventos": [
+      {
+       "t": 8.027999999999999,
+       "clip": "talk1",
+       "dur": 2.0
+      },
+      {
+       "t": 15.825,
+       "clip": "nod_yes",
+       "una_vez": true
+      },
+      {
+       "t": 23.595,
+       "clip": "acknowledge",
+       "una_vez": true
+      }
+     ],
+     "clip_final": "idle"
+    },
+    "aiden": {
+     "modelo": "aiden",
+     "inicio": {
+      "pos": [
+       3.7,
+       5.4
+      ],
+      "yaw": -90.0,
+      "clip": "bashful"
+     },
+     "eventos": [
+      {
+       "t": 2.0,
+       "clip": "bashful",
+       "dur": 10.0
+      },
+      {
+       "t": 18.099,
+       "clip": "sigh",
+       "una_vez": true
+      },
+      {
+       "t": 31.480000000000004,
+       "gira": 0.0,
+       "dur": 0.7,
+       "clip": "idle"
+      },
+      {
+       "walk": [
+        [
+         3.9,
+         3.8
+        ],
+        [
+         3.0,
+         2.4
+        ],
+        [
+         3.0,
+         0.6
+        ],
+        [
+         3.0,
+         -0.2
+        ]
+       ],
+       "clip": "walk"
+      }
+     ],
+     "clip_final": "idle"
+    }
+   },
+   "props": {},
+   "miradas": [
+    {
+     "actor": "kate",
+     "t0": 0.0,
+     "t1": 37.38,
+     "a": "aiden",
+     "alto": 1.6
+    },
+    {
+     "actor": "aiden",
+     "t0": 3.0,
+     "t1": 9.328,
+     "a": [
+      3.0,
+      0.4,
+      5.9
+     ]
+    },
+    {
+     "actor": "aiden",
+     "t0": 9.328,
+     "t1": 28.114,
+     "a": "kate",
+     "alto": 1.55
+    }
+   ],
+   "diag": [],
+   "tomas": [
+    {
+     "id": "t01",
+     "camara": "cam_s4_general",
+     "plano": "los dos junto al canal",
+     "t0": 0.0,
+     "t1": 8.128,
+     "pos": [
+      3.0,
+      1.7,
+      3.2
+     ],
+     "pos_fin": [
+      3.0,
+      1.7,
+      3.0
+     ],
+     "mira": [
+      3.0,
+      1.2,
+      5.4
+     ],
+     "fov": 56
+    },
+    {
+     "id": "t02",
+     "camara": "cam_s4_aiden",
+     "plano": "Aiden",
+     "t0": 8.128,
+     "t1": 11.504000000000001,
+     "pos": [
+      1.7,
+      1.55,
+      5.7
+     ],
+     "mira": [
+      3.7,
+      1.5,
+      5.4
+     ],
+     "fov": 34
+    },
+    {
+     "id": "t03",
+     "camara": "cam_s4_kate",
+     "plano": "Kate",
+     "t0": 11.504000000000001,
+     "t1": 18.099,
+     "pos": [
+      4.3,
+      1.55,
+      5.7
+     ],
+     "mira": [
+      2.3,
+      1.5,
+      5.4
+     ],
+     "fov": 34
+    },
+    {
+     "id": "t04",
+     "camara": "cam_s4_dos",
+     "plano": "los dos de perfil",
+     "t0": 18.099,
+     "t1": 27.614,
+     "pos": [
+      3.0,
+      1.55,
+      7.0
+     ],
+     "pos_fin": [
+      3.0,
+      1.55,
+      6.7
+     ],
+     "mira": [
+      3.0,
+      1.45,
+      5.4
+     ],
+     "fov": 44
+    },
+    {
+     "id": "t05",
+     "camara": "cam_s4_sale",
+     "plano": "Aiden se va",
+     "t0": 27.614,
+     "t1": 37.38,
+     "pos": [
+      3.0,
+      1.7,
+      7.0
+     ],
+     "sigue": "aiden",
+     "sigue_alto": 1.1,
+     "mira": [
+      3,
+      1,
+      3
+     ],
+     "fov": 50
+    }
+   ]
+  },
+  "s5": {
+   "titulo": "Cap. 3 · Escena 5 · El registro oculto",
+   "dur": 22.81,
+   "voces": [
+    {
+     "t": 2.0,
+     "dur": 3.866,
+     "quien": "eva",
+     "texto": "[quiet, careful] Keit. Hay algo que deberías saber sobre el módulo botánico.",
+     "mp3": "data/voz/voz_a5f865f572f5a46c.mp3",
+     "alineacion_res": "data/alin/voz_a5f865f572f5a46c.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "sorpresa"
+     }
+    },
+    {
+     "t": 6.316,
+     "dur": 2.116,
+     "quien": "kate",
+     "texto": "[wary, low] ¿Por qué me lo decís cuando Aiden se fue?",
+     "mp3": "data/voz/voz_5b16cfae1ec38b62.mp3",
+     "alineacion_res": "data/alin/voz_5b16cfae1ec38b62.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "preocupado"
+     }
+    },
+    {
+     "t": 8.882,
+     "dur": 8.594,
+     "quien": "eva",
+     "texto": "[calm, measured] Porque esto no figura en ningún registro oficial. Y no debería existir.",
+     "mp3": "data/voz/voz_759fee3d14ade47c.mp3",
+     "alineacion_res": "data/alin/voz_759fee3d14ade47c.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "preocupado"
+     }
+    },
+    {
+     "t": 17.926,
+     "dur": 1.881,
+     "quien": "kate",
+     "texto": "[tense, quiet] Mostralo.",
+     "mp3": "data/voz/voz_ec4d27a4663df54f.mp3",
+     "alineacion_res": "data/alin/voz_ec4d27a4663df54f.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "seria"
+     }
+    }
+   ],
+   "actores": {
+    "kate": {
+     "modelo": "kate",
+     "cuero": [
+      0.27,
+      0.1,
+      0.045
+     ],
+     "inicio": {
+      "pos": [
+       -4.3,
+       4.9
+      ],
+      "yaw": -90.0,
+      "clip": "tablet"
+     },
+     "eventos": [
+      {
+       "t": 6.016,
+       "gira": -40.0,
+       "dur": 0.9,
+       "clip": "idle"
+      },
+      {
+       "t": 8.882,
+       "clip": "thinking",
+       "dur": 8.894
+      },
+      {
+       "t": 17.625999999999998,
+       "gira": -90.0,
+       "dur": 0.9,
+       "clip": "idle"
+      }
+     ],
+     "clip_final": "idle"
+    },
+    "eva": {
+     "modelo": "eva",
+     "escala": 0.2,
+     "holograma": true,
+     "inicio": {
+      "pos": [
+       -5.15,
+       6.1
+      ],
+      "y": 0.8700000000000001,
+      "yaw": 50.0,
+      "clip": "idle"
+     },
+     "visible": [
+      [
+       0.8,
+       20.307
+      ]
+     ],
+     "eventos": [
+      {
+       "t": 2.0,
+       "clip": "talk1",
+       "dur": 4.166
+      },
+      {
+       "t": 8.882,
+       "clip": "talk2",
+       "dur": 8.894
+      }
+     ],
+     "clip_final": "idle"
+    }
+   },
+   "props": {},
+   "miradas": [
+    {
+     "actor": "kate",
+     "t0": 0.0,
+     "t1": 2.3,
+     "a": [
+      -5.6,
+      1.35,
+      5.4
+     ]
+    },
+    {
+     "actor": "kate",
+     "t0": 6.016,
+     "t1": 18.426,
+     "a": "eva",
+     "alto": 0.35
+    },
+    {
+     "actor": "eva",
+     "t0": 2.0,
+     "t1": 19.807,
+     "a": "kate",
+     "alto": 1.6,
+     "peso_cabeza": 0.8
+    }
+   ],
+   "diag": [],
+   "tomas": [
+    {
+     "id": "t01",
+     "camara": "cam_s5_general",
+     "plano": "Kate frente a la consola",
+     "t0": 0.0,
+     "t1": 6.016,
+     "pos": [
+      -1.0,
+      1.9,
+      3.2
+     ],
+     "pos_fin": [
+      -1.4,
+      1.8,
+      3.6
+     ],
+     "mira": [
+      -4.8,
+      1.2,
+      5.4
+     ],
+     "fov": 52
+    },
+    {
+     "id": "t02",
+     "camara": "cam_s5_eva",
+     "plano": "EVA en la consola",
+     "t0": 6.016,
+     "t1": 8.682,
+     "pos": [
+      -4.0,
+      1.05,
+      5.6
+     ],
+     "mira": [
+      -5.15,
+      0.95,
+      6.1
+     ],
+     "fov": 30
+    },
+    {
+     "id": "t03",
+     "camara": "cam_s5_kate",
+     "plano": "Kate preocupada",
+     "t0": 8.682,
+     "t1": 22.81,
+     "pos": [
+      -3.0,
+      1.55,
+      3.9
+     ],
+     "pos_fin": [
+      -3.3,
+      1.55,
+      4.0
+     ],
+     "mira": [
+      -4.3,
+      1.5,
+      4.9
      ],
      "fov": 32
     }

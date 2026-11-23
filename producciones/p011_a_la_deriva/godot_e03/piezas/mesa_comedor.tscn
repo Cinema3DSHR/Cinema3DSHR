@@ -32,29 +32,29 @@ size = Vector3(0.07, 0.72, 0.7)
 [sub_resource type="BoxMesh" id="BoxMesh_aey2f"]
 size = Vector3(2, 0.05, 0.08)
 
-[node name="mesa_comedor" type="Node3D" unique_id=2106691030]
+[node name="mesa_comedor" type="Node3D" unique_id=206524069]
 
-[node name="Tapa" type="MeshInstance3D" parent="." unique_id=336549202]
+[node name="Tapa" type="MeshInstance3D" parent="." unique_id=203338717]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74, 0)
 material_override = SubResource("StandardMaterial3D_gmicx")
 mesh = SubResource("BoxMesh_iakco")
 
-[node name="BordeLuz" type="MeshInstance3D" parent="." unique_id=1860376054]
+[node name="BordeLuz" type="MeshInstance3D" parent="." unique_id=980226743]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.705, 0)
 material_override = SubResource("StandardMaterial3D_vty3v")
 mesh = SubResource("BoxMesh_ln27b")
 
-[node name="Panel" type="MeshInstance3D" parent="." unique_id=170365213]
+[node name="Panel" type="MeshInstance3D" parent="." unique_id=1759667057]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.36, 0)
 material_override = SubResource("StandardMaterial3D_xepe4")
 mesh = SubResource("BoxMesh_swoo7")
 
-[node name="@MeshInstance3D@7" type="MeshInstance3D" parent="." unique_id=141685965]
+[node name="@MeshInstance3D@7" type="MeshInstance3D" parent="." unique_id=1545066260]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.36, 0)
 material_override = SubResource("StandardMaterial3D_xepe4")
 mesh = SubResource("BoxMesh_c4v8s")
 
-[node name="Travesaño" type="MeshInstance3D" parent="." unique_id=1603290815]
+[node name="Travesaño" type="MeshInstance3D" parent="." unique_id=168541317]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
 material_override = SubResource("StandardMaterial3D_xepe4")
 mesh = SubResource("BoxMesh_aey2f")

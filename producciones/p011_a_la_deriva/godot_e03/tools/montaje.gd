@@ -103,7 +103,7 @@ func _materiales(ac, d: Dictionary) -> void:
 			elif nm.begins_with("traje_luz"):
 				nuevo = StandardMaterial3D.new(); nuevo.albedo_color = Color(0.1, 0.75, 1.0); nuevo.emission_enabled = true; nuevo.emission = Color(0.1, 0.75, 1.0); nuevo.emission_energy_multiplier = 3.0
 			elif nm.begins_with("traje_bota"):
-				nuevo = StandardMaterial3D.new(); nuevo.albedo_color = Color(0.03, 0.032, 0.04); nuevo.roughness = 0.45; nuevo.metallic = 0.15
+				nuevo = StandardMaterial3D.new(); nuevo.albedo_color = Color(0.03, 0.032, 0.04); nuevo.roughness = 0.45; nuevo.metallic = 0.15; nuevo.cull_mode = BaseMaterial3D.CULL_DISABLED
 			elif nm.begins_with("EM3D_Skin") or nm.begins_with("EM3D_Nails"):
 				nuevo = (mat as StandardMaterial3D).duplicate()
 				nuevo.albedo_color = Color(nuevo.albedo_color.r * 0.8, nuevo.albedo_color.g * 0.76, nuevo.albedo_color.b * 0.74)
@@ -585,6 +585,10 @@ func _camaras_y_salida(clave: String, salida: String, caps: Array) -> void:
 			objetivo = (SB["_hist"][dg["sigue"]][gd] as Vector3) + Vector3(0, float(dg.get("alto", 1.5)), 0)
 		else:
 			objetivo = Vector3(dg["mira"][0], dg["mira"][1], dg["mira"][2])
+		for nm in dg.get("ocultar", []):
+			var mm = actores[dg["sigue"]].modelo.find_child(nm, true, false)
+			if mm:
+				mm.visible = false
 		dc.global_position = objetivo + delta
 		dc.look_at(objetivo, Vector3.UP)
 		dc.current = true
@@ -592,6 +596,10 @@ func _camaras_y_salida(clave: String, salida: String, caps: Array) -> void:
 			await process_frame
 		root.get_texture().get_image().save_png("%s_diag_%s.png" % [salida, dg["n"]])
 		dc.queue_free()
+		for nm in dg.get("ocultar", []):
+			var mm2 = actores[dg["sigue"]].modelo.find_child(nm, true, false)
+			if mm2:
+				mm2.visible = true
 	# exportar GLB
 	ap.seek(0.0, true)
 	var doc := GLTFDocument.new()

@@ -12,9 +12,9 @@ func _initialize() -> void:
 	var cam := Camera3D.new(); cam.current = true; root.add_child(cam)
 	var ocultar := OS.get_cmdline_user_args()
 	for nm in ocultar.slice(1):
-		var mm = a.modelo.find_child(nm, true, false)
+		var mm = a.modelo.find_child(nm, true, false) if nm != "" else null
 		if mm: mm.visible = false
-	var tomas := [["idle", 10, Vector3(0.7, 0.2, 0.7), Vector3(0, 0.05, 0.1), 40], ["walk", 6, Vector3(1.0, 0.18, 0.5), Vector3(0.1, 0.1, 0), 40],
+	var tomas := [["idle", 10, Vector3(1.1, 0.25, 0.9), Vector3(0, 0.07, 0), 30], ["walk", 6, Vector3(1.0, 0.18, 0.5), Vector3(0.1, 0.1, 0), 40],
 		["idle", 10, Vector3(1.2, 1.62, 0.35), Vector3(0, 1.58, 0), 30], ["idle", 10, Vector3(1.4, 1.0, 0.7), Vector3(0, 0.95, 0), 40], ["idle", 10, Vector3(3.2, 1.1, 1.2), Vector3(0, 0.9, 0), 50]]
 	var i := 0
 	for t in tomas:
