@@ -986,3 +986,7 @@ Verificaciones previas al render: cámaras sin picos de aceleración (2.ª difer
 - Producción `producciones/p020_a_la_deriva_cap3` v001: BLEND 141.493.948 bytes, SHA-256 `e6c8615d64e07fb9ace2b2ab7605042a7db2c988e06f749b69ab935e304a3c96`, aprobación registrada (`versiones/v001.aprobacion.json`), BLEND por Git LFS (`blend/`).
 - `incorporar_blend.yml` lanzado (run 45146139176, 60 trabajos). Pendiente: descargar el MP4, mezclar el audio de las voces (`audio_e03/voces.json`, M4A por escena) y entregar.
 - Honestidad: la etapa Blender (luces, holograma, materiales) no pasó antes por el visor del dueño; el GLB revisado era el de Godot. Pendientes conocidos: parche claro en la nuca de Aiden, aro de cuello provisorio, pelo sin física, holograma de EVA sin «construcción por capas».
+
+## 23/11/2026 · Cap. 3 — sonido de ambiente (mismo que los cap. 1 y 2)
+- El primer montaje sólo llevaba voces. Ahora (`herramientas/audio_cap3.py`): ambiente procedural «nave_interior» a 0,35 en todo el capítulo + música y efectos YA generados en la biblioteca para los cap. 1 y 2 (partitura de espacio, partitura del jardín, motivo de piano, invernadero hidropónico en bucle, chime y ping), pasos en cada caminata/corrida y una alerta suave en la escena 2. Sin generar ni gastar créditos nuevos. El video no se volvió a renderizar: sólo se rehízo el audio del MP4.
+- `montaje.gd` tiene un modo `plan` (`-- sN prefijo plan`) que vuelca qué hace cada actor y cuándo (lo usa el diseño de sonido).

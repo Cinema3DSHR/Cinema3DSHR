@@ -64,6 +64,20 @@ func _montar(clave: String, salida: String, caps: Array) -> void:
 	# planes
 	for id in actores:
 		planes[id] = _planificar(id)
+	# modo «plan»: sólo vuelca qué hace cada actor y cuándo (para el diseño de sonido: pasos, etc.) y sale
+	if OS.get_cmdline_user_args().size() > 2 and OS.get_cmdline_user_args()[2] == "plan":
+		var vol := {}
+		for id in actores:
+			var lst := []
+			for sg in planes[id]:
+				var cyc: float = float(actores[id].duracion_cuadros(sg["clip"]) - 1) / FPS
+				lst.append({"clip": sg["clip"], "modo": sg["modo"], "t0": float(sg["f0"]) / FPS, "t1": float(sg["f0"] + sg["nf"]) / FPS, "ciclo_s": cyc})
+			vol[id] = lst
+		var ff := FileAccess.open(salida + "_plan.json", FileAccess.WRITE)
+		ff.store_string(JSON.stringify(vol, "  "))
+		ff.close()
+		print("PLAN ", salida)
+		return
 	# pista de cada nodo
 	anim.loop_mode = Animation.LOOP_NONE
 	await _hornear()
