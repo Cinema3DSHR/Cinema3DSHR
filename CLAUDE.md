@@ -25,6 +25,7 @@ producciones: no proponer otros flujos ni volver a preguntar qué modalidad usar
   decir exactamente qué permiso falta y detenerse ahí.
 
 ## Repositorios
+- **«A la deriva» quedó GUARDADA el 23/11/2026 (`docs/A_LA_DERIVA_ESTADO.md`: qué existe, qué no está en el repo, cómo rehacerlo, trampas). Formato por defecto de las series: VERTICAL 9:16, 540×960 — confirmarlo antes de renderizar (el cap. 3 salió horizontal por error).**
 - **Desde el 19/11/2026 este repositorio está dedicado a «A la deriva» (`producciones/p011_a_la_deriva`)** más las
   herramientas comunes y la prueba Godot → Blender (`pruebas/godot_blender`). Las demás producciones se borraron
   (detalle y cómo recuperar: `docs/REGISTRO.md` → «Limpieza general»; estado previo en el commit `150fcea`).

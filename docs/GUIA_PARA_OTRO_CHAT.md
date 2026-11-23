@@ -3,6 +3,8 @@
 Leé esto primero, antes de abrir otros archivos. Sirve para trabajar sin auditar los repositorios. Si algo de acá no
 coincide con el código, **manda el código**: corregí esta guía en el mismo cambio. Estado al 18/11/2026.
 
+> **23/11/2026: «A la deriva» (cap. 1–3) está guardada y documentada en `docs/A_LA_DERIVA_ESTADO.md`** (pipeline Godot→Blender completo, personajes, sonido, trampas). Series nuevas: vertical 540×960.
+
 > **18/11/2026: revisión rápida con el visor HTML.** El dueño revisa las escenas en el navegador con
 > `visor/visor_escena.html` (https://claude.ai/artifact/SEW8AN7eTVhb1t3vaRAvJq): Claude le pasa el GLB + JSON de
 > `python -m estudio previa` por el chat y el dueño devuelve un texto con cámaras nuevas o modificadas y notas.
