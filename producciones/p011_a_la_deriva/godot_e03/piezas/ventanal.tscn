@@ -34,43 +34,43 @@ size = Vector3(0.05, 2.2, 0.1)
 [sub_resource type="BoxMesh" id="BoxMesh_7xmfv"]
 size = Vector3(0.05, 2.2, 0.1)
 
-[node name="ventanal" type="Node3D" unique_id=143268373]
+[node name="ventanal" type="Node3D" unique_id=424987752]
 
-[node name="Vidrio" type="MeshInstance3D" parent="." unique_id=1734973575]
+[node name="Vidrio" type="MeshInstance3D" parent="." unique_id=578220682]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_ruber")
 mesh = SubResource("BoxMesh_n0d02")
 
-[node name="MarcoV" type="MeshInstance3D" parent="." unique_id=1649429203]
+[node name="MarcoV" type="MeshInstance3D" parent="." unique_id=419007663]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_lrbgd")
 mesh = SubResource("BoxMesh_biidr")
 
-[node name="@MeshInstance3D@13" type="MeshInstance3D" parent="." unique_id=58239827]
+[node name="@MeshInstance3D@13" type="MeshInstance3D" parent="." unique_id=975267757]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_lrbgd")
 mesh = SubResource("BoxMesh_n3sdn")
 
-[node name="MarcoH" type="MeshInstance3D" parent="." unique_id=1140706352]
+[node name="MarcoH" type="MeshInstance3D" parent="." unique_id=793893353]
 material_override = SubResource("StandardMaterial3D_lrbgd")
 mesh = SubResource("BoxMesh_o4tid")
 
-[node name="@MeshInstance3D@14" type="MeshInstance3D" parent="." unique_id=1656490923]
+[node name="@MeshInstance3D@14" type="MeshInstance3D" parent="." unique_id=57357472]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
 material_override = SubResource("StandardMaterial3D_lrbgd")
 mesh = SubResource("BoxMesh_5p6dv")
 
-[node name="Divisor0" type="MeshInstance3D" parent="." unique_id=581827526]
+[node name="Divisor0" type="MeshInstance3D" parent="." unique_id=1708291676]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_lrbgd")
 mesh = SubResource("BoxMesh_4rbu4")
 
-[node name="Divisor1" type="MeshInstance3D" parent="." unique_id=1574908927]
+[node name="Divisor1" type="MeshInstance3D" parent="." unique_id=737380026]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_lrbgd")
 mesh = SubResource("BoxMesh_hhih7")
 
-[node name="Divisor2" type="MeshInstance3D" parent="." unique_id=1038512017]
+[node name="Divisor2" type="MeshInstance3D" parent="." unique_id=140227434]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_lrbgd")
 mesh = SubResource("BoxMesh_7xmfv")

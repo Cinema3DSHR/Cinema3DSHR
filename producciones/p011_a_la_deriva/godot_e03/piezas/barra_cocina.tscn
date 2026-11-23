@@ -97,59 +97,59 @@ bottom_radius = 0.045
 height = 0.09
 radial_segments = 32
 
-[node name="barra_cocina" type="Node3D" unique_id=1502322224]
+[node name="barra_cocina" type="Node3D" unique_id=197662014]
 
-[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=2076754308]
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=788792800]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 material_override = SubResource("StandardMaterial3D_y4gwx")
 mesh = SubResource("BoxMesh_2ghx2")
 
-[node name="Tapa" type="MeshInstance3D" parent="." unique_id=242377452]
+[node name="Tapa" type="MeshInstance3D" parent="." unique_id=83023505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
 material_override = SubResource("StandardMaterial3D_01rtj")
 mesh = SubResource("BoxMesh_py1mv")
 
-[node name="Puerta0" type="MeshInstance3D" parent="." unique_id=234175345]
+[node name="Puerta0" type="MeshInstance3D" parent="." unique_id=1678821729]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0.45, -0.355)
 material_override = SubResource("StandardMaterial3D_fgw45")
 mesh = SubResource("BoxMesh_wej4q")
 
-[node name="Puerta1" type="MeshInstance3D" parent="." unique_id=1283528313]
+[node name="Puerta1" type="MeshInstance3D" parent="." unique_id=655902788]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.45, -0.355)
 material_override = SubResource("StandardMaterial3D_jkd0c")
 mesh = SubResource("BoxMesh_tbukh")
 
-[node name="Puerta2" type="MeshInstance3D" parent="." unique_id=1656404032]
+[node name="Puerta2" type="MeshInstance3D" parent="." unique_id=451028645]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.45, -0.355)
 material_override = SubResource("StandardMaterial3D_f7u1t")
 mesh = SubResource("BoxMesh_7l7fm")
 
-[node name="Puerta3" type="MeshInstance3D" parent="." unique_id=502174761]
+[node name="Puerta3" type="MeshInstance3D" parent="." unique_id=868466274]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.45, -0.355)
 material_override = SubResource("StandardMaterial3D_v17rr")
 mesh = SubResource("BoxMesh_lidr5")
 
-[node name="LuzBajo" type="MeshInstance3D" parent="." unique_id=275446600]
+[node name="LuzBajo" type="MeshInstance3D" parent="." unique_id=281899268]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, -0.36)
 material_override = SubResource("StandardMaterial3D_6cnit")
 mesh = SubResource("BoxMesh_ubukw")
 
-[node name="Dispensador" type="MeshInstance3D" parent="." unique_id=950391734]
+[node name="Dispensador" type="MeshInstance3D" parent="." unique_id=343967165]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, 0.1)
 material_override = SubResource("StandardMaterial3D_j34fy")
 mesh = SubResource("BoxMesh_wn0nm")
 
-[node name="DispLuz" type="MeshInstance3D" parent="." unique_id=85160316]
+[node name="DispLuz" type="MeshInstance3D" parent="." unique_id=2064830372]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.2, -0.056)
 material_override = SubResource("StandardMaterial3D_4icxd")
 mesh = SubResource("BoxMesh_3d01f")
 
-[node name="Cafetera" type="MeshInstance3D" parent="." unique_id=1796070000]
+[node name="Cafetera" type="MeshInstance3D" parent="." unique_id=8179363]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 1.1, 0)
 material_override = SubResource("StandardMaterial3D_kd3xh")
 mesh = SubResource("CylinderMesh_6rf24")
 
-[node name="Taza" type="MeshInstance3D" parent="." unique_id=335519067]
+[node name="Taza" type="MeshInstance3D" parent="." unique_id=2048364173]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.99, -0.1)
 material_override = SubResource("StandardMaterial3D_cw2ti")
 mesh = SubResource("CylinderMesh_vkwar")

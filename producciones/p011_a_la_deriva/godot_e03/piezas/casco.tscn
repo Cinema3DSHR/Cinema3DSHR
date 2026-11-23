@@ -36,19 +36,19 @@ bottom_radius = 0.11
 height = 0.04
 radial_segments = 32
 
-[node name="casco" type="Node3D" unique_id=1334041205]
+[node name="casco" type="Node3D" unique_id=1686551500]
 
-[node name="Cascara" type="MeshInstance3D" parent="." unique_id=1600368111]
+[node name="Cascara" type="MeshInstance3D" parent="." unique_id=663261824]
 transform = Transform3D(1, 0, 0, 0, 1.05, 0, 0, 0, 1.1, 0, 0.15, 0)
 material_override = SubResource("StandardMaterial3D_lvkbn")
 mesh = SubResource("SphereMesh_1xuff")
 
-[node name="Visor" type="MeshInstance3D" parent="." unique_id=252597461]
+[node name="Visor" type="MeshInstance3D" parent="." unique_id=136433972]
 transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0.16, -0.085)
 material_override = SubResource("StandardMaterial3D_pbmjs")
 mesh = SubResource("SphereMesh_hklgx")
 
-[node name="Cuello" type="MeshInstance3D" parent="." unique_id=120321589]
+[node name="Cuello" type="MeshInstance3D" parent="." unique_id=764706968]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 material_override = SubResource("StandardMaterial3D_21n5i")
 mesh = SubResource("CylinderMesh_xbxyn")

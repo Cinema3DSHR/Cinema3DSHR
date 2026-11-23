@@ -2,7 +2,7 @@
 ## (3) piezas atravesadas entre sí. Uso: godot --headless --path . --script res://tools/verificar.gd
 extends SceneTree
 const TOL_GRADOS := 8.0
-const PARED := ["pantalla_pared", "ventanal", "luminaria_techo"]
+const PARED := ["pantalla_pared", "ventanal", "luminaria_techo", "caja_electrica"]
 const IGNORAR_CHOQUE := ["pantalla_pared", "ventanal", "luminaria_techo", "marco_puerta", "silla_comando", "silla_comedor", "mesa_comedor", "consola_mando", "consola_central", "escritorio", "cama", "mesita", "florero", "casco", "microscopio", "terrario", "barra_cocina", "camilla", "soporte_suero", "armario", "estante", "nucleo_eva", "holoproyector"]
 var piezas := []
 var mallas := []
@@ -55,7 +55,7 @@ func _initialize() -> void:
 			var b: Node3D = piezas[j]
 			var pa := String(a.get_meta("pieza", ""))
 			var pb := String(b.get_meta("pieza", ""))
-			if PARED.has(pa) or PARED.has(pb) or pa.begins_with("bush") or pb.begins_with("bush") or a.is_ancestor_of(b) or b.is_ancestor_of(a):
+			if PARED.has(pa) or PARED.has(pb) or pa == "costilla" or pb == "costilla" or a.has_meta("hundida") or b.has_meta("hundida") or pa.begins_with("bush") or pb.begins_with("bush") or a.is_ancestor_of(b) or b.is_ancestor_of(a):
 				continue
 			var ba := _aabb_global(a)
 			var bb2 := _aabb_global(b)

@@ -175,7 +175,7 @@ static func caja_electrica() -> Node3D:
 	L.caja(r, "Cuerpo", Vector3(0, 0, 0), Vector3(0.5, 0.7, 0.1), L.mat(Color(0.14, 0.16, 0.2), 0.7, 0.35))
 	L.caja(r, "Panel", Vector3(0, 0.06, -0.052), Vector3(0.42, 0.4, 0.005), L.mat(Color(0.05, 0.06, 0.08), 0.5, 0.4))
 	for i in 5:
-		var c := [Color(0.1, 1, 0.5), Color(1, 0.7, 0.1), Color(0.1, 0.8, 1), Color(1, 0.2, 0.2), Color(0.1, 1, 0.5)][i]
+		var c: Color = [Color(0.1, 1, 0.5), Color(1, 0.7, 0.1), Color(0.1, 0.8, 1), Color(1, 0.2, 0.2), Color(0.1, 1, 0.5)][i]
 		L.caja(r, "Led%d" % i, Vector3(-0.15 + i * 0.075, 0.2, -0.056), Vector3(0.03, 0.03, 0.01), L.mat(c, 0, 0.3, c, 3.0))
 	L.caja(r, "Manija", Vector3(0, -0.24, -0.06), Vector3(0.2, 0.04, 0.03), L.mat(Color(0.6, 0.62, 0.68), 0.9, 0.3))
 	return r

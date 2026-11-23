@@ -41,29 +41,29 @@ emission_energy_multiplier = 3.0
 [sub_resource type="BoxMesh" id="BoxMesh_wl851"]
 size = Vector3(0.04, 0.01, 0.04)
 
-[node name="microscopio" type="Node3D" unique_id=1828169413]
+[node name="microscopio" type="Node3D" unique_id=2047242910]
 
-[node name="Base" type="MeshInstance3D" parent="." unique_id=2013406735]
+[node name="Base" type="MeshInstance3D" parent="." unique_id=1111492295]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 material_override = SubResource("StandardMaterial3D_f3lbp")
 mesh = SubResource("BoxMesh_ddt2v")
 
-[node name="Columna" type="MeshInstance3D" parent="." unique_id=1835317339]
+[node name="Columna" type="MeshInstance3D" parent="." unique_id=483142509]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0.1)
 material_override = SubResource("StandardMaterial3D_f3lbp")
 mesh = SubResource("CylinderMesh_6hseb")
 
-[node name="Tubo" type="MeshInstance3D" parent="." unique_id=196966192]
+[node name="Tubo" type="MeshInstance3D" parent="." unique_id=1291440125]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0.3, -0.02)
 material_override = SubResource("StandardMaterial3D_culh1")
 mesh = SubResource("CylinderMesh_e8o75")
 
-[node name="Platina" type="MeshInstance3D" parent="." unique_id=58482817]
+[node name="Platina" type="MeshInstance3D" parent="." unique_id=1325789335]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.04)
 material_override = SubResource("StandardMaterial3D_culh1")
 mesh = SubResource("CylinderMesh_tlp5r")
 
-[node name="Led" type="MeshInstance3D" parent="." unique_id=64904744]
+[node name="Led" type="MeshInstance3D" parent="." unique_id=1651553421]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, -0.04)
 material_override = SubResource("StandardMaterial3D_g1qik")
 mesh = SubResource("BoxMesh_wl851")

@@ -194,94 +194,94 @@ emission_energy_multiplier = 2.2
 [sub_resource type="BoxMesh" id="BoxMesh_xspr8"]
 size = Vector3(0.7, 0.015, 0.4)
 
-[node name="terrario" type="Node3D" unique_id=738550011]
+[node name="terrario" type="Node3D" unique_id=1705840324]
 
-[node name="Base" type="MeshInstance3D" parent="." unique_id=496079743]
+[node name="Base" type="MeshInstance3D" parent="." unique_id=1283294285]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 material_override = SubResource("StandardMaterial3D_mn88g")
 mesh = SubResource("BoxMesh_1yx1f")
 
-[node name="Tierra" type="MeshInstance3D" parent="." unique_id=1380124437]
+[node name="Tierra" type="MeshInstance3D" parent="." unique_id=1692723770]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
 material_override = SubResource("StandardMaterial3D_86y02")
 mesh = SubResource("BoxMesh_mxvmq")
 
-[node name="Tallo0" type="MeshInstance3D" parent="." unique_id=660386660]
+[node name="Tallo0" type="MeshInstance3D" parent="." unique_id=1927202993]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.27, 0.24201417, -0.043331664)
 material_override = SubResource("StandardMaterial3D_8n0v7")
 mesh = SubResource("CylinderMesh_iaru1")
 
-[node name="Hoja0" type="MeshInstance3D" parent="." unique_id=1194850676]
+[node name="Hoja0" type="MeshInstance3D" parent="." unique_id=680348835]
 transform = Transform3D(1.3, 0, 0, 0, 0.7, 0, 0, 0, 1, -0.27, 0.36402833, 0)
 material_override = SubResource("StandardMaterial3D_1tfxk")
 mesh = SubResource("SphereMesh_shovc")
 
-[node name="Tallo1" type="MeshInstance3D" parent="." unique_id=215712449]
+[node name="Tallo1" type="MeshInstance3D" parent="." unique_id=54747875]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.22848737, -0.051704433)
 material_override = SubResource("StandardMaterial3D_8tw3u")
 mesh = SubResource("CylinderMesh_cwv6h")
 
-[node name="Hoja1" type="MeshInstance3D" parent="." unique_id=492317432]
+[node name="Hoja1" type="MeshInstance3D" parent="." unique_id=517541828]
 transform = Transform3D(1.3, 0, 0, 0, 0.7, 0, 0, 0, 1, -0.18, 0.33697474, 0)
 material_override = SubResource("StandardMaterial3D_kjtu5")
 mesh = SubResource("SphereMesh_d8lgt")
 
-[node name="Tallo2" type="MeshInstance3D" parent="." unique_id=1841016863]
+[node name="Tallo2" type="MeshInstance3D" parent="." unique_id=1855509670]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09, 0.20940123, 0.017654441)
 material_override = SubResource("StandardMaterial3D_5lenm")
 mesh = SubResource("CylinderMesh_pscg2")
 
-[node name="Hoja2" type="MeshInstance3D" parent="." unique_id=21325008]
+[node name="Hoja2" type="MeshInstance3D" parent="." unique_id=1615617524]
 transform = Transform3D(1.3, 0, 0, 0, 0.7, 0, 0, 0, 1, -0.09, 0.29880247, 0)
 material_override = SubResource("StandardMaterial3D_fg6er")
 mesh = SubResource("SphereMesh_qc5oy")
 
-[node name="Tallo3" type="MeshInstance3D" parent="." unique_id=329509464]
+[node name="Tallo3" type="MeshInstance3D" parent="." unique_id=1310798331]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19050144, -0.008705549)
 material_override = SubResource("StandardMaterial3D_l6gyb")
 mesh = SubResource("CylinderMesh_xy5sw")
 
-[node name="Hoja3" type="MeshInstance3D" parent="." unique_id=419649788]
+[node name="Hoja3" type="MeshInstance3D" parent="." unique_id=1023694186]
 transform = Transform3D(1.3, 0, 0, 0, 0.7, 0, 0, 0, 1, 0, 0.26100287, 0)
 material_override = SubResource("StandardMaterial3D_maubu")
 mesh = SubResource("SphereMesh_nvovr")
 
-[node name="Tallo4" type="MeshInstance3D" parent="." unique_id=1386555876]
+[node name="Tallo4" type="MeshInstance3D" parent="." unique_id=570794735]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09, 0.21918482, 0.06366483)
 material_override = SubResource("StandardMaterial3D_t36gq")
 mesh = SubResource("CylinderMesh_ia73y")
 
-[node name="Hoja4" type="MeshInstance3D" parent="." unique_id=418189901]
+[node name="Hoja4" type="MeshInstance3D" parent="." unique_id=1878938982]
 transform = Transform3D(1.3, 0, 0, 0, 0.7, 0, 0, 0, 1, 0.09, 0.31836963, 0)
 material_override = SubResource("StandardMaterial3D_66tyy")
 mesh = SubResource("SphereMesh_5inr2")
 
-[node name="Tallo5" type="MeshInstance3D" parent="." unique_id=102463834]
+[node name="Tallo5" type="MeshInstance3D" parent="." unique_id=1274328185]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.22800982, 0.093537994)
 material_override = SubResource("StandardMaterial3D_ocrsj")
 mesh = SubResource("CylinderMesh_0gv05")
 
-[node name="Hoja5" type="MeshInstance3D" parent="." unique_id=1588446232]
+[node name="Hoja5" type="MeshInstance3D" parent="." unique_id=1801085421]
 transform = Transform3D(1.3, 0, 0, 0, 0.7, 0, 0, 0, 1, 0.18, 0.33601964, 0)
 material_override = SubResource("StandardMaterial3D_6kyho")
 mesh = SubResource("SphereMesh_uhvpc")
 
-[node name="Tallo6" type="MeshInstance3D" parent="." unique_id=1661320423]
+[node name="Tallo6" type="MeshInstance3D" parent="." unique_id=1761921937]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27, 0.17829089, 0.0682844)
 material_override = SubResource("StandardMaterial3D_g3pnh")
 mesh = SubResource("CylinderMesh_7ifai")
 
-[node name="Hoja6" type="MeshInstance3D" parent="." unique_id=2101820328]
+[node name="Hoja6" type="MeshInstance3D" parent="." unique_id=1093880850]
 transform = Transform3D(1.3, 0, 0, 0, 0.7, 0, 0, 0, 1, 0.27, 0.23658179, 0)
 material_override = SubResource("StandardMaterial3D_3kwxx")
 mesh = SubResource("SphereMesh_5hmx6")
 
-[node name="Vidrio" type="MeshInstance3D" parent="." unique_id=1981857252]
+[node name="Vidrio" type="MeshInstance3D" parent="." unique_id=133457702]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.23, 0)
 material_override = SubResource("StandardMaterial3D_ndyns")
 mesh = SubResource("BoxMesh_u02ly")
 
-[node name="Luz" type="MeshInstance3D" parent="." unique_id=974352383]
+[node name="Luz" type="MeshInstance3D" parent="." unique_id=999447881]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41, 0)
 material_override = SubResource("StandardMaterial3D_koogb")
 mesh = SubResource("BoxMesh_xspr8")

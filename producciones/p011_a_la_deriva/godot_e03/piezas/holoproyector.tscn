@@ -30,19 +30,19 @@ outer_radius = 0.4
 rings = 48
 ring_segments = 12
 
-[node name="holoproyector" type="Node3D" unique_id=1879055592]
+[node name="holoproyector" type="Node3D" unique_id=1458895808]
 
-[node name="Disco" type="MeshInstance3D" parent="." unique_id=1263751191]
+[node name="Disco" type="MeshInstance3D" parent="." unique_id=529957032]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 material_override = SubResource("StandardMaterial3D_jny8h")
 mesh = SubResource("CylinderMesh_ouy3h")
 
-[node name="Aro" type="MeshInstance3D" parent="." unique_id=943845095]
+[node name="Aro" type="MeshInstance3D" parent="." unique_id=1161516705]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0)
 material_override = SubResource("StandardMaterial3D_22631")
 mesh = SubResource("TorusMesh_qpkg4")
 
-[node name="AroInterno" type="MeshInstance3D" parent="." unique_id=1342476176]
+[node name="AroInterno" type="MeshInstance3D" parent="." unique_id=51031902]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.045, 0)
 material_override = SubResource("StandardMaterial3D_22631")
 mesh = SubResource("TorusMesh_2cqsv")

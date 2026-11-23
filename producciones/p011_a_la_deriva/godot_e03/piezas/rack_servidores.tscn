@@ -1,0 +1,63 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pantallas/botonera.png" id="1_a68ql"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rt483"]
+albedo_color = Color(0.09, 0.11, 0.14, 1)
+metallic = 0.75
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_23hi8"]
+size = Vector3(0.75, 2.1, 0.65)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lnmgh"]
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 1.6
+emission_operator = 1
+emission_texture = ExtResource("1_a68ql")
+
+[sub_resource type="QuadMesh" id="QuadMesh_3i6rg"]
+size = Vector2(0.66, 1.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g8uuc"]
+albedo_color = Color(0.03, 0.04, 0.05, 1)
+metallic = 0.5
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_kt5xe"]
+size = Vector3(0.66, 0.16, 0.005)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_smsls"]
+albedo_color = Color(0.1, 0.8, 1, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.1, 0.8, 1, 1)
+emission_energy_multiplier = 2.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_ls2pn"]
+size = Vector3(0.6, 0.02, 0.01)
+
+[node name="rack_servidores" type="Node3D" unique_id=1949899077]
+
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=262806644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+material_override = SubResource("StandardMaterial3D_rt483")
+mesh = SubResource("BoxMesh_23hi8")
+
+[node name="Frente" type="MeshInstance3D" parent="." unique_id=1463488896]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.1, -0.331)
+material_override = SubResource("StandardMaterial3D_lnmgh")
+mesh = SubResource("QuadMesh_3i6rg")
+
+[node name="Rejilla" type="MeshInstance3D" parent="." unique_id=440619222]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.331)
+material_override = SubResource("StandardMaterial3D_g8uuc")
+mesh = SubResource("BoxMesh_kt5xe")
+
+[node name="LuzTope" type="MeshInstance3D" parent="." unique_id=620231298]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.07, -0.33)
+material_override = SubResource("StandardMaterial3D_smsls")
+mesh = SubResource("BoxMesh_ls2pn")

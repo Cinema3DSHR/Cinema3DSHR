@@ -122,102 +122,102 @@ emission_texture = ExtResource("4_2t4sc")
 [sub_resource type="QuadMesh" id="QuadMesh_aavuc"]
 size = Vector2(1.4, 0.74)
 
-[node name="consola_central" type="Node3D" unique_id=86607866]
+[node name="consola_central" type="Node3D" unique_id=931853836]
 
-[node name="Tramo0" type="Node3D" parent="." unique_id=322923190]
+[node name="Tramo0" type="Node3D" parent="." unique_id=1231958997]
 transform = Transform3D(0.88294756, 0, -0.46947157, 0, 1, 0, 0.46947157, 0, 0.88294756, -0.79810166, 0, -0.1989891)
 
-[node name="Cuerpo" type="MeshInstance3D" parent="Tramo0" unique_id=433423170]
+[node name="Cuerpo" type="MeshInstance3D" parent="Tramo0" unique_id=241796317]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 material_override = SubResource("StandardMaterial3D_e157o")
 mesh = SubResource("BoxMesh_54wwr")
 
-[node name="Tapa" type="MeshInstance3D" parent="Tramo0" unique_id=1401734774]
+[node name="Tapa" type="MeshInstance3D" parent="Tramo0" unique_id=567498188]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
 material_override = SubResource("StandardMaterial3D_1q555")
 mesh = SubResource("BoxMesh_jaked")
 
-[node name="Botonera" type="MeshInstance3D" parent="Tramo0" unique_id=1166109194]
+[node name="Botonera" type="MeshInstance3D" parent="Tramo0" unique_id=1424443887]
 transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, 0, 0.955, -0.12)
 material_override = SubResource("StandardMaterial3D_xgx60")
 mesh = SubResource("QuadMesh_1qgg5")
 
-[node name="LuzBase" type="MeshInstance3D" parent="Tramo0" unique_id=1388628572]
+[node name="LuzBase" type="MeshInstance3D" parent="Tramo0" unique_id=544679252]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.452)
 material_override = SubResource("StandardMaterial3D_5uhdx")
 mesh = SubResource("BoxMesh_jll0r")
 
-[node name="Marco" type="MeshInstance3D" parent="Tramo0" unique_id=1506351204]
+[node name="Marco" type="MeshInstance3D" parent="Tramo0" unique_id=2031115288]
 transform = Transform3D(1, 0, 0, 0, 0.9945219, 0.104528464, 0, -0.104528464, 0.9945219, 0, 1.5, 0.3)
 material_override = SubResource("StandardMaterial3D_e157o")
 mesh = SubResource("BoxMesh_fovh7")
 
-[node name="Pantalla" type="MeshInstance3D" parent="Tramo0" unique_id=422606733]
+[node name="Pantalla" type="MeshInstance3D" parent="Tramo0" unique_id=398719770]
 transform = Transform3D(-1, 9.1381684e-09, -8.694387e-08, 0, 0.9945219, 0.104528464, 8.742278e-08, 0.104528464, -0.9945219, 0, 1.5, 0.272)
 material_override = SubResource("StandardMaterial3D_bu08p")
 mesh = SubResource("QuadMesh_11wxy")
 
-[node name="Tramo1" type="Node3D" parent="." unique_id=977662199]
+[node name="Tramo1" type="Node3D" parent="." unique_id=54081158]
 
-[node name="Cuerpo" type="MeshInstance3D" parent="Tramo1" unique_id=501314075]
+[node name="Cuerpo" type="MeshInstance3D" parent="Tramo1" unique_id=139712460]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 material_override = SubResource("StandardMaterial3D_e157o")
 mesh = SubResource("BoxMesh_epvot")
 
-[node name="Tapa" type="MeshInstance3D" parent="Tramo1" unique_id=76920232]
+[node name="Tapa" type="MeshInstance3D" parent="Tramo1" unique_id=2034542542]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
 material_override = SubResource("StandardMaterial3D_3u0vt")
 mesh = SubResource("BoxMesh_oo0qw")
 
-[node name="Botonera" type="MeshInstance3D" parent="Tramo1" unique_id=21257435]
+[node name="Botonera" type="MeshInstance3D" parent="Tramo1" unique_id=741923787]
 transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, 0, 0.955, -0.12)
 material_override = SubResource("StandardMaterial3D_xgx60")
 mesh = SubResource("QuadMesh_fghc8")
 
-[node name="LuzBase" type="MeshInstance3D" parent="Tramo1" unique_id=877558695]
+[node name="LuzBase" type="MeshInstance3D" parent="Tramo1" unique_id=292283429]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.452)
 material_override = SubResource("StandardMaterial3D_5uhdx")
 mesh = SubResource("BoxMesh_13plv")
 
-[node name="Marco" type="MeshInstance3D" parent="Tramo1" unique_id=919563796]
+[node name="Marco" type="MeshInstance3D" parent="Tramo1" unique_id=2090234632]
 transform = Transform3D(1, 0, 0, 0, 0.9945219, 0.104528464, 0, -0.104528464, 0.9945219, 0, 1.5, 0.3)
 material_override = SubResource("StandardMaterial3D_e157o")
 mesh = SubResource("BoxMesh_q0iko")
 
-[node name="Pantalla" type="MeshInstance3D" parent="Tramo1" unique_id=499414688]
+[node name="Pantalla" type="MeshInstance3D" parent="Tramo1" unique_id=1756693563]
 transform = Transform3D(-1, 9.1381684e-09, -8.694387e-08, 0, 0.9945219, 0.104528464, 8.742278e-08, 0.104528464, -0.9945219, 0, 1.5, 0.272)
 material_override = SubResource("StandardMaterial3D_w3dih")
 mesh = SubResource("QuadMesh_w6kei")
 
-[node name="Tramo2" type="Node3D" parent="." unique_id=2139343431]
+[node name="Tramo2" type="Node3D" parent="." unique_id=2061467132]
 transform = Transform3D(0.88294756, 0, 0.46947157, 0, 1, 0, -0.46947157, 0, 0.88294756, 0.79810166, 0, -0.1989891)
 
-[node name="Cuerpo" type="MeshInstance3D" parent="Tramo2" unique_id=978034700]
+[node name="Cuerpo" type="MeshInstance3D" parent="Tramo2" unique_id=1359212258]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
 material_override = SubResource("StandardMaterial3D_e157o")
 mesh = SubResource("BoxMesh_gc17m")
 
-[node name="Tapa" type="MeshInstance3D" parent="Tramo2" unique_id=1331539123]
+[node name="Tapa" type="MeshInstance3D" parent="Tramo2" unique_id=235432522]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
 material_override = SubResource("StandardMaterial3D_kmig7")
 mesh = SubResource("BoxMesh_r5bmu")
 
-[node name="Botonera" type="MeshInstance3D" parent="Tramo2" unique_id=271810138]
+[node name="Botonera" type="MeshInstance3D" parent="Tramo2" unique_id=1868208126]
 transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, 0, 0.955, -0.12)
 material_override = SubResource("StandardMaterial3D_xgx60")
 mesh = SubResource("QuadMesh_1mx0f")
 
-[node name="LuzBase" type="MeshInstance3D" parent="Tramo2" unique_id=1204164179]
+[node name="LuzBase" type="MeshInstance3D" parent="Tramo2" unique_id=1403559075]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.452)
 material_override = SubResource("StandardMaterial3D_5uhdx")
 mesh = SubResource("BoxMesh_ihff0")
 
-[node name="Marco" type="MeshInstance3D" parent="Tramo2" unique_id=1545729721]
+[node name="Marco" type="MeshInstance3D" parent="Tramo2" unique_id=495096751]
 transform = Transform3D(1, 0, 0, 0, 0.9945219, 0.104528464, 0, -0.104528464, 0.9945219, 0, 1.5, 0.3)
 material_override = SubResource("StandardMaterial3D_e157o")
 mesh = SubResource("BoxMesh_p46y8")
 
-[node name="Pantalla" type="MeshInstance3D" parent="Tramo2" unique_id=1824700849]
+[node name="Pantalla" type="MeshInstance3D" parent="Tramo2" unique_id=987236750]
 transform = Transform3D(-1, 9.1381684e-09, -8.694387e-08, 0, 0.9945219, 0.104528464, 8.742278e-08, 0.104528464, -0.9945219, 0, 1.5, 0.272)
 material_override = SubResource("StandardMaterial3D_cvbuy")
 mesh = SubResource("QuadMesh_aavuc")

@@ -17,7 +17,7 @@ func _initialize() -> void:
 		"pantalla_pared": PZ.pantalla_pared(), "cama": PZ.cama(), "escritorio": PZ.escritorio(), "armario": PZ.armario(), "estante": PZ.estante(),
 		"incubadora": PZ.incubadora(), "luminaria_techo": PZ.luminaria_techo(), "marco_puerta": PZ.marco_puerta(), "holoproyector": PZ.holoproyector(),
 		"nucleo_eva": PZ.nucleo_eva(), "ventanal": PZ.ventanal(), "consola_central": PZ.consola_central(), "camilla": PZ.camilla(),
-		"mesita": mesita(), "florero": florero(), "heladera_vidrio": P2.heladera_vidrio(), "expendedora": P2.expendedora(), "estanteria_alimentos": P2.estanteria_alimentos(), "jardinera": P2.jardinera(), "canal_agua": P2.canal_agua(16.0), "rack_servidores": P2.rack_servidores(), "costilla": P2.costilla(), "caja_electrica": P2.caja_electrica(), "umbral": P2.umbral(), "casco": PZ.casco(), "barra_cocina": PZ.barra_cocina(), "microscopio": PZ.microscopio(), "terrario": PZ.terrario(), "soporte_suero": PZ.soporte_suero()}
+		"mesita": mesita(), "florero": florero(), "heladera_vidrio": P2.heladera_vidrio(), "expendedora": P2.expendedora(), "estanteria_alimentos": P2.estanteria_alimentos(), "jardinera": P2.jardinera(), "canal_agua": P2.canal_agua(13.0), "rack_servidores": P2.rack_servidores(), "costilla": P2.costilla(), "caja_electrica": P2.caja_electrica(), "umbral": P2.umbral(), "casco": PZ.casco(), "barra_cocina": PZ.barra_cocina(), "microscopio": PZ.microscopio(), "terrario": PZ.terrario(), "soporte_suero": PZ.soporte_suero()}
 	for k in lista:
 		L.guardar_pieza(lista[k], "res://piezas/%s.tscn" % k)
 	armar_nave()
@@ -94,22 +94,19 @@ func planta(padre: Node, glb: String, nombre: String, pos: Vector3, giro_deg := 
 	padre.add_child(w)
 	return w
 
-func decorar(s: Node, x0: float, x1: float, z0: float, z1: float, lado_pasillo: int, ritmo := 2.4) -> void:
+func decorar(s: Node, x0: float, x1: float, z0: float, z1: float, lado_pasillo: int, ritmo := 2.4, sin_oeste := false, sin_fondo := false) -> void:
 	## Estructura de nave: cuadernas en los muros laterales y de fondo, ductos y bandeja de cables en el techo.
 	var tub := L.mat(Color(0.14, 0.16, 0.20), 0.75, 0.35)
 	var anillo := L.mat(Color(0.1, 0.8, 1.0), 0, 0.3, Color(0.1, 0.8, 1.0), 2.2)
-	var n := int((x1 - x0) / ritmo)
-	for i in range(1, n):
-		var x := x0 + i * (x1 - x0) / n
-		var zf := z1 if lado_pasillo < 0 else z0
-		var giro := Vector3(x, 0, zf + (-5 if lado_pasillo < 0 else 5))
-		if absf(x - (x0 + x1) / 2) > 2.2:
-			inst(s, "costilla", "CostillaFondo_%d" % i, Vector3(x, 0, zf + (0.1 if lado_pasillo > 0 else -0.1) * -1.0), giro)
-	var m := int(absf(z1 - z0) / ritmo)
-	for j in range(1, m):
-		var z := z0 + j * (z1 - z0) / m
-		inst(s, "costilla", "CostillaO_%d" % j, Vector3(x0 + 0.1, 0, z), Vector3(x1, 0, z))
-		inst(s, "costilla", "CostillaE_%d" % j, Vector3(x1 - 0.1, 0, z), Vector3(x0, 0, z))
+	var zf := z1 if lado_pasillo < 0 else z0
+	var dirf := -5.0 if lado_pasillo < 0 else 5.0
+	var zc := z1 - 0.55 if lado_pasillo < 0 else z0 + 0.55
+	if not sin_fondo:
+		inst(s, "costilla", "CostillaFondoO", Vector3(x0 + 0.6, 0, zf + (-0.0 if lado_pasillo < 0 else 0.0)), Vector3(x0 + 0.6, 0, zf + dirf))
+		inst(s, "costilla", "CostillaFondoE", Vector3(x1 - 0.6, 0, zf), Vector3(x1 - 0.6, 0, zf + dirf))
+	if not sin_oeste:
+		inst(s, "costilla", "CostillaO", Vector3(x0 + 0.1, 0, zc), Vector3(x1, 0, zc))
+	inst(s, "costilla", "CostillaE", Vector3(x1 - 0.1, 0, zc), Vector3(x0, 0, zc))
 	for z in [z0 + 0.25, z1 - 0.25]:
 		L.cil(s, "Ducto", Vector3((x0 + x1) / 2, ALTO - 0.18, z), 0.07, x1 - x0 - 0.4, tub, Vector3(0, 0, 90), 14)
 		for k in 6:
@@ -192,7 +189,7 @@ func armar_nave() -> void:
 	var mm_kat = muro.call(Color(0.8, 1.2, 1.15))
 	var mm_bot = muro.call(Color(0.85, 1.2, 0.95))
 	var mm_enf = muro.call(Color(1.1, 1.15, 1.2))
-	var suelo := L.mat_muro(A + "suelo_nave.png", Color(1, 1, 1))
+	var suelo := L.mat_muro(A + "suelo_nave.png", Color(1.8, 1.8, 1.9))
 	var techo := L.mat(Color(0.10, 0.12, 0.15), 0.7, 0.4)
 	var alfombra_a := L.mat(Color(0.28, 0.13, 0.05), 0, 0.95)
 	var alfombra_k := L.mat(Color(0.10, 0.28, 0.28), 0, 0.95)
@@ -257,7 +254,7 @@ func armar_nave() -> void:
 		inst(co, "rack_servidores", "RackNucleo_%d" % int(z * 10), Vector3(-33.6, 0, z), Vector3(-26, 0, z))
 	luces_techo(co, -33, -21, -6, 6, Color(0.75, 0.88, 1.0), 3, 2, 2.0, 10.5)
 	L.luz(co, "LuzEVA", Vector3(-31.5, 2.2, 0), Color(0.2, 0.8, 1.0), 2.0, 9.0)
-	decorar(co, -34, -20, -7, 7, 1, 3.0)
+	decorar(co, -34, -20, -7, 7, 1, 3.0, true, true)
 	# ── CUARTO DE AIDEN (x −17…−9, z −8…−1.6): piloto, grafito y ámbar
 	var ca := recinto("CuartoAiden", -17, -9, -8, -1.6, mm_aid, suelo, techo)
 	pared_z(ca, "MuroOeste", -17, -8, -1.6, [], mm_aid)
@@ -272,7 +269,7 @@ func armar_nave() -> void:
 	inst(ca, "silla_comando", "SillaEscritorio", Vector3(-10.75, 0, -5.6), Vector3(-9.55, 0, -5.6))
 	inst(ca, "pantalla_pared", "MonitorEscritorioA", Vector3(-9.15, 1.4, -6.2), Vector3(-13, 0, -6.2), 0.6).get_node("Pantalla").material_override = L.mat_tex(A + "navegacion.png")
 	inst(ca, "pantalla_pared", "MonitorEscritorioB", Vector3(-9.15, 1.4, -5.0), Vector3(-13, 0, -5.0), 0.6).get_node("Pantalla").material_override = L.mat_tex(A + "mapa_estelar.png")
-	inst(ca, "casco", "CascoDePiloto", Vector3(-9.45, 0.775, -6.7), Vector3(-13, 0, -6.7))
+	inst(ca, "casco", "CascoDePiloto", Vector3(-9.6, 0.775, -6.1), Vector3(-13, 0, -6.1))
 	inst(ca, "armario", "Armario", Vector3(-16.7, 0, -2.5), Vector3(-9, 0, -2.5))
 	inst(ca, "estante", "EstanteLibros", Vector3(-10.8, 0, -7.65), Vector3(-10.8, 0, 0), 0.9)
 	inst(ca, "pantalla_pared", "MapaSobreLaCama", Vector3(-16.85, 1.9, -5.0), Vector3(-9, 1.9, -5.0), 1.0).get_node("Pantalla").material_override = L.mat_tex(A + "mapa_estelar.png")
@@ -300,7 +297,7 @@ func armar_nave() -> void:
 	inst(cd, "barra_cocina", "BarraCocina", Vector3(-3.3, 0, -9.55), Vector3(-3.3, 0, 0), 0.9)
 	inst(cd, "estanteria_alimentos", "DepositoA", Vector3(3.3, 0, -9.7), Vector3(3.3, 0, 0), 1.0)
 	inst(cd, "estanteria_alimentos", "DepositoB", Vector3(1.5, 0, -9.7), Vector3(1.5, 0, 0), 1.0) if false else null
-	planta(cd, "planta_hojas_anchas", "PlantaComedor", Vector3(-4.45, 0, -9.3), 30.0, 0.9, 0.1)
+	planta(cd, "planta_hojas_anchas", "PlantaComedor", Vector3(-0.35, 0, -9.35), 30.0, 0.9, 0.1)
 	inst(cd, "pantalla_pared", "PantallaComedor", Vector3(-4.85, 2.4, -5.6), Vector3(0, 2.4, -5.6), 0.9).get_node("Pantalla").material_override = L.mat_tex(A + "mapa_estelar.png")
 	luces_techo(cd, -4.5, 4.5, -9.5, -2.0, Color(1.0, 0.95, 0.88), 2, 3, 2.2, 8.5)
 	decorar(cd, -5, 5, -10, -1.6, -1, 2.8)
@@ -322,8 +319,8 @@ func armar_nave() -> void:
 	inst(ck, "terrario", "Terrario", Vector3(9.75, 0.775, -4.9), Vector3(13, 0, -4.9))
 	inst(ck, "armario", "Armario", Vector3(16.7, 0, -2.5), Vector3(9, 0, -2.5)).get_node("Cuerpo").material_override = L.mat(Color(0.84, 0.88, 0.9), 0.3, 0.35)
 	inst(ck, "estante", "EstanteMuestras", Vector3(11.0, 0, -7.65), Vector3(11, 0, 0), 0.9)
-	planta(ck, "planta_hojas_anchas", "PlantaHojasAnchas", Vector3(9.9, 0, -7.1), 20.0, 0.8, 0.3)
-	planta(ck, "helecho", "HelechoRincon", Vector3(16.3, 0, -7.2), 0.0, 1.0, 0.55)
+	planta(ck, "planta_hojas_anchas", "PlantaHojasAnchas", Vector3(16.2, 0, -7.2), 20.0, 0.8, 0.3)
+	planta(ck, "helecho", "HelechoRincon", Vector3(9.8, 0, -7.4), 0.0, 0.9, 0.55)
 	planta(ck, "enredadera", "EnredaderaColgante", Vector3(13.0, ALTO - 0.2, -7.0), 0.0, 1.0, 0.8, true)
 	L.cil(ck, "CableEnredadera", Vector3(13.0, ALTO - 0.1, -7.0), 0.004, 0.2, L.mat(Color(0.1, 0.1, 0.12)), Vector3.ZERO, 6)
 	inst(ck, "caja_electrica", "CajaElectrica", Vector3(14.5, 1.8, -1.72), Vector3(14.5, 1.8, -8))
@@ -402,7 +399,7 @@ func cielo() -> void:
 	env.background_color = Color(0.004, 0.006, 0.014)
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.45, 0.55, 0.75)
-	env.ambient_light_energy = 1.1
+	env.ambient_light_energy = 1.0
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.glow_enabled = true
 	env.glow_intensity = 0.7

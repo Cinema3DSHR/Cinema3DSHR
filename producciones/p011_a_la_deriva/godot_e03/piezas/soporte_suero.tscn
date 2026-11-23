@@ -38,24 +38,24 @@ emission_energy_multiplier = 2.0
 [sub_resource type="BoxMesh" id="BoxMesh_qyhjr"]
 size = Vector3(0.18, 0.12, 0.03)
 
-[node name="soporte_suero" type="Node3D" unique_id=1868339482]
+[node name="soporte_suero" type="Node3D" unique_id=1319567306]
 
-[node name="Base" type="MeshInstance3D" parent="." unique_id=2055105726]
+[node name="Base" type="MeshInstance3D" parent="." unique_id=194616842]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 material_override = SubResource("StandardMaterial3D_fx4xk")
 mesh = SubResource("CylinderMesh_hrxda")
 
-[node name="Mastil" type="MeshInstance3D" parent="." unique_id=468684780]
+[node name="Mastil" type="MeshInstance3D" parent="." unique_id=1554752959]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 material_override = SubResource("StandardMaterial3D_fx4xk")
 mesh = SubResource("CylinderMesh_bpj63")
 
-[node name="Bolsa" type="MeshInstance3D" parent="." unique_id=917143754]
+[node name="Bolsa" type="MeshInstance3D" parent="." unique_id=1400854165]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, -0.05)
 material_override = SubResource("StandardMaterial3D_yoy1k")
 mesh = SubResource("BoxMesh_ju500")
 
-[node name="Monitor" type="MeshInstance3D" parent="." unique_id=661055354]
+[node name="Monitor" type="MeshInstance3D" parent="." unique_id=319635420]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.04)
 material_override = SubResource("StandardMaterial3D_wl421")
 mesh = SubResource("BoxMesh_qyhjr")
