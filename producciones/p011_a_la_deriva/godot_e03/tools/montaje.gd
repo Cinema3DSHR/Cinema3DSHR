@@ -111,7 +111,7 @@ func _materiales(ac, d: Dictionary) -> void:
 				nuevo = (mat as StandardMaterial3D).duplicate()
 				nuevo.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS
 				nuevo.cull_mode = BaseMaterial3D.CULL_DISABLED
-				if nm.begins_with("Scalp"):
+				if "Scalp" in nm:
 					if d.has("cuero"):
 						var cu: Array = d["cuero"]
 						nuevo.albedo_color = Color(cu[0], cu[1], cu[2])      # cuero cabelludo del color del pelo (pelo largo cubre todo)

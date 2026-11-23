@@ -120,6 +120,16 @@ def construir(arm, body, P='EM3D_Base_', H=1.7, M=True):
     zank=0.115*S                                     # sobre el empeine: ahí termina la «zapatilla» y empieza la caña
     caña=_region(sc,body,lambda n: True,0.016*S,'TRAJE_BOTAS',bota,zmin=zank-0.035*S,zmax=z_bota)
     piezas.append(caña)
+    # CUELLO: aro alto que tapa el borde del traje (el corte contra la piel del cuello quedaba irregular)
+    zc=W('NeckTwist01').z+0.025*S
+    nb=W('NeckTwist01'); mwb=body.matrix_world
+    ring=[mwb@v.co for v in body.data.vertices if abs((mwb@v.co).z-zc)<0.012*S and (Vector(((mwb@v.co).x,(mwb@v.co).y,0))-Vector((nb.x,nb.y,0))).length<0.12*S]
+    if ring:
+        cx=sum(p.x for p in ring)/len(ring); cy=sum(p.y for p in ring)/len(ring)
+        R=sum((Vector((p.x,p.y,0))-Vector((cx,cy,0))).length for p in ring)/len(ring)
+        co=_toro(sc,'COLLAR',R+0.006*S,0.0165*S,tela,esc=(1,1,1))
+        _al_hueso(arm,co,P+'NeckTwist01',Matrix.Translation(Vector((cx,cy,zc-0.006*S))))
+        piezas.append(co)
     # PIE: envolvente convexa de cada pie (dedos juntos en una sola punta redondeada, suela gruesa) con pesos tomados del vértice más cercano del cuerpo
     from mathutils import kdtree
     mw_b=body.matrix_world
