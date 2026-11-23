@@ -136,7 +136,6 @@ def escena_2() -> dict:
             {"actor": "aiden", "t0": t[0] + 3.5, "t1": t[1] + 2.0, "a": "kate", "alto": 1.45},
             {"actor": "kate", "t0": t[1], "t1": t[3] - 0.5, "a": "aiden", "alto": 1.5},
         ],
-        "diag": [],
         "tomas": [
             {"id": "t01", "camara": "cam_s2_general", "plano": "general del comedor", "t0": 0.0, "t1": t[1] - 0.3, "pos": [-0.8, 2.1, -2.1], "mira": [-1.4, 1.0, -5.6], "fov": 62},
             {"id": "t02", "camara": "cam_s2_aiden", "plano": "medio Aiden", "t0": t[1] - 0.3, "t1": t[2] + 0.3, "pos": [-1.1, 1.35, -6.0], "mira": [-1.4, 1.2, -4.6], "fov": 38},
@@ -228,7 +227,6 @@ def escena_4() -> dict:
             {"actor": "aiden", "t0": t[0] + 1.0, "t1": t[1] + 1.0, "a": [3.0, 0.4, 5.9]},
             {"actor": "aiden", "t0": t[1] + 1.0, "t1": t[6] + 1.0, "a": "kate", "alto": 1.55},
         ],
-        "diag": [],
         "tomas": [
             {"id": "t01", "camara": "cam_s4_general", "plano": "los dos junto al canal", "t0": 0.0, "t1": t[1] - 0.2, "pos": [3.0, 1.7, 3.2], "pos_fin": [3.0, 1.7, 3.0], "mira": [3.0, 1.2, 5.4], "fov": 56},
             {"id": "t02", "camara": "cam_s4_aiden", "plano": "Aiden", "t0": t[1] - 0.2, "t1": t[2] - 0.2, "pos": [1.7, 1.55, 5.7], "mira": [3.7, 1.5, 5.4], "fov": 34},

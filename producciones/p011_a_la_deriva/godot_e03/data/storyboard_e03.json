@@ -681,7 +681,44 @@
     }
    },
    "props": {},
-   "diag": [],
+   "diag": [
+    {
+     "n": "aiden_cara",
+     "t": 8.906,
+     "sigue": "aiden",
+     "hueso": "Head",
+     "off": [
+      0.0,
+      0.02,
+      0.5
+     ],
+     "fov": 24
+    },
+    {
+     "n": "aiden_cara2",
+     "t": 22.567,
+     "sigue": "aiden",
+     "hueso": "Head",
+     "off": [
+      0.0,
+      0.02,
+      0.5
+     ],
+     "fov": 24
+    },
+    {
+     "n": "aiden_manos",
+     "t": 8.906,
+     "sigue": "aiden",
+     "hueso": "R_Hand",
+     "off": [
+      0.0,
+      0.15,
+      0.5
+     ],
+     "fov": 34
+    }
+   ],
    "miradas": [
     {
      "actor": "aiden",
@@ -1357,7 +1394,44 @@
     }
    },
    "props": {},
-   "diag": [],
+   "diag": [
+    {
+     "n": "kate_cara",
+     "t": 9.128,
+     "sigue": "kate",
+     "hueso": "Head",
+     "off": [
+      0.3,
+      0.02,
+      0.5
+     ],
+     "fov": 24
+    },
+    {
+     "n": "aiden_cara",
+     "t": 12.704,
+     "sigue": "aiden",
+     "hueso": "Head",
+     "off": [
+      0.0,
+      0.02,
+      0.5
+     ],
+     "fov": 24
+    },
+    {
+     "n": "kate_manos",
+     "t": 16.425,
+     "sigue": "kate",
+     "hueso": "L_Hand",
+     "off": [
+      0.0,
+      0.1,
+      0.5
+     ],
+     "fov": 34
+    }
+   ],
    "miradas": [
     {
      "actor": "kate",
