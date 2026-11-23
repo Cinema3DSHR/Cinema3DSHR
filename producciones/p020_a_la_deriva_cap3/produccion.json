@@ -1,0 +1,42 @@
+{
+ "tipo": "produccion",
+ "id": "p020_a_la_deriva_cap3",
+ "titulo": "A la deriva · Cap. 3 «Protocolo de cierre»",
+ "clase": "secuencia",
+ "formato": {
+  "aspecto": "16:9",
+  "resolucion": "960x540",
+  "fps": 30,
+  "duracion_s": 177.46666666666667
+ },
+ "estado": "en_render",
+ "origen": {
+  "godot": "producciones/p011_a_la_deriva/godot_e03",
+  "storyboard": "producciones/p011_a_la_deriva/herramientas/storyboard_e03.py",
+  "blender": "producciones/p011_a_la_deriva/herramientas/etapa_blender/construir_cap3.py",
+  "audio": "producciones/p011_a_la_deriva/audio_e03/voces.json"
+ },
+ "escenas_en_el_blend": {
+  "s1": [
+   1,
+   1231
+  ],
+  "s2": [
+   1232,
+   2161
+  ],
+  "s3": [
+   2162,
+   3515
+  ],
+  "s4": [
+   3516,
+   4638
+  ],
+  "s5": [
+   4639,
+   5324
+  ]
+ },
+ "nota": "Capítulo 3 de la serie «A la deriva» (p011). Un solo BLEND con las 5 escenas encadenadas; el audio (voces de ElevenLabs) se agrega en el montaje final."
+}
