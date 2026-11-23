@@ -36,3 +36,8 @@ Tras el choque Gabriel busca a Elena desesperado; **se le apaga la visión y que
 
 ## Auto en Godot (23/11/2026)
 `godot_cap1/tools/auto.gd` carga `assets/hustler.glb` (no va al repo; copia en `/home/user/cap1_noir/auto/`), lo gira 180° (el original mira a +Z; las piezas del estudio miran a −Z) y repinta la carrocería de NEGRO brillante (el modelo viene claro). Es un cupé clásico de los 70. Pruebas: `tools/prueba_auto.gd`.
+
+## Escena del viaje (dueño, 23/11/2026): los dos dentro del auto, de noche, con lluvia
+Gabriel (conduce) y Elena (acompañante) adentro del cupé negro: faros que iluminan la ruta mojada, limpiaparabrisas en movimiento (barrido de 1,5 s, igual que el sonido), gotas en el parabrisas, ambiente de cabina + lluvia, música; vertical 540×960 para TikTok/Shorts/Reels. Va al inicio, con la voz «Hay noches que nunca terminan… Íbamos juntos… no recuerdo qué pasó primero».
+- **Sonido hecho:** `herramientas/audio_viaje.py` (procedural, sin créditos): lluvia en el techo, ruta mojada, motor, limpiaparabrisas, 2 truenos, música (cuerdas + piano en La menor) y la voz (líneas 1–5). La voz termina a los ~25 s.
+- **Pendiente imagen:** sentados con `sit_idle`/`nervous` + brazos al volante (agarre de manos), limpiaparabrisas animados, faros con cono y lluvia (Blender), ruta que pasa (parallax/terreno que se desplaza), cámaras: interior sobre el hombro, perfil de ambos, faros por delante, exterior bajo.
