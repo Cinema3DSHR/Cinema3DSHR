@@ -99,6 +99,7 @@ func _luces() -> void:
 
 func _montar(prefijo: String, sin_glb: bool) -> void:
 	esc = Node3D.new(); esc.name = "Escena"; root.add_child(esc)
+	await process_frame
 	var Au = load("res://tools/auto.gd")
 	var we: WorldEnvironment = Au.entorno_noche(); we.name = "Entorno"; esc.add_child(we)
 	total = int(ceil(DUR * FPS)) + 1
