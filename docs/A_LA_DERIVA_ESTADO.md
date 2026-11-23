@@ -54,3 +54,5 @@ sonido de los capítulos anteriores, personajes «normales» (no la EVA IA) para
 - **Para recuperar cualquier audio:** `git show 2e07f26:<ruta>` (último commit con todo). Las voces se pueden regenerar con ElevenLabs (cuesta créditos).
 - Se conservan escenas, recetas, fuentes de Godot/Blender, BLEND por LFS y herramientas para capítulos futuros.
 - Videos/audios de las Releases: se borran con el flujo `borrar_medios.yml` (primero simulacro); los BLEND, GLB y manifiestos no se tocan.
+
+Borrado real de medios en Releases ejecutado el 23/11/2026 (30 archivos mp4/ogv/wav, 670 MB; simulacro previo en la corrida 45270698177). BLEND/GLB/manifiestos intactos.
