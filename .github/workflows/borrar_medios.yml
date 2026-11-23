@@ -1,5 +1,8 @@
 name: Borrar medios de Releases
 on:
+  push:
+    branches: [claude/inspiring-sagan-1ogr0n]
+    paths: [config/borrar_medios.json]
   workflow_dispatch:
     inputs:
       ejecutar:
@@ -11,12 +14,17 @@ jobs:
   limpiar:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Listar / borrar videos y audios de las Releases
         env:
           GH_TOKEN: ${{ github.token }}
           EJECUTAR: ${{ inputs.ejecutar }}
+          CFG_EJECUTAR: ${{ github.event_name == 'push' && 'cfg' || '' }}
         run: |
           set -u
+          if [ -n "$CFG_EJECUTAR" ]; then
+            EJECUTAR=$(python3 -c "import json;print(str(json.load(open('config/borrar_medios.json'))['ejecutar']).lower())")
+          fi
           gh api --paginate "repos/${{ github.repository }}/releases?per_page=100" \
             --jq '.[] | .tag_name as $t | .assets[] | [$t, .id, .name, .size] | @tsv' > activos.tsv
           echo "Total de activos: $(wc -l < activos.tsv)"
