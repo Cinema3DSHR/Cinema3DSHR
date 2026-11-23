@@ -231,8 +231,14 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 	for par in [["ok", ok_car], ["da", da_car]]:
 		for nm in ["Wheel FL", "Wheel FR", "Wheel RL", "Wheel RR"]:
 			var w := par[1].find_child(nm, true, false) as MeshInstance3D
-			var Pb: Basis = (par[1].global_transform.affine_inverse() * (w.get_parent() as Node3D).global_transform).basis
-			ruedas[par[0] + nm] = [w, w.transform, w.get_aabb().get_center(), Pb]
+			var padre := w.get_parent() as Node3D
+			var Pb: Basis = (par[1].global_transform.affine_inverse() * padre.global_transform).basis
+			var cen: Vector3 = w.transform * w.get_aabb().get_center()               # centro de la rueda en el espacio del padre
+			var pv := Node3D.new(); pv.name = "RuedaPivote_" + par[0] + nm.replace(" ", "_")
+			padre.add_child(pv); pv.transform = Transform3D(Basis.IDENTITY, cen)
+			var wt := w.transform
+			padre.remove_child(w); pv.add_child(w); w.transform = Transform3D(Basis.IDENTITY, -cen) * wt
+			ruedas[par[0] + nm] = [pv, (Pb.inverse() * Vector3.RIGHT).normalized()]        # eje de giro (el del auto) en el espacio del padre
 	var vol_ok := ok_car.find_child("rul", true, false) as Node3D
 	# personajes dentro del auto (hijos del auto: viajan con él)
 	G = Actor3.new(); G.cargar("gabriel", "res://assets/aiden.glb", "res://assets/aiden_meta.json", carro)
@@ -247,7 +253,7 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 	print("rigs ", RG.ok, " ", RE.ok, " impacto en ", P_IMP.snapped(Vector3(0.1, 0.1, 0.1)))
 	# pistas
 	var p_carro := _pista(carro); var p_ok := _pista(ok_car, false, false, true); var p_da := _pista(da_car, false, false, true)
-	var p_rued := {}; for k in ruedas: p_rued[k] = _pista(ruedas[k][0], true, true)
+	var p_rued := {}; for k in ruedas: p_rued[k] = _pista(ruedas[k][0], false, true)
 	var p_limp := []; for pv in limp_ok + limp_da: p_limp.append(_pista(pv, false, true))
 	var p_sk := {}
 	for ac in [G, E, G2]:
@@ -281,10 +287,8 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 		for k in ruedas:
 			var rodando := 1.0 if t < T_IMPACTO else (1.0 - _suave(T_IMPACTO, T_REPOSO, t))
 			ang[k] += minf(st_vel[g] / 22.0, 1.0) * 0.26 * (1.0 if t < T_SKID else (0.55 if t < T_IMPACTO else rodando * 0.5))
-			var w: Node3D = ruedas[k][0]; var c: Vector3 = ruedas[k][2]; var Pb: Basis = ruedas[k][3]
-			var rl := Pb.inverse() * Basis(Vector3.RIGHT, -ang[k]) * Pb
-			var base: Transform3D = ruedas[k][1]
-			w.transform = Transform3D(Basis.IDENTITY, base * c) * Transform3D(rl, Vector3.ZERO) * Transform3D(Basis.IDENTITY, -(base * c)) * base
+			var w: Node3D = ruedas[k][0]
+			w.transform.basis = Basis(ruedas[k][1], -ang[k])                       # sólo rotación sobre el centro de la rueda (sin movimiento de posición: no vibra)
 			_clave(p_rued[k], w, t)
 		var ia := 0
 		for pv in limp_ok + limp_da:
@@ -501,6 +505,8 @@ func _elena_cuadro(g: int, t: float, pt: Array, rig: RigSentado) -> void:
 			E.poner_pose(E.pose_clip("fly_back", int(tr * FPS), false))
 		ELENA_N.global_transform = Transform3D(giro, elena_p)
 		ELENA_N.scale = Vector3.ONE if elena_p.y > -26.0 else Vector3.ONE * 0.0005
+	if t >= T_EYECTA and int(round(t * 10.0)) % 5 == 0 and g % 3 == 0 and t < 15.0:
+		print("ELENA t=", snappedf(t, 0.1), " a lo largo ", snappedf((ELENA_N.global_position - P_IMP).dot(DIR_SKID), 0.1), " altura ", snappedf(ELENA_N.global_position.y, 0.1))
 	_clave(pt, ELENA_N, t)
 
 func _gabriel_cuadro(g: int, t: float, pt: Array, pt_sc: Array) -> void:
