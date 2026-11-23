@@ -278,7 +278,7 @@ def escena_5() -> dict:
 ESCENAS = {"s1": escena_1, "s2": escena_2, "s3": escena_3, "s4": escena_4, "s5": escena_5}
 
 if __name__ == "__main__":
-    out = {"global": {"fundido_cuadros": 8}, "escenas": {k: f() for k, f in ESCENAS.items()}}
+    out = {"global": {"fundido_cuadros": 8, "resolucion": [540, 960]}, "escenas": {k: f() for k, f in ESCENAS.items()}}
     json.dump(out, open(GODOT / "data" / "storyboard_e03.json", "w"), indent=1, ensure_ascii=False)
     for k, e in out["escenas"].items():
         print(k, "dur", e["dur"], "tomas", len(e["tomas"]), "voces", len(e["voces"]))

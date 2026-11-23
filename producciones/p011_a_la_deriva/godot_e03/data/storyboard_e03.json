@@ -1,6 +1,10 @@
 {
  "global": {
-  "fundido_cuadros": 8
+  "fundido_cuadros": 8,
+  "resolucion": [
+   540,
+   960
+  ]
  },
  "escenas": {
   "s1": {

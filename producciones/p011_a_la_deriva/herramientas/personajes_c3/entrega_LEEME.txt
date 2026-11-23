@@ -1,0 +1,39 @@
+A LA DERIVA · PERSONAJES BASE (Aiden, Kate y Mujer adulta)
+=================================================
+Los tres son personas normales (sin hologramas ni nada de IA): Aiden, Kate y la Mujer adulta.
+Cada personaje viene en dos formatos, SIN animaciones y en pose de reposo:
+  · <Nombre>.blend  → para Blender 5.x (texturas empaquetadas: abre solo, sin archivos externos).
+  · <Nombre>.glb    → estático, para ver o llevar a Godot (esqueleto, ropa puesta y todas las formas de la cara; sin la ropa interior).
+
+QUÉ TRAE CADA .BLEND (colecciones)
+  · Esqueleto      → el armature de 101 huesos de Character Creator (EM3D_Base_*), compatible con Mixamo.
+  · Cuerpo         → cuerpo COMPLETO (EM3D_Base_Body, con los pies enteros), ojos, dientes, lengua, lagrimal.
+                     Tiene 122 formas de cara (visemas V_*, cejas, ojos, boca, serie A01–A51 tipo ARKit).
+  · Pelo y cejas   → pelo, cuero cabelludo y cejas, ya con el color de cada personaje.
+  · Ropa interior  → ropa interior original del modelo, OCULTA por defecto (se asomaba por el traje). Mostrala cuando saques el traje.
+  · Ropa           → la ropa actual, en PIEZAS SEPARADAS (se ocultan o se borran sin tocar el cuerpo):
+        TRAJE_MONO            traje de primera piel (cuello a muñecas y tobillos)
+        COLLAR                aro del cuello
+        TRAJE_BOTAS           caña de las botas
+        TRAJE_PIE_L / _R      zapatilla de cada pie
+        VIVO_TORSO, VIVO_PIERNA_L/R, BOTA_LUZ_L/R, EMBLEMA   vivos celestes que brillan
+    Todas están enlazadas al mismo esqueleto (modificador Armature), así se mueven con las animaciones.
+
+COLORES YA PUESTOS
+  Aiden: piel (0,85 / 0,60 / 0,46), pelo castaño oscuro.   Kate: piel (0,90 / 0,64 / 0,50), pelo castaño rojizo.
+  Mujer adulta: piel (0,80 / 0,60 / 0,50), pelo castaño oscuro.   (Se cambian en los materiales EM3D_Skin_*, Hair_*, Eyebrows_*.)
+  Materiales de la ropa: traje_tela (azul marino), traje_bota, traje_luz (vivos celestes), traje_placa, traje_suela.
+
+CÓMO CAMBIAR LA ROPA
+  1. Ocultá o borrá la colección «Ropa» (ojo en el panel de la derecha). El cuerpo queda desnudo y completo debajo.
+  2. Poné la ropa nueva (modelada o importada). Para que siga al personaje:
+        · Seleccioná la prenda y después el esqueleto (activo) → Ctrl+P → «Con pesos automáticos»,
+          o copiá los pesos del cuerpo: modificador «Transferencia de datos» (Vertex Groups) desde EM3D_Base_Body.
+        · Verificá que tenga el modificador Armature apuntando al esqueleto.
+  3. Para que no se transparente la piel: inflá la prenda unos 5–10 mm respecto del cuerpo (en el traje actual son 12 mm).
+  4. Si querés que la prenda se pliegue con la cara/cuello o se anime sin atravesar el cuerpo, retocá los pesos en Weight Paint.
+  5. Ropa interior: viene en la colección «Ropa interior» (oculta). Al sacar el traje, activala con el ojo de esa colección.
+
+OJO
+  · Los GLB y el .blend no llevan el pelo con física: esa simulación se hace en Blender cuando corresponda.
+  · Los modelos de Character Creator pueden tener licencias propias: revisalas antes de publicarlos fuera del estudio.

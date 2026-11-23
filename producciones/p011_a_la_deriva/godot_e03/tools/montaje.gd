@@ -23,12 +23,16 @@ func _initialize() -> void:
 	var a := OS.get_cmdline_user_args()
 	var clave: String = a[0]
 	var salida: String = a[1]
-	var caps: Array = [] if a.size() < 3 else Array(a[2].split(",")).map(func(s): return float(s))
+	var caps: Array = [] if a.size() < 3 or a[2] == "plan" or a[2] == "tomas" else Array(a[2].split(",")).map(func(s): return float(s))
 	var sbj = JSON.parse_string(FileAccess.get_file_as_string("res://data/storyboard_e03.json"))
 	SB = sbj["escenas"][clave]
 	SB["_global"] = sbj.get("global", {})
-	root.size = Vector2i(1280, 720)
-	DisplayServer.window_set_size(Vector2i(1280, 720))
+	var res_v: Array = SB["_global"].get("resolucion", [1280, 720])
+	if a.size() > 2 and a[2] == "tomas":      # una captura en el medio de cada toma (revisión del encuadre)
+		for tm0 in SB["tomas"]:
+			caps.append(snappedf((float(tm0["t0"]) + float(tm0["t1"])) * 0.5, 0.1))
+	root.size = Vector2i(int(res_v[0]), int(res_v[1]))
+	DisplayServer.window_set_size(Vector2i(int(res_v[0]), int(res_v[1])))
 	await _montar(clave, salida, caps)
 	quit()
 
@@ -614,6 +618,9 @@ func _camaras_y_salida(clave: String, salida: String, caps: Array) -> void:
 			var mm2 = actores[dg["sigue"]].modelo.find_child(nm, true, false)
 			if mm2:
 				mm2.visible = true
+	if OS.get_cmdline_user_args().size() > 3 and OS.get_cmdline_user_args()[3] == "sin_glb":
+		print("SIN_GLB")
+		return
 	# exportar GLB
 	ap.seek(0.0, true)
 	var doc := GLTFDocument.new()
@@ -626,7 +633,7 @@ func _camaras_y_salida(clave: String, salida: String, caps: Array) -> void:
 	for id in actores:
 		nodos_actor.append({"id": id, "nodo": id, "modelo": SB["actores"][id]["modelo"]})
 	var js := {"formato": "estudio.previa_godot/1", "produccion": "p011_a_la_deriva", "escena_id": "e03_" + clave, "version": 1, "titulo": SB.get("titulo", clave),
-		"fps": int(FPS), "frames": total, "duracion_s": float(total - 1) / FPS, "resolucion": [1280, 720], "animacion": "escena",
+		"fps": int(FPS), "frames": total, "duracion_s": float(total - 1) / FPS, "resolucion": SB["_global"].get("resolucion", [1280, 720]), "animacion": "escena",
 		"actores": nodos_actor, "tomas": cams_json, "voces": SB.get("voces", []), "tiempo": {"pelicula": "t = (cuadro − 1) / fps"}}
 	var fa := FileAccess.open(salida + ".json", FileAccess.WRITE)
 	fa.store_string(JSON.stringify(js, "  "))
