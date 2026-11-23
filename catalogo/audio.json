@@ -134,6 +134,26 @@
    "variantes": 0,
    "volumen_db": -12,
    "prompt": "single soft futuristic message notification ping, subtle, clean"
+  },
+  {
+   "id": "voz_9598f5cbdbedb29c",
+   "nombre": "[tired, broken, low] Hay noches que nunca terminan...",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_9598f5cbdbedb29c.mp3",
+   "duracion_s": 2.04,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p022",
+    "cap1",
+    "prueba"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "5egO01tkUjEzu7xSSE8M",
+   "texto": "[tired, broken, low] Hay noches que nunca terminan...",
+   "rol": "gabriel_noir"
   }
  ],
  "fuentes_existentes_para_importar": [
