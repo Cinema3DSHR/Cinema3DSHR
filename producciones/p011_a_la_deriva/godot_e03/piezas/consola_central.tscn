@@ -1,0 +1,223 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pantallas/botonera.png" id="1_li8fw"]
+[ext_resource type="Texture2D" path="res://assets/pantallas/comunicaciones.png" id="2_gpr45"]
+[ext_resource type="Texture2D" path="res://assets/pantallas/mapa_estelar.png" id="3_dnomf"]
+[ext_resource type="Texture2D" path="res://assets/pantallas/estado_nave.png" id="4_2t4sc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e157o"]
+albedo_color = Color(0.1, 0.12, 0.16, 1)
+metallic = 0.7
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_54wwr"]
+size = Vector3(1.6, 0.9, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1q555"]
+albedo_color = Color(0.06, 0.08, 0.12, 1)
+metallic = 0.5
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_jaked"]
+size = Vector3(1.64, 0.05, 0.94)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xgx60"]
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 2.0
+emission_operator = 1
+emission_texture = ExtResource("1_li8fw")
+
+[sub_resource type="QuadMesh" id="QuadMesh_1qgg5"]
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5uhdx"]
+albedo_color = Color(0.1, 0.8, 1, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.1, 0.8, 1, 1)
+emission_energy_multiplier = 2.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_jll0r"]
+size = Vector3(1.5, 0.02, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fovh7"]
+size = Vector3(1.5, 0.82, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bu08p"]
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 1.6
+emission_operator = 1
+emission_texture = ExtResource("2_gpr45")
+
+[sub_resource type="QuadMesh" id="QuadMesh_11wxy"]
+size = Vector2(1.4, 0.74)
+
+[sub_resource type="BoxMesh" id="BoxMesh_epvot"]
+size = Vector3(1.6, 0.9, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3u0vt"]
+albedo_color = Color(0.06, 0.08, 0.12, 1)
+metallic = 0.5
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_oo0qw"]
+size = Vector3(1.64, 0.05, 0.94)
+
+[sub_resource type="QuadMesh" id="QuadMesh_fghc8"]
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_13plv"]
+size = Vector3(1.5, 0.02, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_q0iko"]
+size = Vector3(1.5, 0.82, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w3dih"]
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 1.6
+emission_operator = 1
+emission_texture = ExtResource("3_dnomf")
+
+[sub_resource type="QuadMesh" id="QuadMesh_w6kei"]
+size = Vector2(1.4, 0.74)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gc17m"]
+size = Vector3(1.6, 0.9, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kmig7"]
+albedo_color = Color(0.06, 0.08, 0.12, 1)
+metallic = 0.5
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_r5bmu"]
+size = Vector3(1.64, 0.05, 0.94)
+
+[sub_resource type="QuadMesh" id="QuadMesh_1mx0f"]
+size = Vector2(1.4, 0.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ihff0"]
+size = Vector3(1.5, 0.02, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_p46y8"]
+size = Vector3(1.5, 0.82, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cvbuy"]
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 1.6
+emission_operator = 1
+emission_texture = ExtResource("4_2t4sc")
+
+[sub_resource type="QuadMesh" id="QuadMesh_aavuc"]
+size = Vector2(1.4, 0.74)
+
+[node name="consola_central" type="Node3D" unique_id=86607866]
+
+[node name="Tramo0" type="Node3D" parent="." unique_id=322923190]
+transform = Transform3D(0.88294756, 0, -0.46947157, 0, 1, 0, 0.46947157, 0, 0.88294756, -0.79810166, 0, -0.1989891)
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Tramo0" unique_id=433423170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+material_override = SubResource("StandardMaterial3D_e157o")
+mesh = SubResource("BoxMesh_54wwr")
+
+[node name="Tapa" type="MeshInstance3D" parent="Tramo0" unique_id=1401734774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+material_override = SubResource("StandardMaterial3D_1q555")
+mesh = SubResource("BoxMesh_jaked")
+
+[node name="Botonera" type="MeshInstance3D" parent="Tramo0" unique_id=1166109194]
+transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, 0, 0.955, -0.12)
+material_override = SubResource("StandardMaterial3D_xgx60")
+mesh = SubResource("QuadMesh_1qgg5")
+
+[node name="LuzBase" type="MeshInstance3D" parent="Tramo0" unique_id=1388628572]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.452)
+material_override = SubResource("StandardMaterial3D_5uhdx")
+mesh = SubResource("BoxMesh_jll0r")
+
+[node name="Marco" type="MeshInstance3D" parent="Tramo0" unique_id=1506351204]
+transform = Transform3D(1, 0, 0, 0, 0.9945219, 0.104528464, 0, -0.104528464, 0.9945219, 0, 1.5, 0.3)
+material_override = SubResource("StandardMaterial3D_e157o")
+mesh = SubResource("BoxMesh_fovh7")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Tramo0" unique_id=422606733]
+transform = Transform3D(-1, 9.1381684e-09, -8.694387e-08, 0, 0.9945219, 0.104528464, 8.742278e-08, 0.104528464, -0.9945219, 0, 1.5, 0.272)
+material_override = SubResource("StandardMaterial3D_bu08p")
+mesh = SubResource("QuadMesh_11wxy")
+
+[node name="Tramo1" type="Node3D" parent="." unique_id=977662199]
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Tramo1" unique_id=501314075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+material_override = SubResource("StandardMaterial3D_e157o")
+mesh = SubResource("BoxMesh_epvot")
+
+[node name="Tapa" type="MeshInstance3D" parent="Tramo1" unique_id=76920232]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+material_override = SubResource("StandardMaterial3D_3u0vt")
+mesh = SubResource("BoxMesh_oo0qw")
+
+[node name="Botonera" type="MeshInstance3D" parent="Tramo1" unique_id=21257435]
+transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, 0, 0.955, -0.12)
+material_override = SubResource("StandardMaterial3D_xgx60")
+mesh = SubResource("QuadMesh_fghc8")
+
+[node name="LuzBase" type="MeshInstance3D" parent="Tramo1" unique_id=877558695]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.452)
+material_override = SubResource("StandardMaterial3D_5uhdx")
+mesh = SubResource("BoxMesh_13plv")
+
+[node name="Marco" type="MeshInstance3D" parent="Tramo1" unique_id=919563796]
+transform = Transform3D(1, 0, 0, 0, 0.9945219, 0.104528464, 0, -0.104528464, 0.9945219, 0, 1.5, 0.3)
+material_override = SubResource("StandardMaterial3D_e157o")
+mesh = SubResource("BoxMesh_q0iko")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Tramo1" unique_id=499414688]
+transform = Transform3D(-1, 9.1381684e-09, -8.694387e-08, 0, 0.9945219, 0.104528464, 8.742278e-08, 0.104528464, -0.9945219, 0, 1.5, 0.272)
+material_override = SubResource("StandardMaterial3D_w3dih")
+mesh = SubResource("QuadMesh_w6kei")
+
+[node name="Tramo2" type="Node3D" parent="." unique_id=2139343431]
+transform = Transform3D(0.88294756, 0, 0.46947157, 0, 1, 0, -0.46947157, 0, 0.88294756, 0.79810166, 0, -0.1989891)
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Tramo2" unique_id=978034700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+material_override = SubResource("StandardMaterial3D_e157o")
+mesh = SubResource("BoxMesh_gc17m")
+
+[node name="Tapa" type="MeshInstance3D" parent="Tramo2" unique_id=1331539123]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.92, 0)
+material_override = SubResource("StandardMaterial3D_kmig7")
+mesh = SubResource("BoxMesh_r5bmu")
+
+[node name="Botonera" type="MeshInstance3D" parent="Tramo2" unique_id=271810138]
+transform = Transform3D(-1, 8.742278e-08, 3.821371e-15, 0, -4.371139e-08, 1, 8.742278e-08, 1, 4.371139e-08, 0, 0.955, -0.12)
+material_override = SubResource("StandardMaterial3D_xgx60")
+mesh = SubResource("QuadMesh_1mx0f")
+
+[node name="LuzBase" type="MeshInstance3D" parent="Tramo2" unique_id=1204164179]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.452)
+material_override = SubResource("StandardMaterial3D_5uhdx")
+mesh = SubResource("BoxMesh_ihff0")
+
+[node name="Marco" type="MeshInstance3D" parent="Tramo2" unique_id=1545729721]
+transform = Transform3D(1, 0, 0, 0, 0.9945219, 0.104528464, 0, -0.104528464, 0.9945219, 0, 1.5, 0.3)
+material_override = SubResource("StandardMaterial3D_e157o")
+mesh = SubResource("BoxMesh_p46y8")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Tramo2" unique_id=1824700849]
+transform = Transform3D(-1, 9.1381684e-09, -8.694387e-08, 0, 0.9945219, 0.104528464, 8.742278e-08, 0.104528464, -0.9945219, 0, 1.5, 0.272)
+material_override = SubResource("StandardMaterial3D_cvbuy")
+mesh = SubResource("QuadMesh_aavuc")

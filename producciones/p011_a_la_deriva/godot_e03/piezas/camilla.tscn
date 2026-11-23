@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2l32w"]
+albedo_color = Color(0.75, 0.82, 0.9, 1)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_f2bo4"]
+size = Vector3(0.8, 0.12, 2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0h6vn"]
+albedo_color = Color(0.82, 0.86, 0.9, 1)
+metallic = 0.5
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_klpvy"]
+size = Vector3(0.7, 0.05, 1.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g6rml"]
+size = Vector3(0.28, 0.74, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m1emy"]
+albedo_color = Color(0.14, 0.15, 0.18, 1)
+metallic = 0.6
+roughness = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_pgeih"]
+size = Vector3(0.9, 0.06, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a8wax"]
+albedo_color = Color(0.2, 1, 0.6, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.2, 1, 0.6, 1)
+emission_energy_multiplier = 2.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_qowyw"]
+size = Vector3(0.01, 0.01, 1.8)
+
+[node name="camilla" type="Node3D" unique_id=1654328974]
+
+[node name="Colchon" type="MeshInstance3D" parent="." unique_id=1675066350]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, 0)
+material_override = SubResource("StandardMaterial3D_2l32w")
+mesh = SubResource("BoxMesh_f2bo4")
+
+[node name="Estructura" type="MeshInstance3D" parent="." unique_id=1410599045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74, 0)
+material_override = SubResource("StandardMaterial3D_0h6vn")
+mesh = SubResource("BoxMesh_klpvy")
+
+[node name="Pie" type="MeshInstance3D" parent="." unique_id=1797372946]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.37, 0)
+material_override = SubResource("StandardMaterial3D_0h6vn")
+mesh = SubResource("BoxMesh_g6rml")
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=829491693]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+material_override = SubResource("StandardMaterial3D_m1emy")
+mesh = SubResource("BoxMesh_pgeih")
+
+[node name="Luz" type="MeshInstance3D" parent="." unique_id=959186107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.8, 0)
+material_override = SubResource("StandardMaterial3D_a8wax")
+mesh = SubResource("BoxMesh_qowyw")

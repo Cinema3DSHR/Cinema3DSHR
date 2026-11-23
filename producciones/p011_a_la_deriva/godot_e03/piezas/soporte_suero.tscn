@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fx4xk"]
+albedo_color = Color(0.78, 0.8, 0.84, 1)
+metallic = 0.7
+roughness = 0.3
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_hrxda"]
+top_radius = 0.22
+bottom_radius = 0.22
+height = 0.04
+radial_segments = 20
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bpj63"]
+top_radius = 0.015
+bottom_radius = 0.015
+height = 1.8
+radial_segments = 12
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yoy1k"]
+transparency = 1
+albedo_color = Color(0.85, 0.95, 1, 0.7)
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.4, 0.8, 1, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_ju500"]
+size = Vector3(0.12, 0.2, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wl421"]
+albedo_color = Color(0.1, 0.8, 0.6, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.2, 1, 0.6, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_qyhjr"]
+size = Vector3(0.18, 0.12, 0.03)
+
+[node name="soporte_suero" type="Node3D" unique_id=1868339482]
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=2055105726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+material_override = SubResource("StandardMaterial3D_fx4xk")
+mesh = SubResource("CylinderMesh_hrxda")
+
+[node name="Mastil" type="MeshInstance3D" parent="." unique_id=468684780]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+material_override = SubResource("StandardMaterial3D_fx4xk")
+mesh = SubResource("CylinderMesh_bpj63")
+
+[node name="Bolsa" type="MeshInstance3D" parent="." unique_id=917143754]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62, -0.05)
+material_override = SubResource("StandardMaterial3D_yoy1k")
+mesh = SubResource("BoxMesh_ju500")
+
+[node name="Monitor" type="MeshInstance3D" parent="." unique_id=661055354]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.04)
+material_override = SubResource("StandardMaterial3D_wl421")
+mesh = SubResource("BoxMesh_qyhjr")

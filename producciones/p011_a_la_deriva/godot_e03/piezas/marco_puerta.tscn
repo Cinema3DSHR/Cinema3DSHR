@@ -1,0 +1,63 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sh3gy"]
+albedo_color = Color(0.12, 0.14, 0.18, 1)
+metallic = 0.65
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_wdgw1"]
+size = Vector3(0.1, 2.2, 0.32)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6nqsk"]
+albedo_color = Color(0.1, 0.8, 1, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.1, 0.8, 1, 1)
+emission_energy_multiplier = 2.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_kuth8"]
+size = Vector3(0.012, 2.1, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4gpvi"]
+size = Vector3(0.1, 2.2, 0.32)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rd6r4"]
+size = Vector3(0.012, 2.1, 0.01)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yv0uw"]
+size = Vector3(1.46, 0.14, 0.32)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6pmuj"]
+size = Vector3(1.3, 0.012, 0.01)
+
+[node name="marco_puerta" type="Node3D" unique_id=890998161]
+
+[node name="Jamba" type="MeshInstance3D" parent="." unique_id=813165265]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.68, 1.1, 0)
+material_override = SubResource("StandardMaterial3D_sh3gy")
+mesh = SubResource("BoxMesh_wdgw1")
+
+[node name="JambaLuz" type="MeshInstance3D" parent="." unique_id=2121083483]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.62, 1.1, -0.16)
+material_override = SubResource("StandardMaterial3D_6nqsk")
+mesh = SubResource("BoxMesh_kuth8")
+
+[node name="@MeshInstance3D@11" type="MeshInstance3D" parent="." unique_id=628409053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.68, 1.1, 0)
+material_override = SubResource("StandardMaterial3D_sh3gy")
+mesh = SubResource("BoxMesh_4gpvi")
+
+[node name="@MeshInstance3D@12" type="MeshInstance3D" parent="." unique_id=1011482749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.62, 1.1, -0.16)
+material_override = SubResource("StandardMaterial3D_6nqsk")
+mesh = SubResource("BoxMesh_rd6r4")
+
+[node name="Dintel" type="MeshInstance3D" parent="." unique_id=784071873]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.25, 0)
+material_override = SubResource("StandardMaterial3D_sh3gy")
+mesh = SubResource("BoxMesh_yv0uw")
+
+[node name="DintelLuz" type="MeshInstance3D" parent="." unique_id=648827239]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.17, -0.16)
+material_override = SubResource("StandardMaterial3D_6nqsk")
+mesh = SubResource("BoxMesh_6pmuj")

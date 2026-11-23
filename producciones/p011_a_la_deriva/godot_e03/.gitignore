@@ -1,0 +1,6 @@
+.godot/
+assets/sh3d/
+assets/fondo/
+assets/plantas/
+*.glb
+*.import

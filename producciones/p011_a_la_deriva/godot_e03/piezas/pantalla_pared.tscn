@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/pantallas/navegacion.png" id="1_86i1m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kenb0"]
+albedo_color = Color(0.1, 0.12, 0.16, 1)
+metallic = 0.7
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_8jdr0"]
+size = Vector3(1.72, 1.02, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cg2ij"]
+albedo_color = Color(0.1, 0.8, 1, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.1, 0.8, 1, 1)
+emission_energy_multiplier = 2.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_gdkf7"]
+size = Vector3(1.72, 0.012, 0.01)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m60vo"]
+albedo_color = Color(0.02, 0.02, 0.03, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 1.6
+emission_operator = 1
+emission_texture = ExtResource("1_86i1m")
+
+[sub_resource type="QuadMesh" id="QuadMesh_wrytb"]
+size = Vector2(1.6, 0.9)
+
+[node name="pantalla_pared" type="Node3D" unique_id=1263933457]
+
+[node name="Marco" type="MeshInstance3D" parent="." unique_id=936621533]
+material_override = SubResource("StandardMaterial3D_kenb0")
+mesh = SubResource("BoxMesh_8jdr0")
+
+[node name="Filete" type="MeshInstance3D" parent="." unique_id=1954038137]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.52, -0.03)
+material_override = SubResource("StandardMaterial3D_cg2ij")
+mesh = SubResource("BoxMesh_gdkf7")
+
+[node name="Pantalla" type="MeshInstance3D" parent="." unique_id=1969997769]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.037)
+material_override = SubResource("StandardMaterial3D_m60vo")
+mesh = SubResource("QuadMesh_wrytb")
