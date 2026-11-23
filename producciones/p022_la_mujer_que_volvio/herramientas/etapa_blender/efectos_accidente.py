@@ -28,7 +28,7 @@ for l in bal:
     l.energy = 0.0; l.keyframe_insert('energy', frame=1)
     f = f_r
     while f < TOTAL:
-        for df, e in ((0, 0.0), (1, 220.0), (8, 220.0), (9, 0.0)):
+        for df, e in ((0, 0.0), (1, 38.0), (8, 38.0), (9, 0.0)):
             l.energy = e; l.keyframe_insert('energy', frame=min(f + df, TOTAL))
         f += 19
 
@@ -159,7 +159,7 @@ def mat_anillo():
     nt.links.new(sc_.outputs[0], mx.inputs['Fac']); nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0]); return m
 def mat_niebla():
     m = bpy.data.materials.new('Niebla_agua'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
-    out = N(nt, 'ShaderNodeOutputMaterial'); v = N(nt, 'ShaderNodeVolumeScatter'); v.inputs['Density'].default_value = 7.0; v.inputs['Color'].default_value = (0.85, 0.9, 1.0, 1)
+    out = N(nt, 'ShaderNodeOutputMaterial'); v = N(nt, 'ShaderNodeVolumeScatter'); v.inputs['Density'].default_value = 2.2; v.inputs['Color'].default_value = (0.85, 0.9, 1.0, 1)
     nt.links.new(v.outputs[0], out.inputs['Volume']); return m
 def mat_rocio(op):
     m = bpy.data.materials.new('Rocio'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
@@ -168,8 +168,12 @@ def mat_rocio(op):
     nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(em.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0]); return m
 O_GOTA = malla_obj('Gota_lluvia', m_gota, mat_lluvia())
 O_ANILLO = malla_obj('Anillo_lluvia', m_anillo, mat_anillo())
-O_ROCIO = malla_obj('Gota_rocio', m_esfera, mat_rocio(0.40)); O_NIEBLA = malla_obj('Niebla_rocio', m_esfera, mat_niebla())
-for _o in (O_ROCIO, O_NIEBLA):
+def mat_humo():
+    m = bpy.data.materials.new('Humo_motor'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    out = N(nt, 'ShaderNodeOutputMaterial'); v = N(nt, 'ShaderNodeVolumeScatter'); v.inputs['Density'].default_value = 0.55; v.inputs['Color'].default_value = (0.32, 0.32, 0.34, 1); v.inputs['Anisotropy'].default_value = 0.5
+    nt.links.new(v.outputs[0], out.inputs['Volume']); return m
+O_ROCIO = malla_obj('Gota_rocio', m_esfera, mat_rocio(0.40)); O_NIEBLA = malla_obj('Niebla_rocio', m_esfera, mat_niebla()); O_HUMO = malla_obj('Bocanada_humo', m_esfera, mat_humo())
+for _o in (O_ROCIO, O_NIEBLA, O_HUMO):
     for _p in _o.data.polygons: _p.use_smooth = True
 # siguen al auto (sólo posición)
 sigue = bpy.data.objects.new('Sigue_auto', None); sc.collection.objects.link(sigue)
@@ -257,3 +261,179 @@ def objeto_gn(nombre, grupo, sigue_pos=True):
     return o
 objeto_gn('Lluvia', construir_lluvia()); objeto_gn('Salpicaduras', construir_salpicaduras()); objeto_gn('Rocio_ruedas', construir_rocio(), False)
 print('efectos listos')
+
+# ═════════════════════════════ ÁRBOLES Y ROCAS REALES (reemplazan a los conos y esferas de Godot) ═════════════════════════════
+import sys as _sys
+_sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import assets_reales as AR
+rng_a = random.Random(77)
+pos_arboles = [o.location.copy() for o in bpy.data.objects if o.name.startswith('Copa_')]
+pos_rocas = [o.location.copy() for o in bpy.data.objects if o.name.startswith('Roca_')]
+for o in [o for o in bpy.data.objects if o.name.startswith(('Tronco_', 'Copa_', 'Roca_'))]: bpy.data.objects.remove(o, do_unlink=True)
+variantes = [AR.pino(f'Pino_v{i}', al, 100 + i) for i, al in enumerate((10.0, 12.0, 14.5, 9.0))]
+col_arb = bpy.data.collections.new('Arboles'); sc.collection.children.link(col_arb)
+for i, p in enumerate(pos_arboles):
+    o = bpy.data.objects.new(f'Pino_{i}', variantes[i % len(variantes)]); col_arb.objects.link(o)
+    o.location = (p.x, p.y, 0.0); o.rotation_euler = (0, 0, rng_a.uniform(0, 6.28)); s_ = rng_a.uniform(0.8, 1.25); o.scale = (s_, s_, s_)
+R = AR.rocas_reales()
+col_roc = bpy.data.collections.new('Rocas'); sc.collection.children.link(col_roc)
+def poner_roca(p, esc_, rot):
+    o = bpy.data.objects.new('Roca', R[rng_a.randrange(3)].data); col_roc.objects.link(o)
+    o.location = (p.x, p.y, esc_ * 0.12); o.rotation_euler = rot; o.scale = (esc_, esc_ * rng_a.uniform(0.7, 1.1), esc_ * rng_a.uniform(0.6, 1.0))
+    for m in R[0].modifiers:
+        n = o.modifiers.new(m.name, m.type)
+        if m.type == 'SUBSURF': n.levels = 2; n.render_levels = 3; n.subdivision_type = 'SIMPLE'
+        else: n.texture = m.texture; n.strength = m.strength; n.mid_level = m.mid_level
+for p in pos_rocas: poner_roca(p, rng_a.uniform(3.2, 7.0), (rng_a.uniform(-0.3, 0.3), rng_a.uniform(-0.3, 0.3), rng_a.uniform(0, 6.28)))
+Pimp = gb(EV['punto_impacto']); Dd = gb(EV['dir_deslizamiento']); Ld = Vector((-Dd.y, Dd.x, 0))        # dirección del deslizamiento y su izquierda (plano del suelo)
+for k in range(34):                                                                                     # peñascos a lo largo del borde del barranco y entre la ruta y el borde
+    q = Pimp + Dd * (12.0 + rng_a.uniform(-0.8, 1.4)) + Ld * rng_a.uniform(-22, 18)
+    poner_roca(q, rng_a.uniform(2.0, 5.5), (rng_a.uniform(-0.4, 0.4), rng_a.uniform(-0.4, 0.4), rng_a.uniform(0, 6.28)))
+for k in range(26):
+    q = Pimp + Dd * rng_a.uniform(-24, 6) + Ld * rng_a.uniform(6, 20)
+    poner_roca(q, rng_a.uniform(1.4, 3.8), (rng_a.uniform(-0.4, 0.4), rng_a.uniform(-0.4, 0.4), rng_a.uniform(0, 6.28)))
+print('árboles', len(pos_arboles), 'rocas reales listas')
+
+# ═════════════════════════════ ROPA (en lugar del traje espacial), SANGRE EN ROSTRO Y MANOS ═════════════════════════════
+def dueno(o):
+    while o:
+        if o.name in ('gabriel', 'gabriel_fuera', 'elena'): return o.name
+        o = o.parent
+    return None
+for o in bpy.data.objects:
+    if o.type == 'MESH' and dueno(o) and o.name.startswith(('VIVO_', 'BOTA_LUZ_', 'EMBLEMA')):
+        o.hide_render = True; o.hide_viewport = True
+def mat_ropa(nombre, arriba, abajo, gen_z_cadera=0.53):
+    m = bpy.data.materials.new(nombre); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    out = nt.nodes.new('ShaderNodeOutputMaterial'); bs = nt.nodes.new('ShaderNodeBsdfPrincipled'); nt.links.new(bs.outputs[0], out.inputs[0])
+    tc = nt.nodes.new('ShaderNodeTexCoord'); sepx = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Generated'], sepx.inputs[0])
+    corte = nt.nodes.new('ShaderNodeMath'); corte.operation = 'SMOOTH_MAX' if False else 'GREATER_THAN'; corte.inputs[1].default_value = gen_z_cadera; nt.links.new(sepx.outputs['Z'], corte.inputs[0])
+    mix = nt.nodes.new('ShaderNodeMix'); mix.data_type = 'RGBA'; mix.inputs['A'].default_value = abajo; mix.inputs['B'].default_value = arriba; nt.links.new(corte.outputs[0], mix.inputs['Factor'])
+    tej = nt.nodes.new('ShaderNodeTexNoise'); tej.inputs['Scale'].default_value = 900.0; tej.inputs['Detail'].default_value = 2.0; nt.links.new(tc.outputs['Object'], tej.inputs['Vector'])
+    arr = nt.nodes.new('ShaderNodeTexNoise'); arr.inputs['Scale'].default_value = 14.0; arr.inputs['Detail'].default_value = 6.0; nt.links.new(tc.outputs['Object'], arr.inputs['Vector'])
+    sumar = nt.nodes.new('ShaderNodeMath'); sumar.operation = 'ADD'; nt.links.new(tej.outputs['Fac'], sumar.inputs[0]); nt.links.new(arr.outputs['Fac'], sumar.inputs[1])
+    bp = nt.nodes.new('ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.5; bp.inputs['Distance'].default_value = 0.002; nt.links.new(sumar.outputs[0], bp.inputs['Height'])
+    nt.links.new(mix.outputs['Result'], bs.inputs['Base Color']); nt.links.new(bp.outputs[0], bs.inputs['Normal']); bs.inputs['Roughness'].default_value = 0.78
+    return m
+M_ROPA_G = mat_ropa('Ropa_Gabriel', (0.030, 0.034, 0.050, 1), (0.016, 0.016, 0.020, 1)); M_ROPA_E = mat_ropa('Ropa_Elena', (0.22, 0.020, 0.040, 1), (0.018, 0.016, 0.02, 1))
+def mat_zapato():
+    m = bpy.data.materials.new('Zapatos'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    out = nt.nodes.new('ShaderNodeOutputMaterial'); bs = nt.nodes.new('ShaderNodeBsdfPrincipled'); nt.links.new(bs.outputs[0], out.inputs[0])
+    bs.inputs['Base Color'].default_value = (0.012, 0.010, 0.010, 1); bs.inputs['Roughness'].default_value = 0.25
+    return m
+M_ZAP = mat_zapato()
+for o in bpy.data.objects:
+    d = dueno(o)
+    if o.type != 'MESH' or not d: continue
+    if o.name.startswith('TRAJE_MONO'): o.data.materials.clear(); o.data.materials.append(M_ROPA_E if d == 'elena' else M_ROPA_G)
+    elif o.name.startswith(('TRAJE_BOTAS', 'TRAJE_PIE')): o.data.materials.clear(); o.data.materials.append(M_ZAP)
+# sangre en la piel (rostro y manos): aparece con el choque y se oscurece con el tiempo; máscaras por coordenadas generadas del cuerpo
+f_imp = int(EV['impacto_s'] * FPS) + 1
+def sangre_en(material, mascara_fn, factor_max=1.0):
+    nt = material.node_tree; bs = next(n for n in nt.nodes if n.type == 'BSDF_PRINCIPLED')
+    ent = bs.inputs['Base Color']
+    origen = ent.links[0].from_socket if ent.links else None; val = tuple(ent.default_value)
+    tc = nt.nodes.new('ShaderNodeTexCoord'); sx = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Generated'], sx.inputs[0])
+    ru = nt.nodes.new('ShaderNodeTexNoise'); ru.inputs['Scale'].default_value = 22.0; ru.inputs['Detail'].default_value = 7.0; nt.links.new(tc.outputs['Generated'], ru.inputs['Vector'])
+    m_ = mascara_fn(nt, sx, ru)
+    cant = nt.nodes.new('ShaderNodeValue'); cant.outputs[0].default_value = 0.0
+    d_ = cant.outputs[0].driver_add('default_value') if False else None
+    drv = cant.driver_add('outputs[0].default_value') if False else None
+    mul = nt.nodes.new('ShaderNodeMath'); mul.operation = 'MULTIPLY'; nt.links.new(m_, mul.inputs[0]); mul.inputs[1].default_value = 1.0
+    d2 = mul.inputs[1].driver_add('default_value'); d2.driver.type = 'SCRIPTED'; d2.driver.expression = f'min(max((frame - {f_imp}) / 40.0, 0.0), 1.0) * {factor_max}'
+    mx = nt.nodes.new('ShaderNodeMix'); mx.data_type = 'RGBA'; mx.inputs['B'].default_value = (0.20, 0.004, 0.006, 1)
+    if origen: nt.links.new(origen, mx.inputs['A'])
+    else: mx.inputs['A'].default_value = val
+    cl = nt.nodes.new('ShaderNodeClamp'); nt.links.new(mul.outputs[0], cl.inputs['Value']); nt.links.new(cl.outputs[0], mx.inputs['Factor'])
+    nt.links.new(mx.outputs['Result'], ent)
+    # brillo húmedo donde hay sangre
+    rg = nt.nodes.new('ShaderNodeMix'); rg.data_type = 'FLOAT'; rg.inputs['A'].default_value = bs.inputs['Roughness'].default_value; rg.inputs['B'].default_value = 0.08
+    nt.links.new(cl.outputs[0], rg.inputs['Factor']); nt.links.new(rg.outputs['Result'], bs.inputs['Roughness'])
+def mascara_cara(nt, sx, ru):          # frente, sien izquierda y mejilla: tira que baja + goteo irregular
+    z = sx.outputs['Z']
+    zr = nt.nodes.new('ShaderNodeMapRange'); zr.inputs['From Min'].default_value = 0.90; zr.inputs['From Max'].default_value = 0.985; nt.links.new(z, zr.inputs['Value'])
+    xr = nt.nodes.new('ShaderNodeMapRange'); xr.inputs['From Min'].default_value = 0.62; xr.inputs['From Max'].default_value = 0.46; nt.links.new(sx.outputs['X'], xr.inputs['Value'])
+    prod = nt.nodes.new('ShaderNodeMath'); prod.operation = 'MULTIPLY'; nt.links.new(zr.outputs[0], prod.inputs[0]); nt.links.new(xr.outputs[0], prod.inputs[1])
+    mm = nt.nodes.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; nt.links.new(prod.outputs[0], mm.inputs[0]); nt.links.new(ru.outputs['Fac'], mm.inputs[1])
+    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.12; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
+def mascara_manos(nt, sx, ru):         # manos y antebrazos (zona baja a los costados del cuerpo)
+    zr = nt.nodes.new('ShaderNodeMapRange'); zr.inputs['From Min'].default_value = 0.52; zr.inputs['From Max'].default_value = 0.40; nt.links.new(sx.outputs['Z'], zr.inputs['Value'])
+    mm = nt.nodes.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; nt.links.new(zr.outputs[0], mm.inputs[0]); nt.links.new(ru.outputs['Fac'], mm.inputs[1])
+    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.20; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
+for nom, fn in (('EM3D_Skin_Head', mascara_cara), ('EM3D_Skin_Arm', mascara_manos)):
+    m = bpy.data.materials.get(nom)
+    if m and m.use_nodes: sangre_en(m, fn)
+print('ropa y sangre en piel listas')
+
+# ═════════════════════════════ SANGRE EN EL SUELO, HUMO, NIEBLA BAJA ═════════════════════════════
+def mat_sangre_suelo():
+    m = bpy.data.materials.new('Sangre_suelo'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    out = nt.nodes.new('ShaderNodeOutputMaterial'); bs = nt.nodes.new('ShaderNodeBsdfPrincipled'); tr = nt.nodes.new('ShaderNodeBsdfTransparent'); mx = nt.nodes.new('ShaderNodeMixShader')
+    tc = nt.nodes.new('ShaderNodeTexCoord'); ru = nt.nodes.new('ShaderNodeTexNoise'); ru.inputs['Scale'].default_value = 2.8; ru.inputs['Detail'].default_value = 8.0; nt.links.new(tc.outputs['Generated'], ru.inputs['Vector'])
+    gr = nt.nodes.new('ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'
+    mp = nt.nodes.new('ShaderNodeMapping'); mp.inputs['Location'].default_value = (-0.5, -0.5, -0.5); nt.links.new(tc.outputs['Generated'], mp.inputs[0]); nt.links.new(mp.outputs[0], gr.inputs[0])
+    inv = nt.nodes.new('ShaderNodeMath'); inv.operation = 'SUBTRACT'; inv.inputs[0].default_value = 1.0; nt.links.new(gr.outputs['Fac'], inv.inputs[1])
+    mul = nt.nodes.new('ShaderNodeMath'); mul.operation = 'MULTIPLY'; nt.links.new(inv.outputs[0], mul.inputs[0]); nt.links.new(ru.outputs['Fac'], mul.inputs[1])
+    mr = nt.nodes.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 0.05; mr.inputs['From Max'].default_value = 0.24; nt.links.new(mul.outputs[0], mr.inputs['Value'])
+    bs.inputs['Base Color'].default_value = (0.11, 0.0, 0.004, 1); bs.inputs['Roughness'].default_value = 0.04
+    nt.links.new(mr.outputs[0], mx.inputs['Fac']); nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(bs.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0]); return m
+M_SANGRE = mat_sangre_suelo()
+def mancha(nombre, pos_gb, tam, t_visible_s):
+    bpy.ops.mesh.primitive_plane_add(size=tam, location=(pos_gb.x, pos_gb.y, 0.011)); o = bpy.context.active_object; o.name = nombre
+    o.data.materials.append(M_SANGRE); o.rotation_euler = (0, 0, rng_a.uniform(0, 6.28))
+    for c in list(o.users_collection): c.objects.unlink(o)
+    col_fx.objects.link(o)
+    f0 = int(t_visible_s * FPS) + 1
+    o.scale = (0.001, 0.001, 0.001); o.keyframe_insert('scale', frame=max(f0 - 1, 1))
+    o.scale = (1, 1, 1); o.keyframe_insert('scale', frame=f0 + 45)
+# charco bajo la puerta del conductor (donde sale) y rastros por donde camina (gotas más chicas)
+rg = EV['ruta_gabriel']
+primera = rg[0]; mancha('Sangre_puerta', gb((primera['p0'][0], 0, primera['p0'][1])), 2.3, primera['t0'])
+for i, sg in enumerate(rg[1:], 1):
+    if sg['clip'] in ('inj_walk', 'sad_walk'):
+        n = 6
+        for k in range(n):
+            u = (k + 0.6) / n; px = sg['p0'][0] + (sg['p1'][0] - sg['p0'][0]) * u; pz = sg['p0'][1] + (sg['p1'][1] - sg['p0'][1]) * u
+            mancha(f'Gota_sangre_{i}_{k}', gb((px + rng_a.uniform(-0.15, 0.15), 0, pz + rng_a.uniform(-0.15, 0.15))), rng_a.uniform(0.25, 0.55), sg['t0'] + sg['dur'] * u)
+    if sg['clip'] in ('kneel_down', 'fall_fwd'):
+        mancha(f'Sangre_caida_{i}', gb((sg['p0'][0], 0, sg['p0'][1])), 1.6, sg['t0'] + 0.6)
+# humo del motor (volúmenes que suben y se disipan, deterministas por cuadro) y niebla baja alrededor del accidente
+datos_humo = bpy.data.objects.new('Datos_humo', None); sc.collection.objects.link(datos_humo)
+for i in range(TOTAL):
+    t = i / FPS; v = min(max((t - EV['impacto_s']) / 1.5, 0.0), 1.0)
+    datos_humo.scale = (v, 1.0, 1.0); datos_humo.keyframe_insert('scale', frame=i + 1)
+origen_humo = bpy.data.objects.new('Humo_origen', None); sc.collection.objects.link(origen_humo); origen_humo.parent = auto; origen_humo.location = gb((0.1, 0.15, -1.55))
+def construir_humo():
+    g = ng('GN_Humo'); sal = N(g, 'NodeGroupOutput')
+    d = N(g, 'GeometryNodeObjectInfo'); d.inputs['Object'].default_value = datos_humo; inten = sep(g, d.outputs['Scale'])[0]
+    o_ = N(g, 'GeometryNodeObjectInfo'); o_.inputs['Object'].default_value = origen_humo; O = o_.outputs['Location']
+    ml = N(g, 'GeometryNodeMeshLine'); ml.inputs['Count'].default_value = 60; ml.inputs['Start Location'].default_value = (0, 0, 0); ml.inputs['Offset'].default_value = (0, 0, 0)
+    tiempo = N(g, 'GeometryNodeInputSceneTime'); ida = N(g, 'GeometryNodeInputIndex').outputs[0]
+    r1 = rnd(g, 31, ident=ida); r2 = rnd(g, 32, -1.0, 1.0, ident=ida); r3 = rnd(g, 33, -1.0, 1.0, ident=ida); r4 = rnd(g, 34, ident=ida)
+    V = 5.0
+    edad = mat_(g, 'MULTIPLY', mat_(g, 'FRACT', mat_(g, 'ADD', mat_(g, 'DIVIDE', tiempo.outputs['Seconds'], V), r1)), V)
+    pos = vec_(g, 'ADD', O, xyz(g, mat_(g, 'ADD', mat_(g, 'MULTIPLY', edad, 0.6), mat_(g, 'MULTIPLY', r2, mat_(g, 'MULTIPLY', edad, 0.35))), mat_(g, 'MULTIPLY', r3, mat_(g, 'MULTIPLY', edad, 0.3)), mat_(g, 'MULTIPLY', edad, 1.15)))
+    sp = N(g, 'GeometryNodeSetPosition'); g.links.new(ml.outputs['Mesh'], sp.inputs['Geometry']); g.links.new(pos, sp.inputs['Position'])
+    oi = N(g, 'GeometryNodeObjectInfo'); oi.inputs['Object'].default_value = O_HUMO; oi.inputs['As Instance'].default_value = True
+    ins = N(g, 'GeometryNodeInstanceOnPoints'); g.links.new(sp.outputs['Geometry'], ins.inputs['Points']); g.links.new(oi.outputs['Geometry'], ins.inputs['Instance'])
+    crece = mat_(g, 'MULTIPLY', mat_(g, 'ADD', 0.16, mat_(g, 'MULTIPLY', edad, 0.14)), inten)
+    g.links.new(xyz(g, crece, crece, crece), ins.inputs['Scale']); g.links.new(ins.outputs['Instances'], sal.inputs['Geometry'])
+    return g
+objeto_gn('Humo_motor', construir_humo(), False)
+# niebla baja: cubo de volumen alrededor del lugar del accidente (se ve con las balizas y los faros)
+bpy.ops.mesh.primitive_cube_add(size=1.0, location=(Pimp.x + Dd.x * 6, Pimp.y + Dd.y * 6, 1.4)); nb = bpy.context.active_object; nb.name = 'Niebla_baja'; nb.scale = (46, 46, 2.8)
+mv = bpy.data.materials.new('Niebla_volumen'); mv.use_nodes = True; ntv = mv.node_tree; ntv.nodes.clear()
+ov = ntv.nodes.new('ShaderNodeOutputMaterial'); vv = ntv.nodes.new('ShaderNodeVolumePrincipled'); vv.inputs['Density'].default_value = 0.012; vv.inputs['Color'].default_value = (0.7, 0.75, 0.85, 1); vv.inputs['Anisotropy'].default_value = 0.4
+ntv.links.new(vv.outputs[0], ov.inputs['Volume']); nb.data.materials.append(mv)
+for c in list(nb.users_collection): c.objects.unlink(nb)
+col_fx.objects.link(nb); nb.display_type = 'BOUNDS'
+print('suelo, humo y niebla listos')
+
+# luz fría que acompaña a Gabriel cuando sale del auto (y un contraluz azul), para que se lo vea en la noche
+g_fuera = bpy.data.objects['gabriel_fuera']
+for nm, off, en, col, tam in (('Luz_G_frente', (1.6, -3.4, 3.2), 1600.0, (0.75, 0.85, 1.0), 85), ('Luz_G_contra', (-2.4, 3.0, 3.6), 900.0, (0.45, 0.6, 1.0), 80)):
+    l = bpy.data.lights.new(nm, 'SPOT'); l.energy = en; l.color = col; l.spot_size = math.radians(tam); l.spot_blend = 0.8; l.shadow_soft_size = 0.8
+    o = bpy.data.objects.new(nm, l); sc.collection.objects.link(o)
+    cl = o.constraints.new('COPY_LOCATION'); cl.target = g_fuera; cl.use_offset = True
+    o.location = off
+    tr = o.constraints.new('TRACK_TO'); tr.target = g_fuera; tr.track_axis = 'TRACK_NEGATIVE_Z'; tr.up_axis = 'UP_Y'

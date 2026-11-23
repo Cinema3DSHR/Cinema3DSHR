@@ -11,12 +11,15 @@ const T_SKID := 8.6                    # empieza a despistar
 const T_IMPACTO := 10.3
 const T_ROLL_FIN := 13.4
 const T_REPOSO := 14.6
+const T_EYECTA := 10.55                 # Elena sale despedida del auto durante el vuelco
+const T_SALE := 16.0                    # Gabriel sale del auto
+const T_DESMAYO := 44.6
 const CARRIL := -2.0                   # el auto va por el carril derecho (desplazamiento lateral; positivo = izquierda)
 const CHARCOS_S := [66.0, 101.0, 137.0, 172.0]   # metros de ruta donde hay charcos grandes
 const PISO := -0.50                    # piso de la cabina respecto del centro del auto
 const Y0 := 0.75                       # altura del centro del auto sobre el asfalto
 const MEDIO_ANCHO := 4.0
-var DUR := 30.0
+var DUR := 80.0                         # sólo para simular; la duración real sale de la ruta de Gabriel
 var esc: Node3D
 var anim: Animation
 var ap: AnimationPlayer
@@ -27,6 +30,11 @@ var limp_ok: Array
 var limp_da: Array
 var G: Actor3
 var E: Actor3
+var G2: Actor3                         # Gabriel de pie (sale del auto)
+var ELENA_N: Node3D                    # nodo del mundo que lleva a Elena (viaja con el auto hasta ser despedida)
+var elena_p := Vector3.ZERO
+var elena_v := Vector3.ZERO
+var RUTA_G: Array = []                 # recorrido de Gabriel: [t0, t1, clip, pos_ini, pos_fin, yaw_ini, yaw_fin, vel_clip]
 var RG: RigSentado
 var RE: RigSentado
 var cams := {}
@@ -187,7 +195,9 @@ func _pista(n: Node, pos := true, rot := true, sc := false) -> Array:
 
 func _clave(pt: Array, n: Node3D, t: float, glob := false) -> void:
 	if pt[0] >= 0: anim.position_track_insert_key(pt[0], t, n.global_position if glob else n.position)
-	if pt[1] >= 0: anim.rotation_track_insert_key(pt[1], t, n.global_transform.basis.get_rotation_quaternion() if glob else n.transform.basis.get_rotation_quaternion())
+	if pt[1] >= 0:
+		var bq: Basis = n.global_transform.basis if glob else n.transform.basis
+		anim.rotation_track_insert_key(pt[1], t, Quaternion.IDENTITY if bq.get_scale().length() < 1e-5 else bq.orthonormalized().get_rotation_quaternion())
 	if pt[2] >= 0: anim.scale_track_insert_key(pt[2], t, n.scale)
 
 func _montar(prefijo: String, sin_glb: bool) -> void:
@@ -226,10 +236,13 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 	var vol_ok := ok_car.find_child("rul", true, false) as Node3D
 	# personajes dentro del auto (hijos del auto: viajan con él)
 	G = Actor3.new(); G.cargar("gabriel", "res://assets/aiden.glb", "res://assets/aiden_meta.json", carro)
-	E = Actor3.new(); E.cargar("elena", "res://assets/kate.glb", "res://assets/kate_meta.json", carro)
-	for par in [[G, 0.36], [E, -0.36]]:
-		par[0].raiz.position = Vector3(par[1], PISO, 0.20); par[0].raiz.rotation.y = PI
+	ELENA_N = Node3D.new(); ELENA_N.name = "elena_mundo"; esc.add_child(ELENA_N)
+	E = Actor3.new(); E.cargar("elena", "res://assets/kate.glb", "res://assets/kate_meta.json", ELENA_N)
+	G2 = Actor3.new(); G2.cargar("gabriel_fuera", "res://assets/aiden.glb", "res://assets/aiden_meta.json", esc)
+	G.raiz.position = Vector3(0.36, PISO, 0.20); G.raiz.rotation.y = PI
+	E.raiz.position = Vector3(0.0, -0.30, 0.0); E.raiz.rotation.y = PI        # ELENA_N va a la altura de su cadera
 	await process_frame
+	_ruta_gabriel()
 	RG = RigSentado.new(G.sk, G.raiz); RE = RigSentado.new(E.sk, E.raiz)
 	print("rigs ", RG.ok, " ", RE.ok, " impacto en ", P_IMP.snapped(Vector3(0.1, 0.1, 0.1)))
 	# pistas
@@ -237,12 +250,16 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 	var p_rued := {}; for k in ruedas: p_rued[k] = _pista(ruedas[k][0], true, true)
 	var p_limp := []; for pv in limp_ok + limp_da: p_limp.append(_pista(pv, false, true))
 	var p_sk := {}
-	for ac in [G, E]:
+	for ac in [G, E, G2]:
 		var d := {}
 		for h in ac.sk.get_bone_count():
 			var tq := anim.add_track(Animation.TYPE_ROTATION_3D); anim.track_set_path(tq, NodePath("%s:%s" % [esc.get_path_to(ac.sk), ac.sk.get_bone_name(h)])); d[h] = tq
 		var th := anim.add_track(Animation.TYPE_POSITION_3D); anim.track_set_path(th, NodePath("%s:%s" % [esc.get_path_to(ac.sk), ac.sk.get_bone_name(ac.hueso_cadera)])); d["pos"] = th
 		p_sk[ac.id] = d
+	var p_enodo := _pista(ELENA_N, true, true, true); var p_g_sc := _pista(G.raiz, false, false, true); var p_g2 := _pista(G2.raiz, true, true, true)
+	var puerta_n := _puerta_conductor()
+	var p_puerta := _pista(puerta_n, true, true)
+	var puerta_base: Transform3D = da_car.global_transform.affine_inverse() * puerta_n.global_transform
 	var tomas := _tomas()
 	var p_cam := {}
 	for tm in tomas:
@@ -259,11 +276,11 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 		_clave(p_carro, carro, t)
 		# el intacto hasta el impacto, el destruido desde el impacto (se esconde con escala 0)
 		var imp: bool = t >= T_IMPACTO
-		ok_car.scale = Vector3.ZERO if imp else Vector3.ONE; da_car.scale = Vector3.ONE if imp else Vector3.ZERO
+		ok_car.scale = Vector3.ONE * 0.0005 if imp else Vector3.ONE; da_car.scale = Vector3.ONE if imp else Vector3.ONE * 0.0005
 		_clave(p_ok, ok_car, t); _clave(p_da, da_car, t)
 		for k in ruedas:
 			var rodando := 1.0 if t < T_IMPACTO else (1.0 - _suave(T_IMPACTO, T_REPOSO, t))
-			ang[k] += st_vel[g] / 0.33 / FPS * (1.0 if t < T_SKID else (0.4 if t < T_IMPACTO else rodando * 0.6))
+			ang[k] += minf(st_vel[g] / 22.0, 1.0) * 0.26 * (1.0 if t < T_SKID else (0.55 if t < T_IMPACTO else rodando * 0.5))
 			var w: Node3D = ruedas[k][0]; var c: Vector3 = ruedas[k][2]; var Pb: Basis = ruedas[k][3]
 			var rl := Pb.inverse() * Basis(Vector3.RIGHT, -ang[k]) * Pb
 			var base: Transform3D = ruedas[k][1]
@@ -300,7 +317,10 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 			"hands": [{"side": "Left", "wrist": Vector3(0.20, 0.42, 0.26), "fdir": Vector3(0, -0.25, 1).normalized(), "back": Vector3(0, 1, 0), "pole": Vector3(0.5, -0.6, -0.3)},
 					  {"side": "Right", "wrist": Vector3(-0.18, 0.42, 0.28), "fdir": Vector3(0, -0.25, 1).normalized(), "back": Vector3(0, 1, 0), "pole": Vector3(0.5, -0.6, -0.3)}],
 			"feet": [{"side": "Left", "pos": Vector3(0.13, 0.12, 0.55)}, {"side": "Right", "pos": Vector3(-0.13, 0.12, 0.55)}]})
-		for ac in [G, E]:
+		_elena_cuadro(g, t, p_enodo, RE)
+		_puerta_cuadro(t, puerta_n, puerta_base, p_puerta)
+		_gabriel_cuadro(g, t, p_g2, p_g_sc)
+		for ac in [G, E, G2]:
 			var d: Dictionary = p_sk[ac.id]
 			for h in ac.sk.get_bone_count():
 				anim.rotation_track_insert_key(d[h], t, ac.sk.get_bone_pose_rotation(h))
@@ -336,9 +356,9 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 	for tm in tomas:
 		cj.append({"id": tm["id"], "camara": tm["camara"], "inicio_s": tm["t0"], "fin_s": tm["t1"], "frame_inicio": int(tm["t0"] * FPS) + 1, "frame_fin": int(minf(tm["t1"] * FPS, total - 1)) + 1, "lente_mm": 12.0 / tan(deg_to_rad(tm["fov"]) / 2.0)})
 	var js := {"formato": "estudio.previa_godot/1", "produccion": "p022_la_mujer_que_volvio", "escena_id": "accidente", "version": 1, "titulo": "El accidente", "fps": int(FPS), "frames": total, "duracion_s": float(total - 1) / FPS,
-		"resolucion": [540, 960], "animacion": "escena", "actores": [{"id": "gabriel", "nodo": "gabriel", "modelo": "aiden"}, {"id": "elena", "nodo": "elena", "modelo": "kate"}], "tomas": cj,
-		"eventos": {"derrape_s": T_SKID, "impacto_s": T_IMPACTO, "vuelco_fin_s": T_ROLL_FIN, "reposo_s": T_REPOSO, "relampagos_s": [5.1, 11.6, 19.7], "balizas_desde_s": T_REPOSO,
-			"punto_impacto": [P_IMP.x, P_IMP.y, P_IMP.z], "auto_intacto": "AutoIntacto", "auto_destruido": "AutoDestruido", "se_cambia_en_s": T_IMPACTO},
+		"resolucion": [540, 960], "animacion": "escena", "actores": [{"id": "gabriel", "nodo": "gabriel", "modelo": "aiden"}, {"id": "elena", "nodo": "elena", "modelo": "kate"}, {"id": "gabriel_fuera", "nodo": "gabriel_fuera", "modelo": "aiden"}], "tomas": cj,
+		"eventos": {"elena_despedida_s": T_EYECTA, "gabriel_sale_s": T_SALE, "desmayo_s": T_DESMAYO_REAL, "derrape_s": T_SKID, "impacto_s": T_IMPACTO, "vuelco_fin_s": T_ROLL_FIN, "reposo_s": T_REPOSO, "relampagos_s": [5.1, 11.6, 19.7], "balizas_desde_s": T_REPOSO,
+			"punto_impacto": [P_IMP.x, P_IMP.y, P_IMP.z], "dir_deslizamiento": [DIR_SKID.x, DIR_SKID.y, DIR_SKID.z], "ruta_gabriel": RUTA_G.map(func(r): return {"clip": r["clip"], "t0": r["t0"], "dur": r["dur"], "p0": [r["p0"].x, r["p0"].z], "p1": [r["p1"].x, r["p1"].z]}), "auto_intacto": "AutoIntacto", "auto_destruido": "AutoDestruido", "se_cambia_en_s": T_IMPACTO},
 		"charcos": CHARCOS_S.map(func(ss): var pp := centro(ss) + Vector3(-cos(rumbo(ss)), 0, sin(rumbo(ss))) * CARRIL; return {"s": ss, "x": pp.x, "z": pp.z, "yaw": rumbo(ss), "t_paso_s": (ss - 30.0) / V0}),
 		"limpiaparabrisas": {"periodo_s": 1.4, "barrido_rad": 1.65}, "velocidad_ms": V0,
 		"efectos_blender": ["lluvia real", "charcos con reflejos", "agua que levanta el auto al pisar charcos", "gotas en el parabrisas", "niebla", "relámpagos", "barniz negro brillante", "conos volumétricos de los faros", "chispas y vidrios al chocar", "polvo y barro", "humo del motor", "balizas"],
@@ -365,7 +385,10 @@ func _tomas() -> Array:
 		{"id": "t3", "camara": "C3_lateral_curva", "t0": 8.4, "t1": 9.6, "modo": "fija", "pos": [6.0, 1.2, -160.0], "mira_seg": 0.9, "fov": 36.0},
 		{"id": "t4", "camara": "C4_primera_persona", "t0": 9.6, "t1": 11.8, "modo": "pov", "fov": 70.0},
 		{"id": "t5", "camara": "C5_rocas_vuelco", "t0": 11.8, "t1": 15.0, "modo": "fija", "pos": "IMP_LADO", "mira_seg": 0.8, "fov": 38.0},
-		{"id": "t6", "camara": "C6_acercamiento_accidente", "t0": 15.0, "t1": 30.0, "modo": "fija_mov", "pos": "IMP_ACERC0", "pos_fin": "IMP_ACERC1", "mira_seg": 1.0, "fov": 34.0}]
+		{"id": "t6", "camara": "C6_acercamiento_accidente", "t0": 15.0, "t1": 22.0, "modo": "fija_mov", "pos": "IMP_ACERC0", "pos_fin": "IMP_ACERC1", "mira_seg": 1.0, "fov": 34.0},
+		{"id": "t7", "camara": "C7_busqueda_media", "t0": 22.0, "t1": T_DESMAYO_REAL - 16.0, "modo": "sigue_g", "off": [4.2, 1.7, 5.2], "alt": 1.1, "fov": 36.0},
+		{"id": "t8", "camara": "C8_rostro_sangre", "t0": T_DESMAYO_REAL - 16.0, "t1": T_DESMAYO_REAL - 4.5, "modo": "sigue_g", "off": [0.9, 1.6, 1.5], "alt": 1.55, "fov": 30.0},
+		{"id": "t9", "camara": "C9_desmayo", "t0": T_DESMAYO_REAL - 4.5, "t1": DUR, "modo": "sigue_g", "off": [3.4, 0.55, -3.2], "alt": 0.5, "fov": 34.0}]
 
 func _poner_camara(tm: Dictionary, c: Camera3D, g: int, t: float, cp: Dictionary, cm: Dictionary) -> void:
 	var u := clampf((t - tm["t0"]) / maxf(tm["t1"] - tm["t0"], 0.001), 0.0, 1.0); var e := smoothstep(0.0, 1.0, u)
@@ -390,12 +413,135 @@ func _poner_camara(tm: Dictionary, c: Camera3D, g: int, t: float, cp: Dictionary
 			prev = prev.lerp(objetivo, s) if cm.has(key) else objetivo
 			cm[key] = prev
 			c.look_at(prev, Vector3.UP)
+		"sigue_g":
+			var o: Array = tm["off"]
+			var objetivo2: Vector3 = G2.raiz.global_position + Vector3(o[0], o[1], o[2])
+			var k2: String = tm["id"] + "_p"
+			var pp: Vector3 = cm.get(k2, objetivo2)
+			pp = pp.lerp(objetivo2, 0.035) if cm.has(k2) else objetivo2
+			cm[k2] = pp
+			c.global_position = pp
+			var mir: Vector3 = G2.raiz.global_position + Vector3(0, float(tm["alt"]), 0)
+			var kk2: String = tm["id"] + "_m"
+			var mm: Vector3 = cm.get(kk2, mir)
+			mm = mm.lerp(mir, 0.08) if cm.has(kk2) else mir
+			cm[kk2] = mm
+			c.look_at(mm, Vector3.UP)
 		"pov":
 			var cabeza: Vector3 = G.raiz.global_transform * Vector3(0.0, 0.98, 0.24)                     # ojos de Gabriel
 			c.global_position = cabeza
 			var fw: Vector3 = (carro.global_transform.basis * Vector3(0, 0.03, -1)).normalized()
 			var arriba: Vector3 = carro.global_transform.basis * Vector3.UP
 			c.look_at(cabeza + fw, arriba)
+
+# ───────── Elena despedida, puerta, Gabriel que sale y busca ─────────
+func _yaw_a(a: Vector3, b: Vector3) -> float:
+	return atan2(b.x - a.x, b.z - a.z)
+
+func _ruta_gabriel() -> void:
+	var W: Vector3 = st_pos[st_pos.size() - 1]; W.y = 0.0
+	var cb := Basis.from_euler(Vector3(st_pit[st_pit.size() - 1], st_yaw[st_yaw.size() - 1], st_rol[st_rol.size() - 1]), EULER_ORDER_YXZ)
+	var der: Vector3 = (cb * Vector3.RIGHT); der.y = 0.0; der = der.normalized()
+	var puerta := W + der * 1.35
+	var d := DIR_SKID; var l := d.rotated(Vector3.UP, PI * 0.5)
+	var A := P_IMP + d * 6.6 + l * 4.4; var B := P_IMP + d * 10.4 + l * 3.4; var C := P_IMP + d * 9.4 + l * -2.8; var D := P_IMP + d * 7.8 + l * -0.6
+	# [clip, modo, duración (s; 0 = según distancia), destino de la caminata, hacia dónde mira]
+	var seq := [["exit_car", "clip", 175.0 / FPS, puerta, A], ["look_around2", "quieto", 3.4, null, A], ["inj_walk", "ruta", 0.0, A, null], ["calling", "quieto", 2.7, null, B], ["nerv_look", "quieto", 2.6, null, B],
+		["sad_walk", "ruta", 0.0, B, null], ["look_down", "quieto", 3.6, null, B], ["sad_walk", "ruta", 0.0, C, null], ["calling", "quieto", 2.7, null, C], ["inj_walk", "ruta", 0.0, D, null],
+		["dizzy", "quieto", 2.4, null, D], ["kneel_down", "quieto", 84.0 / FPS, null, D], ["fall_fwd", "quieto", 78.0 / FPS, null, D]]
+	RUTA_G = []
+	var t := T_SALE; var pos := puerta
+	for sg in seq:
+		var modo: String = sg[1]; var dur: float = sg[2]
+		var p1 := pos; var yaw := _yaw_a(pos, sg[4]) if sg[4] != null else _yaw_cur
+		if modo == "ruta":
+			p1 = sg[3]; yaw = _yaw_a(pos, p1); dur = maxf(pos.distance_to(p1) / 0.85, 1.0)
+		elif modo == "clip":
+			p1 = pos + Basis(Vector3.UP, yaw) * Vector3(0.0, 0.0, 1.9)
+		if sg[4] != null and modo == "quieto":
+			yaw = _yaw_a(pos, sg[4]) if pos.distance_to(sg[4]) > 0.5 else _yaw_cur
+		_yaw_cur = yaw
+		RUTA_G.append({"clip": sg[0], "modo": modo, "t0": t, "dur": dur, "p0": pos, "p1": p1, "yaw0": yaw, "obj": sg[4]})
+		t += dur; pos = p1
+	T_DESMAYO_REAL = RUTA_G[RUTA_G.size() - 1]["t0"]
+	DUR = t + 3.2
+	total = int(ceil(DUR * FPS)) + 1
+	anim.length = float(total - 1) / FPS
+
+func _puerta_conductor() -> Node3D:
+	for nm in ["dver L", "Dver R"]:
+		var n := da_car.find_child(nm, true, false) as MeshInstance3D
+		var c := (da_car.global_transform.affine_inverse() * (n.global_transform * n.get_aabb().get_center())).x
+		if c > 0.0: return n
+	return da_car.find_child("Dver R", true, false) as Node3D
+
+func _puerta_cuadro(t: float, n: Node3D, base: Transform3D, pt: Array) -> void:
+	var ang := deg_to_rad(68.0) * _suave(T_SALE - 1.2, T_SALE - 0.2, t)
+	var pivote := Vector3(0.76, 0.0, -0.60)
+	var m := Transform3D(Basis.IDENTITY, pivote) * Transform3D(Basis(Vector3.UP, ang), Vector3.ZERO) * Transform3D(Basis.IDENTITY, -pivote)
+	n.global_transform = da_car.global_transform * m * base
+	_clave(pt, n, t)
+
+func _elena_cuadro(g: int, t: float, pt: Array, rig: RigSentado) -> void:
+	if t < T_EYECTA:
+		ELENA_N.global_transform = carro.global_transform * Transform3D(Basis.IDENTITY, Vector3(-0.36, PISO + 0.30, 0.20))
+		ELENA_N.scale = Vector3.ONE
+	else:
+		if t < T_EYECTA + 1.0 / FPS:
+			elena_p = ELENA_N.global_position
+			elena_v = DIR_SKID * 12.5 + Vector3(0, 3.6, 0) + DIR_SKID.rotated(Vector3.UP, PI * 0.5) * 1.6
+		elena_v.y -= 9.8 / FPS
+		elena_p += elena_v / FPS
+		var d_ref: float = (elena_p - P_IMP).dot(DIR_SKID)
+		if elena_p.y < 0.35 and d_ref < 12.6 and elena_v.y < 0.0:
+			elena_p.y = 0.35; elena_v.y *= -0.22; elena_v.x *= 0.86; elena_v.z *= 0.86
+		var tr := t - T_EYECTA
+		var giro := Basis.from_euler(Vector3(2.4 * tr, 0.9 * tr, 1.5 * tr))
+		if E.clips.has("fly_back"):
+			E.poner_pose(E.pose_clip("fly_back", int(tr * FPS), false))
+		ELENA_N.global_transform = Transform3D(giro, elena_p)
+		ELENA_N.scale = Vector3.ONE if elena_p.y > -26.0 else Vector3.ONE * 0.0005
+	_clave(pt, ELENA_N, t)
+
+func _gabriel_cuadro(g: int, t: float, pt: Array, pt_sc: Array) -> void:
+	var fuera := t >= T_SALE
+	G.raiz.scale = Vector3.ONE * 0.0005 if fuera else Vector3.ONE
+	G2.raiz.scale = Vector3.ONE if fuera else Vector3.ONE * 0.0005
+	_clave(pt_sc, G.raiz, t)
+	if not fuera:
+		G2.poner_pose(G2.pose_clip("idle", 0, true))
+		G2.raiz.position = Vector3(0, -5.0, 0); _clave(pt, G2.raiz, t); return
+	var sg: Dictionary = RUTA_G[RUTA_G.size() - 1]
+	for s in RUTA_G:
+		if t < float(s["t0"]) + float(s["dur"]):
+			sg = s; break
+	var k := int((t - float(sg["t0"])) * FPS)
+	var clip: String = sg["clip"]
+	var rep := (clip in ["inj_walk", "sad_walk", "look_around2", "nerv_look", "dizzy"])
+	var pose := G2.pose_clip(clip, int(k * (0.8 if clip == "inj_walk" else 1.0)), rep)
+	# fundido de 9 cuadros desde la pose anterior
+	var u := clampf((t - float(sg["t0"])) / 0.30, 0.0, 1.0)
+	if _pose_ant.size() > 0 and u < 1.0:
+		pose = Actor3.mezcla(_pose_ant, pose, smoothstep(0.0, 1.0, u))
+	G2.poner_pose(pose); _pose_ant = pose
+	var uu := clampf((t - float(sg["t0"])) / maxf(float(sg["dur"]), 0.001), 0.0, 1.0)
+	var pos: Vector3
+	var yaw: float = float(sg["yaw0"])
+	if sg["modo"] == "clip":
+		var rc := G2.raiz_clip("exit_car", mini(k, 174))
+		pos = (sg["p0"] as Vector3) + Basis(Vector3.UP, yaw) * Vector3(rc.x, 0.0, rc.y)
+	elif sg["modo"] == "ruta":
+		pos = (sg["p0"] as Vector3).lerp(sg["p1"], uu)
+	else:
+		pos = sg["p0"]
+	_yaw_cur = lerp_angle(_yaw_cur, yaw, 0.10) if t > T_SALE + 0.2 else yaw
+	G2.raiz.position = Vector3(pos.x, 0.0, pos.z)
+	G2.raiz.rotation.y = _yaw_cur
+	_clave(pt, G2.raiz, t)
+
+var _pose_ant: Dictionary = {}
+var _yaw_cur := 0.0
+var T_DESMAYO_REAL := 40.0
 
 func _initialize() -> void:
 	var a := OS.get_cmdline_user_args()
