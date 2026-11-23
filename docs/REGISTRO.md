@@ -995,3 +995,6 @@ Verificaciones previas al render: cámaras sin picos de aceleración (2.ª difer
 - Error mío: el primer render (p020, 960×540 horizontal) ignoró que la serie es 9:16 (540×960; `produccion.json` de p011 ya lo decía). El dueño publica en Shorts/Reels/TikTok.
 - Se reutilizó todo menos las cámaras: reencuadre vertical (`REENCUADRE` en `storyboard_e03.py`: 8 tomas), GLB nuevos desde Godot a 540×960, BLEND nuevo, producción `p021_a_la_deriva_cap3` v001 (SHA-256 `6d1f18a861d249c075ead8230e33c5e38ffe6ae90e6f283258fb69bcd63f3838`), render 60 trabajos OK (5.324 cuadros) y el mismo audio (`audio_cap3.py`: ambiente nave_interior, música y efectos de los cap. 1 y 2, pasos, alerta, voces). Sin gasto de ElevenLabs.
 - El render horizontal p020 queda en su Release pero no sirve para publicar.
+
+## 23/11/2026 — Limpieza de audios viejos
+A pedido del dueño (videos ya en YouTube): `git rm` de 269 audios (recuperables en `2e07f26`), catálogo de audio podado a 10 entradas, conservados 6 audios de ambiente/música/efectos del cap. 1–2 y el `ledger`. Siguiente: borrar medios de las Releases con `borrar_medios.yml`.

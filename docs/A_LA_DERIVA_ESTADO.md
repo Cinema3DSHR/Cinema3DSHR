@@ -48,3 +48,9 @@ El dueño no revisó en su visor HTML la versión con luces/efectos de Blender a
 ## 6. Cómo trabaja el dueño (aprendido en esta tanda)
 Godot arma el escenario único y los personajes; Blender sólo corrige modelos y agrega luces/efectos. Revisa con GLB + JSON en su visor. Quiere vertical, el mismo
 sonido de los capítulos anteriores, personajes «normales» (no la EVA IA) para los paquetes de ropa, y que se le avise antes si algo obliga a rehacer.
+
+## 7. Limpieza del 23/11/2026 (pedido del dueño: los videos ya están en YouTube)
+- Se borraron del árbol de trabajo 269 audios viejos (`audio/biblioteca/` salvo 6 archivos que reutiliza `audio_cap3.py`, más `producciones/*/audio`) y sus entradas de `catalogo/audio.json` (178 → 10). `audio/ledger.jsonl` se conserva.
+- **Para recuperar cualquier audio:** `git show 2e07f26:<ruta>` (último commit con todo). Las voces se pueden regenerar con ElevenLabs (cuesta créditos).
+- Se conservan escenas, recetas, fuentes de Godot/Blender, BLEND por LFS y herramientas para capítulos futuros.
+- Videos/audios de las Releases: se borran con el flujo `borrar_medios.yml` (primero simulacro); los BLEND, GLB y manifiestos no se tocan.

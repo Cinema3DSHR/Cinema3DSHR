@@ -1,0 +1,34 @@
+name: Borrar medios de Releases
+on:
+  workflow_dispatch:
+    inputs:
+      ejecutar:
+        description: "true = borrar de verdad; false = sólo listar (simulacro)"
+        default: "false"
+permissions:
+  contents: write
+jobs:
+  limpiar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Listar / borrar videos y audios de las Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EJECUTAR: ${{ inputs.ejecutar }}
+        run: |
+          set -u
+          gh api --paginate "repos/${{ github.repository }}/releases?per_page=100" \
+            --jq '.[] | .tag_name as $t | .assets[] | [$t, .id, .name, .size] | @tsv' > activos.tsv
+          echo "Total de activos: $(wc -l < activos.tsv)"
+          grep -Ei '\.(mp4|mov|webm|mkv|ogv|m4a|mp3|wav|ogg)\s' activos.tsv > borrar.tsv || true
+          # nunca tocar: .blend, .glb, json, escenarios, catalogo
+          grep -Ev '^(escenarios|catalogo)' borrar.tsv > borrar2.tsv || true
+          echo "== A BORRAR =="; cat borrar2.tsv
+          awk -F'\t' '{s+=$4} END {printf "Total: %.1f MB en %d archivos\n", s/1048576, NR}' borrar2.tsv
+          if [ "$EJECUTAR" = "true" ]; then
+            while IFS=$'\t' read -r tag id name size; do
+              gh api -X DELETE "repos/${{ github.repository }}/releases/assets/$id" && echo "borrado $tag/$name"
+            done < borrar2.tsv
+          else
+            echo "SIMULACRO: no se borró nada."
+          fi
