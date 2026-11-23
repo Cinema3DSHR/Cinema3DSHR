@@ -52,10 +52,18 @@ def mat_simple(nombre, col, rug=0.6, met=0.0, sheen=0.0, sss=0.0):
     return m
 
 def mat_petalo(nombre, centro, borde):
+    """Pétalo con degradado centro→borde por UV.y, como imagen (así viaja en el GLB; un degradado procedural se exportaba blanco)."""
+    from PIL import Image
+    n = 64
+    im = Image.new('RGB', (4, n))
+    for j in range(n):
+        f = j / (n - 1)
+        c = tuple(int(255 * (((centro[i] * (1 - f) + borde[i] * f)) ** (1 / 2.2))) for i in range(3))
+        for i in range(4): im.putpixel((i, j), c)
+    ruta = os.path.join(TEX, nombre + '_%d%d%d.png' % tuple(int(x * 9) for x in borde)); im.save(ruta)
     m = bpy.data.materials.new(nombre); m.use_nodes = True; nt = m.node_tree; p = nt.nodes['Principled BSDF']
-    ng = nt.nodes.new('ShaderNodeTexCoord'); gr = nt.nodes.new('ShaderNodeSeparateXYZ'); ramp = nt.nodes.new('ShaderNodeValToRGB')
-    ramp.color_ramp.elements[0].color = (*centro, 1); ramp.color_ramp.elements[1].color = (*borde, 1)
-    nt.links.new(ng.outputs['UV'], gr.inputs[0]); nt.links.new(gr.outputs['Y'], ramp.inputs['Fac']); nt.links.new(ramp.outputs['Color'], p.inputs['Base Color'])
+    tx = nt.nodes.new('ShaderNodeTexImage'); tx.image = bpy.data.images.load(ruta); tx.interpolation = 'Linear'; tx.extension = 'EXTEND'
+    nt.links.new(tx.outputs['Color'], p.inputs['Base Color'])
     p.inputs['Roughness'].default_value = 0.5
     for k, v in (('Sheen Weight', 0.8), ('Subsurface Weight', 0.3)):
         try: p.inputs[k].default_value = v
@@ -343,6 +351,28 @@ def planta_hojas_anchas():
         hoja_bm(bm, rng.uniform(0.35, 0.5), rng.uniform(0.15, 0.2), 0.45, 0.25, 0, 14, 6, M=Mx, ondul=0.6, seed=f)
     return objeto_desde(bm, 'planta_hojas_anchas', [mh, mv, mm, mt])
 
+
+def planta_rosa_unica(nombre='rosa_unica', col_c=(0.85,0.04,0.06), col_b=(0.35,0.0,0.02), seed=5, largo=0.42):
+    """Una sola rosa real con tallo, espinas y hojas (para tenerla en la mano). Origen en la base del tallo, el tallo sube por +Z."""
+    limpiar()
+    t1 = tex_hoja('rosa_hoja', (46, 128, 44), (26, 84, 30), (140, 200, 110), seed=seed)
+    mh = mat_hoja('hoja_rosa', t1); mv = mat_simple('tallo', (0.18, 0.32, 0.12), 0.6)
+    mp = mat_petalo('petalo', col_b, col_c); ms = mat_simple('sepalo', (0.18, 0.4, 0.15), 0.5)
+    bm = nuevo(); rng = random.Random(seed)
+    base = Vector((0, 0, 0)); punta = Vector((0.0, 0.03, largo))
+    pts = curva(base, Vector((0.0, -0.012, largo * 0.55)), punta, 14)
+    tallo_bm(bm, pts, 0.0048, 0.0036, 1, 6)
+    for k in range(2, 12, 2):
+        p = pts[k]; d = (pts[k + 1] - pts[k - 1]).normalized(); nx = d.cross(Vector((0, 0, 1))).normalized() if abs(d.z) < 0.95 else Vector((1, 0, 0))
+        tallo_bm(bm, [p, p + nx * 0.011 + d * 0.004], 0.0022, 0.0004, 1, 4)
+    for k, az0 in ((4, 0.4), (8, 3.5)):
+        p = pts[k]
+        for s, (da, ln) in enumerate(((0, 0.07), (-1.0, 0.055), (1.0, 0.055))):
+            Mx = Matrix.Translation(p) @ Matrix.Rotation(az0 + da, 4, 'Z') @ Matrix.Translation((0, 0.008, 0)) @ Matrix.Rotation(math.radians(64), 4, 'X')
+            hoja_bm(bm, ln, ln * 0.5, 0.35, 0.25, 0, 10, 4, M=Mx, ondul=0.4, seed=seed + k + s)
+    flor_rosa_bm(bm, Vector((0, 0, 0.02)), Matrix.Translation(punta) @ Matrix.Rotation(0.6, 4, 'Z'), 3, 2, 1.1, seed)
+    return objeto_desde(bm, nombre, [mh, mv, ms, mp])
+
 if __name__ == '__main__':
     quien = os.environ.get('QUE', 'rosa_roja').split(',')
     if 'rosa_roja' in quien: o = planta_rosal('rosal_rojo', (0.35, 0.0, 0.02), (0.85, 0.04, 0.06), 3, 5); exportar_planta(o, 'rosal_rojo', 0.8)
@@ -353,3 +383,5 @@ if __name__ == '__main__':
     if 'helecho' in quien: o = planta_helecho(); exportar_planta(o, 'helecho', 0.7)
     if 'enredadera' in quien: o = planta_enredadera(); exportar_planta(o, 'enredadera', 0.3)
     if 'anchas' in quien: o = planta_hojas_anchas(); exportar_planta(o, 'planta_hojas_anchas', 1.0)
+    if 'rosa_unica' in quien:
+        o = planta_rosa_unica(); exportar(o, 'rosa_unica')

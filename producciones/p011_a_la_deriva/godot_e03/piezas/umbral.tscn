@@ -10,9 +10,9 @@ uv1_scale = Vector3(5, 1, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_tb5hc"]
 size = Vector3(1.5, 0.024, 0.4)
 
-[node name="umbral" type="Node3D" unique_id=519347942]
+[node name="umbral" type="Node3D" unique_id=1200095028]
 
-[node name="Franja" type="MeshInstance3D" parent="." unique_id=1083126509]
+[node name="Franja" type="MeshInstance3D" parent="." unique_id=1258615083]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.012, 0)
 material_override = SubResource("StandardMaterial3D_v4r51")
 mesh = SubResource("BoxMesh_tb5hc")

@@ -41,29 +41,29 @@ roughness = 0.4
 [sub_resource type="BoxMesh" id="BoxMesh_cjhkf"]
 size = Vector3(0.1, 0.08, 0.7)
 
-[node name="jardinera" type="Node3D" unique_id=1601115062]
+[node name="jardinera" type="Node3D" unique_id=1738352287]
 
-[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=804562927]
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=452714689]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 material_override = SubResource("StandardMaterial3D_6p1hx")
 mesh = SubResource("BoxMesh_eu33c")
 
-[node name="Sustrato" type="MeshInstance3D" parent="." unique_id=1504295722]
+[node name="Sustrato" type="MeshInstance3D" parent="." unique_id=696731829]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.61, 0)
 material_override = SubResource("StandardMaterial3D_pefw5")
 mesh = SubResource("BoxMesh_armry")
 
-[node name="LuzBorde" type="MeshInstance3D" parent="." unique_id=840972639]
+[node name="LuzBorde" type="MeshInstance3D" parent="." unique_id=2103647338]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, -0.405)
 material_override = SubResource("StandardMaterial3D_q64jt")
 mesh = SubResource("BoxMesh_hv01k")
 
-[node name="Pata" type="MeshInstance3D" parent="." unique_id=1626067991]
+[node name="Pata" type="MeshInstance3D" parent="." unique_id=252661017]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.04, 0)
 material_override = SubResource("StandardMaterial3D_nrjis")
 mesh = SubResource("BoxMesh_q723j")
 
-[node name="@MeshInstance3D@17" type="MeshInstance3D" parent="." unique_id=34984858]
+[node name="@MeshInstance3D@17" type="MeshInstance3D" parent="." unique_id=1113022635]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.04, 0)
 material_override = SubResource("StandardMaterial3D_xn6sd")
 mesh = SubResource("BoxMesh_cjhkf")

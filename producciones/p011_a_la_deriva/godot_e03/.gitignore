@@ -4,3 +4,5 @@ assets/fondo/
 assets/plantas/
 *.glb
 *.import
+assets/personajes/
+data/voz/

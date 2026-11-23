@@ -973,3 +973,9 @@ Verificaciones previas al render: cámaras sin picos de aceleración (2.ª difer
 - Nave única en Godot (`producciones/p011_a_la_deriva/godot_e03`): 33 piezas, verificador 230 piezas / 0 problemas (nada flotando ni al revés).
 - Plantas modeladas en Blender (`herramientas/plantas/plantas.py`: ficus, helecho, enredadera, hojas anchas, rosales) con viento por morph targets. Causa de las hojas blancas en Godot: Blender 5.3 exportaba el JPEG de la hoja en un formato que Godot no decodifica; se exporta ahora con `export_image_format='AUTO'` (PNG). Los GLB de plantas no van a Git (regla 5): se regeneran con `QUE=rosa_roja,rosa_blanca,rosa_amarilla,ficus,helecho,enredadera,anchas /opt/tools/blendenv/bin/python plantas.py -- <salida>`.
 - Pendiente de revisión del dueño en su visor: GLB de la nave; luego personajes, manos con objetos, cámaras y audio.
+
+## 23/11/2026 · Cap. 3 — motor de montaje en Godot (en curso)
+- Personajes (`herramientas/personajes_c3/`): `ensamblar.py` (FBX CC4 → colores → clips de Mixamo retargeteados con movimiento de raíz extraído → GLB), `traje2.py` (traje «primera piel» + botas con pesos al esqueleto; pies con envolvente convexa). Los GLB no van al repo.
+- Godot (`godot_e03/tools/`): `actor.gd`, `cara.gd` (labios por letra de la voz real, mandíbula, parpadeo, expresiones, mirada), `montaje.gd` (horneado a 30 cuadros/s, objetos en la mano con cierre de dedos, cámaras suaves, GLB + JSON para el visor), `data/storyboard_e03.json` generado por `herramientas/storyboard_e03.py`.
+- Voces del cap. 3 generadas (33 líneas, 2.240 créditos, 137 s): `audio_e03/voces.json`.
+- Rosa real de Blender (`plantas.py`: `rosa_unica`) y pétalos con degradado como imagen (antes salían blancos). Estado: escena 1 montada y en revisión; faltan escenas 2–5.

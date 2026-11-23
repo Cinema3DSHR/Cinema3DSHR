@@ -17,13 +17,13 @@ roughness = 0.4
 [sub_resource type="BoxMesh" id="BoxMesh_ogj1q"]
 size = Vector3(1.5, 0.02, 0.55)
 
-[node name="luminaria_techo" type="Node3D" unique_id=2115648917]
+[node name="luminaria_techo" type="Node3D" unique_id=466417858]
 
-[node name="Panel" type="MeshInstance3D" parent="." unique_id=1262127505]
+[node name="Panel" type="MeshInstance3D" parent="." unique_id=277405907]
 material_override = SubResource("StandardMaterial3D_2cj5g")
 mesh = SubResource("BoxMesh_0rifu")
 
-[node name="Marco" type="MeshInstance3D" parent="." unique_id=1666539015]
+[node name="Marco" type="MeshInstance3D" parent="." unique_id=1937556993]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
 material_override = SubResource("StandardMaterial3D_kr6c7")
 mesh = SubResource("BoxMesh_ogj1q")

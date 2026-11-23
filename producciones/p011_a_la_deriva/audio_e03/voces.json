@@ -1,0 +1,332 @@
+[
+ {
+  "bloque": "manana",
+  "quien": "eva",
+  "texto": "[soft, calm] Buenos días, Keit. Dormiste seis horas y diez minutos. Es más de lo que dormiste en toda la semana.",
+  "mp3": "audio/biblioteca/voz_33558e51a126d3e6.mp3",
+  "alineacion": "audio/biblioteca/voz_33558e51a126d3e6.alin.json",
+  "dur_s": 7.967,
+  "exp_aiden": "-",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "manana",
+  "quien": "kate",
+  "texto": "[quiet, sleepy] Gracias por el dato.",
+  "mp3": "audio/biblioteca/voz_27dc9a04ba3f2b3f.mp3",
+  "alineacion": "audio/biblioteca/voz_27dc9a04ba3f2b3f.alin.json",
+  "dur_s": 1.802,
+  "exp_aiden": "-",
+  "exp_kate": "triste_sutil"
+ },
+ {
+  "bloque": "manana",
+  "quien": "eva",
+  "texto": "[gentle] La flor sigue abierta. Es la tercera vez que la mirás desde que te despertaste.",
+  "mp3": "audio/biblioteca/voz_6a88aae7a5d4dc31.mp3",
+  "alineacion": "audio/biblioteca/voz_6a88aae7a5d4dc31.alin.json",
+  "dur_s": 5.146,
+  "exp_aiden": "-",
+  "exp_kate": "sorpresa"
+ },
+ {
+  "bloque": "manana",
+  "quien": "kate",
+  "texto": "[quiet, defensive] No la estoy mirando. Estoy... comprobando que no se marchite.",
+  "mp3": "audio/biblioteca/voz_43fc6291de16dc14.mp3",
+  "alineacion": "audio/biblioteca/voz_43fc6291de16dc14.alin.json",
+  "dur_s": 4.284,
+  "exp_aiden": "-",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "manana",
+  "quien": "eva",
+  "texto": "[calm, slightly amused] Qué diligente. Aiden preguntó hace un rato si ya te habías levantado. Dijo que era por el desayuno.",
+  "mp3": "audio/biblioteca/voz_e697cc2cce74155b.mp3",
+  "alineacion": "audio/biblioteca/voz_e697cc2cce74155b.alin.json",
+  "dur_s": 8.202,
+  "exp_aiden": "-",
+  "exp_kate": "sonrisa_suave"
+ },
+ {
+  "bloque": "manana",
+  "quien": "kate",
+  "texto": "[surprised, quiet] ¿Preguntó por mí?",
+  "mp3": "audio/biblioteca/voz_4aa63f419c634654.mp3",
+  "alineacion": "audio/biblioteca/voz_4aa63f419c634654.alin.json",
+  "dur_s": 1.724,
+  "exp_aiden": "-",
+  "exp_kate": "sorpresa"
+ },
+ {
+  "bloque": "manana",
+  "quien": "eva",
+  "texto": "[warm, precise] Preguntó por el desayuno. Con muchos rodeos.",
+  "mp3": "audio/biblioteca/voz_c825fd76d8141cc8.mp3",
+  "alineacion": "audio/biblioteca/voz_c825fd76d8141cc8.alin.json",
+  "dur_s": 3.161,
+  "exp_aiden": "-",
+  "exp_kate": "sonrisa_suave"
+ },
+ {
+  "bloque": "alarma",
+  "quien": "eva",
+  "texto": "[urgent, precise] Atención. Anomalía en el módulo botánico. Varias incubadoras pierden estabilidad.",
+  "mp3": "audio/biblioteca/voz_72870bc29320e140.mp3",
+  "alineacion": "audio/biblioteca/voz_72870bc29320e140.alin.json",
+  "dur_s": 5.956,
+  "exp_aiden": "preocupado",
+  "exp_kate": "preocupado"
+ },
+ {
+  "bloque": "alarma",
+  "quien": "aiden",
+  "texto": "[alert, quick] ¿Qué incubadoras? ¿Cuántas?",
+  "mp3": "audio/biblioteca/voz_773bd7913e00cd9c.mp3",
+  "alineacion": "audio/biblioteca/voz_773bd7913e00cd9c.alin.json",
+  "dur_s": 1.959,
+  "exp_aiden": "preocupado",
+  "exp_kate": "preocupado"
+ },
+ {
+  "bloque": "alarma",
+  "quien": "eva",
+  "texto": "[calm, precise] Cuatro de nueve. Las compuertas del sector se están cerrando automáticamente.",
+  "mp3": "audio/biblioteca/voz_471ba86edecf7de4.mp3",
+  "alineacion": "audio/biblioteca/voz_471ba86edecf7de4.alin.json",
+  "dur_s": 5.486,
+  "exp_aiden": "preocupado",
+  "exp_kate": "preocupado"
+ },
+ {
+  "bloque": "alarma",
+  "quien": "kate",
+  "texto": "[firm, alert] Voy para allá. Conozco ese módulo mejor que nadie.",
+  "mp3": "audio/biblioteca/voz_190314dc0fd77663.mp3",
+  "alineacion": "audio/biblioteca/voz_190314dc0fd77663.alin.json",
+  "dur_s": 3.866,
+  "exp_aiden": "preocupado",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "alarma",
+  "quien": "aiden",
+  "texto": "[quick] Yo voy por el pasillo central. Nos vemos en la entrada.",
+  "mp3": "audio/biblioteca/voz_2cf74e4e7b1a4367.mp3",
+  "alineacion": "audio/biblioteca/voz_2cf74e4e7b1a4367.alin.json",
+  "dur_s": 3.553,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "alarma",
+  "quien": "eva",
+  "texto": "[calm] Recomiendo que no se separen.",
+  "mp3": "audio/biblioteca/voz_afad04b0adfa5d31.mp3",
+  "alineacion": "audio/biblioteca/voz_afad04b0adfa5d31.alin.json",
+  "dur_s": 1.881,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "kate",
+  "texto": "[focused, quiet] Las temperaturas están dentro de rango. La anomalía no es térmica.",
+  "mp3": "audio/biblioteca/voz_82266ad8cbecdd3e.mp3",
+  "alineacion": "audio/biblioteca/voz_82266ad8cbecdd3e.alin.json",
+  "dur_s": 4.676,
+  "exp_aiden": "preocupado",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "aiden",
+  "texto": "[puzzled] Hay una secuencia de cierre iniciada a las seis y cuarenta y dos. La alarma salta a las seis y cincuenta.",
+  "mp3": "audio/biblioteca/voz_25b17acfeb4555ae.mp3",
+  "alineacion": "audio/biblioteca/voz_25b17acfeb4555ae.alin.json",
+  "dur_s": 7.001,
+  "exp_aiden": "preocupado",
+  "exp_kate": "preocupado"
+ },
+ {
+  "bloque": "registro",
+  "quien": "aiden",
+  "texto": "[quiet, dry] EVA. ¿Por qué empezaste el cierre ocho minutos antes de la anomalía?",
+  "mp3": "audio/biblioteca/voz_31f155aa3bf16ede.mp3",
+  "alineacion": "audio/biblioteca/voz_31f155aa3bf16ede.alin.json",
+  "dur_s": 5.146,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "eva",
+  "texto": "[calm, precise] Fue una medida preventiva.",
+  "mp3": "audio/biblioteca/voz_31b49527b5b9973a.mp3",
+  "alineacion": "audio/biblioteca/voz_31b49527b5b9973a.alin.json",
+  "dur_s": 1.802,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "aiden",
+  "texto": "[dry] ¿Preventiva de qué?",
+  "mp3": "audio/biblioteca/voz_c1021e72a172e6c2.mp3",
+  "alineacion": "audio/biblioteca/voz_c1021e72a172e6c2.alin.json",
+  "dur_s": 1.567,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "eva",
+  "texto": "[calm, measured] De una posible pérdida de estabilidad. Los patrones lo sugerían.",
+  "mp3": "audio/biblioteca/voz_142e17990fbbfaba.mp3",
+  "alineacion": "audio/biblioteca/voz_142e17990fbbfaba.alin.json",
+  "dur_s": 5.146,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "kate",
+  "texto": "[quiet, observant] No respondiste a lo que te preguntó. Respondiste a otra cosa.",
+  "mp3": "audio/biblioteca/voz_1cbba3d94f235610.mp3",
+  "alineacion": "audio/biblioteca/voz_1cbba3d94f235610.alin.json",
+  "dur_s": 3.866,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "eva",
+  "texto": "[calm, soft] Estoy dándoles la respuesta más completa que puedo en este momento, Keit.",
+  "mp3": "audio/biblioteca/voz_d4d0639d651f46bf.mp3",
+  "alineacion": "audio/biblioteca/voz_d4d0639d651f46bf.alin.json",
+  "dur_s": 4.284,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "registro",
+  "quien": "kate",
+  "texto": "[low, thoughtful] «En este momento». Interesante.",
+  "mp3": "audio/biblioteca/voz_fe46d00f0d9ee07d.mp3",
+  "alineacion": "audio/biblioteca/voz_fe46d00f0d9ee07d.alin.json",
+  "dur_s": 3.004,
+  "exp_aiden": "seria",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "momento",
+  "quien": "aiden",
+  "texto": "[tired, soft] Se estabilizaron tres de las cuatro. La última aguanta, pero hay que vigilarla.",
+  "mp3": "audio/biblioteca/voz_c15af117ded2bf70.mp3",
+  "alineacion": "audio/biblioteca/voz_c15af117ded2bf70.alin.json",
+  "dur_s": 5.878,
+  "exp_aiden": "cansado",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "momento",
+  "quien": "kate",
+  "texto": "[quiet] Me quedo yo. Hoy me ocupo de esa incubadora.",
+  "mp3": "audio/biblioteca/voz_43679e95a1721746.mp3",
+  "alineacion": "audio/biblioteca/voz_43679e95a1721746.alin.json",
+  "dur_s": 2.926,
+  "exp_aiden": "cansado",
+  "exp_kate": "seria"
+ },
+ {
+  "bloque": "momento",
+  "quien": "aiden",
+  "texto": "[awkward, soft] Keit. ¿La flor... te llegó bien?",
+  "mp3": "audio/biblioteca/voz_82fdbd2dc0af361a.mp3",
+  "alineacion": "audio/biblioteca/voz_82fdbd2dc0af361a.alin.json",
+  "dur_s": 3.971,
+  "exp_aiden": "triste_sutil",
+  "exp_kate": "sorpresa"
+ },
+ {
+  "bloque": "momento",
+  "quien": "kate",
+  "texto": "[quiet, a little smile] Sí. Me llegó bien.",
+  "mp3": "audio/biblioteca/voz_df28c91ade7ecfda.mp3",
+  "alineacion": "audio/biblioteca/voz_df28c91ade7ecfda.alin.json",
+  "dur_s": 1.724,
+  "exp_aiden": "sonrisa_suave",
+  "exp_kate": "sonrisa_suave"
+ },
+ {
+  "bloque": "momento",
+  "quien": "aiden",
+  "texto": "[relieved, soft] Qué bueno. No sabía si... bueno. Qué bueno.",
+  "mp3": "audio/biblioteca/voz_afa18e4fdf7f9e63.mp3",
+  "alineacion": "audio/biblioteca/voz_afa18e4fdf7f9e63.alin.json",
+  "dur_s": 5.146,
+  "exp_aiden": "sonrisa_suave",
+  "exp_kate": "sonrisa_suave"
+ },
+ {
+  "bloque": "momento",
+  "quien": "kate",
+  "texto": "[gentle, honest] Gracias de nuevo. Y no lo digo por cortesía.",
+  "mp3": "audio/biblioteca/voz_909b344341b041b9.mp3",
+  "alineacion": "audio/biblioteca/voz_909b344341b041b9.alin.json",
+  "dur_s": 2.769,
+  "exp_aiden": "sonrisa_suave",
+  "exp_kate": "sonrisa_suave"
+ },
+ {
+  "bloque": "momento",
+  "quien": "aiden",
+  "texto": "[quiet] Entonces... te dejo con tus plantas. Cualquier cosa, avisame.",
+  "mp3": "audio/biblioteca/voz_59c691fdfba530f9.mp3",
+  "alineacion": "audio/biblioteca/voz_59c691fdfba530f9.alin.json",
+  "dur_s": 6.766,
+  "exp_aiden": "sonrisa_suave",
+  "exp_kate": "sonrisa_suave"
+ },
+ {
+  "bloque": "oculto",
+  "quien": "eva",
+  "texto": "[quiet, careful] Keit. Hay algo que deberías saber sobre el módulo botánico.",
+  "mp3": "audio/biblioteca/voz_a5f865f572f5a46c.mp3",
+  "alineacion": "audio/biblioteca/voz_a5f865f572f5a46c.alin.json",
+  "dur_s": 3.866,
+  "exp_aiden": "-",
+  "exp_kate": "sorpresa"
+ },
+ {
+  "bloque": "oculto",
+  "quien": "kate",
+  "texto": "[wary, low] ¿Por qué me lo decís cuando Aiden se fue?",
+  "mp3": "audio/biblioteca/voz_5b16cfae1ec38b62.mp3",
+  "alineacion": "audio/biblioteca/voz_5b16cfae1ec38b62.alin.json",
+  "dur_s": 2.116,
+  "exp_aiden": "-",
+  "exp_kate": "preocupado"
+ },
+ {
+  "bloque": "oculto",
+  "quien": "eva",
+  "texto": "[calm, measured] Porque esto no figura en ningún registro oficial. Y no debería existir.",
+  "mp3": "audio/biblioteca/voz_759fee3d14ade47c.mp3",
+  "alineacion": "audio/biblioteca/voz_759fee3d14ade47c.alin.json",
+  "dur_s": 8.594,
+  "exp_aiden": "-",
+  "exp_kate": "preocupado"
+ },
+ {
+  "bloque": "oculto",
+  "quien": "kate",
+  "texto": "[tense, quiet] Mostralo.",
+  "mp3": "audio/biblioteca/voz_ec4d27a4663df54f.mp3",
+  "alineacion": "audio/biblioteca/voz_ec4d27a4663df54f.alin.json",
+  "dur_s": 1.881,
+  "exp_aiden": "-",
+  "exp_kate": "seria"
+ }
+]

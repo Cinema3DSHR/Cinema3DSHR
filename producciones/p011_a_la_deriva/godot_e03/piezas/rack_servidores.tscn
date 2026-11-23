@@ -40,24 +40,24 @@ emission_energy_multiplier = 2.6
 [sub_resource type="BoxMesh" id="BoxMesh_ls2pn"]
 size = Vector3(0.6, 0.02, 0.01)
 
-[node name="rack_servidores" type="Node3D" unique_id=1949899077]
+[node name="rack_servidores" type="Node3D" unique_id=213647464]
 
-[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=262806644]
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=2041210494]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
 material_override = SubResource("StandardMaterial3D_rt483")
 mesh = SubResource("BoxMesh_23hi8")
 
-[node name="Frente" type="MeshInstance3D" parent="." unique_id=1463488896]
+[node name="Frente" type="MeshInstance3D" parent="." unique_id=1098435990]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.1, -0.331)
 material_override = SubResource("StandardMaterial3D_lnmgh")
 mesh = SubResource("QuadMesh_3i6rg")
 
-[node name="Rejilla" type="MeshInstance3D" parent="." unique_id=440619222]
+[node name="Rejilla" type="MeshInstance3D" parent="." unique_id=260256518]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, -0.331)
 material_override = SubResource("StandardMaterial3D_g8uuc")
 mesh = SubResource("BoxMesh_kt5xe")
 
-[node name="LuzTope" type="MeshInstance3D" parent="." unique_id=620231298]
+[node name="LuzTope" type="MeshInstance3D" parent="." unique_id=796928274]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.07, -0.33)
 material_override = SubResource("StandardMaterial3D_smsls")
 mesh = SubResource("BoxMesh_ls2pn")

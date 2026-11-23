@@ -74,43 +74,43 @@ roughness = 0.3
 [sub_resource type="BoxMesh" id="BoxMesh_ysqnj"]
 size = Vector3(0.2, 0.04, 0.03)
 
-[node name="caja_electrica" type="Node3D" unique_id=1245738423]
+[node name="caja_electrica" type="Node3D" unique_id=1128832514]
 
-[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=467769317]
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=1479576452]
 material_override = SubResource("StandardMaterial3D_xclis")
 mesh = SubResource("BoxMesh_ms8hw")
 
-[node name="Panel" type="MeshInstance3D" parent="." unique_id=1010859573]
+[node name="Panel" type="MeshInstance3D" parent="." unique_id=792929355]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.06, -0.052)
 material_override = SubResource("StandardMaterial3D_vbxm8")
 mesh = SubResource("BoxMesh_72jg7")
 
-[node name="Led0" type="MeshInstance3D" parent="." unique_id=332389806]
+[node name="Led0" type="MeshInstance3D" parent="." unique_id=387002935]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.2, -0.056)
 material_override = SubResource("StandardMaterial3D_lxcw7")
 mesh = SubResource("BoxMesh_j45s6")
 
-[node name="Led1" type="MeshInstance3D" parent="." unique_id=234784233]
+[node name="Led1" type="MeshInstance3D" parent="." unique_id=455285252]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.075, 0.2, -0.056)
 material_override = SubResource("StandardMaterial3D_bi4qr")
 mesh = SubResource("BoxMesh_d1o0r")
 
-[node name="Led2" type="MeshInstance3D" parent="." unique_id=807187364]
+[node name="Led2" type="MeshInstance3D" parent="." unique_id=1886924053]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.056)
 material_override = SubResource("StandardMaterial3D_1fkj7")
 mesh = SubResource("BoxMesh_n6foa")
 
-[node name="Led3" type="MeshInstance3D" parent="." unique_id=1782943535]
+[node name="Led3" type="MeshInstance3D" parent="." unique_id=1380537887]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.075, 0.2, -0.056)
 material_override = SubResource("StandardMaterial3D_u8v33")
 mesh = SubResource("BoxMesh_10r1x")
 
-[node name="Led4" type="MeshInstance3D" parent="." unique_id=1562347426]
+[node name="Led4" type="MeshInstance3D" parent="." unique_id=1178908800]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0.2, -0.056)
 material_override = SubResource("StandardMaterial3D_adp2b")
 mesh = SubResource("BoxMesh_0s76f")
 
-[node name="Manija" type="MeshInstance3D" parent="." unique_id=761763994]
+[node name="Manija" type="MeshInstance3D" parent="." unique_id=2054609459]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.24, -0.06)
 material_override = SubResource("StandardMaterial3D_6uphx")
 mesh = SubResource("BoxMesh_ysqnj")

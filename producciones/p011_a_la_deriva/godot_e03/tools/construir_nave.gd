@@ -36,14 +36,11 @@ func mesita() -> Node3D:
 	return r
 
 func florero() -> Node3D:
+	## Sólo el vaso de vidrio con agua: la rosa es un objeto real aparte (assets/plantas/rosa_unica.glb), así Kate puede tomarla con la mano.
 	var r := Node3D.new()
 	r.name = "florero"
 	L.cil(r, "Vaso", Vector3(0, 0.09, 0), 0.04, 0.18, L.mat(Color(0.7, 0.9, 1.0), 0, 0.05, Color(0, 0, 0), 0.0, 0.35), Vector3.ZERO, 20)
-	L.cil(r, "Tallo", Vector3(0, 0.26, 0), 0.006, 0.22, L.mat(Color(0.25, 0.6, 0.25)), Vector3.ZERO, 8)
-	for i in 6:
-		var a := i * TAU / 6.0
-		L.esf(r, "Petalo%d" % i, Vector3(cos(a) * 0.035, 0.38, sin(a) * 0.035), 0.03, L.mat(Color(0.98, 0.97, 0.9), 0, 0.5, Color(1, 0.95, 0.8), 0.3), Vector3(1, 0.5, 1))
-	L.esf(r, "Centro", Vector3(0, 0.385, 0), 0.02, L.mat(Color(1.0, 0.75, 0.2), 0, 0.5))
+	L.cil(r, "Agua", Vector3(0, 0.07, 0), 0.034, 0.12, L.mat(Color(0.55, 0.8, 1.0), 0, 0.05, Color(0.3, 0.6, 1.0), 0.15, 0.5), Vector3.ZERO, 20)
 	return r
 
 # ───────────────────────── ayudas de colocación

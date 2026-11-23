@@ -12,146 +12,27 @@ height = 0.18
 radial_segments = 20
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qkdmq"]
-albedo_color = Color(0.25, 0.6, 0.25, 1)
-roughness = 0.6
+transparency = 1
+albedo_color = Color(0.55, 0.8, 1, 0.5)
+roughness = 0.05
+emission_enabled = true
+emission = Color(0.3, 0.6, 1, 1)
+emission_energy_multiplier = 0.15
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_dc006"]
-top_radius = 0.006
-bottom_radius = 0.006
-height = 0.22
-radial_segments = 8
+top_radius = 0.034
+bottom_radius = 0.034
+height = 0.12
+radial_segments = 20
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_753sd"]
-albedo_color = Color(0.98, 0.97, 0.9, 1)
-roughness = 0.5
-emission_enabled = true
-emission = Color(1, 0.95, 0.8, 1)
-emission_energy_multiplier = 0.3
+[node name="florero" type="Node3D" unique_id=1612890240]
 
-[sub_resource type="SphereMesh" id="SphereMesh_bxfu5"]
-radius = 0.03
-height = 0.06
-radial_segments = 32
-rings = 16
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blh1g"]
-albedo_color = Color(0.98, 0.97, 0.9, 1)
-roughness = 0.5
-emission_enabled = true
-emission = Color(1, 0.95, 0.8, 1)
-emission_energy_multiplier = 0.3
-
-[sub_resource type="SphereMesh" id="SphereMesh_gnehf"]
-radius = 0.03
-height = 0.06
-radial_segments = 32
-rings = 16
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70470"]
-albedo_color = Color(0.98, 0.97, 0.9, 1)
-roughness = 0.5
-emission_enabled = true
-emission = Color(1, 0.95, 0.8, 1)
-emission_energy_multiplier = 0.3
-
-[sub_resource type="SphereMesh" id="SphereMesh_8kday"]
-radius = 0.03
-height = 0.06
-radial_segments = 32
-rings = 16
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hfnx7"]
-albedo_color = Color(0.98, 0.97, 0.9, 1)
-roughness = 0.5
-emission_enabled = true
-emission = Color(1, 0.95, 0.8, 1)
-emission_energy_multiplier = 0.3
-
-[sub_resource type="SphereMesh" id="SphereMesh_55qls"]
-radius = 0.03
-height = 0.06
-radial_segments = 32
-rings = 16
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mlw42"]
-albedo_color = Color(0.98, 0.97, 0.9, 1)
-roughness = 0.5
-emission_enabled = true
-emission = Color(1, 0.95, 0.8, 1)
-emission_energy_multiplier = 0.3
-
-[sub_resource type="SphereMesh" id="SphereMesh_2rxwp"]
-radius = 0.03
-height = 0.06
-radial_segments = 32
-rings = 16
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6mlff"]
-albedo_color = Color(0.98, 0.97, 0.9, 1)
-roughness = 0.5
-emission_enabled = true
-emission = Color(1, 0.95, 0.8, 1)
-emission_energy_multiplier = 0.3
-
-[sub_resource type="SphereMesh" id="SphereMesh_aqc14"]
-radius = 0.03
-height = 0.06
-radial_segments = 32
-rings = 16
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6hqkj"]
-albedo_color = Color(1, 0.75, 0.2, 1)
-roughness = 0.5
-
-[sub_resource type="SphereMesh" id="SphereMesh_rmk6q"]
-radius = 0.02
-height = 0.04
-radial_segments = 32
-rings = 16
-
-[node name="florero" type="Node3D" unique_id=760105218]
-
-[node name="Vaso" type="MeshInstance3D" parent="." unique_id=856690065]
+[node name="Vaso" type="MeshInstance3D" parent="." unique_id=580805216]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
 material_override = SubResource("StandardMaterial3D_vl0ka")
 mesh = SubResource("CylinderMesh_bobux")
 
-[node name="Tallo" type="MeshInstance3D" parent="." unique_id=2045457801]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+[node name="Agua" type="MeshInstance3D" parent="." unique_id=1006264109]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
 material_override = SubResource("StandardMaterial3D_qkdmq")
 mesh = SubResource("CylinderMesh_dc006")
-
-[node name="Petalo0" type="MeshInstance3D" parent="." unique_id=993420944]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0.035, 0.38, 0)
-material_override = SubResource("StandardMaterial3D_753sd")
-mesh = SubResource("SphereMesh_bxfu5")
-
-[node name="Petalo1" type="MeshInstance3D" parent="." unique_id=57885595]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0.0175, 0.38, 0.03031089)
-material_override = SubResource("StandardMaterial3D_blh1g")
-mesh = SubResource("SphereMesh_gnehf")
-
-[node name="Petalo2" type="MeshInstance3D" parent="." unique_id=466100993]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, -0.0175, 0.38, 0.03031089)
-material_override = SubResource("StandardMaterial3D_70470")
-mesh = SubResource("SphereMesh_8kday")
-
-[node name="Petalo3" type="MeshInstance3D" parent="." unique_id=1944478670]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, -0.035, 0.38, 4.286264e-18)
-material_override = SubResource("StandardMaterial3D_hfnx7")
-mesh = SubResource("SphereMesh_55qls")
-
-[node name="Petalo4" type="MeshInstance3D" parent="." unique_id=2010176000]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, -0.0175, 0.38, -0.03031089)
-material_override = SubResource("StandardMaterial3D_mlw42")
-mesh = SubResource("SphereMesh_2rxwp")
-
-[node name="Petalo5" type="MeshInstance3D" parent="." unique_id=968917982]
-transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0.0175, 0.38, -0.03031089)
-material_override = SubResource("StandardMaterial3D_6mlff")
-mesh = SubResource("SphereMesh_aqc14")
-
-[node name="Centro" type="MeshInstance3D" parent="." unique_id=183516675]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.385, 0)
-material_override = SubResource("StandardMaterial3D_6hqkj")
-mesh = SubResource("SphereMesh_rmk6q")

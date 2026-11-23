@@ -2428,6 +2428,666 @@
    "voice_id": "9b3epFpN8VNQyCsbs3ER",
    "texto": "Así que el azul del cielo es luz del Sol, dispersada por el aire.",
    "rol": null
+  },
+  {
+   "id": "voz_33558e51a126d3e6",
+   "nombre": "[soft, calm] Buenos días, Keit. Dormiste seis horas y diez minutos. Es más de lo",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_33558e51a126d3e6.mp3",
+   "duracion_s": 7.97,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[soft, calm] Buenos días, Keit. Dormiste seis horas y diez minutos. Es más de lo que dormiste en toda la semana.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_27dc9a04ba3f2b3f",
+   "nombre": "[quiet, sleepy] Gracias por el dato.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_27dc9a04ba3f2b3f.mp3",
+   "duracion_s": 1.8,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[quiet, sleepy] Gracias por el dato.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_6a88aae7a5d4dc31",
+   "nombre": "[gentle] La flor sigue abierta. Es la tercera vez que la mirás desde que te desp",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_6a88aae7a5d4dc31.mp3",
+   "duracion_s": 5.15,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[gentle] La flor sigue abierta. Es la tercera vez que la mirás desde que te despertaste.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_43fc6291de16dc14",
+   "nombre": "[quiet, defensive] No la estoy mirando. Estoy... comprobando que no se marchite.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_43fc6291de16dc14.mp3",
+   "duracion_s": 4.28,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[quiet, defensive] No la estoy mirando. Estoy... comprobando que no se marchite.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_e697cc2cce74155b",
+   "nombre": "[calm, slightly amused] Qué diligente. Aiden preguntó hace un rato si ya te habí",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_e697cc2cce74155b.mp3",
+   "duracion_s": 8.2,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, slightly amused] Qué diligente. Aiden preguntó hace un rato si ya te habías levantado. Dijo que era por el desayuno.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_4aa63f419c634654",
+   "nombre": "[surprised, quiet] ¿Preguntó por mí?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_4aa63f419c634654.mp3",
+   "duracion_s": 1.72,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[surprised, quiet] ¿Preguntó por mí?",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_c825fd76d8141cc8",
+   "nombre": "[warm, precise] Preguntó por el desayuno. Con muchos rodeos.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_c825fd76d8141cc8.mp3",
+   "duracion_s": 3.16,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[warm, precise] Preguntó por el desayuno. Con muchos rodeos.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_72870bc29320e140",
+   "nombre": "[urgent, precise] Atención. Anomalía en el módulo botánico. Varias incubadoras p",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_72870bc29320e140.mp3",
+   "duracion_s": 5.96,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[urgent, precise] Atención. Anomalía en el módulo botánico. Varias incubadoras pierden estabilidad.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_773bd7913e00cd9c",
+   "nombre": "[alert, quick] ¿Qué incubadoras? ¿Cuántas?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_773bd7913e00cd9c.mp3",
+   "duracion_s": 1.96,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[alert, quick] ¿Qué incubadoras? ¿Cuántas?",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_471ba86edecf7de4",
+   "nombre": "[calm, precise] Cuatro de nueve. Las compuertas del sector se están cerrando aut",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_471ba86edecf7de4.mp3",
+   "duracion_s": 5.49,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, precise] Cuatro de nueve. Las compuertas del sector se están cerrando automáticamente.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_190314dc0fd77663",
+   "nombre": "[firm, alert] Voy para allá. Conozco ese módulo mejor que nadie.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_190314dc0fd77663.mp3",
+   "duracion_s": 3.87,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[firm, alert] Voy para allá. Conozco ese módulo mejor que nadie.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_2cf74e4e7b1a4367",
+   "nombre": "[quick] Yo voy por el pasillo central. Nos vemos en la entrada.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_2cf74e4e7b1a4367.mp3",
+   "duracion_s": 3.55,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quick] Yo voy por el pasillo central. Nos vemos en la entrada.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_afad04b0adfa5d31",
+   "nombre": "[calm] Recomiendo que no se separen.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_afad04b0adfa5d31.mp3",
+   "duracion_s": 1.88,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm] Recomiendo que no se separen.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_82266ad8cbecdd3e",
+   "nombre": "[focused, quiet] Las temperaturas están dentro de rango. La anomalía no es térmi",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_82266ad8cbecdd3e.mp3",
+   "duracion_s": 4.68,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[focused, quiet] Las temperaturas están dentro de rango. La anomalía no es térmica.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_25b17acfeb4555ae",
+   "nombre": "[puzzled] Hay una secuencia de cierre iniciada a las seis y cuarenta y dos. La a",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_25b17acfeb4555ae.mp3",
+   "duracion_s": 7.0,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[puzzled] Hay una secuencia de cierre iniciada a las seis y cuarenta y dos. La alarma salta a las seis y cincuenta.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_31f155aa3bf16ede",
+   "nombre": "[quiet, dry] EVA. ¿Por qué empezaste el cierre ocho minutos antes de la anomalía",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_31f155aa3bf16ede.mp3",
+   "duracion_s": 5.15,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet, dry] EVA. ¿Por qué empezaste el cierre ocho minutos antes de la anomalía?",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_31b49527b5b9973a",
+   "nombre": "[calm, precise] Fue una medida preventiva.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_31b49527b5b9973a.mp3",
+   "duracion_s": 1.8,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, precise] Fue una medida preventiva.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_c1021e72a172e6c2",
+   "nombre": "[dry] ¿Preventiva de qué?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_c1021e72a172e6c2.mp3",
+   "duracion_s": 1.57,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[dry] ¿Preventiva de qué?",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_142e17990fbbfaba",
+   "nombre": "[calm, measured] De una posible pérdida de estabilidad. Los patrones lo sugerían",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_142e17990fbbfaba.mp3",
+   "duracion_s": 5.15,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, measured] De una posible pérdida de estabilidad. Los patrones lo sugerían.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_1cbba3d94f235610",
+   "nombre": "[quiet, observant] No respondiste a lo que te preguntó. Respondiste a otra cosa.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_1cbba3d94f235610.mp3",
+   "duracion_s": 3.87,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[quiet, observant] No respondiste a lo que te preguntó. Respondiste a otra cosa.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_d4d0639d651f46bf",
+   "nombre": "[calm, soft] Estoy dándoles la respuesta más completa que puedo en este momento,",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_d4d0639d651f46bf.mp3",
+   "duracion_s": 4.28,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, soft] Estoy dándoles la respuesta más completa que puedo en este momento, Keit.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_fe46d00f0d9ee07d",
+   "nombre": "[low, thoughtful] «En este momento». Interesante.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_fe46d00f0d9ee07d.mp3",
+   "duracion_s": 3.0,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[low, thoughtful] «En este momento». Interesante.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_c15af117ded2bf70",
+   "nombre": "[tired, soft] Se estabilizaron tres de las cuatro. La última aguanta, pero hay q",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_c15af117ded2bf70.mp3",
+   "duracion_s": 5.88,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[tired, soft] Se estabilizaron tres de las cuatro. La última aguanta, pero hay que vigilarla.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_43679e95a1721746",
+   "nombre": "[quiet] Me quedo yo. Hoy me ocupo de esa incubadora.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_43679e95a1721746.mp3",
+   "duracion_s": 2.93,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[quiet] Me quedo yo. Hoy me ocupo de esa incubadora.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_82fdbd2dc0af361a",
+   "nombre": "[awkward, soft] Keit. ¿La flor... te llegó bien?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_82fdbd2dc0af361a.mp3",
+   "duracion_s": 3.97,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[awkward, soft] Keit. ¿La flor... te llegó bien?",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_df28c91ade7ecfda",
+   "nombre": "[quiet, a little smile] Sí. Me llegó bien.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_df28c91ade7ecfda.mp3",
+   "duracion_s": 1.72,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[quiet, a little smile] Sí. Me llegó bien.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_afa18e4fdf7f9e63",
+   "nombre": "[relieved, soft] Qué bueno. No sabía si... bueno. Qué bueno.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_afa18e4fdf7f9e63.mp3",
+   "duracion_s": 5.15,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[relieved, soft] Qué bueno. No sabía si... bueno. Qué bueno.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_909b344341b041b9",
+   "nombre": "[gentle, honest] Gracias de nuevo. Y no lo digo por cortesía.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_909b344341b041b9.mp3",
+   "duracion_s": 2.77,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[gentle, honest] Gracias de nuevo. Y no lo digo por cortesía.",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_59c691fdfba530f9",
+   "nombre": "[quiet] Entonces... te dejo con tus plantas. Cualquier cosa, avisame.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_59c691fdfba530f9.mp3",
+   "duracion_s": 6.77,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "aiden"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "6xnxeygeMfFgAqKpWy1A",
+   "texto": "[quiet] Entonces... te dejo con tus plantas. Cualquier cosa, avisame.",
+   "rol": "aiden_es_ar"
+  },
+  {
+   "id": "voz_a5f865f572f5a46c",
+   "nombre": "[quiet, careful] Keit. Hay algo que deberías saber sobre el módulo botánico.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_a5f865f572f5a46c.mp3",
+   "duracion_s": 3.87,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[quiet, careful] Keit. Hay algo que deberías saber sobre el módulo botánico.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_5b16cfae1ec38b62",
+   "nombre": "[wary, low] ¿Por qué me lo decís cuando Aiden se fue?",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_5b16cfae1ec38b62.mp3",
+   "duracion_s": 2.12,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[wary, low] ¿Por qué me lo decís cuando Aiden se fue?",
+   "rol": "kate_es_ar"
+  },
+  {
+   "id": "voz_759fee3d14ade47c",
+   "nombre": "[calm, measured] Porque esto no figura en ningún registro oficial. Y no debería ",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_759fee3d14ade47c.mp3",
+   "duracion_s": 8.59,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "eva"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "8gK5gnQBZnJWm1ta8R8X",
+   "texto": "[calm, measured] Porque esto no figura en ningún registro oficial. Y no debería existir.",
+   "rol": "eva"
+  },
+  {
+   "id": "voz_ec4d27a4663df54f",
+   "nombre": "[tense, quiet] Mostralo.",
+   "categoria": "voz",
+   "archivo": "audio/biblioteca/voz_ec4d27a4663df54f.mp3",
+   "duracion_s": 1.88,
+   "procedencia": "ElevenLabs (eleven_v3)",
+   "licencia": "Generado con la cuenta ElevenLabs del dueño; los derechos de uso comercial dependen del plan (verificar en los términos del plan antes de publicar)",
+   "etiquetas": [
+    "p011",
+    "e03",
+    "kate"
+   ],
+   "variantes": 0,
+   "volumen_db": -12,
+   "modelo": "eleven_v3",
+   "voice_id": "EYBbN7OENxAX5QX56IiW",
+   "texto": "[tense, quiet] Mostralo.",
+   "rol": "kate_es_ar"
   }
  ],
  "fuentes_existentes_para_importar": [

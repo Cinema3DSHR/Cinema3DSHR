@@ -1,0 +1,469 @@
+{
+ "global": {
+  "fundido_cuadros": 8
+ },
+ "escenas": {
+  "s1": {
+   "titulo": "Cap. 3 · Escena 1 · La mañana siguiente",
+   "dur": 40.99,
+   "voces": [
+    {
+     "t": 3.0,
+     "dur": 7.967,
+     "quien": "eva",
+     "texto": "[soft, calm] Buenos días, Keit. Dormiste seis horas y diez minutos. Es más de lo que dormiste en toda la semana.",
+     "mp3": "data/voz/voz_33558e51a126d3e6.mp3",
+     "alineacion_res": "data/alin/voz_33558e51a126d3e6.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 11.417,
+     "dur": 1.802,
+     "quien": "kate",
+     "texto": "[quiet, sleepy] Gracias por el dato.",
+     "mp3": "data/voz/voz_27dc9a04ba3f2b3f.mp3",
+     "alineacion_res": "data/alin/voz_27dc9a04ba3f2b3f.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "triste_sutil"
+     }
+    },
+    {
+     "t": 13.669,
+     "dur": 5.146,
+     "quien": "eva",
+     "texto": "[gentle] La flor sigue abierta. Es la tercera vez que la mirás desde que te despertaste.",
+     "mp3": "data/voz/voz_6a88aae7a5d4dc31.mp3",
+     "alineacion_res": "data/alin/voz_6a88aae7a5d4dc31.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "sorpresa"
+     }
+    },
+    {
+     "t": 19.265,
+     "dur": 4.284,
+     "quien": "kate",
+     "texto": "[quiet, defensive] No la estoy mirando. Estoy... comprobando que no se marchite.",
+     "mp3": "data/voz/voz_43fc6291de16dc14.mp3",
+     "alineacion_res": "data/alin/voz_43fc6291de16dc14.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "seria"
+     }
+    },
+    {
+     "t": 23.999,
+     "dur": 8.202,
+     "quien": "eva",
+     "texto": "[calm, slightly amused] Qué diligente. Aiden preguntó hace un rato si ya te habías levantado. Dijo que era por el desayuno.",
+     "mp3": "data/voz/voz_e697cc2cce74155b.mp3",
+     "alineacion_res": "data/alin/voz_e697cc2cce74155b.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "sonrisa_suave"
+     }
+    },
+    {
+     "t": 32.651,
+     "dur": 1.724,
+     "quien": "kate",
+     "texto": "[surprised, quiet] ¿Preguntó por mí?",
+     "mp3": "data/voz/voz_4aa63f419c634654.mp3",
+     "alineacion_res": "data/alin/voz_4aa63f419c634654.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "sorpresa"
+     }
+    },
+    {
+     "t": 34.825,
+     "dur": 3.161,
+     "quien": "eva",
+     "texto": "[warm, precise] Preguntó por el desayuno. Con muchos rodeos.",
+     "mp3": "data/voz/voz_c825fd76d8141cc8.mp3",
+     "alineacion_res": "data/alin/voz_c825fd76d8141cc8.alin.json",
+     "exp": {
+      "aiden": "-",
+      "kate": "sonrisa_suave"
+     }
+    }
+   ],
+   "actores": {
+    "kate": {
+     "modelo": "kate",
+     "cuero": [
+      0.27,
+      0.1,
+      0.045
+     ],
+     "inicio": {
+      "pos": [
+       15.55,
+       -4.62
+      ],
+      "yaw": 0.0,
+      "y": 0.0,
+      "postura": "sentado",
+      "clip": "sit_idle"
+     },
+     "eventos": [
+      {
+       "t": 19.065,
+       "clip": "sit_talk",
+       "dur": 4.684
+      },
+      {
+       "t": 24.198999999999998,
+       "clip": "sit_to_stand",
+       "una_vez": true,
+       "postura": "de_pie"
+      },
+      {
+       "walk": [
+        [
+         16.0,
+         -3.5
+        ]
+       ],
+       "yaw_final": 90.0,
+       "rapidez": 0.8
+      },
+      {
+       "clip": "taking_item",
+       "una_vez": true,
+       "agarra": {
+        "prop": "rosa",
+        "mano": "R",
+        "en": 1.0,
+        "off": [
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ]
+       }
+      },
+      {
+       "gira": -90.0,
+       "dur": 1.0,
+       "clip": "idle"
+      },
+      {
+       "clip": "idle"
+      }
+     ],
+     "clip_final": "idle"
+    },
+    "eva": {
+     "modelo": "eva",
+     "escala": 0.2,
+     "holograma": true,
+     "inicio": {
+      "pos": [
+       9.72,
+       -5.6
+      ],
+      "y": 0.775,
+      "yaw": 90.0,
+      "clip": "idle"
+     },
+     "visible": [
+      [
+       2.4,
+       39.386
+      ]
+     ],
+     "eventos": [
+      {
+       "t": 3.0,
+       "clip": "talk1",
+       "dur": 8.267
+      },
+      {
+       "t": 13.669,
+       "clip": "talk2",
+       "dur": 5.446
+      },
+      {
+       "t": 23.999,
+       "clip": "talk3",
+       "dur": 8.502
+      },
+      {
+       "t": 34.825,
+       "clip": "talk1",
+       "dur": 3.461
+      },
+      {
+       "clip": "idle"
+      }
+     ]
+    }
+   },
+   "props": {
+    "rosa": {
+     "tipo": "glb",
+     "glb": "res://assets/plantas/rosa_unica.glb",
+     "pos": [
+      16.65,
+      0.5,
+      -3.8
+     ],
+     "esc": 1.0
+    }
+   },
+   "miradas": [
+    {
+     "actor": "kate",
+     "t0": 3.5,
+     "t1": 13.469000000000001,
+     "a": [
+      9.72,
+      1.025,
+      -5.6
+     ]
+    },
+    {
+     "actor": "kate",
+     "t0": 15.669,
+     "t1": 19.665,
+     "a": [
+      16.65,
+      0.95,
+      -3.8
+     ]
+    },
+    {
+     "actor": "kate",
+     "t0": 19.865000000000002,
+     "t1": 26.999,
+     "a": [
+      9.72,
+      1.025,
+      -5.6
+     ]
+    },
+    {
+     "actor": "eva",
+     "t0": 3.0,
+     "t1": 37.986000000000004,
+     "a": "kate",
+     "alto": 1.45,
+     "peso_cabeza": 0.7
+    }
+   ],
+   "diag": [
+    {
+     "n": "kate_habla",
+     "t": 20.615000000000002,
+     "sigue": "kate",
+     "hueso": "Head",
+     "off": [
+      0.0,
+      0.04,
+      0.55
+     ],
+     "fov": 26
+    },
+    {
+     "n": "kate_habla2",
+     "t": 21.665,
+     "sigue": "kate",
+     "hueso": "Head",
+     "off": [
+      0.15,
+      0.04,
+      0.55
+     ],
+     "fov": 26
+    },
+    {
+     "n": "kate_manos",
+     "t": 33.151,
+     "sigue": "kate",
+     "hueso": "R_Hand",
+     "off": [
+      0.0,
+      0.1,
+      0.45
+     ],
+     "fov": 34
+    },
+    {
+     "n": "kate_pies",
+     "t": 28.598999999999997,
+     "sigue": "kate",
+     "alto": 0.08,
+     "off": [
+      0.0,
+      0.05,
+      0.8
+     ],
+     "fov": 32
+    },
+    {
+     "n": "kate_pies2",
+     "t": 28.598999999999997,
+     "sigue": "kate",
+     "alto": 0.08,
+     "off": [
+      0.9,
+      0.05,
+      0.3
+     ],
+     "fov": 32
+    }
+   ],
+   "tomas": [
+    {
+     "id": "t01",
+     "camara": "cam_s1_general",
+     "plano": "general",
+     "t0": 0.0,
+     "t1": 4.5,
+     "pos": [
+      12.8,
+      1.9,
+      -2.0
+     ],
+     "pos_fin": [
+      12.8,
+      1.9,
+      -2.0
+     ],
+     "mira": [
+      13.5,
+      0.9,
+      -5.2
+     ],
+     "fov": 72
+    },
+    {
+     "id": "t02",
+     "camara": "cam_s1_eva",
+     "plano": "primer plano EVA",
+     "t0": 4.5,
+     "t1": 11.217,
+     "pos": [
+      11.0,
+      1.15,
+      -5.1
+     ],
+     "pos_fin": [
+      10.8,
+      1.1,
+      -5.15
+     ],
+     "mira": [
+      9.72,
+      1.0,
+      -5.6
+     ],
+     "fov": 32
+    },
+    {
+     "id": "t03",
+     "camara": "cam_s1_kate",
+     "plano": "medio Kate",
+     "t0": 11.217,
+     "t1": 19.065,
+     "pos": [
+      14.3,
+      1.3,
+      -2.7
+     ],
+     "pos_fin": [
+      14.5,
+      1.3,
+      -2.8
+     ],
+     "mira": [
+      15.55,
+      1.05,
+      -4.5
+     ],
+     "fov": 42
+    },
+    {
+     "id": "t04",
+     "camara": "cam_s1_rosa",
+     "plano": "detalle de la rosa",
+     "t0": 19.065,
+     "t1": 26.198999999999998,
+     "pos": [
+      15.7,
+      1.0,
+      -3.0
+     ],
+     "pos_fin": [
+      15.9,
+      1.02,
+      -3.1
+     ],
+     "mira": [
+      16.65,
+      0.85,
+      -3.8
+     ],
+     "fov": 34
+    },
+    {
+     "id": "t05",
+     "camara": "cam_s1_sigue",
+     "plano": "sigue a Kate",
+     "t0": 26.198999999999998,
+     "t1": 32.451,
+     "pos": [
+      13.6,
+      1.5,
+      -2.6
+     ],
+     "pos_fin": [
+      14.4,
+      1.5,
+      -2.6
+     ],
+     "sigue": "kate",
+     "sigue_alto": 1.2,
+     "mira": [
+      15,
+      1,
+      -4
+     ],
+     "fov": 48
+    },
+    {
+     "id": "t06",
+     "camara": "cam_s1_primer",
+     "plano": "primer plano Kate con la rosa",
+     "t0": 32.451,
+     "t1": 40.99,
+     "pos": [
+      14.5,
+      1.5,
+      -3.9
+     ],
+     "pos_fin": [
+      14.7,
+      1.5,
+      -3.7
+     ],
+     "sigue": "kate",
+     "sigue_alto": 1.5,
+     "mira": [
+      16,
+      1.4,
+      -3.5
+     ],
+     "fov": 32
+    }
+   ]
+  }
+ }
+}
