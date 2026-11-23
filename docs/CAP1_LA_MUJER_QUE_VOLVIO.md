@@ -33,3 +33,6 @@ Tras el choque Gabriel busca a Elena desesperado; **se le apaga la visión y que
 
 ## Estado (23/11/2026)
 - Voz de Gabriel **generada**: 42 líneas, 111,9 s, 2.354 créditos (`audio_cap1/voces.json`; mp3 en `audio/biblioteca/`, ledger actualizado). Accidente 37 s de voz, recuerdos 36 s, casa 38 s.
+
+## Auto en Godot (23/11/2026)
+`godot_cap1/tools/auto.gd` carga `assets/hustler.glb` (no va al repo; copia en `/home/user/cap1_noir/auto/`), lo gira 180° (el original mira a +Z; las piezas del estudio miran a −Z) y repinta la carrocería de NEGRO brillante (el modelo viene claro). Es un cupé clásico de los 70. Pruebas: `tools/prueba_auto.gd`.
