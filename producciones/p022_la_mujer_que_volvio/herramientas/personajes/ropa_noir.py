@@ -24,6 +24,7 @@ for pb in dst.pose.bones:
     pb.rotation_mode = 'QUATERNION'; pb.location = (0, 0, 0); pb.rotation_quaternion = (1, 0, 0, 0); pb.scale = (1, 1, 1)
 bpy.context.view_layer.update()
 P = 'EM3D_Base_'
+K = 1.0 / body.matrix_world.to_scale().x      # el cuerpo está en cm (escala 0.01): los márgenes locales deben multiplicarse
 def W(h, punta='head'):
     pb = dst.pose.bones[P + h]; return dst.matrix_world @ (pb.head if punta == 'head' else pb.tail)
 
@@ -77,13 +78,13 @@ def arrugas(obj, fuerza, escala, semilla):
 
 # ── CAMISA: torso + brazos hasta la muñeca, dos vueltas de holgura, faldón que baja bajo el cinturón, escote abierto
 camisa = TF._region(sc, body, lambda n: n.startswith(('Hip', 'Pelvis', 'Waist', 'Spine', 'L_Clavicle', 'R_Clavicle', 'L_Upperarm', 'R_Upperarm', 'L_Forearm', 'R_Forearm', 'L_Elbow', 'R_Elbow', 'L_Breast', 'R_Breast')),
-                    0.026 * S, 'CAMISA', m_top, zmin=cadera - 0.115 * S, zmax=cuello_z - 0.012 * S)
+                    0.026 * S * K, 'CAMISA', m_top, zmin=cadera - 0.115 * S, zmax=cuello_z - 0.012 * S)
 recortar(camisa, cadera - 0.085 * S, True)                                     # dobladillo recto
 # ── PANTALÓN: de la cintura a los tobillos, algo suelto, con botamangas que tapan el borde del zapato
 pantalon = TF._region(sc, body, lambda n: n.startswith(('Hip', 'Pelvis', 'L_Thigh', 'R_Thigh', 'L_Calf', 'R_Calf', 'L_Knee', 'R_Knee')) and not n.startswith(('L_Foot', 'R_Foot')),
-                      0.030 * S, 'PANTALON', m_bot, zmin=zank + 0.01 * S, zmax=cadera + 0.045 * S)
+                      0.030 * S * K, 'PANTALON', m_bot, zmin=zank + 0.01 * S, zmax=cadera + 0.045 * S)
 recortar(pantalon, zank + 0.012 * S, True)
-arrugas(camisa, 0.0090 * S, 0.10, 1); arrugas(pantalon, 0.0075 * S, 0.14, 2)
+arrugas(camisa, 0.0090 * S * K, 0.10 * K, 1); arrugas(pantalon, 0.0075 * S * K, 0.14 * K, 2)
 mwb = body.matrix_world
 vb = [mwb @ v.co for v in body.data.vertices]
 def radio_a_altura(z, tol=0.012):
