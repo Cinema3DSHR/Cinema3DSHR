@@ -1,0 +1,98 @@
+{
+ "formato": "estudio.aprobacion_blend/1",
+ "produccion": "p022_la_mujer_que_volvio",
+ "version": 1,
+ "id": "p022_la_mujer_que_volvio_v001",
+ "release": "blend-p022_la_mujer_que_volvio-v001",
+ "blend": {
+  "sha256": "da4dfcca2f96551e7e4c5e3eae46203f322898829fe45192bff402555343bb61",
+  "bytes": 15108323,
+  "nombre_original": "casa_v007.blend"
+ },
+ "aprobacion": {
+  "nota_del_dueno": "corregí... termina con una toma desde lejos mostrando la escena completa y podes hacer el renderizado ya (dueño, 24/11/2026); renderizar en VERTICAL 540x960",
+  "fecha_utc": "2026-11-24T09:55:05Z",
+  "regla": "se renderiza exactamente este archivo (mismo SHA-256), sin reconstruir ni modificar nada"
+ },
+ "perfil_render": {
+  "motor": "CYCLES",
+  "dispositivo": "CPU",
+  "resolucion": [
+   540,
+   960
+  ],
+  "porcentaje": 100,
+  "fps": 30,
+  "fps_base": 1.0,
+  "muestras": 6,
+  "muestreo_adaptativo": true,
+  "umbral_adaptativo": 0.05,
+  "denoise": true,
+  "denoiser": "OPENIMAGEDENOISE",
+  "rebotes": 6,
+  "arbol_de_luces": true,
+  "semilla_animada": false
+ },
+ "formato_produccion": {
+  "aspecto": "9:16",
+  "resolucion": "540x960",
+  "fps": 30,
+  "duracion_s": 78.03333333333333
+ },
+ "inspeccion": {
+  "archivo": "casa_v007.blend",
+  "blender_guardado": "5.3.31",
+  "blender_lector": "5.3.0",
+  "escena": "Scene",
+  "render": {
+   "motor": "CYCLES",
+   "dispositivo": "CPU",
+   "resolucion": [
+    540,
+    960
+   ],
+   "porcentaje": 100,
+   "fps": 30,
+   "fps_base": 1.0,
+   "muestras": 6,
+   "muestreo_adaptativo": true,
+   "umbral_adaptativo": 0.05,
+   "denoise": true,
+   "denoiser": "OPENIMAGEDENOISE",
+   "rebotes": 6,
+   "arbol_de_luces": true,
+   "semilla": 13,
+   "semilla_animada": false,
+   "cuadro_inicial": 1,
+   "cuadro_final": 2341
+  },
+  "camara": "H4_gabriel_medio",
+  "camara_animada": true,
+  "objetos": 189,
+  "objetos_animados": 22,
+  "acciones": [
+   "Cigarro_cenizaAction",
+   "Datos_vientoAction",
+   "Luz_exteriorAction",
+   "Luz_lamparaAction",
+   "Sangre_gotas_0Action",
+   "Sangre_gotas_1Action",
+   "Sangre_gotas_2Action",
+   "Sangre_gotas_3Action",
+   "Sangre_gotas_4Action",
+   "Sangre_gotas_5Action",
+   "Sangre_gotas_6Action",
+   "Sangre_piso_1Action",
+   "Sangre_piso_2Action",
+   "Tormenta_nocheAction",
+   "Vino_pisoAction",
+   "escena"
+  ],
+  "materiales": 67,
+  "luces": 3,
+  "externos": [],
+  "autonomo": true,
+  "empaquetados": 12
+ },
+ "titulo": "La mujer que volvió de la muerte · Cap. 1 · escena de la CASA (vertical 9:16)"
+}

@@ -135,7 +135,7 @@ for o in list(bpy.data.objects):
     elif n.startswith(('Lampara_pie', 'Encendedor')): asigna(o, M['laton'])
     # bordes biselados y almohadones redondeados (sólo en Blender)
     if n.startswith(('Madera_', 'Tela_sillon', 'Marco_', 'Pistola_corredera')) and not n.startswith('Tela_alfombra'):
-        bv = o.modifiers.new('Bisel', 'BEVEL'); bv.width = 0.035 if n.startswith('Tela_sillon') else 0.006; bv.segments = 5 if n.startswith('Tela_sillon') else 2; bv.limit_method = 'ANGLE'
+        bv = o.modifiers.new('Bisel', 'BEVEL'); bv.width = 0.07 if n.startswith('Tela_sillon') else 0.006; bv.segments = 8 if n.startswith('Tela_sillon') else 2; bv.limit_method = 'ANGLE'
     if n.startswith(('Botella_', 'Copa_', 'Cenicero', 'Colilla', 'Cigarro', 'Lampara')):
         for p in o.data.polygons: p.use_smooth = True
 print('materiales de la casa listos')
@@ -358,7 +358,7 @@ def mat_camisa_gabriel(obj):
 cam_obj = next((o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('CAMISA')), None)
 if cam_obj is not None:
     m_c, nt_c, bs_c, (gauss, hombro, manga, pecho, LO_, SZ_) = mat_camisa_gabriel(cam_obj)
-    g1 = gauss(hombro, 9.0, 10.5, 0.2); g2 = gauss(manga, 6.0, 15.0, 0.05); g3 = gauss(pecho, 8.0, 12.0, -0.3); gh = gauss(hombro, 2.3, 2.8, 0.0)
+    g1 = gauss(hombro, 13.0, 14.0, 0.2); g2 = gauss(manga, 8.0, 18.0, 0.05); g3 = gauss(pecho, 8.0, 12.0, -0.3); gh = gauss(hombro, 3.2, 3.6, 0.0)
     s1 = tex(nt_c, 'ShaderNodeMath', operation='ADD'); L(nt_c, g1, s1.inputs[0]); L(nt_c, g2, s1.inputs[1]); s2 = tex(nt_c, 'ShaderNodeMath', operation='ADD'); L(nt_c, s1.outputs[0], s2.inputs[0]); L(nt_c, g3, s2.inputs[1])
     cl = tex(nt_c, 'ShaderNodeClamp'); L(nt_c, s2.outputs[0], cl.inputs[0])
     base = bs_c.inputs['Base Color'].default_value[:]

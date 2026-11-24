@@ -1,0 +1,19 @@
+{
+ "tipo": "produccion",
+ "id": "p022_la_mujer_que_volvio",
+ "titulo": "La mujer que volvió de la muerte · Cap. 1 · escena de la CASA (vertical 9:16)",
+ "clase": "secuencia",
+ "formato": {
+  "aspecto": "9:16",
+  "resolucion": "540x960",
+  "fps": 30,
+  "duracion_s": 78.03333333333333
+ },
+ "estado": "en_render",
+ "origen": {
+  "godot": "producciones/p022_la_mujer_que_volvio/godot_cap1/tools/casa.gd",
+  "blender": "producciones/p022_la_mujer_que_volvio/herramientas/etapa_blender/construir_casa.py",
+  "audio": "producciones/p022_la_mujer_que_volvio/herramientas/audio_casa.py"
+ },
+ "nota": "Escena de la casa (presente, horas antes del disparo). El accidente (recuerdo) es otra escena del mismo capítulo."
+}

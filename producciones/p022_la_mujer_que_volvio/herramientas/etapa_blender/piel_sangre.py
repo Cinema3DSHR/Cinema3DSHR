@@ -45,7 +45,7 @@ def mascara_cara(nt, sx, ru):          # frente, sienes y mejillas con goteo irr
 def mascara_manos(nt, sx, ru):         # manos y antebrazos (zona baja a los costados del cuerpo)
     zr = nt.nodes.new('ShaderNodeMapRange'); zr.inputs['From Min'].default_value = 0.52; zr.inputs['From Max'].default_value = 0.40; nt.links.new(sx.outputs['Z'], zr.inputs['Value'])
     mm = nt.nodes.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; nt.links.new(zr.outputs[0], mm.inputs[0]); nt.links.new(ru.outputs['Fac'], mm.inputs[1])
-    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.20; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
+    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.40; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
 def sangre_cara(material):
     """Rostro manchado (no chorreado): una heridita en la frente y manchas finas de roce en mejilla, mandíbula, sien y mentón, como de quien se tocó la cara con la mano.
     Cada mancha es una elipse gaussiana definida en el espacio 3D del modelo, centrada en un punto real de la superficie de la cara (se calculan ojos y boca del propio modelo)."""

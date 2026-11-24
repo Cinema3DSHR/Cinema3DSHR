@@ -146,7 +146,7 @@ func _tomas() -> Array:
 		{"id": "h5", "camara": "H5_gotas_suelo", "t0": 43.0, "t1": 51.0, "pos": [-1.95, 0.60, -1.35], "pos_fin": [-1.70, 0.42, -1.20], "mira": [-0.80, 0.45, -0.72], "mira_fin": [-0.80, 0.36, -0.72], "fov": 46.0, "mano": 0.0},
 		{"id": "h6", "camara": "H6_hombro_herido", "t0": 51.0, "t1": 59.0, "pos": [-2.0, 1.52, -1.75], "pos_fin": [-1.65, 1.44, -1.45], "mira": [-0.55, 1.12, -0.25], "mira_fin": [-0.55, 1.12, -0.25], "fov": 34.0, "mano": 0.002},
 		{"id": "h7", "camara": "H7_rostro", "t0": 59.0, "t1": 69.0, "pos": [0.30, 1.28, -2.25], "pos_fin": [0.10, 1.24, -1.95], "mira": [-0.35, 1.15, -0.2], "mira_fin": [-0.35, 1.15, -0.2], "fov": 28.0, "mano": 0.002},
-		{"id": "h8", "camara": "H8_alejamiento_final", "t0": 69.0, "t1": 78.0, "pos": [0.10, 1.24, -1.95], "pos_fin": [2.7, 1.55, 3.4], "mira": [-0.35, 1.15, -0.2], "mira_fin": [0.0, 1.0, -1.5], "fov": 40.0, "mano": 0.0}]
+		{"id": "h8", "camara": "H8_alejamiento_final", "t0": 69.0, "t1": 78.0, "pos": [0.10, 1.24, -1.95], "pos_fin": [3.35, 2.25, 4.45], "mira": [-0.35, 1.15, -0.2], "mira_fin": [0.05, 0.85, -1.7], "fov": 52.0, "mano": 0.0}]
 
 func _initialize() -> void:
 	_montar(OS.get_cmdline_user_args())
