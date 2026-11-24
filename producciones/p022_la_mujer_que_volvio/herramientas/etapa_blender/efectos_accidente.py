@@ -672,3 +672,14 @@ def construir_polvo():
     return g
 objeto_gn('Chispas', construir_chispas(), False); objeto_gn('Vidrios_choque', construir_vidrios(), False); objeto_gn('Polvo_choque', construir_polvo(), False)
 print('chispas, vidrios y polvo listos')
+
+# ═════════════════════════════ LUZ DE CABINA (sólo en el plano interior del choque: que se vea el tablero, los vidrios y las rocas) ═════════════════════════════
+_cam4 = bpy.data.objects['C4_primera_persona']
+_lc = bpy.data.lights.new('Luz_cabina', 'POINT'); _lc.color = (0.62, 0.72, 1.0); _lc.shadow_soft_size = 0.35; _lc.energy = 0.0
+_lo = bpy.data.objects.new('Luz_cabina', _lc); sc.collection.objects.link(_lo); _lo.parent = _cam4; _lo.location = (0.0, 0.10, -0.15)
+_t4 = [t for t in JS['tomas'] if t['id'] == 't4'][0]
+for _f, _e in ((int(_t4['frame_inicio']) - 1, 0.0), (int(_t4['frame_inicio']), 38.0), (int(_t4['frame_fin']) - 1, 38.0), (int(_t4['frame_fin']), 0.0)):
+    _lc.energy = _e; _lc.keyframe_insert('energy', frame=_f)
+for _fc in (_lc.animation_data.action.fcurves if hasattr(_lc.animation_data.action, 'fcurves') else []):
+    for _kp in _fc.keyframe_points: _kp.interpolation = 'CONSTANT'
+print('luz de cabina lista')

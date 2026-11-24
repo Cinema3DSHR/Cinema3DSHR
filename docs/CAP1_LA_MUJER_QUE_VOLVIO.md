@@ -97,4 +97,4 @@ Tema original lento «neo-noir» (en el espíritu de Max Payne, **no** es esa m�
 - `accidente.gd` usa `aiden_noir.glb` / `kate_noir.glb` (camisa, pantalón, zapatos, cinturón, cuello, botones; ver `guardarropa.json`). En Blender las prendas llevan material «mojado» (más oscuro, brillo húmedo, tejido en relieve).
 - Chispas (golpe y raspones del vuelco), fragmentos de vidrio y polvo/barro del choque: nodos de geometría deterministas por cuadro (`Datos_choque`, `Choque_origen`), más grandes y brillantes que en la primera prueba.
 - Sangre del suelo con el mismo material de charco real de la casa; manos con sangre en manchas; la luna sube un poco para que se vean los peñascos.
-- Pendiente: render (esperar la orden del dueño), pulgar sin sangre en las manos, plano interior del choque muy oscuro por diseño.
+- Pendiente: render (esperar la orden del dueño), pulgar sin sangre en las manos, plano interior del choque: ahora con luz de cabina suave (sólo en ese plano) para que se vean el tablero, el parabrisas roto y las rocas.
