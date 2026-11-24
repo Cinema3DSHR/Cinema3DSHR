@@ -1014,3 +1014,9 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 - `incorporar_blend.yml` lanzado (run 45369773353, 60 trabajos). Pendiente: bajar el MP4 y mezclar el audio (`herramientas/audio_casa.py` → `casa.wav`/`casa.m4a`, subtítulos `casa.srt`).
 - Límites conocidos: accidente (el recuerdo) todavía sin ropa/chispas/vidrios/polvo cerrados y sin renderizar; licencias de modelos sin confirmar.
 - **Render terminado (24/11/2026):** run 45369773353 OK, 2.341/2.341 cuadros, 540×960 a 30 fps, sin fallos (59 trabajos, 14,4 s/cuadro, 9,4 h de CPU). MP4 sin audio `p022_la_mujer_que_volvio_v001_final.mp4` en la Release `blend-p022_la_mujer_que_volvio-v001`; audio mezclado aparte (`audio_casa.py`, voz +10,6 dB sobre el fondo) → entrega `casa_final.mp4` (78 s). Subtítulos en `casa.srt` (no incrustados).
+
+## 24/11/2026 · Cap. 1 «La mujer que volvió de la muerte» — capítulo completo armado
+- Accidente: producción `p023_la_mujer_accidente` v001 (SHA-256 `67c50f2d56dc6b47556577149bc25f826e514548251470a8820c9e2e35e2e868`), orden del dueño «renderizá el accidente y armá el capítulo con la tarjeta»; run 45384746049 OK, 2.038/2.038 cuadros, 540×960, sin fallos.
+- Puente de 50 s con la narración que había quedado sin usar (bloque «despues», 12 líneas) sobre negro con grano y subtítulos (`herramientas/audio_puente.py`) y tarjeta final de 7 s «CAPÍTULO 1 / LA MUJER QUE VOLVIÓ DE LA MUERTE».
+- Montaje: accidente (67,9 s) → puente (50 s) → casa (78 s) → tarjeta (7 s), fundidos de 0,5 s, total 201,4 s, 540×960 a 30 fps. Entregado como `capitulo1_envio.mp4` (reducido para el chat).
+- Pendiente: puente con imágenes (hoy negro), pulgar sin sangre, licencias de modelos.
