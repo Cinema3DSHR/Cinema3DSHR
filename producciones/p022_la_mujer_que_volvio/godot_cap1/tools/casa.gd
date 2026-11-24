@@ -13,7 +13,7 @@ var RG: RigSentado
 var total := 0
 const ALTO := 3.3
 const SILLON := Vector3(-0.35, 0.0, -0.20)           # centro del asiento (suelo)
-const MESA_C := Vector3(1.25, 0.0, -0.85)
+const MESA_C := Vector3(1.55, 0.0, -0.85)          # la tapa empieza en x=0.40: libre del brazo derecho del sillón (borde en x=0.25)
 const MESA_Y := 0.76
 
 # ───────── geometría ─────────
@@ -108,8 +108,8 @@ func _construir_mesa() -> void:
 	# botella tumbada (vacía casi): acostada sobre la mesa, el cuello cuelga del borde; charco de vino sobre la tapa que gotea
 	_torneado("Botella_vino_vidrio", m + Vector3(0.62, y + 0.045, -0.12), perf_b, 36, Color(0.05, 0.08, 0.04), Vector3(0, 0, -90))
 	_caja("Botella_vino_etiqueta", m + Vector3(0.50, y + 0.075, -0.12), Vector3(0.07, 0.003, 0.05), Color(0.8, 0.75, 0.6))
-	_torneado("Liquido_derramado", m + Vector3(0.95, y + 0.002, -0.12), [Vector2(0.0, 0.0), Vector2(0.22, 0.0), Vector2(0.26, 0.003), Vector2(0.0, 0.004)], 36, Color(0.3, 0.01, 0.03))        # charco irregular lo deforma Blender
-	_caja("Liquido_hilo", m + Vector3(1.10, y + 0.0015, -0.18), Vector3(0.42, 0.003, 0.03), Color(0.3, 0.01, 0.03))                                                                    # hilo que corre hacia el borde de la mesa
+	_torneado("Liquido_derramado", m + Vector3(0.84, y + 0.002, -0.12), [Vector2(0.0, 0.0), Vector2(0.19, 0.0), Vector2(0.22, 0.003), Vector2(0.0, 0.004)], 36, Color(0.3, 0.01, 0.03))        # charco irregular lo deforma Blender
+	_caja("Liquido_hilo", m + Vector3(1.00, y + 0.0015, -0.14), Vector3(0.30, 0.003, 0.03), Color(0.3, 0.01, 0.03))                                                                    # hilo que corre hacia el borde de la mesa
 	# cenicero de cristal con cigarros consumidos y uno ENCENDIDO
 	_torneado("Cenicero", m + Vector3(0.05, y, 0.17), [Vector2(0.0, 0.0), Vector2(0.055, 0.0), Vector2(0.065, 0.012), Vector2(0.075, 0.03), Vector2(0.07, 0.034), Vector2(0.045, 0.02), Vector2(0.0, 0.018)], 40, Color(0.6, 0.65, 0.7))
 	for k in 5:
@@ -119,10 +119,19 @@ func _construir_mesa() -> void:
 	_torneado("Cigarro_brasa", m + Vector3(0.05 + 0.040, y + 0.0805, 0.20), [Vector2(0.0, 0.0), Vector2(0.0044, 0.0), Vector2(0.0044, 0.007), Vector2(0.0, 0.007)], 12, Color(1.0, 0.3, 0.05), Vector3(0, 0, -22))
 	_torneado("Cigarro_ceniza", m + Vector3(0.05 + 0.047, y + 0.0855, 0.20), [Vector2(0.0, 0.0), Vector2(0.0042, 0.0), Vector2(0.0040, 0.012), Vector2(0.0, 0.012)], 12, Color(0.35, 0.35, 0.36), Vector3(0, 0, -31))   # ceniza real: columna que se curva
 	_caja("Encendedor", m + Vector3(-0.08, y + 0.007, 0.33), Vector3(0.055, 0.014, 0.03), Color(0.7, 0.62, 0.3), Vector3(0, 25, 0))
-	# pistola sobre la mesa (silueta clásica: corredera, empuñadura, guardamonte)
-	_caja("Pistola_corredera", m + Vector3(-0.85, y + 0.04, 0.0), Vector3(0.17, 0.028, 0.03), Color(0.05, 0.05, 0.06), Vector3(0, 10, 0))
-	_caja("Pistola_empunadura", m + Vector3(-0.92, y + 0.015, 0.01), Vector3(0.035, 0.085, 0.03), Color(0.04, 0.04, 0.05), Vector3(0, 10, 18))
-	_caja("Pistola_guardamonte", m + Vector3(-0.88, y + 0.012, 0.0), Vector3(0.04, 0.012, 0.025), Color(0.05, 0.05, 0.06), Vector3(0, 10, 0))
+	# pistola USP real (modelo detallado del catálogo, 2090 triángulos) apoyada de lado sobre la mesa y apuntando hacia el sillón
+	var ps: PackedScene = load("res://assets/pistola_USP.glb")
+	var pis: Node3D = ps.instantiate(); pis.name = "Usp"; esc.add_child(pis)
+	var nme := 0
+	for n in pis.find_children("*", "MeshInstance3D", true, false):
+		n.name = "Pistola_%d" % nme; nme += 1
+	pis.rotation_degrees = Vector3(0, -112, 90)                                  # de costado (rollo 90° sobre el eje del caño), caño hacia −x
+	pis.position = m + Vector3(-0.55, 0.0, 0.18)
+	await process_frame
+	var mn := 1e9
+	for n in pis.find_children("*", "MeshInstance3D", true, false):
+		var mi := n as MeshInstance3D; var ab := mi.global_transform * mi.get_aabb(); mn = minf(mn, ab.position.y)
+	pis.position.y += (y - mn) + 0.0004                                          # apoyada exactamente sobre la tapa
 	# aparador: más botellas (se ven al fondo)
 	for k in 4:
 		_torneado("Botella_aparador_%d" % k, Vector3(3.2, 0.9, 0.9 + k * 0.25), perf_b, 24, Color(0.1, 0.08, 0.05))
@@ -130,12 +139,12 @@ func _construir_mesa() -> void:
 # ───────── cámaras ─────────
 func _tomas() -> Array:
 	return [
-		{"id": "h1", "camara": "H1_establecimiento", "t0": 0.0, "t1": 11.0, "pos": [2.9, 1.55, 3.7], "pos_fin": [2.1, 1.40, 2.5], "mira": [0.0, 1.0, -1.5], "mira_fin": [0.1, 0.95, -1.2], "fov": 54.0, "mano": 0.004},
-		{"id": "h2", "camara": "H2_mesa_detalle", "t0": 11.0, "t1": 20.5, "pos": [1.65, 1.00, 0.55], "pos_fin": [0.95, 0.99, 0.62], "mira": [1.35, 0.80, -0.7], "mira_fin": [1.15, 0.82, -0.62], "fov": 30.0, "mano": 0.002},
+		{"id": "h1", "camara": "H1_establecimiento", "t0": 0.0, "t1": 11.0, "pos": [3.3, 1.60, 3.9], "pos_fin": [2.6, 1.40, 2.7], "mira": [0.5, 1.0, -1.4], "mira_fin": [0.6, 0.95, -1.1], "fov": 54.0, "mano": 0.004},
+		{"id": "h2", "camara": "H2_mesa_detalle", "t0": 11.0, "t1": 20.5, "pos": [3.0, 1.25, 0.6], "pos_fin": [2.0, 1.05, -0.05], "mira": [1.6, 0.80, -0.8], "mira_fin": [1.0, 0.79, -0.67], "fov": 30.0, "mano": 0.002},
 		{"id": "h3", "camara": "H3_ventanal_tormenta", "t0": 20.5, "t1": 29.5, "pos": [-0.2, 1.45, 1.9], "pos_fin": [-0.1, 1.5, 0.6], "mira": [0.0, 1.55, -4.5], "mira_fin": [0.0, 1.65, -4.5], "fov": 48.0, "mano": 0.003},
 		{"id": "h4", "camara": "H4_gabriel_medio", "t0": 29.5, "t1": 43.0, "pos": [0.95, 1.30, -2.5], "pos_fin": [0.55, 1.28, -1.9], "mira": [-0.35, 1.0, -0.2], "mira_fin": [-0.35, 1.05, -0.2], "fov": 38.0, "mano": 0.003},
-		{"id": "h5", "camara": "H5_gotas_suelo", "t0": 43.0, "t1": 51.0, "pos": [-1.65, 0.20, 0.75], "pos_fin": [-1.45, 0.16, 0.55], "mira": [-0.78, 0.10, -0.12], "mira_fin": [-0.78, 0.08, -0.12], "fov": 32.0, "mano": 0.0},
-		{"id": "h6", "camara": "H6_hombro_herido", "t0": 51.0, "t1": 59.0, "pos": [-1.35, 1.30, 0.85], "pos_fin": [-1.05, 1.28, 0.55], "mira": [-0.62, 1.15, -0.18], "mira_fin": [-0.62, 1.15, -0.18], "fov": 34.0, "mano": 0.002},
+		{"id": "h5", "camara": "H5_gotas_suelo", "t0": 43.0, "t1": 51.0, "pos": [-1.55, 0.95, -1.35], "pos_fin": [-1.35, 0.55, -1.25], "mira": [-0.80, 0.55, -0.70], "mira_fin": [-0.80, 0.30, -0.70], "fov": 32.0, "mano": 0.0},
+		{"id": "h6", "camara": "H6_hombro_herido", "t0": 51.0, "t1": 59.0, "pos": [-1.35, 1.38, -1.25], "pos_fin": [-1.05, 1.32, -0.95], "mira": [-0.55, 1.12, -0.15], "mira_fin": [-0.55, 1.12, -0.15], "fov": 34.0, "mano": 0.002},
 		{"id": "h7", "camara": "H7_rostro", "t0": 59.0, "t1": 69.0, "pos": [0.55, 1.22, -1.15], "pos_fin": [0.30, 1.20, -0.85], "mira": [-0.35, 1.15, -0.2], "mira_fin": [-0.35, 1.15, -0.2], "fov": 28.0, "mano": 0.002},
 		{"id": "h8", "camara": "H8_alejamiento_final", "t0": 69.0, "t1": 78.0, "pos": [0.30, 1.20, -0.85], "pos_fin": [2.7, 1.55, 3.4], "mira": [-0.35, 1.15, -0.2], "mira_fin": [0.0, 1.0, -1.5], "fov": 40.0, "mano": 0.0}]
 
@@ -154,10 +163,13 @@ func _pista(n: Node, pos := true, rot := true) -> Array:
 func _montar(a: PackedStringArray) -> void:
 	await process_frame
 	esc = Node3D.new(); esc.name = "Escena"; root.add_child(esc)
+	# luz SÓLO para las fotos de control de Godot (cuelga de root, no de la escena: no se exporta; la iluminación real es de Blender)
+	var luz := OmniLight3D.new(); luz.position = Vector3(0.3, 2.8, 1.0); luz.omni_range = 14.0; luz.light_energy = 2.2; root.add_child(luz)
+	var wenv := WorldEnvironment.new(); var env := Environment.new(); env.background_mode = Environment.BG_COLOR; env.background_color = Color(0.03, 0.04, 0.07); env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR; env.ambient_light_color = Color(0.5, 0.5, 0.6); env.ambient_light_energy = 0.7; wenv.environment = env; root.add_child(wenv)
 	total = int(ceil(DUR * FPS)) + 1
 	anim = Animation.new(); anim.length = float(total - 1) / FPS; anim.step = 1.0 / FPS; anim.loop_mode = Animation.LOOP_NONE
 	ap = AnimationPlayer.new(); ap.name = "Anim"; esc.add_child(ap)
-	_construir_sala(); _construir_mesa()
+	_construir_sala(); await _construir_mesa()
 	G = Actor3.new(); G.cargar("gabriel", "res://assets/aiden_noir.glb", "res://assets/aiden_meta.json", esc)
 	G.raiz.position = SILLON + Vector3(0, 0.0, 0.05); G.raiz.rotation.y = PI
 	await process_frame
@@ -178,18 +190,18 @@ func _montar(a: PackedStringArray) -> void:
 		var dolor := 0.5 + 0.5 * sin(t * 0.7)
 		var hip := Vector3(0, 0.45 + 0.002 * resp, 0.0)
 		# mano izquierda del personaje (+x local → −x del mundo): cuelga al costado del sillón; la derecha reposa sobre el muslo
-		var man_i: Vector3 = inv * Vector3(SILLON.x - 0.50, 0.20, SILLON.z + 0.06)
+		var man_i: Vector3 = inv * Vector3(SILLON.x - 0.45, 0.74, SILLON.z - 0.42)
 		var man_d: Vector3 = inv * Vector3(SILLON.x + 0.23, 0.55, SILLON.z - 0.16)
 		var head := hip + Vector3(0.015, 0.575 + 0.003 * resp - 0.02 * dolor, 0.07 + 0.01 * dolor)
 		RG.pose({"hips": hip, "head": head, "roll": 0.10 + 0.02 * sin(t * 0.4), "look": -0.12 + 0.05 * sin(t * 0.23), "look_y": -0.10 + 0.04 * sin(t * 0.31) + (0.10 if (t > 28.0 and t < 33.5) else 0.0), "grip": 0.4,
-			"hands": [{"side": "Left", "wrist": man_i, "fdir": Vector3(0.1, -1, 0.1).normalized(), "back": Vector3(1, 0.2, 0), "pole": Vector3(0.7, -0.4, -0.6)},
+			"hands": [{"side": "Left", "wrist": man_i, "fdir": Vector3(0.0, -1, -0.35).normalized(), "back": Vector3(1, 0.2, 0), "pole": Vector3(0.7, -0.4, -0.6)},
 					  {"side": "Right", "wrist": man_d, "fdir": Vector3(0, -0.15, 1).normalized(), "back": Vector3(0, 1, 0), "pole": Vector3(0.5, -0.5, -0.3)}],
 			"feet": [{"side": "Left", "pos": Vector3(0.13, 0.04, 0.42)}, {"side": "Right", "pos": Vector3(-0.10, 0.04, 0.46)}], "lean0": -0.02, "lean1": 0.22})
 		for h in G.sk.get_bone_count(): anim.rotation_track_insert_key(p_sk[h], t, G.sk.get_bone_pose_rotation(h))
 		anim.position_track_insert_key(p_sk["pos"], t, G.sk.get_bone_pose_position(G.hueso_cadera))
 		# origen del goteo: punta de los dedos de la mano que cuelga (posición real de la mano en el mundo)
 		var mano_w: Vector3 = G.sk.global_transform * G.sk.get_bone_global_pose(G.mano["L"]).origin
-		goteo.global_position = mano_w + Vector3(0, -0.08, 0); anim.position_track_insert_key(p_goteo[0], t, goteo.position)
+		goteo.global_position = mano_w + Vector3(0, -0.19, -0.05) anim.position_track_insert_key(p_goteo[0], t, goteo.position)
 		for tm in tomas:
 			var c: Camera3D = cams[tm["id"]]
 			var u := clampf((t - tm["t0"]) / maxf(tm["t1"] - tm["t0"], 0.001), 0.0, 1.0); var e := smoothstep(0.0, 1.0, u)

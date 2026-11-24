@@ -5,6 +5,7 @@ col_fx = bpy.data.collections.new('Efectos'); sc.collection.children.link(col_fx
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 exec(open(os.path.join(HERE, 'util_nodos.py')).read())
 rng_c = random.Random(31)
+mesa_c = EV['mesa_centro']; MY = EV['mesa_altura']
 def mk(nombre):
     m = bpy.data.materials.new(nombre); nt, bs, out = reconstruir(m); return m, nt, bs, out
 def tex(nt, tipo, **kw):
@@ -120,7 +121,12 @@ for o in list(bpy.data.objects):
     elif n.startswith('Cigarro_filtro'): asigna(o, M['filtro'])
     elif n.startswith('Cigarro_brasa'): asigna(o, M['brasa'])
     elif n.startswith('Cigarro_ceniza'): asigna(o, M['ceniza'])
-    elif n.startswith('Pistola'): asigna(o, M['pistola'])
+    elif n.startswith('Pistola'):
+        for _m in o.data.materials:
+            if _m and _m.use_nodes:
+                for _n in _m.node_tree.nodes:
+                    if _n.type == 'BSDF_PRINCIPLED':
+                        _n.inputs['Roughness'].default_value = max(min(_n.inputs['Roughness'].default_value, 0.4), 0.18); _n.inputs['Metallic'].default_value = max(_n.inputs['Metallic'].default_value, 0.85)
     elif n.startswith('Lampara_pantalla'): asigna(o, M['pantalla'])
     elif n.startswith(('Lampara_pie', 'Encendedor')): asigna(o, M['laton'])
     # bordes biselados y almohadones redondeados (sólo en Blender)
@@ -153,7 +159,7 @@ for f0 in f_flash:
         lun.energy = e; lun.keyframe_insert('energy', frame=f0 + df)
 lun.energy = 160.0; lun.keyframe_insert('energy', frame=1)
 ember = bpy.data.lights.new('Luz_brasa', 'POINT'); ember.color = (1.0, 0.3, 0.06); ember.energy = 0.35; ember.shadow_soft_size = 0.01
-eo = bpy.data.objects.new('Luz_brasa', ember); sc.collection.objects.link(eo); eo.location = gb((MESA_ + Vector((0.09, 0.0, 0.20)) if False else (1.25 + 0.09, 0.84, 0.20)))
+eo = bpy.data.objects.new('Luz_brasa', ember); sc.collection.objects.link(eo); eo.location = gb((mesa_c[0] + 0.095, MY + 0.083, mesa_c[2] + 0.20))
 # bruma en la sala: se ven los haces de luz de los relámpagos y la lámpara
 bpy.ops.mesh.primitive_cube_add(size=1.0, location=(0, 0, 1.65)); br = bpy.context.active_object; br.name = 'Bruma_sala'; br.scale = (7.2, 9.2, 3.2)
 mvb = bpy.data.materials.new('Bruma'); mvb.use_nodes = True; ntb = mvb.node_tree; ntb.nodes.clear(); ob_ = ntb.nodes.new('ShaderNodeOutputMaterial'); vb = ntb.nodes.new('ShaderNodeVolumePrincipled')
@@ -279,19 +285,19 @@ def construir_goteo(nombre, origen_obj, periodo, caida_m, objeto, radio, semilla
     tam = mat_(g, 'MULTIPLY', mat_(g, 'MULTIPLY', radio, mat_(g, 'ADD', 0.35, mat_(g, 'MULTIPLY', 0.65, mat_(g, 'MINIMUM', crece, 1.0)))), vive)
     g.links.new(xyz(g, mat_(g, 'MULTIPLY', tam, 0.85), mat_(g, 'MULTIPLY', tam, 0.85), mat_(g, 'MULTIPLY', tam, mat_(g, 'ADD', 1.0, mat_(g, 'MULTIPLY', 0.5, mat_(g, 'MINIMUM', t_ * 1.0 if False else t_, 0.3))))), ins.inputs['Scale'])
     g.links.new(ins.outputs['Instances'], unir.inputs['Geometry']); g.links.new(unir.outputs['Geometry'], sal.inputs['Geometry']); return g
-borde_vino = bpy.data.objects.new('Borde_mesa_vino', None); sc.collection.objects.link(borde_vino); borde_vino.location = gb((mesa_c[0] + 0.75, MY - 0.002, mesa_c[2] + 0.475))
+borde_vino = bpy.data.objects.new('Borde_mesa_vino', None); sc.collection.objects.link(borde_vino); borde_vino.location = gb((mesa_c[0] + 1.15, MY - 0.002, mesa_c[2] - 0.14))
 objeto_gn('Goteo_vino', construir_goteo('GN_Goteo_vino', borde_vino, EV['gota_vino_cada_s'], MY, O_GV, 0.011, 0.0))
 goteo_s = bpy.data.objects['Goteo_origen']
-objeto_gn('Goteo_sangre', construir_goteo('GN_Goteo_sangre', goteo_s, EV['gota_sangre_cada_s'], max(goteo_s.location.z if False else 0.20, 0.12), O_GS, 0.0085, 0.37))
+sc.frame_set(1000); gs = goteo_s.matrix_world.translation.copy(); ALT_GOTEO = max(gs.z, 0.25)
+objeto_gn('Goteo_sangre', construir_goteo('GN_Goteo_sangre', goteo_s, EV['gota_sangre_cada_s'], ALT_GOTEO, O_GS, 0.0085, 0.37))
 # charcos que crecen despacio bajo el goteo
 def mancha_piso(nombre, pos, tam0, tam1, mat_):
     bpy.ops.mesh.primitive_plane_add(size=1.0, location=(pos[0], pos[1], 0.003)); o = bpy.context.active_object; o.name = nombre; o.data.materials.append(mat_); o.rotation_euler = (0, 0, rng_c.uniform(0, 6.28))
     for c_ in list(o.users_collection): c_.objects.unlink(o)
     col_fx.objects.link(o); o.scale = (tam0, tam0, 1); o.keyframe_insert('scale', frame=1); o.scale = (tam1, tam1, 1); o.keyframe_insert('scale', frame=TOTAL); return o
-gs = gb((-0.35 - 0.50, 0.0, -0.20 + 0.06))
 mancha_piso('Sangre_piso_1', (gs.x, gs.y), 0.16, 0.46, M_SANGRE); mancha_piso('Sangre_piso_2', (gs.x - 0.08, gs.y + 0.04), 0.06, 0.22, M_SANGRE)
 for k_ in range(7): mancha_piso(f'Sangre_gotas_{k_}', (gs.x + rng_c.uniform(-0.35, 0.35), gs.y + rng_c.uniform(-0.3, 0.3)), 0.02, rng_c.uniform(0.04, 0.09), M_SANGRE)
-mancha_piso('Vino_piso', gb((mesa_c[0] + 0.75, 0, mesa_c[2] + 0.80))[:2], 0.05, 0.28, M['charco'])
+mancha_piso('Vino_piso', gb((mesa_c[0] + 1.17, 0, mesa_c[2] - 0.14))[:2], 0.05, 0.28, M['charco'])
 
 # ───────────────────────── sangre en Gabriel (rostro, manos, hombro herido de la camisa) ─────────────────────────
 f_imp = 0

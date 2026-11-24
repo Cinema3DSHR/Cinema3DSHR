@@ -78,11 +78,11 @@ def arrugas(obj, fuerza, escala, semilla):
 
 # ── CAMISA: torso + brazos hasta la muñeca, dos vueltas de holgura, faldón que baja bajo el cinturón, escote abierto
 camisa = TF._region(sc, body, lambda n: n.startswith(('Hip', 'Pelvis', 'Waist', 'Spine', 'L_Clavicle', 'R_Clavicle', 'L_Upperarm', 'R_Upperarm', 'L_Forearm', 'R_Forearm', 'L_Elbow', 'R_Elbow', 'L_Breast', 'R_Breast')),
-                    0.026 * S * K, 'CAMISA', m_top, zmin=cadera - 0.115 * S, zmax=cuello_z - 0.012 * S)
+                    0.040 * S * K, 'CAMISA', m_top, zmin=cadera - 0.115 * S, zmax=cuello_z - 0.012 * S)
 recortar(camisa, cadera - 0.085 * S, True)                                     # dobladillo recto
 # ── PANTALÓN: de la cintura a los tobillos, algo suelto, con botamangas que tapan el borde del zapato
 pantalon = TF._region(sc, body, lambda n: n.startswith(('Hip', 'Pelvis', 'L_Thigh', 'R_Thigh', 'L_Calf', 'R_Calf', 'L_Knee', 'R_Knee')) and not n.startswith(('L_Foot', 'R_Foot')),
-                      0.030 * S * K, 'PANTALON', m_bot, zmin=zank + 0.01 * S, zmax=cadera + 0.045 * S)
+                      0.036 * S * K, 'PANTALON', m_bot, zmin=zank + 0.01 * S, zmax=cadera + 0.045 * S)
 recortar(pantalon, zank + 0.012 * S, True)
 arrugas(camisa, 0.0090 * S * K, 0.10 * K, 1); arrugas(pantalon, 0.0075 * S * K, 0.14 * K, 2)
 mwb = body.matrix_world
