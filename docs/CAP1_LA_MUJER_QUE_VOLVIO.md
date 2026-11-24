@@ -70,3 +70,9 @@ Indicaciones del dueño: ruedas sin saltos; árboles y rocas reales (nada redond
 
 ### Ruedas sin vibración (23/11/2026)
 Las ruedas se animaban girando el nodo alrededor del origen del auto con compensación de posición cuadro a cuadro (la interpolación lineal de esa trayectoria circular hacía vibrar las ruedas). Ahora cada rueda cuelga de un **pivote en su centro** (`RuedaPivote_*`) y sólo se anima la rotación: medido en el GLB, el pivote no se corre (0,04 mm) y gira parejo (≈7,4°/cuadro). Elena: cruza el borde del barranco a los 11,5 s y cae (−33 m a los 14 s); no se la encuentra.
+
+### Sangre en el rostro (24/11/2026) — manchas, no chorros
+Pedido del dueño: rostro apenas manchado, como si se hubiera tocado o limpiado la cara tras el golpe, y una heridita en la frente.
+- `efectos_accidente.py → sangre_cara()`: **heridita** en la frente (línea corta con un poco de sangre seca alrededor y una gotita corta) y **4 manchas de roce** finas con estrías (mejilla, mandíbula del otro lado, mentón y sien). Aparecen con el golpe (frame del impacto) y no corren. Se ubican con los ojos y la boca reales del modelo (en «coordenadas generadas», que no siguen la pose: las coordenadas de objeto sí se mueven con el personaje y fallaban).
+- Cámara C8 (rostro): ahora sigue la **cabeza real** de Gabriel (antes apuntaba a 1,55 m fijos y perdía el rostro cuando se agachaba); C7 igual. Seguimiento más firme.
+- Todas las texturas se empaquetan dentro del BLEND (autónomo).

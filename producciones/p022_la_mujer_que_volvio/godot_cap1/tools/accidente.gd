@@ -390,8 +390,8 @@ func _tomas() -> Array:
 		{"id": "t4", "camara": "C4_primera_persona", "t0": 9.6, "t1": 11.8, "modo": "pov", "fov": 70.0},
 		{"id": "t5", "camara": "C5_rocas_vuelco", "t0": 11.8, "t1": 15.0, "modo": "fija", "pos": "IMP_LADO", "mira_seg": 0.8, "fov": 38.0},
 		{"id": "t6", "camara": "C6_acercamiento_accidente", "t0": 15.0, "t1": 22.0, "modo": "fija_mov", "pos": "IMP_ACERC0", "pos_fin": "IMP_ACERC1", "mira_seg": 1.0, "fov": 34.0},
-		{"id": "t7", "camara": "C7_busqueda_media", "t0": 22.0, "t1": T_DESMAYO_REAL - 16.0, "modo": "sigue_g", "off": [4.2, 1.7, 5.2], "alt": 1.1, "fov": 36.0},
-		{"id": "t8", "camara": "C8_rostro_sangre", "t0": T_DESMAYO_REAL - 16.0, "t1": T_DESMAYO_REAL - 4.5, "modo": "sigue_g", "off": [0.9, 1.6, 1.5], "alt": 1.55, "fov": 30.0},
+		{"id": "t7", "camara": "C7_busqueda_media", "t0": 22.0, "t1": T_DESMAYO_REAL - 16.0, "modo": "sigue_g", "base": "cabeza", "off": [4.2, -0.05, 5.2], "alt": -0.65, "fov": 36.0},
+		{"id": "t8", "camara": "C8_rostro_sangre", "t0": T_DESMAYO_REAL - 16.0, "t1": T_DESMAYO_REAL - 4.5, "modo": "sigue_g", "base": "cabeza", "off": [0.9, -0.12, 1.45], "alt": 0.0, "fov": 30.0},
 		{"id": "t9", "camara": "C9_desmayo", "t0": T_DESMAYO_REAL - 4.5, "t1": DUR, "modo": "sigue_g", "off": [3.4, 0.55, -3.2], "alt": 0.5, "fov": 34.0}]
 
 func _poner_camara(tm: Dictionary, c: Camera3D, g: int, t: float, cp: Dictionary, cm: Dictionary) -> void:
@@ -419,16 +419,20 @@ func _poner_camara(tm: Dictionary, c: Camera3D, g: int, t: float, cp: Dictionary
 			c.look_at(prev, Vector3.UP)
 		"sigue_g":
 			var o: Array = tm["off"]
-			var objetivo2: Vector3 = G2.raiz.global_position + Vector3(o[0], o[1], o[2])
+			var base_g: Vector3 = G2.raiz.global_position
+			if tm.get("base", "") == "cabeza":
+				base_g = G2.sk.global_transform * G2.sk.get_bone_global_pose(G2.cabeza).origin          # sigue la cabeza real (aunque esté agachado o arrodillado)
+				base_g.y -= float(tm["alt"]) * 0.0
+			var objetivo2: Vector3 = base_g + Vector3(o[0], o[1], o[2])
 			var k2: String = tm["id"] + "_p"
 			var pp: Vector3 = cm.get(k2, objetivo2)
-			pp = pp.lerp(objetivo2, 0.035) if cm.has(k2) else objetivo2
+			pp = pp.lerp(objetivo2, 0.14) if cm.has(k2) else objetivo2
 			cm[k2] = pp
 			c.global_position = pp
-			var mir: Vector3 = G2.raiz.global_position + Vector3(0, float(tm["alt"]), 0)
+			var mir: Vector3 = base_g + Vector3(0, float(tm["alt"]), 0)
 			var kk2: String = tm["id"] + "_m"
 			var mm: Vector3 = cm.get(kk2, mir)
-			mm = mm.lerp(mir, 0.08) if cm.has(kk2) else mir
+			mm = mm.lerp(mir, 0.40) if cm.has(kk2) else mir
 			cm[kk2] = mm
 			c.look_at(mm, Vector3.UP)
 		"pov":

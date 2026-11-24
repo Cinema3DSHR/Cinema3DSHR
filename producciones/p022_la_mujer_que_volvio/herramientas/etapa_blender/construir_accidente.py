@@ -137,5 +137,7 @@ for f, cam in sorted(camaras, key=lambda x: x[0]):
 sc.camera = sorted(camaras, key=lambda x: x[0])[0][1]
 
 exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'efectos_accidente.py')).read())
+for _im in bpy.data.images:
+    if _im.source == 'FILE' and not _im.packed_file: _im.pack()           # el BLEND queda autónomo (texturas adentro)
 bpy.ops.wm.save_as_mainfile(filepath=SALIDA, compress=True)
 print('GUARDADO', SALIDA, os.path.getsize(SALIDA))
