@@ -140,7 +140,7 @@ import musica_noir as MN                                                        
 sec = [{"t0": 0.5, "t1": T_IM - 0.5, "capas": ["nota_sola", "pad"]},                   # antes del choque: notas aisladas y aire
        {"t0": 22.0, "t1": T_DE - 12.0, "capas": ["piano", "melodia", "pad"]},          # después del silencio: entra el piano
        {"t0": T_DE - 12.0, "t1": T_DE + 4.0, "capas": ["piano", "melodia", "cuerdas", "pad"]}]   # sube con la búsqueda y se apaga con el desmayo
-mus += MN.tema(n, np.random.default_rng(31), sec, 1.0) * 1.05
+mus += MN.tema(n, np.random.default_rng(31), sec, 1.0) * 0.38
 mus *= np.clip(np.interp(t, [0, 1, T_IM - 0.4, T_IM + 0.3, T_IM + 6, 21.5, 24.0, T_DE - 3, T_DE + 2.5, DUR], [0, 0.6, 1.0, 0.0, 0.0, 0.0, 0.8, 1.0, 0.25, 0.0]), 0, 1)[:, None]
 
 # 10) VOZ: narración de Gabriel (voces.json) ubicada sobre las escenas
