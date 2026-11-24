@@ -551,3 +551,99 @@ for nm, off, en, col, tam in (('Luz_G_frente', (1.6, -3.4, 3.2), 1600.0, (0.75, 
     cl = o.constraints.new('COPY_LOCATION'); cl.target = g_fuera; cl.use_offset = True
     o.location = off
     tr = o.constraints.new('TRACK_TO'); tr.target = g_fuera; tr.track_axis = 'TRACK_NEGATIVE_Z'; tr.up_axis = 'UP_Y'
+
+# ═════════════════════════════ CHISPAS, VIDRIOS Y POLVO DEL CHOQUE (deterministas por cuadro) ═════════════════════════════
+T_IM_ = EV['impacto_s']; T_RO_ = EV['vuelco_fin_s']
+# datos keyados: x = chispas (ráfaga del golpe + raspones del vuelco), y = polvo
+datos_fx = bpy.data.objects.new('Datos_choque', None); sc.collection.objects.link(datos_fx)
+raspones = [T_IM_ + 0.7, T_IM_ + 1.4, T_IM_ + 2.15, T_IM_ + 2.9]
+for i in range(TOTAL):
+    tt = i / FPS
+    ch = 0.0
+    if T_IM_ <= tt < T_IM_ + 0.45: ch = 1.0 - (tt - T_IM_) / 0.45 * 0.6
+    for r_ in raspones:
+        if r_ <= tt < r_ + 0.35: ch = max(ch, 0.55 * (1.0 - (tt - r_) / 0.35))
+    po = 0.0
+    if T_IM_ <= tt < T_IM_ + 3.5: po = min((tt - T_IM_) / 0.15, 1.0) * max(0.0, 1.0 - (tt - T_IM_) / 3.5)
+    datos_fx.scale = (ch, po, 1.0); datos_fx.keyframe_insert('scale', frame=i + 1)
+choque_origen = bpy.data.objects.new('Choque_origen', None); sc.collection.objects.link(choque_origen); choque_origen.location = (Pimp.x, Pimp.y, 0.55)
+def mat_chispa():
+    m = bpy.data.materials.new('Chispa'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    out = N(nt, 'ShaderNodeOutputMaterial'); em = N(nt, 'ShaderNodeEmission'); em.inputs['Color'].default_value = (1.0, 0.55, 0.16, 1); em.inputs['Strength'].default_value = 40.0
+    nt.links.new(em.outputs[0], out.inputs[0]); return m
+def mat_vidrio_fragmento():
+    m = bpy.data.materials.new('Vidrio_roto'); nt, bs, out = reconstruir(m)
+    bs.inputs['Base Color'].default_value = (0.75, 0.85, 0.9, 1); entrada(bs, 'Roughness').default_value = 0.03; entrada(bs, 'Transmission Weight', 'Transmission').default_value = 0.9; entrada(bs, 'IOR').default_value = 1.5
+    return m
+def mat_polvo():
+    m = bpy.data.materials.new('Polvo_barro'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
+    out = N(nt, 'ShaderNodeOutputMaterial'); v = N(nt, 'ShaderNodeVolumeScatter'); v.inputs['Density'].default_value = 0.9; v.inputs['Color'].default_value = (0.22, 0.17, 0.12, 1); v.inputs['Anisotropy'].default_value = 0.3
+    nt.links.new(v.outputs[0], out.inputs['Volume']); return m
+def m_chispa(me):
+    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0); bmesh.ops.scale(bm, vec=(0.004, 0.004, 0.055), verts=bm.verts); bm.to_mesh(me); bm.free()
+def m_fragmento(me):
+    bm = bmesh.new(); a = bm.verts.new((0, 0, 0)); b = bm.verts.new((0.05, 0.004, 0)); c = bm.verts.new((0.012, 0.045, 0.004)); bm.faces.new((a, b, c)); bm.to_mesh(me); bm.free()
+O_CHISPA = malla_obj('Chispa_obj', m_chispa, mat_chispa()); O_FRAG = malla_obj('Fragmento_vidrio', m_fragmento, mat_vidrio_fragmento()); O_POLVO = malla_obj('Bocanada_polvo', m_esfera, mat_polvo())
+for _p in O_POLVO.data.polygons: _p.use_smooth = True
+def construir_chispas():
+    g = ng('GN_Chispas'); sal = N(g, 'NodeGroupOutput')
+    d = N(g, 'GeometryNodeObjectInfo'); d.inputs['Object'].default_value = datos_fx; inten = sep(g, d.outputs['Scale'])[0]
+    ori = N(g, 'GeometryNodeObjectInfo'); ori.inputs['Object'].default_value = choque_origen; O1 = ori.outputs['Location']
+    car = N(g, 'GeometryNodeObjectInfo'); car.inputs['Object'].default_value = auto; O2 = car.outputs['Location']
+    ml = N(g, 'GeometryNodeMeshLine'); ml.inputs['Count'].default_value = 260; ml.inputs['Start Location'].default_value = (0, 0, 0); ml.inputs['Offset'].default_value = (0, 0, 0)
+    tiempo = N(g, 'GeometryNodeInputSceneTime'); ida = N(g, 'GeometryNodeInputIndex').outputs[0]
+    r1 = rnd(g, 41, ident=ida); r2 = rnd(g, 42, -1.0, 1.0, ident=ida); r3 = rnd(g, 43, -1.0, 1.0, ident=ida); r4 = rnd(g, 44, ident=ida); r5 = rnd(g, 45, ident=ida)
+    VIDA = 0.7
+    edad = mat_(g, 'MULTIPLY', mat_(g, 'FRACT', mat_(g, 'ADD', mat_(g, 'DIVIDE', tiempo.outputs['Seconds'], VIDA), r1)), VIDA)
+    v0 = xyz(g, mat_(g, 'MULTIPLY', r2, 7.5), mat_(g, 'MULTIPLY', r3, 7.5), mat_(g, 'ADD', 2.0, mat_(g, 'MULTIPLY', r4, 6.0)))
+    # primeras 200 salen del punto del golpe; las demás, del auto que rueda (raspones)
+    desde = mat_(g, 'LESS_THAN', ida, 200)
+    base = vec_(g, 'ADD', vec_(g, 'SCALE', O1, s=desde), vec_(g, 'SCALE', vec_(g, 'ADD', O2, (0, 0, -0.2)), s=mat_(g, 'SUBTRACT', 1.0, desde)))
+    pos = vec_(g, 'ADD', vec_(g, 'ADD', base, vec_(g, 'SCALE', v0, s=edad)), xyz(g, 0.0, 0.0, mat_(g, 'MULTIPLY', mat_(g, 'MULTIPLY', edad, edad), -4.9)))
+    sp = N(g, 'GeometryNodeSetPosition'); g.links.new(ml.outputs['Mesh'], sp.inputs['Geometry']); g.links.new(pos, sp.inputs['Position'])
+    vel_dir = vec_(g, 'ADD', v0, xyz(g, 0.0, 0.0, mat_(g, 'MULTIPLY', edad, -9.8)))
+    al = N(g, 'FunctionNodeAlignRotationToVector'); al.axis = 'Z'; g.links.new(vel_dir, al.inputs['Vector'])
+    oi = N(g, 'GeometryNodeObjectInfo'); oi.inputs['Object'].default_value = O_CHISPA; oi.inputs['As Instance'].default_value = True
+    ins = N(g, 'GeometryNodeInstanceOnPoints'); g.links.new(sp.outputs['Geometry'], ins.inputs['Points']); g.links.new(oi.outputs['Geometry'], ins.inputs['Instance']); g.links.new(al.outputs['Rotation'], ins.inputs['Rotation'])
+    ok = mat_(g, 'LESS_THAN', r5, inten)
+    k = mat_(g, 'MULTIPLY', ok, mat_(g, 'SUBTRACT', 1.0, mat_(g, 'MULTIPLY', edad, 1.0 / VIDA * 0.7)))
+    g.links.new(xyz(g, k, k, k), ins.inputs['Scale']); g.links.new(ins.outputs['Instances'], sal.inputs['Geometry'])
+    return g
+def construir_vidrios():
+    g = ng('GN_Vidrios'); sal = N(g, 'NodeGroupOutput')
+    ori = N(g, 'GeometryNodeObjectInfo'); ori.inputs['Object'].default_value = choque_origen; O = ori.outputs['Location']
+    ml = N(g, 'GeometryNodeMeshLine'); ml.inputs['Count'].default_value = 320; ml.inputs['Start Location'].default_value = (0, 0, 0); ml.inputs['Offset'].default_value = (0, 0, 0)
+    tiempo = N(g, 'GeometryNodeInputSceneTime'); ida = N(g, 'GeometryNodeInputIndex').outputs[0]
+    r2 = rnd(g, 51, -1.0, 1.0, ident=ida); r3 = rnd(g, 52, -1.0, 1.0, ident=ida); r4 = rnd(g, 53, ident=ida); r6 = rnd(g, 54, -3.0, 3.0, ident=ida); r7 = rnd(g, 55, 0.0, 6.28, ident=ida); r8 = rnd(g, 56, 0.4, 1.6, ident=ida)
+    vx = mat_(g, 'MULTIPLY', r2, 3.4); vy = mat_(g, 'MULTIPLY', r3, 3.4); vz = mat_(g, 'ADD', 1.2, mat_(g, 'MULTIPLY', r4, 4.5))
+    edad_ = mat_(g, 'MAXIMUM', mat_(g, 'SUBTRACT', tiempo.outputs['Seconds'], T_IM_ + 0.02), 0.0)
+    t_pos = mat_(g, 'DIVIDE', mat_(g, 'ADD', vz, mat_(g, 'SQRT', mat_(g, 'ADD', mat_(g, 'MULTIPLY', vz, vz), 19.6 * 0.4))), 9.8)           # tiempo de caída hasta el suelo desde 0,55–0,15 m
+    ea = mat_(g, 'MINIMUM', edad_, t_pos)
+    pos = vec_(g, 'ADD', O, xyz(g, mat_(g, 'MULTIPLY', vx, mat_(g, 'ADD', ea, mat_(g, 'MULTIPLY', mat_(g, 'MINIMUM', mat_(g, 'MAXIMUM', mat_(g, 'SUBTRACT', edad_, t_pos), 0.0), 0.25), 0.3))),
+                                  mat_(g, 'MULTIPLY', vy, mat_(g, 'ADD', ea, mat_(g, 'MULTIPLY', mat_(g, 'MINIMUM', mat_(g, 'MAXIMUM', mat_(g, 'SUBTRACT', edad_, t_pos), 0.0), 0.25), 0.3))),
+                                  mat_(g, 'MAXIMUM', mat_(g, 'SUBTRACT', mat_(g, 'ADD', mat_(g, 'MULTIPLY', vz, ea), -0.55), mat_(g, 'MULTIPLY', mat_(g, 'MULTIPLY', ea, ea), 4.9)), -0.55 + 0.012)))
+    sp = N(g, 'GeometryNodeSetPosition'); g.links.new(ml.outputs['Mesh'], sp.inputs['Geometry']); g.links.new(pos, sp.inputs['Position'])
+    oi = N(g, 'GeometryNodeObjectInfo'); oi.inputs['Object'].default_value = O_FRAG; oi.inputs['As Instance'].default_value = True
+    ins = N(g, 'GeometryNodeInstanceOnPoints'); g.links.new(sp.outputs['Geometry'], ins.inputs['Points']); g.links.new(oi.outputs['Geometry'], ins.inputs['Instance'])
+    giro = mat_(g, 'MULTIPLY', ea, 9.0)
+    g.links.new(xyz(g, mat_(g, 'ADD', r7, giro), mat_(g, 'MULTIPLY', r6, ea), mat_(g, 'ADD', r7, mat_(g, 'MULTIPLY', giro, 0.6))), ins.inputs['Rotation'])
+    visible = mat_(g, 'GREATER_THAN', tiempo.outputs['Seconds'], T_IM_)
+    esc_f = mat_(g, 'MULTIPLY', r8, visible); g.links.new(xyz(g, esc_f, esc_f, esc_f), ins.inputs['Scale']); g.links.new(ins.outputs['Instances'], sal.inputs['Geometry'])
+    return g
+def construir_polvo():
+    g = ng('GN_Polvo'); sal = N(g, 'NodeGroupOutput')
+    d = N(g, 'GeometryNodeObjectInfo'); d.inputs['Object'].default_value = datos_fx; inten = sep(g, d.outputs['Scale'])[1]
+    ori = N(g, 'GeometryNodeObjectInfo'); ori.inputs['Object'].default_value = choque_origen; O = ori.outputs['Location']
+    ml = N(g, 'GeometryNodeMeshLine'); ml.inputs['Count'].default_value = 45; ml.inputs['Start Location'].default_value = (0, 0, 0); ml.inputs['Offset'].default_value = (0, 0, 0)
+    tiempo = N(g, 'GeometryNodeInputSceneTime'); ida = N(g, 'GeometryNodeInputIndex').outputs[0]
+    r1 = rnd(g, 61, ident=ida); r2 = rnd(g, 62, -1.0, 1.0, ident=ida); r3 = rnd(g, 63, -1.0, 1.0, ident=ida)
+    edad = mat_(g, 'MULTIPLY', mat_(g, 'FRACT', mat_(g, 'ADD', mat_(g, 'DIVIDE', tiempo.outputs['Seconds'], 3.0), r1)), 3.0)
+    pos = vec_(g, 'ADD', O, xyz(g, mat_(g, 'MULTIPLY', r2, mat_(g, 'ADD', 0.6, mat_(g, 'MULTIPLY', edad, 2.2))), mat_(g, 'MULTIPLY', r3, mat_(g, 'ADD', 0.6, mat_(g, 'MULTIPLY', edad, 2.2))), mat_(g, 'MULTIPLY', edad, 0.5)))
+    sp = N(g, 'GeometryNodeSetPosition'); g.links.new(ml.outputs['Mesh'], sp.inputs['Geometry']); g.links.new(pos, sp.inputs['Position'])
+    oi = N(g, 'GeometryNodeObjectInfo'); oi.inputs['Object'].default_value = O_POLVO; oi.inputs['As Instance'].default_value = True
+    ins = N(g, 'GeometryNodeInstanceOnPoints'); g.links.new(sp.outputs['Geometry'], ins.inputs['Points']); g.links.new(oi.outputs['Geometry'], ins.inputs['Instance'])
+    crece = mat_(g, 'MULTIPLY', mat_(g, 'ADD', 0.35, mat_(g, 'MULTIPLY', edad, 0.5)), inten)
+    g.links.new(xyz(g, crece, crece, crece), ins.inputs['Scale']); g.links.new(ins.outputs['Instances'], sal.inputs['Geometry'])
+    return g
+objeto_gn('Chispas', construir_chispas(), False); objeto_gn('Vidrios_choque', construir_vidrios(), False); objeto_gn('Polvo_choque', construir_polvo(), False)
+print('chispas, vidrios y polvo listos')
