@@ -26,12 +26,12 @@ def bump_(nt, bs, altura_socket, fuerza, dist=0.02):
 def mat_piso():
     m, nt, bs, out = mk('Piso_madera'); tc = tex(nt, 'ShaderNodeTexCoord')
     br = tex(nt, 'ShaderNodeTexBrick', i_Scale=1.0, i_Mortar_Size=0.004, i_Bias=0.0, i_Brick_Width=1.4, i_Row_Height=0.14, offset=0.5, offset_frequency=2, squash=1.0, squash_frequency=2)
-    br.inputs['Color1'].default_value = (0.045, 0.026, 0.014, 1); br.inputs['Color2'].default_value = (0.085, 0.048, 0.024, 1); br.inputs['Mortar'].default_value = (0.004, 0.002, 0.001, 1)
+    br.inputs['Color1'].default_value = (0.30, 0.285, 0.26, 1); br.inputs['Color2'].default_value = (0.43, 0.405, 0.37, 1); br.inputs['Mortar'].default_value = (0.05, 0.045, 0.04, 1)
     L(nt, tc.outputs['Object'], br.inputs['Vector'])
     ve = tex(nt, 'ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', i_Scale=22.0, i_Distortion=4.0, i_Detail=3.0); L(nt, tc.outputs['Object'], ve.inputs['Vector'])
     mx = tex(nt, 'ShaderNodeMix', data_type='RGBA'); mx.inputs['Factor'].default_value = 0.35; L(nt, br.outputs['Color'], [x for x in mx.inputs if x.name == 'A' and x.type == 'RGBA'][0]); L(nt, ve.outputs['Color'], [x for x in mx.inputs if x.name == 'B' and x.type == 'RGBA'][0])
-    L(nt, mx.outputs['Result'], bs.inputs['Base Color']); bs.inputs['Roughness'].default_value = 0.22
-    entrada(bs, 'Coat Weight', 'Clearcoat').default_value = 0.7; entrada(bs, 'Coat Roughness', 'Clearcoat Roughness').default_value = 0.08
+    L(nt, mx.outputs['Result'], bs.inputs['Base Color']); bs.inputs['Roughness'].default_value = 0.28
+    entrada(bs, 'Coat Weight', 'Clearcoat').default_value = 0.45; entrada(bs, 'Coat Roughness', 'Clearcoat Roughness').default_value = 0.08
     bump_(nt, bs, br.outputs['Fac'], 0.4, 0.004); return m
 def mat_pared():
     m, nt, bs, out = mk('Pared'); tc = tex(nt, 'ShaderNodeTexCoord'); ns = tex(nt, 'ShaderNodeTexNoise', i_Scale=4.0, i_Detail=8.0); L(nt, tc.outputs['Object'], ns.inputs['Vector'])
@@ -294,12 +294,36 @@ goteo_s = bpy.data.objects['Goteo_origen']
 sc.frame_set(1000); gs = goteo_s.matrix_world.translation.copy(); ALT_GOTEO = max(gs.z, 0.25)
 objeto_gn('Goteo_sangre', construir_goteo('GN_Goteo_sangre', goteo_s, EV['gota_sangre_cada_s'], ALT_GOTEO, O_GS, 0.0085, 0.37))
 # charcos que crecen despacio bajo el goteo
+
+def mat_sangre_real():
+    """Charco de sangre real: contorno irregular y orgánico, borde fino rojo anaranjado, centro espeso casi negro, superficie líquida brillante con menisco y reflejos."""
+    m = bpy.data.materials.new('Sangre_real'); m.use_nodes = True; nt_ = m.node_tree; nt_.nodes.clear()
+    out = N(nt_, 'ShaderNodeOutputMaterial'); bs_ = N(nt_, 'ShaderNodeBsdfPrincipled'); tr = N(nt_, 'ShaderNodeBsdfTransparent'); mx_ = N(nt_, 'ShaderNodeMixShader')
+    tc = N(nt_, 'ShaderNodeTexCoord')
+    ru = N(nt_, 'ShaderNodeTexNoise'); ru.inputs['Scale'].default_value = 3.2; ru.inputs['Detail'].default_value = 9.0; ru.inputs['Roughness'].default_value = 0.62; nt_.links.new(tc.outputs['Generated'], ru.inputs['Vector'])
+    ru2 = N(nt_, 'ShaderNodeTexNoise'); ru2.inputs['Scale'].default_value = 14.0; ru2.inputs['Detail'].default_value = 4.0; nt_.links.new(tc.outputs['Generated'], ru2.inputs['Vector'])
+    gr = N(nt_, 'ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'
+    mp = N(nt_, 'ShaderNodeMapping'); mp.inputs['Location'].default_value = (-0.5, -0.5, -0.5); nt_.links.new(tc.outputs['Generated'], mp.inputs[0]); nt_.links.new(mp.outputs[0], gr.inputs[0])
+    inv = N(nt_, 'ShaderNodeMapRange'); inv.inputs['From Min'].default_value = 0.0; inv.inputs['From Max'].default_value = 0.5; inv.inputs['To Min'].default_value = 1.0; inv.inputs['To Max'].default_value = 0.0; nt_.links.new(gr.outputs['Fac'], inv.inputs['Value'])
+    ds = N(nt_, 'ShaderNodeMath'); ds.operation = 'ADD'; nt_.links.new(inv.outputs[0], ds.inputs[0]); nz = N(nt_, 'ShaderNodeMapRange'); nz.inputs['To Min'].default_value = -0.30; nz.inputs['To Max'].default_value = 0.30; nt_.links.new(ru.outputs['Fac'], nz.inputs['Value']); nt_.links.new(nz.outputs[0], ds.inputs[1])
+    forma = N(nt_, 'ShaderNodeMapRange'); forma.inputs['From Min'].default_value = 0.30; forma.inputs['From Max'].default_value = 0.40; nt_.links.new(ds.outputs[0], forma.inputs['Value'])      # 0 afuera … 1 adentro (borde nítido y orgánico)
+    esp = N(nt_, 'ShaderNodeMapRange'); esp.inputs['From Min'].default_value = 0.34; esp.inputs['From Max'].default_value = 0.85; nt_.links.new(ds.outputs[0], esp.inputs['Value'])             # grosor: 0 borde … 1 centro
+    col = N(nt_, 'ShaderNodeMix'); col.data_type = 'RGBA'; col.inputs['Factor'].default_value = 0.0; nt_.links.new(esp.outputs[0], col.inputs['Factor'])
+    for sk, v in (('A', (0.34, 0.012, 0.006, 1)), ('B', (0.035, 0.0, 0.002, 1))): [x for x in col.inputs if x.name == sk and x.type == 'RGBA'][0].default_value = v
+    nt_.links.new(col.outputs['Result'], bs_.inputs['Base Color'])
+    bs_.inputs['Roughness'].default_value = 0.035; entrada(bs_, 'Coat Weight', 'Clearcoat').default_value = 1.0; entrada(bs_, 'Coat Roughness', 'Clearcoat Roughness').default_value = 0.02; entrada(bs_, 'IOR').default_value = 1.38
+    bp = N(nt_, 'ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.7; bp.inputs['Distance'].default_value = 0.006
+    hh = N(nt_, 'ShaderNodeMath'); hh.operation = 'ADD'; nt_.links.new(esp.outputs[0], hh.inputs[0]); nt_.links.new(ru2.outputs['Fac'], hh.inputs[1]); hh.inputs[1].default_value = 0.0
+    sm = N(nt_, 'ShaderNodeMath'); sm.operation = 'MULTIPLY'; sm.inputs[1].default_value = 0.08; nt_.links.new(ru2.outputs['Fac'], sm.inputs[0]); nt_.links.new(esp.outputs[0], hh.inputs[0]); nt_.links.new(sm.outputs[0], hh.inputs[1])
+    nt_.links.new(hh.outputs[0], bp.inputs['Height']); nt_.links.new(bp.outputs[0], bs_.inputs['Normal'])
+    nt_.links.new(forma.outputs[0], mx_.inputs['Fac']); nt_.links.new(tr.outputs[0], mx_.inputs[1]); nt_.links.new(bs_.outputs[0], mx_.inputs[2]); nt_.links.new(mx_.outputs[0], out.inputs[0]); return m
+M_SANGRE_REAL = mat_sangre_real()
 def mancha_piso(nombre, pos, tam0, tam1, mat_):
     bpy.ops.mesh.primitive_plane_add(size=1.0, location=(pos[0], pos[1], 0.003)); o = bpy.context.active_object; o.name = nombre; o.data.materials.append(mat_); o.rotation_euler = (0, 0, rng_c.uniform(0, 6.28))
     for c_ in list(o.users_collection): c_.objects.unlink(o)
     col_fx.objects.link(o); o.scale = (tam0, tam0, 1); o.keyframe_insert('scale', frame=1); o.scale = (tam1, tam1, 1); o.keyframe_insert('scale', frame=TOTAL); return o
-mancha_piso('Sangre_piso_1', (gs.x, gs.y), 0.16, 0.46, M_SANGRE); mancha_piso('Sangre_piso_2', (gs.x - 0.08, gs.y + 0.04), 0.06, 0.22, M_SANGRE)
-for k_ in range(7): mancha_piso(f'Sangre_gotas_{k_}', (gs.x + rng_c.uniform(-0.35, 0.35), gs.y + rng_c.uniform(-0.3, 0.3)), 0.02, rng_c.uniform(0.04, 0.09), M_SANGRE)
+mancha_piso('Sangre_piso_1', (gs.x, gs.y), 0.18, 0.60, M_SANGRE_REAL); mancha_piso('Sangre_piso_2', (gs.x - 0.10, gs.y + 0.06), 0.07, 0.30, M_SANGRE_REAL)
+for k_ in range(7): mancha_piso(f'Sangre_gotas_{k_}', (gs.x + rng_c.uniform(-0.35, 0.35), gs.y + rng_c.uniform(-0.3, 0.3)), 0.025, rng_c.uniform(0.05, 0.11), M_SANGRE_REAL)
 mancha_piso('Vino_piso', gb((mesa_c[0] + 1.17, 0, mesa_c[2] - 0.14))[:2], 0.05, 0.28, M['charco'])
 
 # ───────────────────────── sangre en Gabriel (rostro, manos, hombro herido de la camisa) ─────────────────────────

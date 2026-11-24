@@ -13,7 +13,7 @@ var RG: RigSentado
 var total := 0
 const ALTO := 3.3
 const SILLON := Vector3(-0.35, 0.0, -0.20)           # centro del asiento (suelo)
-const MESA_C := Vector3(1.55, 0.0, -0.85)          # la tapa empieza en x=0.40: libre del brazo derecho del sillón (borde en x=0.25)
+const MESA_C := Vector3(0.30, 0.0, -1.30)          # mesa DELANTE de Gabriel (a su alcance): borde cercano en z=-0.825, el sillón llega a z=-0.65
 const MESA_Y := 0.76
 
 # ───────── geometría ─────────
@@ -139,14 +139,14 @@ func _construir_mesa() -> void:
 # ───────── cámaras ─────────
 func _tomas() -> Array:
 	return [
-		{"id": "h1", "camara": "H1_establecimiento", "t0": 0.0, "t1": 11.0, "pos": [3.3, 1.60, 3.9], "pos_fin": [2.6, 1.40, 2.7], "mira": [0.1, 1.0, -1.3], "mira_fin": [0.3, 0.95, -1.1], "fov": 54.0, "mano": 0.004},
-		{"id": "h2", "camara": "H2_mesa_detalle", "t0": 11.0, "t1": 20.5, "pos": [3.0, 1.25, 0.6], "pos_fin": [2.0, 1.05, -0.05], "mira": [1.6, 0.80, -0.8], "mira_fin": [1.0, 0.79, -0.67], "fov": 30.0, "mano": 0.002},
+		{"id": "h1", "camara": "H1_establecimiento", "t0": 0.0, "t1": 11.0, "pos": [3.3, 1.60, 3.9], "pos_fin": [2.6, 1.40, 2.7], "mira": [0.0, 1.0, -1.0], "mira_fin": [0.1, 0.95, -0.9], "fov": 54.0, "mano": 0.004},
+		{"id": "h2", "camara": "H2_mesa_detalle", "t0": 11.0, "t1": 20.5, "pos": [1.9, 1.30, 0.35], "pos_fin": [0.75, 1.02, -0.45], "mira": [0.35, 0.80, -1.30], "mira_fin": [-0.25, 0.79, -1.12], "fov": 30.0, "mano": 0.002},
 		{"id": "h3", "camara": "H3_ventanal_tormenta", "t0": 20.5, "t1": 29.5, "pos": [-0.2, 1.45, 1.9], "pos_fin": [-0.1, 1.5, 0.6], "mira": [0.0, 1.55, -4.5], "mira_fin": [0.0, 1.65, -4.5], "fov": 48.0, "mano": 0.003},
 		{"id": "h4", "camara": "H4_gabriel_medio", "t0": 29.5, "t1": 43.0, "pos": [0.95, 1.30, -2.5], "pos_fin": [0.55, 1.28, -1.9], "mira": [-0.35, 1.0, -0.2], "mira_fin": [-0.35, 1.05, -0.2], "fov": 38.0, "mano": 0.003},
 		{"id": "h5", "camara": "H5_gotas_suelo", "t0": 43.0, "t1": 51.0, "pos": [-1.85, 0.55, -1.95], "pos_fin": [-1.60, 0.38, -1.75], "mira": [-0.80, 0.45, -0.72], "mira_fin": [-0.80, 0.36, -0.72], "fov": 46.0, "mano": 0.0},
 		{"id": "h6", "camara": "H6_hombro_herido", "t0": 51.0, "t1": 59.0, "pos": [-1.35, 1.38, -1.25], "pos_fin": [-1.05, 1.32, -0.95], "mira": [-0.55, 1.12, -0.15], "mira_fin": [-0.55, 1.12, -0.15], "fov": 34.0, "mano": 0.002},
-		{"id": "h7", "camara": "H7_rostro", "t0": 59.0, "t1": 69.0, "pos": [0.55, 1.22, -1.15], "pos_fin": [0.30, 1.20, -0.85], "mira": [-0.35, 1.15, -0.2], "mira_fin": [-0.35, 1.15, -0.2], "fov": 28.0, "mano": 0.002},
-		{"id": "h8", "camara": "H8_alejamiento_final", "t0": 69.0, "t1": 78.0, "pos": [0.30, 1.20, -0.85], "pos_fin": [2.7, 1.55, 3.4], "mira": [-0.35, 1.15, -0.2], "mira_fin": [0.0, 1.0, -1.5], "fov": 40.0, "mano": 0.0}]
+		{"id": "h7", "camara": "H7_rostro", "t0": 59.0, "t1": 69.0, "pos": [0.30, 1.28, -2.25], "pos_fin": [0.10, 1.24, -1.95], "mira": [-0.35, 1.15, -0.2], "mira_fin": [-0.35, 1.15, -0.2], "fov": 28.0, "mano": 0.002},
+		{"id": "h8", "camara": "H8_alejamiento_final", "t0": 69.0, "t1": 78.0, "pos": [0.10, 1.24, -1.95], "pos_fin": [2.7, 1.55, 3.4], "mira": [-0.35, 1.15, -0.2], "mira_fin": [0.0, 1.0, -1.5], "fov": 40.0, "mano": 0.0}]
 
 func _initialize() -> void:
 	_montar(OS.get_cmdline_user_args())
