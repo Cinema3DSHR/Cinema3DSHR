@@ -85,6 +85,15 @@ pantalon = TF._region(sc, body, lambda n: n.startswith(('Hip', 'Pelvis', 'L_Thig
                       0.036 * S * K, 'PANTALON', m_bot, zmin=zank + 0.01 * S, zmax=cadera + 0.045 * S)
 recortar(pantalon, zank + 0.012 * S, True)
 arrugas(camisa, 0.0090 * S * K, 0.10 * K, 1); arrugas(pantalon, 0.0075 * S * K, 0.14 * K, 2)
+def sin_atravesar(obj, holgura):
+    """La prenda nunca queda dentro del cuerpo: los vértices que quedaron adentro (pectorales, glúteos, rodillas) se empujan hacia afuera hasta la holgura."""
+    bpy.context.view_layer.objects.active = obj
+    for o_ in bpy.data.objects: o_.select_set(False)
+    obj.select_set(True)
+    md = obj.modifiers.new('SinAtravesar', 'SHRINKWRAP'); md.target = body; md.wrap_method = 'NEAREST_SURFACEPOINT'; md.wrap_mode = 'OUTSIDE_SURFACE'; md.offset = holgura
+    try: bpy.ops.object.modifier_apply(modifier='SinAtravesar')
+    except Exception as e: print('no se aplicó SinAtravesar', e)
+sin_atravesar(camisa, 0.022 * S * K); sin_atravesar(pantalon, 0.018 * S * K)
 mwb = body.matrix_world
 vb = [mwb @ v.co for v in body.data.vertices]
 def radio_a_altura(z, tol=0.012):

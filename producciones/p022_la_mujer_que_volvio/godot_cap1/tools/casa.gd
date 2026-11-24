@@ -139,11 +139,11 @@ func _construir_mesa() -> void:
 # ───────── cámaras ─────────
 func _tomas() -> Array:
 	return [
-		{"id": "h1", "camara": "H1_establecimiento", "t0": 0.0, "t1": 11.0, "pos": [3.3, 1.60, 3.9], "pos_fin": [2.6, 1.40, 2.7], "mira": [0.5, 1.0, -1.4], "mira_fin": [0.6, 0.95, -1.1], "fov": 54.0, "mano": 0.004},
+		{"id": "h1", "camara": "H1_establecimiento", "t0": 0.0, "t1": 11.0, "pos": [3.3, 1.60, 3.9], "pos_fin": [2.6, 1.40, 2.7], "mira": [0.1, 1.0, -1.3], "mira_fin": [0.3, 0.95, -1.1], "fov": 54.0, "mano": 0.004},
 		{"id": "h2", "camara": "H2_mesa_detalle", "t0": 11.0, "t1": 20.5, "pos": [3.0, 1.25, 0.6], "pos_fin": [2.0, 1.05, -0.05], "mira": [1.6, 0.80, -0.8], "mira_fin": [1.0, 0.79, -0.67], "fov": 30.0, "mano": 0.002},
 		{"id": "h3", "camara": "H3_ventanal_tormenta", "t0": 20.5, "t1": 29.5, "pos": [-0.2, 1.45, 1.9], "pos_fin": [-0.1, 1.5, 0.6], "mira": [0.0, 1.55, -4.5], "mira_fin": [0.0, 1.65, -4.5], "fov": 48.0, "mano": 0.003},
 		{"id": "h4", "camara": "H4_gabriel_medio", "t0": 29.5, "t1": 43.0, "pos": [0.95, 1.30, -2.5], "pos_fin": [0.55, 1.28, -1.9], "mira": [-0.35, 1.0, -0.2], "mira_fin": [-0.35, 1.05, -0.2], "fov": 38.0, "mano": 0.003},
-		{"id": "h5", "camara": "H5_gotas_suelo", "t0": 43.0, "t1": 51.0, "pos": [-1.55, 0.95, -1.35], "pos_fin": [-1.35, 0.55, -1.25], "mira": [-0.80, 0.55, -0.70], "mira_fin": [-0.80, 0.30, -0.70], "fov": 32.0, "mano": 0.0},
+		{"id": "h5", "camara": "H5_gotas_suelo", "t0": 43.0, "t1": 51.0, "pos": [-1.85, 0.55, -1.95], "pos_fin": [-1.60, 0.38, -1.75], "mira": [-0.80, 0.45, -0.72], "mira_fin": [-0.80, 0.36, -0.72], "fov": 46.0, "mano": 0.0},
 		{"id": "h6", "camara": "H6_hombro_herido", "t0": 51.0, "t1": 59.0, "pos": [-1.35, 1.38, -1.25], "pos_fin": [-1.05, 1.32, -0.95], "mira": [-0.55, 1.12, -0.15], "mira_fin": [-0.55, 1.12, -0.15], "fov": 34.0, "mano": 0.002},
 		{"id": "h7", "camara": "H7_rostro", "t0": 59.0, "t1": 69.0, "pos": [0.55, 1.22, -1.15], "pos_fin": [0.30, 1.20, -0.85], "mira": [-0.35, 1.15, -0.2], "mira_fin": [-0.35, 1.15, -0.2], "fov": 28.0, "mano": 0.002},
 		{"id": "h8", "camara": "H8_alejamiento_final", "t0": 69.0, "t1": 78.0, "pos": [0.30, 1.20, -0.85], "pos_fin": [2.7, 1.55, 3.4], "mira": [-0.35, 1.15, -0.2], "mira_fin": [0.0, 1.0, -1.5], "fov": 40.0, "mano": 0.0}]
@@ -201,7 +201,7 @@ func _montar(a: PackedStringArray) -> void:
 		anim.position_track_insert_key(p_sk["pos"], t, G.sk.get_bone_pose_position(G.hueso_cadera))
 		# origen del goteo: punta de los dedos de la mano que cuelga (posición real de la mano en el mundo)
 		var mano_w: Vector3 = G.sk.global_transform * G.sk.get_bone_global_pose(G.mano["L"]).origin
-		goteo.global_position = mano_w + Vector3(0, -0.19, -0.05) anim.position_track_insert_key(p_goteo[0], t, goteo.position)
+		goteo.global_position = mano_w + Vector3(0, -0.19, -0.05); anim.position_track_insert_key(p_goteo[0], t, goteo.position)
 		for tm in tomas:
 			var c: Camera3D = cams[tm["id"]]
 			var u := clampf((t - tm["t0"]) / maxf(tm["t1"] - tm["t0"], 0.001), 0.0, 1.0); var e := smoothstep(0.0, 1.0, u)

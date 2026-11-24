@@ -11,8 +11,11 @@ def mk(nombre):
 def tex(nt, tipo, **kw):
     n = nt.nodes.new(tipo)
     for k, v in kw.items():
-        if k.startswith('i_'): n.inputs[k[2:]].default_value = v
-        else: setattr(n, k, v)
+        try:
+            if k.startswith('i_'): n.inputs[k[2:].replace('_', ' ')].default_value = v
+            else: setattr(n, k, v)
+        except Exception as e_:
+            print('AVISO tex', tipo, k, '->', [i_.name for i_ in n.inputs][:14] if k.startswith('i_') else e_)
     return n
 def L(nt, a, b): nt.links.new(a, b)
 def bump_(nt, bs, altura_socket, fuerza, dist=0.02):
@@ -54,8 +57,8 @@ def mat_alfombra():
     L(nt, ch.outputs['Color'], bs.inputs['Base Color']); bs.inputs['Roughness'].default_value = 0.95; bump_(nt, bs, ns.outputs['Fac'], 0.5, 0.004); return m
 def mat_cortina():
     m, nt, bs, out = mk('Cortina'); tc = tex(nt, 'ShaderNodeTexCoord'); wv = tex(nt, 'ShaderNodeTexWave', wave_type='BANDS', bands_direction='X', i_Scale=26.0, i_Distortion=0.6); L(nt, tc.outputs['Object'], wv.inputs['Vector'])
-    bs.inputs['Base Color'].default_value = (0.20, 0.028, 0.04, 1); bs.inputs['Roughness'].default_value = 0.9; entrada(bs, 'Transmission Weight', 'Transmission').default_value = 0.18
-    entrada(bs, 'Sheen Weight', 'Sheen').default_value = 0.8; bump_(nt, bs, wv.outputs['Fac'], 0.35, 0.004); return m
+    bs.inputs['Base Color'].default_value = (0.075, 0.012, 0.018, 1); bs.inputs['Roughness'].default_value = 0.92; entrada(bs, 'Transmission Weight', 'Transmission').default_value = 0.10
+    entrada(bs, 'Sheen Weight', 'Sheen').default_value = 0.25; entrada(bs, 'Sheen Tint').default_value = (0.25, 0.06, 0.06, 1); bump_(nt, bs, wv.outputs['Fac'], 0.35, 0.004); return m
 def mat_vidrio(nombre='Vidrio', col=(0.9, 0.95, 1.0), ior=1.5, rough=0.01, trans=1.0):
     m, nt, bs, out = mk(nombre); bs.inputs['Base Color'].default_value = (*col, 1); bs.inputs['Roughness'].default_value = rough
     entrada(bs, 'Transmission Weight', 'Transmission').default_value = trans; entrada(bs, 'IOR').default_value = ior; return m
@@ -153,7 +156,7 @@ lo = bpy.data.objects.new('Luz_lampara', lam); sc.collection.objects.link(lo); l
 for i in range(0, TOTAL, 6):                                                                 # parpadeo muy suave de la lámpara (la tormenta baja la tensión): seno lento, sin ruido por cuadro
     lam.energy = 85.0 * (1.0 + 0.05 * math.sin(i * 0.05) + 0.03 * math.sin(i * 0.19 + 1.0)); lam.keyframe_insert('energy', frame=i + 1)
 lun = bpy.data.lights.new('Luz_exterior', 'AREA'); lun.shape = 'RECTANGLE'; lun.size = 7.0; lun.size_y = 3.2; lun.color = (0.48, 0.60, 1.0); lun.energy = 160.0
-lu = bpy.data.objects.new('Luz_exterior', lun); sc.collection.objects.link(lu); lu.location = (0, 6.4, 1.7); lu.rotation_euler = (math.radians(90), 0, math.radians(180))     # fuera del ventanal, mirando hacia adentro
+lu = bpy.data.objects.new('Luz_exterior', lun); sc.collection.objects.link(lu); lu.visible_camera = False; lu.location = (0, 6.4, 1.7); lu.rotation_euler = (math.radians(90), 0, math.radians(180))     # fuera del ventanal, mirando hacia adentro
 for f0 in f_flash:
     for df, e in ((0, 160.0), (1, 5200.0), (3, 900.0), (5, 6500.0), (7, 1400.0), (12, 160.0)):
         lun.energy = e; lun.keyframe_insert('energy', frame=f0 + df)
@@ -319,7 +322,7 @@ def mat_camisa_gabriel(obj):
         rs = tex(nt_, 'ShaderNodeVectorMath', operation='SUBTRACT'); rs.inputs[1].default_value = cn; L(nt_, tc.outputs['Generated'], rs.inputs[0])
         a_ = tex(nt_, 'ShaderNodeVectorMath', operation='MULTIPLY'); a_.inputs[1].default_value = (SZ.x, SZ.y, SZ.z); L(nt_, rs.outputs[0], a_.inputs[0])
         ro = tex(nt_, 'ShaderNodeVectorRotate', rotation_type='Z_AXIS'); ro.inputs['Angle'].default_value = -ang; L(nt_, a_.outputs[0], ro.inputs['Vector'])
-        dv = tex(nt_, 'ShaderNodeVectorMath', operation='DIVIDE'); dv.inputs[1].default_value = (ax, ay, 0.16); L(nt_, ro.outputs[0], dv.inputs[0])
+        dv = tex(nt_, 'ShaderNodeVectorMath', operation='DIVIDE'); dv.inputs[1].default_value = (ax, ay, 7.0); L(nt_, ro.outputs[0], dv.inputs[0])
         ln = tex(nt_, 'ShaderNodeVectorMath', operation='LENGTH'); L(nt_, dv.outputs[0], ln.inputs[0])
         sq = tex(nt_, 'ShaderNodeMath', operation='MULTIPLY'); L(nt_, ln.outputs['Value'], sq.inputs[0]); L(nt_, ln.outputs['Value'], sq.inputs[1])
         ng_ = tex(nt_, 'ShaderNodeMath', operation='MULTIPLY'); ng_.inputs[1].default_value = -1.0; L(nt_, sq.outputs[0], ng_.inputs[0])
