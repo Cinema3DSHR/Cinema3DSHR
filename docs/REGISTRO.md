@@ -1007,3 +1007,9 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 **23/11/2026 (aclaración del dueño):** en el cap. 1 NO se muestra el disparo; Gabriel ya está herido en la casa y el disparo se cuenta en otro capítulo. La sangre real (suelo, rostro, manos) se mantiene en el accidente. Plan actualizado.
 
 **23/11/2026:** voz de Gabriel del cap. 1 generada (42 líneas, 111,9 s, 2.354 créditos; ledger actualizado). Contexto: tras buscar a Elena se desmaya y pierde el rastro; pasa 1 año y luego el disparo (otros capítulos).
+
+## 24/11/2026 · Cap. 1 «La mujer que volvió de la muerte» — escena de la CASA: BLEND aprobado y render lanzado (vertical 540×960)
+- Orden del dueño: «corregí… termina con una toma desde lejos mostrando un poco la escena completa y podés hacer el renderizado ya». Correcciones: sangre de las manos en manchas (no «guante»), sillón más redondeado, herida del hombro más marcada, última toma (H8) que se aleja hasta mostrar toda la sala.
+- Producción `p022_la_mujer_que_volvio` v001: BLEND 15.108.323 bytes, SHA-256 `da4dfcca2f96551e7e4c5e3eae46203f322898829fe45192bff402555343bb61` (= el BLEND de las fotos de control), 2.341 cuadros = 78,03 s, aprobación en `versiones/v001.aprobacion.json`, BLEND por Git LFS.
+- `incorporar_blend.yml` lanzado (run 45369773353, 60 trabajos). Pendiente: bajar el MP4 y mezclar el audio (`herramientas/audio_casa.py` → `casa.wav`/`casa.m4a`, subtítulos `casa.srt`).
+- Límites conocidos: accidente (el recuerdo) todavía sin ropa/chispas/vidrios/polvo cerrados y sin renderizar; licencias de modelos sin confirmar.
