@@ -8,7 +8,7 @@ for n, kw in (('Faro_L', {}), ('Faro_R', {})):
     L.energy = 2600.0; L.spot_size = math.radians(52); L.spot_blend = 0.55; L.color = (1.0, 0.93, 0.78); L.shadow_soft_size = 0.06
     if hasattr(L, 'use_shadow'): L.use_shadow = True
 bpy.data.objects['Luz_Trasera'].data.energy = 14.0; bpy.data.objects['Luz_Trasera'].data.color = (1, 0.04, 0.02)
-bpy.data.objects['Luz_Luna'].data.energy = 1.1; bpy.data.objects['Luz_Luna'].data.color = (0.45, 0.55, 0.85); bpy.data.objects['Luz_Luna'].data.angle = math.radians(8)
+bpy.data.objects['Luz_Luna'].data.energy = 2.4; bpy.data.objects['Luz_Luna'].data.color = (0.45, 0.55, 0.85); bpy.data.objects['Luz_Luna'].data.angle = math.radians(8)
 ray = bpy.data.objects['Luz_Rayo'].data; ray.color = (0.75, 0.85, 1.0); ray.angle = math.radians(1.5)
 def relampago(t0):
     f0 = int(t0 * FPS) + 1
@@ -314,30 +314,33 @@ def dueno(o):
 for o in bpy.data.objects:
     if o.type == 'MESH' and dueno(o) and o.name.startswith(('VIVO_', 'BOTA_LUZ_', 'EMBLEMA')):
         o.hide_render = True; o.hide_viewport = True
-def mat_ropa(nombre, arriba, abajo, gen_z_cadera=0.53):
+def mat_prenda(nombre, col, rough=0.5, sheen=0.35):
+    """Prenda mojada por la lluvia: tela más oscura y con brillo húmedo, tejido fino en relieve."""
     m = bpy.data.materials.new(nombre); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
     out = nt.nodes.new('ShaderNodeOutputMaterial'); bs = nt.nodes.new('ShaderNodeBsdfPrincipled'); nt.links.new(bs.outputs[0], out.inputs[0])
-    tc = nt.nodes.new('ShaderNodeTexCoord'); sepx = nt.nodes.new('ShaderNodeSeparateXYZ'); nt.links.new(tc.outputs['Generated'], sepx.inputs[0])
-    corte = nt.nodes.new('ShaderNodeMath'); corte.operation = 'SMOOTH_MAX' if False else 'GREATER_THAN'; corte.inputs[1].default_value = gen_z_cadera; nt.links.new(sepx.outputs['Z'], corte.inputs[0])
-    mix = nt.nodes.new('ShaderNodeMix'); mix.data_type = 'RGBA'; mix.inputs['A'].default_value = abajo; mix.inputs['B'].default_value = arriba; nt.links.new(corte.outputs[0], mix.inputs['Factor'])
-    tej = nt.nodes.new('ShaderNodeTexNoise'); tej.inputs['Scale'].default_value = 900.0; tej.inputs['Detail'].default_value = 2.0; nt.links.new(tc.outputs['Object'], tej.inputs['Vector'])
-    arr = nt.nodes.new('ShaderNodeTexNoise'); arr.inputs['Scale'].default_value = 14.0; arr.inputs['Detail'].default_value = 6.0; nt.links.new(tc.outputs['Object'], arr.inputs['Vector'])
+    tc = nt.nodes.new('ShaderNodeTexCoord'); tej = nt.nodes.new('ShaderNodeTexNoise'); tej.inputs['Scale'].default_value = 700.0; tej.inputs['Detail'].default_value = 2.0; nt.links.new(tc.outputs['Object'], tej.inputs['Vector'])
+    arr = nt.nodes.new('ShaderNodeTexNoise'); arr.inputs['Scale'].default_value = 11.0; arr.inputs['Detail'].default_value = 6.0; nt.links.new(tc.outputs['Object'], arr.inputs['Vector'])
     sumar = nt.nodes.new('ShaderNodeMath'); sumar.operation = 'ADD'; nt.links.new(tej.outputs['Fac'], sumar.inputs[0]); nt.links.new(arr.outputs['Fac'], sumar.inputs[1])
-    bp = nt.nodes.new('ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.5; bp.inputs['Distance'].default_value = 0.002; nt.links.new(sumar.outputs[0], bp.inputs['Height'])
-    nt.links.new(mix.outputs['Result'], bs.inputs['Base Color']); nt.links.new(bp.outputs[0], bs.inputs['Normal']); bs.inputs['Roughness'].default_value = 0.78
+    bp = nt.nodes.new('ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.5; bp.inputs['Distance'].default_value = 0.003; nt.links.new(sumar.outputs[0], bp.inputs['Height']); nt.links.new(bp.outputs[0], bs.inputs['Normal'])
+    bs.inputs['Base Color'].default_value = (col[0] * 0.65, col[1] * 0.65, col[2] * 0.65, 1); bs.inputs['Roughness'].default_value = rough
+    for k, v in (('Sheen Weight', sheen), ('Coat Weight', 0.12 if rough > 0.6 else 0.25), ('Coat Roughness', 0.2)):
+        try: bs.inputs[k].default_value = v
+        except Exception: pass
     return m
-M_ROPA_G = mat_ropa('Ropa_Gabriel', (0.030, 0.034, 0.050, 1), (0.016, 0.016, 0.020, 1)); M_ROPA_E = mat_ropa('Ropa_Elena', (0.22, 0.020, 0.040, 1), (0.018, 0.016, 0.02, 1))
-def mat_zapato():
-    m = bpy.data.materials.new('Zapatos'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
-    out = nt.nodes.new('ShaderNodeOutputMaterial'); bs = nt.nodes.new('ShaderNodeBsdfPrincipled'); nt.links.new(bs.outputs[0], out.inputs[0])
-    bs.inputs['Base Color'].default_value = (0.012, 0.010, 0.010, 1); bs.inputs['Roughness'].default_value = 0.25
-    return m
-M_ZAP = mat_zapato()
+import json as _json
+_GR = _json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'personajes', 'guardarropa.json')))['looks']
+def _look(d): return _GR['elena_borravino'] if d == 'elena' else _GR['gabriel_noche']
+M_PRENDA = {}
+for _d in ('gabriel', 'gabriel_fuera', 'elena'):
+    L_ = _look(_d)
+    M_PRENDA[_d] = {'camisa': mat_prenda('Camisa_' + _d, L_['camisa'], 0.5, 0.45), 'pantalon': mat_prenda('Pantalon_' + _d, L_['pantalon'], 0.78, 0.1),
+                    'zapato': mat_prenda('Zapato_' + _d, L_['zapato'], 0.22, 0.0), 'cinturon': mat_prenda('Cinturon_' + _d, L_['cinturon'], 0.4, 0.0), 'boton': mat_prenda('Boton_' + _d, (0.8, 0.8, 0.78), 0.3, 0.0)}
 for o in bpy.data.objects:
     d = dueno(o)
     if o.type != 'MESH' or not d: continue
-    if o.name.startswith('TRAJE_MONO'): o.data.materials.clear(); o.data.materials.append(M_ROPA_E if d == 'elena' else M_ROPA_G)
-    elif o.name.startswith(('TRAJE_BOTAS', 'TRAJE_PIE')): o.data.materials.clear(); o.data.materials.append(M_ZAP)
+    n = o.name; mp = M_PRENDA[d]
+    m_ = mp['camisa'] if n.startswith(('CAMISA', 'COLLAR', 'PUNO')) else mp['pantalon'] if n.startswith('PANTALON') else mp['zapato'] if n.startswith(('ZAPATO', 'PIE_')) else mp['cinturon'] if n.startswith('CINTURON') and 'hebilla' not in n else mp['boton'] if n.startswith(('BOTON', 'CINTURON_hebilla')) else None
+    if m_ is not None: o.data.materials.clear(); o.data.materials.append(m_)
 # sangre en la piel (rostro y manos): aparece con el choque y se oscurece con el tiempo; máscaras por coordenadas generadas del cuerpo
 f_imp = int(EV['impacto_s'] * FPS) + 1
 def _rgba(nodo, nombre):
@@ -386,7 +389,7 @@ def mascara_cara(nt, sx, ru):          # frente, sienes y mejillas con goteo irr
 def mascara_manos(nt, sx, ru):         # manos y antebrazos (zona baja a los costados del cuerpo)
     zr = nt.nodes.new('ShaderNodeMapRange'); zr.inputs['From Min'].default_value = 0.52; zr.inputs['From Max'].default_value = 0.40; nt.links.new(sx.outputs['Z'], zr.inputs['Value'])
     mm = nt.nodes.new('ShaderNodeMath'); mm.operation = 'MULTIPLY'; nt.links.new(zr.outputs[0], mm.inputs[0]); nt.links.new(ru.outputs['Fac'], mm.inputs[1])
-    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.20; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
+    ge = nt.nodes.new('ShaderNodeMath'); ge.operation = 'GREATER_THAN'; ge.inputs[1].default_value = 0.40; nt.links.new(mm.outputs[0], ge.inputs[0]); return ge.outputs[0]
 def sangre_cara(material):
     """Rostro manchado (no chorreado): una heridita en la frente y manchas finas de roce en mejilla, mandíbula, sien y mentón, como de quien se tocó la cara con la mano.
     Cada mancha es una elipse gaussiana definida en el espacio 3D del modelo, centrada en un punto real de la superficie de la cara (se calculan ojos y boca del propio modelo)."""
@@ -491,10 +494,32 @@ def mat_sangre_suelo():
     mr = nt.nodes.new('ShaderNodeMapRange'); mr.inputs['From Min'].default_value = 0.10; mr.inputs['From Max'].default_value = 0.30; nt.links.new(mul.outputs[0], mr.inputs['Value'])
     bs.inputs['Base Color'].default_value = (0.11, 0.0, 0.004, 1); bs.inputs['Roughness'].default_value = 0.04
     nt.links.new(mr.outputs[0], mx.inputs['Fac']); nt.links.new(tr.outputs[0], mx.inputs[1]); nt.links.new(bs.outputs[0], mx.inputs[2]); nt.links.new(mx.outputs[0], out.inputs[0]); return m
-M_SANGRE = mat_sangre_suelo()
+def mat_sangre_real():
+    """Charco de sangre real: contorno irregular y orgánico, borde fino rojo anaranjado, centro espeso casi negro, superficie líquida brillante con menisco y reflejos."""
+    m = bpy.data.materials.new('Sangre_real'); m.use_nodes = True; nt_ = m.node_tree; nt_.nodes.clear()
+    out = N(nt_, 'ShaderNodeOutputMaterial'); bs_ = N(nt_, 'ShaderNodeBsdfPrincipled'); tr = N(nt_, 'ShaderNodeBsdfTransparent'); mx_ = N(nt_, 'ShaderNodeMixShader')
+    tc = N(nt_, 'ShaderNodeTexCoord')
+    ru = N(nt_, 'ShaderNodeTexNoise'); ru.inputs['Scale'].default_value = 3.2; ru.inputs['Detail'].default_value = 9.0; ru.inputs['Roughness'].default_value = 0.62; nt_.links.new(tc.outputs['Generated'], ru.inputs['Vector'])
+    ru2 = N(nt_, 'ShaderNodeTexNoise'); ru2.inputs['Scale'].default_value = 14.0; ru2.inputs['Detail'].default_value = 4.0; nt_.links.new(tc.outputs['Generated'], ru2.inputs['Vector'])
+    gr = N(nt_, 'ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'
+    mp = N(nt_, 'ShaderNodeMapping'); mp.inputs['Location'].default_value = (-0.5, -0.5, -0.5); nt_.links.new(tc.outputs['Generated'], mp.inputs[0]); nt_.links.new(mp.outputs[0], gr.inputs[0])
+    inv = N(nt_, 'ShaderNodeMapRange'); inv.inputs['From Min'].default_value = 0.0; inv.inputs['From Max'].default_value = 0.5; inv.inputs['To Min'].default_value = 1.0; inv.inputs['To Max'].default_value = 0.0; nt_.links.new(gr.outputs['Fac'], inv.inputs['Value'])
+    ds = N(nt_, 'ShaderNodeMath'); ds.operation = 'ADD'; nt_.links.new(gr.outputs['Fac'], ds.inputs[0]); nz = N(nt_, 'ShaderNodeMapRange'); nz.inputs['To Min'].default_value = -0.34; nz.inputs['To Max'].default_value = 0.34; nt_.links.new(ru.outputs['Fac'], nz.inputs['Value']); nt_.links.new(nz.outputs[0], ds.inputs[1])
+    forma = N(nt_, 'ShaderNodeMapRange'); forma.inputs['From Min'].default_value = 0.56; forma.inputs['From Max'].default_value = 0.60; nt_.links.new(ds.outputs[0], forma.inputs['Value'])      # 0 afuera … 1 adentro (borde nítido y orgánico)
+    esp = N(nt_, 'ShaderNodeMapRange'); esp.inputs['From Min'].default_value = 0.58; esp.inputs['From Max'].default_value = 0.95; nt_.links.new(ds.outputs[0], esp.inputs['Value'])             # grosor: 0 borde … 1 centro
+    col = N(nt_, 'ShaderNodeMix'); col.data_type = 'RGBA'; col.inputs['Factor'].default_value = 0.0; nt_.links.new(esp.outputs[0], col.inputs['Factor'])
+    for sk, v in (('A', (0.24, 0.008, 0.005, 1)), ('B', (0.07, 0.0, 0.003, 1))): [x for x in col.inputs if x.name == sk and x.type == 'RGBA'][0].default_value = v
+    nt_.links.new(col.outputs['Result'], bs_.inputs['Base Color'])
+    bs_.inputs['Roughness'].default_value = 0.035; entrada(bs_, 'Coat Weight', 'Clearcoat').default_value = 1.0; entrada(bs_, 'Coat Roughness', 'Clearcoat Roughness').default_value = 0.02; entrada(bs_, 'IOR').default_value = 1.38
+    bp = N(nt_, 'ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.35; bp.inputs['Distance'].default_value = 0.003
+    hh = N(nt_, 'ShaderNodeMath'); hh.operation = 'ADD'; nt_.links.new(esp.outputs[0], hh.inputs[0]); nt_.links.new(ru2.outputs['Fac'], hh.inputs[1]); hh.inputs[1].default_value = 0.0
+    sm = N(nt_, 'ShaderNodeMath'); sm.operation = 'MULTIPLY'; sm.inputs[1].default_value = 0.08; nt_.links.new(ru2.outputs['Fac'], sm.inputs[0]); nt_.links.new(esp.outputs[0], hh.inputs[0]); nt_.links.new(sm.outputs[0], hh.inputs[1])
+    nt_.links.new(hh.outputs[0], bp.inputs['Height']); nt_.links.new(bp.outputs[0], bs_.inputs['Normal'])
+    nt_.links.new(forma.outputs[0], mx_.inputs['Fac']); nt_.links.new(tr.outputs[0], mx_.inputs[1]); nt_.links.new(bs_.outputs[0], mx_.inputs[2]); nt_.links.new(mx_.outputs[0], out.inputs[0]); return m
+M_SANGRE = mat_sangre_real()
 def mancha(nombre, pos_gb, tam, t_visible_s):
     bpy.ops.mesh.primitive_plane_add(size=tam, location=(pos_gb.x, pos_gb.y, 0.011)); o = bpy.context.active_object; o.name = nombre
-    o.data.materials.append(M_SANGRE); o.rotation_euler = (0, 0, rng_a.uniform(0, 6.28))
+    o.data.materials.append(M_SANGRE); o.rotation_euler = (0, 0, rng_a.uniform(0, 6.28)); o.scale = (rng_a.uniform(0.7, 1.5), rng_a.uniform(0.5, 1.0), 1.0); bpy.ops.object.transform_apply(scale=True)
     for c in list(o.users_collection): c.objects.unlink(o)
     col_fx.objects.link(o)
     f0 = int(t_visible_s * FPS) + 1
@@ -569,7 +594,7 @@ for i in range(TOTAL):
 choque_origen = bpy.data.objects.new('Choque_origen', None); sc.collection.objects.link(choque_origen); choque_origen.location = (Pimp.x, Pimp.y, 0.55)
 def mat_chispa():
     m = bpy.data.materials.new('Chispa'); m.use_nodes = True; nt = m.node_tree; nt.nodes.clear()
-    out = N(nt, 'ShaderNodeOutputMaterial'); em = N(nt, 'ShaderNodeEmission'); em.inputs['Color'].default_value = (1.0, 0.55, 0.16, 1); em.inputs['Strength'].default_value = 40.0
+    out = N(nt, 'ShaderNodeOutputMaterial'); em = N(nt, 'ShaderNodeEmission'); em.inputs['Color'].default_value = (1.0, 0.55, 0.16, 1); em.inputs['Strength'].default_value = 160.0
     nt.links.new(em.outputs[0], out.inputs[0]); return m
 def mat_vidrio_fragmento():
     m = bpy.data.materials.new('Vidrio_roto'); nt, bs, out = reconstruir(m)
@@ -580,9 +605,9 @@ def mat_polvo():
     out = N(nt, 'ShaderNodeOutputMaterial'); v = N(nt, 'ShaderNodeVolumeScatter'); v.inputs['Density'].default_value = 0.9; v.inputs['Color'].default_value = (0.22, 0.17, 0.12, 1); v.inputs['Anisotropy'].default_value = 0.3
     nt.links.new(v.outputs[0], out.inputs['Volume']); return m
 def m_chispa(me):
-    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0); bmesh.ops.scale(bm, vec=(0.004, 0.004, 0.055), verts=bm.verts); bm.to_mesh(me); bm.free()
+    bm = bmesh.new(); bmesh.ops.create_cube(bm, size=1.0); bmesh.ops.scale(bm, vec=(0.009, 0.009, 0.14), verts=bm.verts); bm.to_mesh(me); bm.free()
 def m_fragmento(me):
-    bm = bmesh.new(); a = bm.verts.new((0, 0, 0)); b = bm.verts.new((0.05, 0.004, 0)); c = bm.verts.new((0.012, 0.045, 0.004)); bm.faces.new((a, b, c)); bm.to_mesh(me); bm.free()
+    bm = bmesh.new(); a = bm.verts.new((0, 0, 0)); b = bm.verts.new((0.11, 0.008, 0)); c = bm.verts.new((0.025, 0.095, 0.008)); bm.faces.new((a, b, c)); bm.to_mesh(me); bm.free()
 O_CHISPA = malla_obj('Chispa_obj', m_chispa, mat_chispa()); O_FRAG = malla_obj('Fragmento_vidrio', m_fragmento, mat_vidrio_fragmento()); O_POLVO = malla_obj('Bocanada_polvo', m_esfera, mat_polvo())
 for _p in O_POLVO.data.polygons: _p.use_smooth = True
 def construir_chispas():

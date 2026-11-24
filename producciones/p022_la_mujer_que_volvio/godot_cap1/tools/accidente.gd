@@ -241,10 +241,10 @@ func _montar(prefijo: String, sin_glb: bool) -> void:
 			ruedas[par[0] + nm] = [pv, (Pb.inverse() * Vector3.RIGHT).normalized()]        # eje de giro (el del auto) en el espacio del padre
 	var vol_ok := ok_car.find_child("rul", true, false) as Node3D
 	# personajes dentro del auto (hijos del auto: viajan con él)
-	G = Actor3.new(); G.cargar("gabriel", "res://assets/aiden.glb", "res://assets/aiden_meta.json", carro)
+	G = Actor3.new(); G.cargar("gabriel", "res://assets/aiden_noir.glb", "res://assets/aiden_meta.json", carro)
 	ELENA_N = Node3D.new(); ELENA_N.name = "elena_mundo"; esc.add_child(ELENA_N)
-	E = Actor3.new(); E.cargar("elena", "res://assets/kate.glb", "res://assets/kate_meta.json", ELENA_N)
-	G2 = Actor3.new(); G2.cargar("gabriel_fuera", "res://assets/aiden.glb", "res://assets/aiden_meta.json", esc)
+	E = Actor3.new(); E.cargar("elena", "res://assets/kate_noir.glb", "res://assets/kate_meta.json", ELENA_N)
+	G2 = Actor3.new(); G2.cargar("gabriel_fuera", "res://assets/aiden_noir.glb", "res://assets/aiden_meta.json", esc)
 	G.raiz.position = Vector3(0.36, PISO, 0.20); G.raiz.rotation.y = PI
 	E.raiz.position = Vector3(0.0, -0.30, 0.0); E.raiz.rotation.y = PI        # ELENA_N va a la altura de su cadera
 	await process_frame

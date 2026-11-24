@@ -92,3 +92,9 @@ Tema original lento «neo-noir» (en el espíritu de Max Payne, **no** es esa m�
 - Audio (`herramientas/audio_casa.py`): tormenta, viento, truenos, goteos, reloj, latido y respiración, música triste (piano grave, cuerdas, drone sucio), voz +10,6 dB sobre el fondo.
 - Ropa: `ropa_noir.py` (escala del cuerpo 0,01 corregida, costillas incluidas, la prenda no atraviesa el cuerpo) + `guardarropa.json` (looks por color).
 - Pendiente: mano con sangre más realista (el pulgar queda sin sangre), cortinas/lluvia vistas en movimiento, revisar licencias de los modelos.
+
+## Accidente con ropa nueva, chispas, vidrios y polvo (24/11/2026) — versión para revisión
+- `accidente.gd` usa `aiden_noir.glb` / `kate_noir.glb` (camisa, pantalón, zapatos, cinturón, cuello, botones; ver `guardarropa.json`). En Blender las prendas llevan material «mojado» (más oscuro, brillo húmedo, tejido en relieve).
+- Chispas (golpe y raspones del vuelco), fragmentos de vidrio y polvo/barro del choque: nodos de geometría deterministas por cuadro (`Datos_choque`, `Choque_origen`), más grandes y brillantes que en la primera prueba.
+- Sangre del suelo con el mismo material de charco real de la casa; manos con sangre en manchas; la luna sube un poco para que se vean los peñascos.
+- Pendiente: render (esperar la orden del dueño), pulgar sin sangre en las manos, plano interior del choque muy oscuro por diseño.

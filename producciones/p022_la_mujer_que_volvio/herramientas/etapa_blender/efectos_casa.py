@@ -304,11 +304,11 @@ def mat_sangre_real():
     gr = N(nt_, 'ShaderNodeTexGradient'); gr.gradient_type = 'SPHERICAL'
     mp = N(nt_, 'ShaderNodeMapping'); mp.inputs['Location'].default_value = (-0.5, -0.5, -0.5); nt_.links.new(tc.outputs['Generated'], mp.inputs[0]); nt_.links.new(mp.outputs[0], gr.inputs[0])
     inv = N(nt_, 'ShaderNodeMapRange'); inv.inputs['From Min'].default_value = 0.0; inv.inputs['From Max'].default_value = 0.5; inv.inputs['To Min'].default_value = 1.0; inv.inputs['To Max'].default_value = 0.0; nt_.links.new(gr.outputs['Fac'], inv.inputs['Value'])
-    ds = N(nt_, 'ShaderNodeMath'); ds.operation = 'ADD'; nt_.links.new(gr.outputs['Fac'], ds.inputs[0]); nz = N(nt_, 'ShaderNodeMapRange'); nz.inputs['To Min'].default_value = -0.20; nz.inputs['To Max'].default_value = 0.20; nt_.links.new(ru.outputs['Fac'], nz.inputs['Value']); nt_.links.new(nz.outputs[0], ds.inputs[1])
+    ds = N(nt_, 'ShaderNodeMath'); ds.operation = 'ADD'; nt_.links.new(gr.outputs['Fac'], ds.inputs[0]); nz = N(nt_, 'ShaderNodeMapRange'); nz.inputs['To Min'].default_value = -0.34; nz.inputs['To Max'].default_value = 0.34; nt_.links.new(ru.outputs['Fac'], nz.inputs['Value']); nt_.links.new(nz.outputs[0], ds.inputs[1])
     forma = N(nt_, 'ShaderNodeMapRange'); forma.inputs['From Min'].default_value = 0.56; forma.inputs['From Max'].default_value = 0.60; nt_.links.new(ds.outputs[0], forma.inputs['Value'])      # 0 afuera … 1 adentro (borde nítido y orgánico)
     esp = N(nt_, 'ShaderNodeMapRange'); esp.inputs['From Min'].default_value = 0.58; esp.inputs['From Max'].default_value = 0.95; nt_.links.new(ds.outputs[0], esp.inputs['Value'])             # grosor: 0 borde … 1 centro
     col = N(nt_, 'ShaderNodeMix'); col.data_type = 'RGBA'; col.inputs['Factor'].default_value = 0.0; nt_.links.new(esp.outputs[0], col.inputs['Factor'])
-    for sk, v in (('A', (0.34, 0.012, 0.006, 1)), ('B', (0.11, 0.0, 0.004, 1))): [x for x in col.inputs if x.name == sk and x.type == 'RGBA'][0].default_value = v
+    for sk, v in (('A', (0.24, 0.008, 0.005, 1)), ('B', (0.07, 0.0, 0.003, 1))): [x for x in col.inputs if x.name == sk and x.type == 'RGBA'][0].default_value = v
     nt_.links.new(col.outputs['Result'], bs_.inputs['Base Color'])
     bs_.inputs['Roughness'].default_value = 0.035; entrada(bs_, 'Coat Weight', 'Clearcoat').default_value = 1.0; entrada(bs_, 'Coat Roughness', 'Clearcoat Roughness').default_value = 0.02; entrada(bs_, 'IOR').default_value = 1.38
     bp = N(nt_, 'ShaderNodeBump'); bp.inputs['Strength'].default_value = 0.35; bp.inputs['Distance'].default_value = 0.003
