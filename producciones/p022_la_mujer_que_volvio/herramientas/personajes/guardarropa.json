@@ -1,0 +1,13 @@
+{
+ "descripcion": "Guardarropa reutilizable de la serie. Las prendas se construyen UNA vez en Blender (ropa_noir.py: CAMISA, PANTALON, ZAPATO_*, PUNO_*, CINTURON, BOTON_*, COLLAR) y cada escena sólo elige un look: se cambian colores de los materiales ropa_camisa / ropa_pantalon / ropa_zapato / ropa_cinturon / ropa_boton, sin tocar la geometría.",
+ "looks": {
+  "gabriel_noche":   {"camisa": [0.60,0.61,0.64], "pantalon": [0.035,0.036,0.042], "zapato": [0.012,0.010,0.010], "cinturon": [0.02,0.014,0.01]},
+  "gabriel_herido":  {"camisa": [0.52,0.53,0.56], "pantalon": [0.03,0.031,0.036], "zapato": [0.012,0.010,0.010], "cinturon": [0.02,0.014,0.01]},
+  "gabriel_blanca":  {"camisa": [0.80,0.80,0.78], "pantalon": [0.06,0.07,0.10], "zapato": [0.02,0.015,0.01], "cinturon": [0.05,0.03,0.02]},
+  "gabriel_azul":    {"camisa": [0.10,0.16,0.30], "pantalon": [0.03,0.03,0.035], "zapato": [0.012,0.010,0.010], "cinturon": [0.02,0.014,0.01]},
+  "elena_borravino": {"camisa": [0.30,0.035,0.07], "pantalon": [0.025,0.025,0.03], "zapato": [0.012,0.010,0.010], "cinturon": [0.02,0.014,0.01]},
+  "elena_crema":     {"camisa": [0.72,0.64,0.52], "pantalon": [0.08,0.06,0.05], "zapato": [0.03,0.02,0.015], "cinturon": [0.04,0.02,0.01]},
+  "elena_negra":     {"camisa": [0.02,0.02,0.025], "pantalon": [0.02,0.02,0.025], "zapato": [0.01,0.01,0.01], "cinturon": [0.02,0.014,0.01]},
+  "elena_verde":     {"camisa": [0.05,0.20,0.14], "pantalon": [0.03,0.03,0.035], "zapato": [0.012,0.010,0.010], "cinturon": [0.02,0.014,0.01]}
+ }
+}
