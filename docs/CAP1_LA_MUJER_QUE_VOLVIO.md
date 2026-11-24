@@ -84,3 +84,11 @@ Lluvia, motor y ruta mojada, limpiaparabrisas, **derrape** (8,6–10,3 s), **cho
 ### Música (24/11/2026) — `herramientas/musica_noir.py`
 Tema original lento «neo-noir» (en el espíritu de Max Payne, **no** es esa música ni la copia): Re menor, 56 BPM, progresión Dm–B♭–Gm–A, piano grave con notas largas y mucha reverberación (convolución), cello/viola con vibrato lento, pad casi inaudible. Reemplaza al tema anterior en `audio_accidente.py`: antes del choque sólo notas aisladas y aire; silencio con zumbido tras el golpe; entra el piano a los 22 s; suben las cuerdas en la búsqueda y se apaga con el desmayo.
 **Duración hasta ahora:** el accidente dura 67,9 s (de 3–4 min planeados para el capítulo); faltan los recuerdos (~40 s de voz), la casa (~1 min) y el cierre; la voz total ya generada es de 111,9 s.
+
+
+## Escena de la CASA (24/11/2026) — versión 1 para revisión
+- Godot (`godot_cap1/tools/casa.gd`): sala con ventanal, sillón (sin atravesar la mesa: la mesa está DELANTE de Gabriel, a su alcance), botella de whisky, copa con vino, botella tumbada con vino que corre y gotea del borde, cenicero con colillas y cigarro encendido, encendedor y pistola USP real (catálogo `armas.json`, 2090 triángulos, apoyada de costado sobre la tapa). Brazo izquierdo apoyado en el apoyabrazos con la mano colgando (de ahí gotea la sangre).
+- Blender (`etapa_blender/efectos_casa.py`): piso claro, materiales reales, cortinas con viento, relámpagos, humo del cigarro, brasa y ceniza, goteos de sangre y vino, charco de sangre real, herida del hombro en la camisa, foco de cámara que sigue al sujeto.
+- Audio (`herramientas/audio_casa.py`): tormenta, viento, truenos, goteos, reloj, latido y respiración, música triste (piano grave, cuerdas, drone sucio), voz +10,6 dB sobre el fondo.
+- Ropa: `ropa_noir.py` (escala del cuerpo 0,01 corregida, costillas incluidas, la prenda no atraviesa el cuerpo) + `guardarropa.json` (looks por color).
+- Pendiente: mano con sangre más realista (el pulgar queda sin sangre), cortinas/lluvia vistas en movimiento, revisar licencias de los modelos.

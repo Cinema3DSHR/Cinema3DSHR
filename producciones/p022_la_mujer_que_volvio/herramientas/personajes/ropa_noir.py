@@ -77,7 +77,7 @@ def arrugas(obj, fuerza, escala, semilla):
         except Exception as e: print('no se aplicó', nm_, e)
 
 # ── CAMISA: torso + brazos hasta la muñeca, dos vueltas de holgura, faldón que baja bajo el cinturón, escote abierto
-camisa = TF._region(sc, body, lambda n: n.startswith(('Hip', 'Pelvis', 'Waist', 'Spine', 'L_Clavicle', 'R_Clavicle', 'L_Upperarm', 'R_Upperarm', 'L_Forearm', 'R_Forearm', 'L_Elbow', 'R_Elbow', 'L_Breast', 'R_Breast')),
+camisa = TF._region(sc, body, lambda n: n.startswith(('Hip', 'Pelvis', 'Waist', 'Spine', 'L_Clavicle', 'R_Clavicle', 'L_Upperarm', 'R_Upperarm', 'L_Forearm', 'R_Forearm', 'L_Elbow', 'R_Elbow', 'L_Breast', 'R_Breast', 'L_Ribs', 'R_Ribs')),
                     0.040 * S * K, 'CAMISA', m_top, zmin=cadera - 0.115 * S, zmax=cuello_z - 0.012 * S)
 recortar(camisa, cadera - 0.085 * S, True)                                     # dobladillo recto
 # ── PANTALÓN: de la cintura a los tobillos, algo suelto, con botamangas que tapan el borde del zapato
