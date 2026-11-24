@@ -149,7 +149,7 @@ mus *= np.clip(np.interp(t, [0, 1, T_IM, T_IM + 0.3, T_IM + 6, T_SA, T_DE - 3, T
 
 # 10) VOZ: narración de Gabriel (voces.json) ubicada sobre las escenas
 vo = [x for x in json.load(open(Path(__file__).parents[1] / 'audio_cap1' / 'voces.json')) if x['bloque'] == 'accidente']
-inicios = [0.8, 3.2, 6.0, 12.4, 14.4, 22.6, 27.5, 34.0, 37.4, 41.0, 46.0, 52.0, 57.6]
+inicios = [0.8, 3.2, 6.35, 12.4, 14.4, 22.6, 27.5, 34.0, 37.4, 41.0, 46.0, 52.0, 57.6]
 voz = np.zeros((n, 2))
 srt = []
 def tc(s_): return '%02d:%02d:%02d,%03d' % (int(s_ // 3600), int(s_ % 3600 // 60), int(s_ % 60), int((s_ % 1) * 1000))
