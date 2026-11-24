@@ -448,8 +448,11 @@ def sangre_cara(material):
     manchas = [esc_(gauss(ojo_i[0] - 0.6, ojo_y - 0.55 * D, 2.6, 1.0, -0.35, 0.55), 1.0),               # mejilla
                esc_(gauss(ojo_d[0] + 0.4, boca_y + 0.60 * D, 2.0, 0.85, 0.50, 0.55), 1.0),              # mandíbula del otro lado
                esc_(gauss((ojo_i[0] + ojo_d[0]) / 2 + 0.3, boca_y - 0.62 * D, 1.8, 0.75, 0.08, 0.5), 1.0),   # mentón
-               esc_(gauss(ojo_i[0] - 1.2, ojo_y + 0.55 * D, 1.6, 0.70, 0.55, 0.5), 0.95)]               # sien
-    heridas = [gauss(ojo_i[0] + 0.6, ojo_y + 0.60 * D, 1.05, 0.22, 0.35), esc_(gauss(ojo_i[0] + 0.6, ojo_y + 0.60 * D, 1.8, 0.65, 0.35), 0.55),
+               esc_(gauss(ojo_i[0] - 1.2, ojo_y + 0.55 * D, 1.6, 0.70, 0.55, 0.5), 0.95),               # sien
+               esc_(gauss(ojo_d[0] + 0.9, ojo_y - 0.15 * D, 1.5, 0.65, -0.4, 0.5), 0.95),               # pómulo del otro lado
+               esc_(gauss((ojo_i[0] + ojo_d[0]) / 2 + 0.2, ojo_y + 0.05 * D, 0.55, 1.3, 0.1, 0.0), 0.65),   # puente de la nariz (se la tocó)
+               esc_(gauss(ojo_d[0] + 0.5, ojo_y + 0.62 * D, 1.4, 0.55, 0.3, 0.5), 0.85)]               # roce en la frente del otro lado
+    heridas = [esc_(gauss(ojo_d[0] + 0.7, ojo_y - 0.30 * D, 0.75, 0.16, -0.5), 0.85), gauss(ojo_i[0] + 0.6, ojo_y + 0.60 * D, 1.05, 0.22, 0.35), esc_(gauss(ojo_i[0] + 0.6, ojo_y + 0.60 * D, 1.8, 0.65, 0.35), 0.55),
                esc_(gauss(ojo_i[0] + 0.4, ojo_y + 0.60 * D - 0.95, 0.16, 0.34, 0.1), 0.75)]                # la heridita y una gotita corta (sin chorro)
     M_s = suma(manchas); M_h = suma(heridas)
     M_s.node.name = 'DBG_Ms'; M_h.node.name = 'DBG_Mh'
@@ -458,7 +461,7 @@ def sangre_cara(material):
     def x_amt(g):
         n = nt.nodes.new('ShaderNodeMath'); n.operation = 'MULTIPLY'; nt.links.new(g, n.inputs[0]); nt.links.new(amt.outputs[0], n.inputs[1]); return n.outputs[0]
     m_s2 = x_amt(M_s); m_h2 = x_amt(M_h)
-    mx1 = nt.nodes.new('ShaderNodeMix'); mx1.data_type = 'RGBA'; _rgba(mx1, 'B').default_value = (0.15, 0.006, 0.008, 1)
+    mx1 = nt.nodes.new('ShaderNodeMix'); mx1.data_type = 'RGBA'; _rgba(mx1, 'B').default_value = (0.12, 0.005, 0.007, 1)
     if origen: nt.links.new(origen, _rgba(mx1, 'A'))
     else: _rgba(mx1, 'A').default_value = val
     nt.links.new(m_s2, mx1.inputs['Factor'])
