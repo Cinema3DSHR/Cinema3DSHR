@@ -135,17 +135,13 @@ def piano(f_, g_):
 mus = np.zeros((n, 2))
 P._poner(mus, cuerda(55.0, T_IM - 1.0, 0.30), 0.5, 1.0, 0.0); P._poner(mus, cuerda(82.4, T_IM - 3.0, 0.16), 2.5, 1.0, 0.0)           # drone bajo que crece hasta el choque
 P._poner(mus, np.sin(2 * np.pi * 36 * np.arange(int(3.5 * SR)) / SR) * np.exp(-np.arange(int(3.5 * SR)) / SR / 1.2) * 0.9, T_IM, 1.0, 0.0)  # golpe grave del choque
-acordes = [(110.0, 220.0, 261.63), (87.31, 174.61, 220.0), (130.81, 261.63, 329.63), (98.0, 196.0, 246.94)]
-t0m = T_SA + 3.0; i = 0
-while t0m < T_DE + 1.0:
-    b, m1, m2 = acordes[i % 4]
-    for f_, g_ in ((b, 0.16), (m1, 0.09), (m2, 0.06)): P._poner(mus, cuerda(f_, 9.0, g_), t0m, 1.0, 0.0)
-    t0m += 8.0; i += 1
-mel = [440, 523.25, 493.88, 392, 440, 349.23, 392, 329.63]
-for k_, f_ in enumerate(mel * 6):
-    tn = T_SA + 5.0 + k_ * 1.8
-    if tn < T_DE + 2.0: P._poner(mus, piano(f_, 0.14 + 0.16 * min((tn - T_SA) / (T_DE - T_SA), 1)), tn, 1.0, 0.2)
-mus *= np.clip(np.interp(t, [0, 1, T_IM, T_IM + 0.3, T_IM + 6, T_SA, T_DE - 3, T_DE + 2.5, DUR], [0, 0.5, 1.0, 0.0, 0.0, 0.5, 1.0, 0.25, 0.0]), 0, 1)[:, None]
+sys.path.insert(0, str(Path(__file__).parent))
+import musica_noir as MN                                                              # tema lento, piano grave y cuerdas con reverberación (original)
+sec = [{"t0": 0.5, "t1": T_IM - 0.5, "capas": ["nota_sola", "pad"]},                   # antes del choque: notas aisladas y aire
+       {"t0": 22.0, "t1": T_DE - 12.0, "capas": ["piano", "melodia", "pad"]},          # después del silencio: entra el piano
+       {"t0": T_DE - 12.0, "t1": T_DE + 4.0, "capas": ["piano", "melodia", "cuerdas", "pad"]}]   # sube con la búsqueda y se apaga con el desmayo
+mus += MN.tema(n, np.random.default_rng(31), sec, 1.0) * 1.05
+mus *= np.clip(np.interp(t, [0, 1, T_IM - 0.4, T_IM + 0.3, T_IM + 6, 21.5, 24.0, T_DE - 3, T_DE + 2.5, DUR], [0, 0.6, 1.0, 0.0, 0.0, 0.0, 0.8, 1.0, 0.25, 0.0]), 0, 1)[:, None]
 
 # 10) VOZ: narración de Gabriel (voces.json) ubicada sobre las escenas
 vo = [x for x in json.load(open(Path(__file__).parents[1] / 'audio_cap1' / 'voces.json')) if x['bloque'] == 'accidente']
