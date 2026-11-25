@@ -77,7 +77,10 @@ def ensanchar(m, rad):
 rng = np.random.default_rng(5); yy, xx = np.mgrid[0:H, 0:W].astype(np.float32)
 grano = rng.normal(0, 1, (H, W)).astype(np.float32); grano = sup(np.clip(grano * 0.5 + 0.5, 0, 1), 0.6) - 0.5          # papel: grano fijo
 fibra = sup(np.clip(rng.normal(0, 1, (H, W)).astype(np.float32) * 0.5 + 0.5, 0, 1), 3.0) - 0.5
+TC = {}
+def _t(k, t): TC[k] = TC.get(k, 0.0) + (time.time() - t)
 def compuesto(f):
+    _t0 = time.time()
     rgb = lambda n: np.asarray(Image.open(f'{SAL}/pasadas/{n}_{f:04d}.png').convert('RGB'), dtype=np.float32) / 255.0
     color, arcilla, nor, cla = rgb('color'), rgb('arcilla'), rgb('normales'), rgb('clases')
     pro = np.asarray(Image.open(f'{SAL}/pasadas/prof_{f:04d}.png')).astype(np.float32); pro = pro / (65535.0 if pro.max() > 255 else 255.0)
@@ -104,14 +107,16 @@ def compuesto(f):
     ancho = np.clip(0.012 * np.clip(z * 0.35, 0.6, 3.0) * 1.1 / pix_m, 1.0, 2.7)
     silu = np.maximum(ensanchar(sil * (ancho < 1.5), 0), ensanchar(sil * (ancho >= 1.5), 1)); silu = sup(silu, 0.55)
     def tinta(img, m, kk=1.0, col=TINTA): return img * (1 - (m * kk)[..., None]) + col[None, None, :] * (m * kk)[..., None]
+    _t('comun_lectura_y_aristas', _t0); _t0 = time.time()
     # --- A plano (base para C) ---
     nz, nx, ny = n[..., 2], n[..., 0], n[..., 1]
     tt = np.where(nz > 0.6, 1.0, np.where(nz < -0.6, 0.8, np.where(np.abs(ny) > np.abs(nx), 0.93, 0.86)))
     tint = 0.50 + 0.50 * np.clip(alb * 1.3, 0, 1); A = PAPEL[None, None, :] * (tt * (0.35 + 0.65 * tint))[..., None]; A[cielo] = FONDO
-    Cimg = tinta(A, silu)
+    Cimg = tinta(A, silu); _t('C_plano_y_silueta', _t0); _t0 = time.time()
     # --- D líneas de pantalla: profundidad + 2.ª derivada + juntas del auto; 4 tonos de papel ---
     g4 = np.floor(cl * 4.0 + 0.5) / 4.0; Dm = (g4 * 0.2 + 0.8)[..., None] * np.ones((1, 1, 3), dtype=np.float32); Dm[cielo] = FONDO
     Dm = tinta(Dm, sup(np.maximum(np.maximum(e_prof, segunda.astype(np.float32) * 0.8), detalle * 0.7), 0.5))
+    _t('D_lineas_pantalla', _t0); _t0 = time.time()
     # --- E combinado: toon con sombra + silueta + pliegues finos + juntas ---
     band = np.floor(lit * 3.0 + 0.5) / 3.0; sombra = 0.64 + 0.36 * band; tn = 0.72 + 0.28 * np.clip(alb * 1.35, 0, 1)
     sx = (xx + 0.5) / W * 2 - 1; sy = 1 - (yy + 0.5) / H * 2
@@ -123,9 +128,11 @@ def compuesto(f):
     ndl = np.clip((n * Ld).sum(-1), 0, 1); espec = (np.power(np.clip((n * Hv).sum(-1), 0, 1), 24) * (lit > 0.6)) > 0.90; rim = np.power(1 - np.clip((n * V).sum(-1), 0, 1), 3.0) * ndl * 0.18
     B = (tn * sombra + rim)[..., None] * PAPEL[None, None, :]; B = np.where(espec[..., None], np.clip(B + 0.2, 0, 1), B); B[cielo] = FONDO
     Eimg = tinta(B, sup(np.maximum(plieg, detalle * 0.8), 0.5), 0.75); Eimg = tinta(Eimg, silu, 0.95)
+    _t('E_toon_y_pliegues', _t0); _t0 = time.time()
     # --- original: grano de película, viñeta suave y brillo (bloom) sobre el render de Blender ---
     brillo = sup(np.clip(lum(color) - 0.80, 0, 1) * 3.0, 6.0)[..., None] * 0.35; vig = 1 - 0.18 * np.clip(((sx ** 2) * 0.6 + (sy ** 2) * 0.4), 0, 1)[..., None]
     Orig = np.clip((color + brillo) * vig, 0, 1)
+    _t('original_bloom_vineta', _t0); _t0 = time.time()
     # --- híbrido «lápices de color»: D con colores tenues, sombreado rayado, brillos blancos, papel con grano ---
     gris = lum(color)[..., None]; pastel = gris + (color - gris) * 0.45; pastel = pastel * 0.74 + PAPEL[None, None, :] * 0.26
     niv = np.round(gris * 6) / 6.0; pastel = pastel * (0.55 + 0.45 * (niv / np.maximum(gris, 0.05)))
@@ -142,10 +149,11 @@ def compuesto(f):
     lapiz_col = np.array([0.20, 0.19, 0.24], dtype=np.float32)
     H_ = H_ * (1 - (lineas * 0.85)[..., None]) + lapiz_col[None, None, :] * (lineas * 0.85)[..., None]
     H_ = np.clip(H_ * (1 + 0.05 * grano[..., None] + 0.04 * fibra[..., None]), 0, 1)
+    _t('hibrido_lapices', _t0); _t0 = time.time()
     for nombre, img in (('original', Orig), ('C', Cimg), ('D', Dm), ('E', Eimg), ('hibrido', H_)):
         Image.fromarray((np.clip(img, 0, 1) * 255 + 0.5).astype(np.uint8)).save(f'{SAL}/{nombre}/f_{f:04d}.png')
 t1 = time.time()
 for f in cuadros(): compuesto(f)
-T['composicion_total_s'] = round(time.time() - t1, 1); T['tiempo_total_s'] = round(time.time() - t0, 1)
+T['composicion_total_s'] = round(time.time() - t1, 1); T['composicion_por_estilo_s'] = {k: round(v / max(HASTA - DESDE + 1, 1), 2) for k, v in TC.items()}; T['tiempo_total_s'] = round(time.time() - t0, 1)
 T['cuadros'] = HASTA - DESDE + 1; T['memoria_max_mb'] = round(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss / 1024, 0); T['cpus'] = os.cpu_count(); T['maquina'] = platform.processor() or platform.machine()
 json.dump(T, open(f'{SAL}/informe_{DESDE:04d}_{HASTA:04d}.json', 'w'), indent=1); print('LISTO', json.dumps({k: v for k, v in T.items() if not isinstance(v, list)}))

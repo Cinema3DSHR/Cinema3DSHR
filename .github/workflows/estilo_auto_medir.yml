@@ -1,0 +1,28 @@
+name: Estilo auto · medición de costo por estilo (1 máquina, pasadas de cada estilo por separado)
+on:
+  workflow_dispatch:
+  push:
+    paths: [".github/disparadores/estilo_auto_medir.txt"]
+permissions:
+  contents: read
+env:
+  BLEND: producciones/p024_auto_estilos/blend/p024_auto_estilos_v001.blend
+jobs:
+  medir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with: {lfs: true}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13"}
+      - run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q bpy==5.3.0 numpy pillow
+          lscpu | grep -E "Model name|^CPU\(s\)"; free -m | sed -n 2p
+      - name: Medir render por pasada y por estilo
+        run: /usr/bin/time -v python producciones/p024_auto_estilos/herramientas/medir_estilos.py "$BLEND" medicion.json 2> tiempo.txt; cat medicion.json; grep -E "User time|System time|Maximum resident|Elapsed" tiempo.txt
+      - name: Medir composición por estilo (3 cuadros completos)
+        run: python producciones/p024_auto_estilos/herramientas/estilo_auto_frame.py "$BLEND" 40 42 salida | grep -E "LISTO"; python3 -c "import json;d=json.load(open('salida/informe_0040_0042.json'));print(json.dumps(d['composicion_por_estilo_s'],indent=1))"
+      - uses: actions/upload-artifact@v4
+        with: {name: "medicion", path: "medicion.json\nsalida/informe_0040_0042.json\ntiempo.txt"}
