@@ -1,0 +1,26 @@
+[
+ {
+  "quien": "aiden",
+  "t": 0.5,
+  "dur": 3.2,
+  "texto": "No puede ser... pensé que ya no te volvería a ver."
+ },
+ {
+  "quien": "kate",
+  "t": 4.0,
+  "dur": 3.0,
+  "texto": "Yo también lo pensé, pero hay cosas que no se terminan."
+ },
+ {
+  "quien": "aiden",
+  "t": 7.3,
+  "dur": 1.4,
+  "texto": "¿Y ahora qué hacemos?"
+ },
+ {
+  "quien": "kate",
+  "t": 8.8,
+  "dur": 1.1,
+  "texto": "Primero, escucharme."
+ }
+]

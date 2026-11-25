@@ -40,7 +40,7 @@ def restaurar():
         for m in orig[o.name]: o.data.materials.append(m)
 t0 = time.time()
 # 1) COLOR: el render «normal» de Blender (32 muestras, OIDN, desenfoque de profundidad, reflejos, rebotes)
-cy = sc.cycles; cy.samples = 32; cy.use_denoising = True
+cy = sc.cycles; cy.samples = int(os.environ.get('COLOR_SPP', 32)); cy.use_denoising = True
 for f in cuadros(): render('color', f)
 # 2) ARCILLA (blanca con luz y sombra)
 MT = mat_tipo('transparente'); MA = mat_tipo('arcilla'); cycles(8, 1.5, True, 3)
@@ -96,9 +96,10 @@ def compuesto(f):
         return e
     e_prof = lin_edges(); g = np.maximum(np.abs(np.roll(cla, -1, 1) - cla), np.abs(np.roll(cla, -1, 0) - cla)).max(axis=-1); g[-1, :] = 0; g[:, -1] = 0; e_clase = (g > 0.3).astype(np.float32)
     plieg = np.zeros_like(e_prof)
-    for dx, dy in ((1, 0), (0, 1)):
-        nn = np.roll(np.roll(n, -dx, 1), -dy, 0); zn = np.roll(np.roll(z, -dx, 1), -dy, 0)
-        plieg = np.maximum(plieg, ((np.abs((n * nn).sum(-1)) < 0.90) & (np.abs(zn - z) < 0.03 * zz)).astype(np.float32))
+    nb = np.stack([sup(nor[..., c], 1.3) for c in range(3)], axis=-1) * 2 - 1; nb /= np.maximum(np.linalg.norm(nb, axis=-1, keepdims=True), 1e-6)         # normales suavizadas: las arrugas de la ropa no son aristas
+    for dx, dy in ((2, 0), (0, 2)):
+        nn = np.roll(np.roll(nb, -dx, 1), -dy, 0); zn = np.roll(np.roll(z, -dx, 1), -dy, 0)
+        plieg = np.maximum(plieg, ((np.abs((nb * nn).sum(-1)) < 0.80) & (np.abs(zn - z) < 0.03 * zz)).astype(np.float32))
     plieg[cielo] = 0
     k2 = 2; segunda = (np.maximum(np.abs(np.roll(zz, k2, 1) + np.roll(zz, -k2, 1) - 2 * zz), np.abs(np.roll(zz, k2, 0) + np.roll(zz, -k2, 0) - 2 * zz)) > 0.010 * zz) & ~cielo
     cl = lum(color); gx = np.abs(np.roll(cl, -1, 1) - cl) + np.abs(np.roll(cl, -1, 0) - cl); detalle = ((gx > 0.10) & m_auto).astype(np.float32)      # juntas de chapa, vidrios, parrilla, llantas
@@ -118,7 +119,7 @@ def compuesto(f):
     Dm = tinta(Dm, sup(np.maximum(np.maximum(e_prof, segunda.astype(np.float32) * 0.8), detalle * 0.7), 0.5))
     _t('D_lineas_pantalla', _t0); _t0 = time.time()
     # --- E combinado: toon con sombra + silueta + pliegues finos + juntas ---
-    band = np.floor(lit * 3.0 + 0.5) / 3.0; sombra = 0.64 + 0.36 * band; tn = 0.72 + 0.28 * np.clip(alb * 1.35, 0, 1)
+    band = np.floor(lit * 3.0 + 0.5) / 3.0; sombra = 0.64 + 0.36 * band; tn = 0.60 + 0.40 * np.clip(alb * 1.35, 0, 1)
     sx = (xx + 0.5) / W * 2 - 1; sy = 1 - (yy + 0.5) / H * 2
     M = sc.camera.matrix_world; fwd = -(M.to_3x3() @ __import__('mathutils').Vector((0, 0, 1))); rig = M.to_3x3() @ __import__('mathutils').Vector((1, 0, 0)); upv = M.to_3x3() @ __import__('mathutils').Vector((0, 1, 0))
     tv = math.tan(sc.camera.data.angle_y / 2); thh = tv * W / H
