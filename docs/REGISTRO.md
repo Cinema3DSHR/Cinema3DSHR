@@ -1039,3 +1039,11 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 - `herramientas/estilo_pistolas_frame.py`: pasadas + compuesto estilo E (color directo sólo en sangre, anatomía y fuego) y original. Formato 1280×720 (la escena es horizontal).
 - Flujo `pistolas_e.yml` (disparador `.github/disparadores/pistolas_e.txt`): 60 trabajos, 694 cuadros, audio `audio/mezcla_audio.m4a`. Corrida 1 OK → Release `pistolas-e-1` (E, original, informe).
 - Costos: 32,9 CPU-h, trabajo medio 591 s (337–808), 2,9 GB pico, 18 s/cuadro color, 18 s arcilla, 3,4 s cada pasada de normales/profundidad/clases, composición 0,9 s.
+
+## 25/11/2026 · Duelos 2–5 del trailer de extracción en estilo E (p027)
+- Origen: `duelos.part01-10.rar` (4 GLB: duelo 2 escopeta 10,0 s/301 cuadros, duelo 3 subfusil 10,9 s/329, duelo 4 fusil 19,8 s/595, duelo 5 rifle .50 34,7 s/1041; ~4,3 M de triángulos cada uno, con mapa, sangre, miembros arrancados y anatomía completa; sin efectos). El dueño pidió sólo el video de líneas negras (estilo E), uno por vez, 60 máquinas por video.
+- `herramientas/construir_duelo.py` (variante de `construir_pistolas.py`): efectos desde `datos/dueloN/*_disparos.json` + `sonidos.csv`; fogonazo según arma (escopeta, subfusil, fusil, rifle .50), tirador por proximidad temporal; clase «anat» también para `Miembro_*`. Se usa `p026/.../estilo_pistolas_frame.py` para las pasadas y el compuesto.
+- Flujos `duelo2_e.yml` y `duelo5_e.yml` (disparadores `duelo2_e.txt`, `duelo5_e.txt`), BLEND por LFS (≈200 MB) distribuido como artefacto.
+- Duelo 2 (corrida 1, OK, Release `duelo2-e-1`): 12,1 CPU-h, trabajo medio 255 s (163–366), 3,8 GB pico, 13,4 s/cuadro color, 4,5 s por pasada liviana.
+- Observaciones: la anatomía sólo se ve en la toma de rayos X (duelo 2: 3,3–5 s). Nubes grises lisas del GLB (Icosphere) y charcos de sangre muy cargados con manchas negras: ajustes pendientes si el dueño los pide.
+- Duelo 5: disparado después del duelo 2.
