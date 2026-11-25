@@ -5,6 +5,8 @@ Uso: /opt/tools/blendenv/bin/python construir_pistolas.py GLB_OK DISPAROS.json S
 import bpy, bmesh, sys, json, csv, math, random
 from mathutils import Vector, Quaternion
 GLB, DISP, SON, SAL = sys.argv[-4:]
+import os
+SOLO_SANGRE = os.environ.get('SOLO_SANGRE') == '1'          # sólo sangre: sin fogonazos, humo, trazadoras, chispas, polvo ni astillas (el resto queda como en el juego)
 bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = bpy.context.scene
 bpy.ops.import_scene.gltf(filepath=GLB)
@@ -78,7 +80,7 @@ def tiro_de(e):
     mt = max(s['t'] for s in c); c = [s for s in c if s['t'] >= mt - 0.05]                # el disparo más reciente (varios tiradores a la vez: el más lejano al impacto)
     return max(c, key=lambda s: (s['pos'] - p).length)
 # ───────── fogonazos, humo, trazadoras ─────────
-for s in tiros:
+for s in (tiros if not SOLO_SANGRE else []):
     k0 = kk(s['t']); d = Vector((1, 0, 0)) if (s['jug'] or s['pos'].x < 14.5) else Vector((-1, 0, 0))
     objetivos = [G(e['x'], e['y'], e['z']) for e in disp if tiro_de(e) is s]
     if objetivos: d = (objetivos[0] - s['pos']).normalized()
@@ -128,7 +130,7 @@ for e in disp:
         for i in range(2):                               # bolas grandes (sangre que sale a chorro)
             o = nuevo('esfera', M_SANGRE, 'sangre'); r = rnd.uniform(0.07, 0.11); v = d * rnd.uniform(1.0, 2.6) + n_b * rnd.uniform(0.3, 1.0) + Vector((0, rnd.gauss(0, .4), rnd.uniform(0.3, 1.2)))
             balistico(o, k0, p, v, 60, (r, r, r))
-    else:
+    elif not SOLO_SANGRE:
         tp = tipo_mundo(e)
         if tp == 'impact_metal':                          # chispas
             for i in range(18):
@@ -149,7 +151,7 @@ for e in disp:
                 balistico(o, k0, p, v, 60, (rnd.uniform(0.01, 0.025), rnd.uniform(0.02, 0.07), rnd.uniform(0.01, 0.025)), flat=False)
 # ───────── ruptura del cajón de madera (sonido wood_break): lluvia de tablas y astillas ─────────
 for t, snd, p in sonidos_imp:
-    if snd != 'wood_break': continue
+    if snd != 'wood_break' or SOLO_SANGRE: continue
     k0 = kk(t)
     for i in range(34):
         o = nuevo('cubo', M_MADERA if i % 2 else M_MADERA2, 'fx'); big = i < 10

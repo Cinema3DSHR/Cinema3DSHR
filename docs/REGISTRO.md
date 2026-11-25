@@ -1047,3 +1047,4 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 - Duelo 2 (corrida 1, OK, Release `duelo2-e-1`): 12,1 CPU-h, trabajo medio 255 s (163–366), 3,8 GB pico, 13,4 s/cuadro color, 4,5 s por pasada liviana.
 - Observaciones: la anatomía sólo se ve en la toma de rayos X (duelo 2: 3,3–5 s). Nubes grises lisas del GLB (Icosphere) y charcos de sangre muy cargados con manchas negras: ajustes pendientes si el dueño los pide.
 - Duelo 5: disparado después del duelo 2.
+- Duelo 5 v002 (25/11/2026, pedido del dueño: «que no se pierda cómo se ve en el juego, agregá sólo sangre, humo y fuego no»): se construyó con `SOLO_SANGRE=1` (`construir_duelo.py`): sólo sangre en los impactos; sin fogonazos, luces, humo, trazadoras, chispas, polvo ni astillas. Se canceló la corrida 1 (con efectos).

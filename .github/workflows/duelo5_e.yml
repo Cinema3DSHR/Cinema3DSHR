@@ -14,7 +14,7 @@ permissions:
 env:
   GH_TOKEN: ${{ github.token }}
   REPO: ${{ github.repository }}
-  BLEND: producciones/p027_duelos_estilo_e/blend/p027_duelo5_v001.blend
+  BLEND: producciones/p027_duelos_estilo_e/blend/p027_duelo5_v002.blend
 
 jobs:
   preparar:
@@ -27,7 +27,7 @@ jobs:
           ls -la "$BLEND"; [ "$(stat -c %s "$BLEND")" -gt 1000000 ] || { echo "::error::el BLEND es un puntero LFS"; exit 1; }
           sha256sum "$BLEND" | tee blend.sha256
       - uses: actions/upload-artifact@v4
-        with: {name: blend, path: "producciones/p027_duelos_estilo_e/blend/p027_duelo5_v001.blend", compression-level: 0, retention-days: 7}
+        with: {name: blend, path: "producciones/p027_duelos_estilo_e/blend/p027_duelo5_v002.blend", compression-level: 0, retention-days: 7}
 
   planificar:
     runs-on: ubuntu-latest
