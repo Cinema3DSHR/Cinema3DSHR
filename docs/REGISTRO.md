@@ -1020,3 +1020,9 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 - Puente de 50 s con la narración que había quedado sin usar (bloque «despues», 12 líneas) sobre negro con grano y subtítulos (`herramientas/audio_puente.py`) y tarjeta final de 7 s «CAPÍTULO 1 / LA MUJER QUE VOLVIÓ DE LA MUERTE».
 - Montaje: accidente (67,9 s) → puente (50 s) → casa (78 s) → tarjeta (7 s), fundidos de 0,5 s, total 201,4 s, 540×960 a 30 fps. Entregado como `capitulo1_envio.mp4` (reducido para el chat).
 - Pendiente: puente con imágenes (hoy negro), pulgar sin sangre, licencias de modelos.
+
+## 25/11/2026 · Experimento de estilo «líneas técnicas» (pedido del dueño, prompt EXTRACCIÓN VERTICAL adaptado a nuestras producciones)
+- Escena de prueba con todos los tipos de objeto (auto original, casa, puerta con marco, cajas, barriles, árboles, flores, farol, valla, extintor, tubo rojo) y los dos personajes (Aiden apuntando con la pistola USP y láser rojo, Kate de pie): `godot_cap1/tools/escena_lineas.gd` → GLB → Blender (`herramientas/estilo_lineas/render_estilo.py` + `componer.py`). 720×1280 vertical, Cycles (perfil del estudio: 6 muestras, OIDN, semilla fija).
+- Cuatro tratamientos del mismo cuadro y la misma cámara: A ink filter, B technical materials, C hybrid line art, D plano dibujado (imágenes en el chat; no van al repo).
+- Costos medidos (4 núcleos, por cuadro a 720×1280): sombreado Cycles ≈ 6,7 s; contornos con Freestyle ≈ 33 s (lo caro); contornos por pasadas (normales+profundidad+clases, bordes en espacio de imagen) ≈ 3,7 s; máscara de clases ≈ 1,5 s. Total: ≈ 41 s con Freestyle, ≈ 12 s por pasadas. Referencia noir actual ≈ 14 s/cuadro a 540×960 en GitHub.
+- Prueba de movimiento (16 cuadros, caminata → apuntado, cámara acercándose, estilo B por pasadas): líneas estables, sin parpadeo visible en la tira; los contornos de cara y manos son más ruidosos que los de arquitectura.
