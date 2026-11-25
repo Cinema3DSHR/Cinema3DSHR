@@ -1,0 +1,6 @@
+ESCENA «PISTOLAS» (23 s, 30 fps) — un solo GLB con el mapa incluido.
+- escena_pistolas.glb: mapa, personajes animados, armas, cámara del gameplay, sangre (gotas y manchas) y la ANATOMÍA
+  (huesos, órganos, vasos) que aparece en la toma de rayos X de la muerte (hacia el segundo 14) mientras el traje se esconde.
+  Animación: «escena». Todo en blanco/gris, sin texturas (agregar líneas con Freestyle o el outline de Workbench).
+- mezcla_audio.wav: sonido completo alineado con la animación (empieza en 0 s). sonidos.csv: cada sonido con su segundo.
+- escena_pistolas_disparos.json: cada impacto con su segundo y posición.
