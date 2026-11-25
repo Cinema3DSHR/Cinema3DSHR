@@ -1,0 +1,6 @@
+DUELO 5_rifle_50 — IA contra IA en el campo de prácticas, 2 rondas con la misma arma (un solo GLB con mapa, 30 fps, animación «escena»).
+Cada ronda: dos personajes se disparan hasta que uno mata al otro; la cámara es la del gameplay y la cámara de muerte (rayos X) del juego.
+El GLB trae: personajes con esqueleto, armas en las manos, sangre (gotas y manchas), miembros arrancados (nodos Miembro_N, con su anatomía)
+y la ANATOMÍA COMPLETA de cada combatiente (huesos, músculos translúcidos, órganos, vasos, nervios; nodos hueso_*, musculo_*, organo_*, vaso_*, nervio_*)
+que aparece en la toma de rayos X de la muerte mientras el traje se esconde. Materiales blancos/grises, sin texturas (líneas con Freestyle / Workbench).
+mezcla_audio.wav: sonido alineado con la animación (empieza en 0 s). sonidos.csv: cada sonido con su segundo. *_disparos.json: impactos con su segundo y posición.
