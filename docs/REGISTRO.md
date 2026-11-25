@@ -1032,3 +1032,10 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 - Render distribuido (corrida 2): 60 trabajos, 6,6 min de reloj, trabajo medio 223 s (121–326), 9,76 h de CPU para los 5 videos juntos (las pasadas se comparten), memoria pico 1,6 GB, máquina 4 vCPU x86_64. La corrida 1 perdió un trabajo (el 17) y GitHub dio 500 al reintentar sólo ese: se relanzó entera.
 - Costo por estilo si se renderiza solo (medición, 1 máquina de 4 vCPU, por cuadro): original 58,1 s · C 3,9 s · D 25,2 s · E 25,1 s · híbrido 52,2 s (+ composición 0,1–0,6 s). C cuesta ~7 % del original; D y E ~44 %; el híbrido ~90 %.
 - Aviso: los tiempos varían ±30 % entre máquinas (el color a 32 muestras tardó 42,7 s en el render y 58,1 s en la medición).
+
+## 25/11/2026 · Escena «pistolas» del trailer de extracción en estilo E (p026)
+- Origen: `escena_pistolas.part1-3.rar` del dueño (GLB de 98 MB con mapa, personajes, armas, cámara, sangre y anatomía de rayos X, 23,1 s). El GLB usa `KHR_node_visibility`, que este Blender no importa: `herramientas/parchear_glb.py` quita la extensión.
+- `herramientas/construir_pistolas.py` arma el BLEND (116 MB, LFS) y agrega los efectos que no viajan en el GLB desde `datos/escena_pistolas_disparos.json` + `sonidos.csv`: sangre (chorros y charcos), fogonazos con luz, trazadoras, humo, chispas, polvo/esquirlas y rotura del cajón. Cuadro de salida a 30 fps ↔ animación a 24.
+- `herramientas/estilo_pistolas_frame.py`: pasadas + compuesto estilo E (color directo sólo en sangre, anatomía y fuego) y original. Formato 1280×720 (la escena es horizontal).
+- Flujo `pistolas_e.yml` (disparador `.github/disparadores/pistolas_e.txt`): 60 trabajos, 694 cuadros, audio `audio/mezcla_audio.m4a`. Corrida 1 OK → Release `pistolas-e-1` (E, original, informe).
+- Costos: 32,9 CPU-h, trabajo medio 591 s (337–808), 2,9 GB pico, 18 s/cuadro color, 18 s arcilla, 3,4 s cada pasada de normales/profundidad/clases, composición 0,9 s.
