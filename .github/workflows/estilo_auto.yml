@@ -1,0 +1,119 @@
+name: Estilo auto · giro de cámara en 5 estilos (Blender distribuido → 5 MP4)
+
+# EXPERIMENTO de estilo (docs/REGISTRO.md, 25/11/2026): el auto gris estacionado, cámara que rodea el auto en 5 s (150 cuadros, 720×1280, 30 fps), renderizado una vez por cuadro
+# (pasadas de Blender) y compuesto en 5 tratamientos: original, C contorno, D líneas de pantalla, E combinado e híbrido «lápices de color». Reparte los cuadros en 60 trabajos.
+# Se dispara con un push al archivo .github/disparadores/estilo_auto.txt (o a mano) y publica los videos en la Release «estilo-auto-<corrida>».
+on:
+  workflow_dispatch:
+  push:
+    paths: [".github/disparadores/estilo_auto.txt"]
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  GH_TOKEN: ${{ github.token }}
+  REPO: ${{ github.repository }}
+  BLEND: producciones/p024_auto_estilos/blend/p024_auto_estilos_v001.blend
+
+jobs:
+  planificar:
+    runs-on: ubuntu-latest
+    outputs:
+      trozos: ${{ steps.plan.outputs.trozos }}
+    steps:
+      - id: plan
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          tam = [3] * 30 + [2] * 30; t = []; c = 1
+          for i, n in enumerate(tam): t.append({"n": i + 1, "desde": c, "hasta": c + n - 1}); c += n
+          assert c - 1 == 150
+          print("trozos=" + json.dumps(t))
+          PY
+
+  render:
+    needs: planificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 60
+      matrix:
+        trozo: ${{ fromJSON(needs.planificar.outputs.trozos) }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {lfs: true}
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13"}
+      - name: Instalar bpy (Blender como módulo) y librerías
+        run: |
+          t=$(date +%s)
+          sudo apt-get update -qq && sudo apt-get install -y -qq libxxf86vm1 libxfixes3 libxi6 libxkbcommon0 libsm6 libgl1 libegl1 >/dev/null
+          pip install -q bpy==5.3.0 numpy pillow
+          echo "{\"instalar_s\": $(( $(date +%s) - t ))}" > t_instalar.json
+          lscpu | grep -E "Model name|^CPU\(s\)" ; free -m | sed -n 2p
+      - name: Renderizar cuadros ${{ matrix.trozo.desde }}–${{ matrix.trozo.hasta }}
+        run: |
+          set -o pipefail
+          /usr/bin/time -v python producciones/p024_auto_estilos/herramientas/estilo_auto_frame.py "$BLEND" ${{ matrix.trozo.desde }} ${{ matrix.trozo.hasta }} out 2> tiempo.txt | grep -E "LISTO|Error|Traceback" || { cat tiempo.txt | tail -20; exit 1; }
+          python3 - <<'PY'
+          import glob, json, re
+          p = glob.glob("out/informe_*.json")[0]; d = json.load(open(p)); d.update(json.load(open("t_instalar.json"))); d["trabajo"] = ${{ matrix.trozo.n }}
+          t = open("tiempo.txt").read()
+          for k, rx in (("cpu_usuario_s", r"User time \(seconds\): ([\d.]+)"), ("cpu_sistema_s", r"System time \(seconds\): ([\d.]+)"), ("memoria_pico_kb", r"Maximum resident set size \(kbytes\): (\d+)"), ("pared_s", r"Elapsed \(wall clock\) time.*: ([\d:.]+)")):
+              m = re.search(rx, t); d[k] = m.group(1) if m else None
+          json.dump(d, open(p, "w"), indent=1)
+          PY
+      - name: Empaquetar
+        if: ${{ always() }}
+        run: cd out && rm -rf pasadas && zip -0 -q -r "../trozo_${{ matrix.trozo.n }}.zip" . || true
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with: {name: "trozo-${{ matrix.trozo.n }}", path: "trozo_${{ matrix.trozo.n }}.zip", compression-level: 0, retention-days: 14}
+
+  montar:
+    needs: [planificar, render]
+    if: ${{ !cancelled() && needs.planificar.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+      - uses: actions/download-artifact@v4
+        with: {pattern: "trozo-*", path: descargas}
+      - name: Reunir cuadros, verificar que estén los 150 de cada estilo y codificar los 5 videos
+        run: |
+          set -e
+          mkdir -p todo; for z in descargas/trozo-*/trozo_*.zip; do unzip -q -o "$z" -d todo; done
+          for e in original C D E hibrido; do n=$(ls todo/$e/f_*.png 2>/dev/null | wc -l); echo "$e: $n cuadros"; [ "$n" = "150" ] || { echo "::error::Faltan cuadros en $e ($n/150)"; exit 1; }; done
+          mkdir -p videos
+          for e in original C D E hibrido; do ffmpeg -y -loglevel error -framerate 30 -i todo/$e/f_%04d.png -c:v libx264 -pix_fmt yuv420p -crf 16 -preset slow -movflags +faststart videos/auto_$e.mp4; done
+          ls -la videos
+          mkdir -p informes; cp todo/informe_*.json informes/
+          gh api "repos/$REPO/actions/runs/${{ github.run_id }}/attempts/${{ github.run_attempt }}/jobs?per_page=100" --paginate --jq '.jobs[]' > jobs.jsonl
+          python3 - <<'PY'
+          import glob, json, statistics as S, datetime as D
+          inf = [json.load(open(p)) for p in sorted(glob.glob("informes/informe_*.json"))]
+          def seg(a, b): return (D.datetime.fromisoformat(b.replace("Z", "+00:00")) - D.datetime.fromisoformat(a.replace("Z", "+00:00"))).total_seconds()
+          jobs = [json.loads(l) for l in open("jobs.jsonl") if l.strip()]
+          rj = [j for j in jobs if j["name"].startswith("render")]
+          dur = [seg(j["started_at"], j["completed_at"]) for j in rj if j.get("completed_at")]
+          pas = {}
+          for i in inf:
+              for k in ("color", "arcilla", "normales", "prof", "clases"): pas.setdefault(k, []).extend(i.get(k, []))
+          rep = {"trabajos": len(inf), "cuadros": sum(i["cuadros"] for i in inf), "maquina": {"cpus": inf[0]["cpus"], "tipo": inf[0]["maquina"]},
+                 "s_por_cuadro_pasada": {k: round(S.mean(v), 1) for k, v in pas.items()},
+                 "cpu_total_h": round(sum(float(i["cpu_usuario_s"]) + float(i["cpu_sistema_s"]) for i in inf) / 3600, 2),
+                 "memoria_pico_mb_max": round(max(int(i["memoria_pico_kb"]) for i in inf) / 1024),
+                 "duracion_trabajo_s": {"media": round(S.mean(dur)), "min": round(min(dur)), "max": round(max(dur))} if dur else None,
+                 "instalar_bpy_s_media": round(S.mean(i["instalar_s"] for i in inf)), "composicion_s_por_cuadro": round(S.mean(i["composicion_total_s"] / i["cuadros"] for i in inf), 1),
+                 "minutos_facturables_aprox": round(sum(dur) / 60) if dur else None}
+          json.dump(rep, open("videos/informe_costos.json", "w"), indent=1); print(json.dumps(rep, indent=1))
+          PY
+      - uses: actions/upload-artifact@v4
+        with: {name: "videos", path: "videos", retention-days: 30}
+      - name: Publicar en la Release estilo-auto-${{ github.run_number }}
+        run: |
+          gh release create "estilo-auto-${{ github.run_number }}" --repo "$REPO" --title "Estilo auto · giro de cámara (corrida ${{ github.run_number }})" --notes "5 videos de 5 s, 720x1280, 30 fps: original, C, D, E e híbrido. Informe de costos adjunto." videos/*
