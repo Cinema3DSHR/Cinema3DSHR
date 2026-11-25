@@ -1026,3 +1026,9 @@ Pedido del dueño: neo-noir de 3–4 min (accidente en tormenta, recuerdos, casa
 - Cuatro tratamientos del mismo cuadro y la misma cámara: A ink filter, B technical materials, C hybrid line art, D plano dibujado (imágenes en el chat; no van al repo).
 - Costos medidos (4 núcleos, por cuadro a 720×1280): sombreado Cycles ≈ 6,7 s; contornos con Freestyle ≈ 33 s (lo caro); contornos por pasadas (normales+profundidad+clases, bordes en espacio de imagen) ≈ 3,7 s; máscara de clases ≈ 1,5 s. Total: ≈ 41 s con Freestyle, ≈ 12 s por pasadas. Referencia noir actual ≈ 14 s/cuadro a 540×960 en GitHub.
 - Prueba de movimiento (16 cuadros, caminata → apuntado, cámara acercándose, estilo B por pasadas): líneas estables, sin parpadeo visible en la tira; los contornos de cara y manos son más ruidosos que los de arquitectura.
+
+## 25/11/2026 · Estilo «líneas técnicas»: el auto gris con giro de cámara de 5 s en 5 tratamientos (render distribuido en 60 máquinas)
+- Producción `p024_auto_estilos` (BLEND por LFS). Escena: Hustler gris metalizado en playón, seto y árboles, cámara que rodea el auto en 150 cuadros (frente → costado → atrás), 720×1280 a 30 fps. Flujo `estilo_auto.yml` (60 trabajos de 2–3 cuadros) y `estilo_auto_medir.yml` (medición por estilo en 1 máquina). Videos en la Release `estilo-auto-2`.
+- Render distribuido (corrida 2): 60 trabajos, 6,6 min de reloj, trabajo medio 223 s (121–326), 9,76 h de CPU para los 5 videos juntos (las pasadas se comparten), memoria pico 1,6 GB, máquina 4 vCPU x86_64. La corrida 1 perdió un trabajo (el 17) y GitHub dio 500 al reintentar sólo ese: se relanzó entera.
+- Costo por estilo si se renderiza solo (medición, 1 máquina de 4 vCPU, por cuadro): original 58,1 s · C 3,9 s · D 25,2 s · E 25,1 s · híbrido 52,2 s (+ composición 0,1–0,6 s). C cuesta ~7 % del original; D y E ~44 %; el híbrido ~90 %.
+- Aviso: los tiempos varían ±30 % entre máquinas (el color a 32 muestras tardó 42,7 s en el render y 58,1 s en la medición).
